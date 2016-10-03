@@ -4,6 +4,15 @@ require 'pry-byebug'
 require 'logger'
 require 'open3'
 
+# TODO: Implement parser for pinch action
+# TODO: Read .yml file and set custom shortcut keys
+# TODO: Write gemspec
+# TODO: Write test
+# TODO: Write README.md
+# TODO: Support long-press
+# TODO: Actions' thresholds should be detected by distance per time
+# TODO: Add custom parameters for threshold of swipe or pinch actions
+
 # manage actions
 class ActionStack < Array
   def initialize(*args)
@@ -43,7 +52,7 @@ class ActionStack < Array
   end
 
   def detect_finger
-    first.finger
+    last.finger
   end
 
   def sum_direction
@@ -86,6 +95,25 @@ class GestureAction
     @time = time
   end
   attr_reader :action_name, :finger, :directions, :time
+
+  class << self
+    def initialize_by_libinput(line, device_name)
+      return unless line.to_s =~ /^#{device_name}/
+      action, finger_num, directions, time = parse_from_libinput(line)
+      return unless action =~ /GESTURE_SWIPE|GESTURE_PINCH/
+      GestureAction.new(action, finger_num, directions, time)
+    end
+
+    private
+
+    def parse_from_libinput(line)
+      _device, action_time, finger_directions = line.split("\t").map(&:strip)
+      action, time = action_time.split
+      finger_num, directions = finger_directions.split
+      [action, finger_num, directions, time]
+    end
+  end
+    
 end
 
 # Main class
@@ -116,7 +144,7 @@ class Fusuma
   def read_libinput
     Open3.popen3(libinput_command) do |_i, o, _e, _w|
       o.each do |line|
-        gesture_action = generate_gesture_action(line)
+        gesture_action = GestureAction.initialize_by_libinput(line, device_name)
         next if gesture_action.nil?
         @action_stack ||= ActionStack.new
         @action_stack << gesture_action
@@ -124,20 +152,6 @@ class Fusuma
         trigger_keyevent(gesture_info) unless gesture_info.nil?
       end
     end
-  end
-
-  def generate_gesture_action(line)
-    return unless line.to_s =~ /^#{device_name}/
-    rows = line.split("\t").map(&:strip)
-    action = rows[1].split[0]
-    time = rows[1].split[1]
-    finger_and_directions = rows[2].split
-    finger_num = finger_and_directions[0]
-    directions = (finger_and_directions[1] if finger_and_directions.length > 2)
-
-    return unless action =~ /GESTURE_SWIPE/
-
-    GestureAction.new(action, finger_num, directions, time)
   end
 
   def trigger_keyevent(gesture_info)
@@ -166,20 +180,20 @@ class Fusuma
     {
       swipe: {
         '3' => {
-          left: { shortcut: 'alt+Right' },
+          left:  { shortcut: 'alt+Right' },
           right: { shortcut: 'alt+Left' },
-          up: { shortcut: 'ctrl+t' },
-          down: { shortcut: 'ctrl+w' }
+          up:    { shortcut: 'ctrl+t' },
+          down:  { shortcut: 'ctrl+w' }
         },
         '4' => {
-          left: { shortcut: 'super+Right' },
+          left:  { shortcut: 'super+Right' },
           right: { shortcut: 'super+Left' },
-          up: { shortcut: 'super+a' },
-          down: { shortcut: 'super+s' }
+          up:    { shortcut: 'super+a' },
+          down:  { shortcut: 'super+s' }
         }
       },
       pinch: {
-        in: { shortcut: 'ctrl+minus' },
+        in:  { shortcut: 'ctrl+minus' },
         out: { shortcut: 'ctrl+plus' }
       }
     }
