@@ -4,13 +4,12 @@ require 'pry-byebug'
 require 'logger'
 require 'open3'
 
-# TODO: Implement parser for pinch action
 # TODO: Read .yml file and set custom shortcut keys
 # TODO: Write gemspec
 # TODO: Write test
 # TODO: Write README.md
 # TODO: Support long-press
-# TODO: Actions' thresholds should be detected by distance per time
+# TODO: Actions' thresholds should be detected by move per time
 # TODO: Add custom parameters for threshold of swipe or pinch actions
 
 # manage actions
@@ -24,10 +23,9 @@ class ActionStack < Array
   def gesture_info
     return unless enough_actions?
     direction = detect_direction
-    finger = detect_finger
-    action = detect_action
+    finger    = detect_finger
+    action    = detect_action
     clear
-    @logger.debug "-------#{finger}--#{direction}--#{action}------"
     { finger: finger, direction: direction, action: action }
   end
 
@@ -40,15 +38,20 @@ class ActionStack < Array
 
   def detect_direction
     direction_hash = sum_direction
-    x = direction_hash[:x]
-    y = direction_hash[:y]
-    if x.abs > y.abs
-      return 'right' if x > 0
-      return 'left'
-    else
-      return 'down' if y > 0
-      return 'up'
+    move = detect_move(direction_hash)
+    pinch = detect_pinch(direction_hash)
+    { move: move, pinch: pinch }
+  end
+
+  def detect_move(direction_hash)
+    if direction_hash[:move][:x].abs > direction_hash[:move][:y].abs
+      return direction_hash[:move][:x] > 0 ? 'right' : 'left'
     end
+    direction_hash[:move][:y] > 0 ? 'down' : 'up'
+  end
+
+  def detect_pinch(direction_hash)
+    direction_hash[:pinch] > 1 ? 'in' : 'out'
   end
 
   def detect_finger
@@ -56,15 +59,24 @@ class ActionStack < Array
   end
 
   def sum_direction
-    directions_arr = map(&:directions).compact.map do |directions|
-      x, y = directions.split('/')
-      { x: x.to_f, y: y.to_f }
-    end
-    directions_arr.inject(x: 0, y: 0) do |sum, directions|
-      sum[:x] += directions[:x]
-      sum[:y] += directions[:y]
-      { x: sum[:x], y: sum[:y] }
-    end
+    move_x = sum_attrs(:move_x)
+    move_y = sum_attrs(:move_y)
+    pinch  = mul_attrs(:pinch)
+    { move: { x: move_x, y: move_y }, pinch: pinch }
+  end
+
+  def sum_attrs(attr)
+    send('map') do |gesture_action|
+      gesture_action.send(attr.to_sym.to_s)
+    end.compact.inject(:+)
+  end
+
+  def mul_attrs(attr)
+    send('map') do |gesture_action|
+      num = gesture_action.send(attr.to_sym.to_s)
+      # NOTE: ignore 0.0, treat as 1(immutable)
+      num.zero? ? 1 : num
+    end.compact.inject(:*)
   end
 
   def action_end?
@@ -73,35 +85,42 @@ class ActionStack < Array
 
   def last_action_name
     return false if last.class != GestureAction
-    last.action_name
+    last.action
   end
 
   def enough_actions?
-    length > 7 # TODO: should be detected by distance per time
+    length > 7 # TODO: should be detected by move per time
   end
 
   def detect_action
-    first.action_name =~ /GESTURE_(.*?)_/
+    first.action =~ /GESTURE_(.*?)_/
     Regexp.last_match(1).downcase
   end
 end
 
 # pinch or swipe action
 class GestureAction
-  def initialize(action_name, finger, directions, time)
-    @action_name = action_name
+  def initialize(time, action, finger, directions)
+    @time   = time
+    @action = action
     @finger = finger
-    @directions = directions
-    @time = time
+    @move_x = directions[:move][:x].to_f
+    @move_y = directions[:move][:y].to_f
+    @pinch  = directions[:pinch].to_f
   end
-  attr_reader :action_name, :finger, :directions, :time
+  attr_reader :time, :action, :finger,
+              :move_x, :move_y, :pinch
 
   class << self
     def initialize_by_libinput(line, device_name)
+      @logger ||= Logger.new(STDOUT)
       return unless line.to_s =~ /^#{device_name}/
-      action, finger_num, directions, time = parse_from_libinput(line)
-      return unless action =~ /GESTURE_SWIPE|GESTURE_PINCH/
-      GestureAction.new(action, finger_num, directions, time)
+      return if line.to_s =~ /_BEGIN/
+      return unless line.to_s =~ /GESTURE_SWIPE|GESTURE_PINCH/
+      time, action, finger_num, directions = parse_from_libinput(line)
+      @logger.debug(line)
+      @logger.debug(directions)
+      GestureAction.new(time, action, finger_num, directions)
     end
 
     private
@@ -109,8 +128,9 @@ class GestureAction
     def parse_from_libinput(line)
       _device, action_time, finger_directions = line.split("\t").map(&:strip)
       action, time = action_time.split
-      finger_num, directions = finger_directions.split
-      [action, finger_num, directions, time]
+      finger_num, move_x, move_y, _, _, _, pinch = finger_directions.tr('/', ' ').split
+      directions = { move: { x: move_x, y: move_y }, pinch: pinch }
+      [time, action, finger_num, directions]
     end
   end
     
@@ -160,9 +180,11 @@ class Fusuma
     direction = gesture_info[:direction]
     case action
     when 'swipe'
-      swipe(finger, direction)
+      @logger.debug('swipe')
+      swipe(finger, direction[:move])
     when 'pinch'
-      pinch
+      pinch(direction[:pinch])
+      @logger.debug('pinch')
     end
   end
 
@@ -193,8 +215,8 @@ class Fusuma
         }
       },
       pinch: {
-        in:  { shortcut: 'ctrl+minus' },
-        out: { shortcut: 'ctrl+plus' }
+        in:  { shortcut: 'ctrl+plus' },
+        out: { shortcut: 'ctrl+minus' }
       }
     }
   end
