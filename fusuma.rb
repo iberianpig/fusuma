@@ -3,14 +3,16 @@
 require 'pry-byebug'
 require 'logger'
 require 'open3'
+require 'yaml'
 
-# TODO: Read .yml file and set custom shortcut keys
 # TODO: Write gemspec
 # TODO: Write test
 # TODO: Write README.md
 # TODO: Support long-press
 # TODO: Actions' thresholds should be detected by move per time
 # TODO: Add custom parameters for threshold of swipe or pinch actions
+# TODO: Tune threshold for pinch zoom
+# TODO: Refactoring with dividing classes
 
 # manage actions
 class ActionStack < Array
@@ -26,21 +28,25 @@ class ActionStack < Array
     finger    = detect_finger
     action    = detect_action
     clear
-    { finger: finger, direction: direction, action: action }
+    GestureInfo.new(finger, direction, action)
   end
 
-  def <<(gesture_action)
+  def push(gesture_action)
     super(gesture_action)
     clear if action_end?
   end
+  alias << push
 
   private
+
+  GestureInfo = Struct.new(:finger, :direction, :action)
+  Direction = Struct.new(:move, :pinch)
 
   def detect_direction
     direction_hash = sum_direction
     move = detect_move(direction_hash)
     pinch = detect_pinch(direction_hash)
-    { move: move, pinch: pinch }
+    Direction.new(move, pinch)
   end
 
   def detect_move(direction_hash)
@@ -117,20 +123,31 @@ class GestureAction
       return unless line.to_s =~ /^#{device_name}/
       return if line.to_s =~ /_BEGIN/
       return unless line.to_s =~ /GESTURE_SWIPE|GESTURE_PINCH/
-      time, action, finger_num, directions = parse_from_libinput(line)
+      time, action, finger, directions = gesture_action_arguments(line)
       @logger.debug(line)
       @logger.debug(directions)
-      GestureAction.new(time, action, finger_num, directions)
+      GestureAction.new(time, action, finger, directions)
     end
 
     private
 
-    def parse_from_libinput(line)
+    def gesture_action_arguments(libinput_line)
+      action, time, finger_directions = parse_libinput(libinput_line)
+      finger, move_x, move_y, pinch = parse_finger_directions(finger_directions)
+      directions = { move: { x: move_x, y: move_y }, pinch: pinch }
+      [time, action, finger, directions]
+    end
+
+    def parse_libinput(line)
       _device, action_time, finger_directions = line.split("\t").map(&:strip)
       action, time = action_time.split
-      finger_num, move_x, move_y, _, _, _, pinch = finger_directions.tr('/', ' ').split
-      directions = { move: { x: move_x, y: move_y }, pinch: pinch }
-      [time, action, finger_num, directions]
+      [action, time, finger_directions]
+    end
+
+    def parse_finger_directions(finger_directions_line)
+      finger_num, move_x, move_y, _, _, _, pinch =
+        finger_directions_line.tr('/', ' ').split
+      [finger_num, move_x, move_y, pinch]
     end
   end
     
@@ -145,13 +162,15 @@ class Fusuma
 
   private
 
-  def device_name
-    return @device_name unless @device_name.nil?
-    Open3.popen3('libinput-list-devices') do |_i, o, _e, _w|
+  def read_libinput
+    Open3.popen3(libinput_command) do |_i, o, _e, _w|
       o.each do |line|
-        @device_name = line.match(/event[0-9]/).to_s if line =~ /^Kernel: /
-        next unless line =~ /^Tap-to-click: /
-        return @device_name unless line =~ %r{n/a}
+        gesture_action = GestureAction.initialize_by_libinput(line, device_name)
+        next if gesture_action.nil?
+        @action_stack ||= ActionStack.new
+        @action_stack.push gesture_action
+        gesture_info = @action_stack.gesture_info
+        trigger_keyevent(gesture_info) unless gesture_info.nil?
       end
     end
   end
@@ -161,64 +180,55 @@ class Fusuma
     /dev/input/#{device_name}"
   end
 
-  def read_libinput
-    Open3.popen3(libinput_command) do |_i, o, _e, _w|
+  def device_name
+    return @device_name unless @device_name.nil?
+    Open3.popen3('libinput-list-devices') do |_i, o, _e, _w|
       o.each do |line|
-        gesture_action = GestureAction.initialize_by_libinput(line, device_name)
-        next if gesture_action.nil?
-        @action_stack ||= ActionStack.new
-        @action_stack << gesture_action
-        gesture_info = @action_stack.gesture_info
-        trigger_keyevent(gesture_info) unless gesture_info.nil?
+        extracted_input_device_from(line)
+        next unless touch_is_available?(line)
+        return @device_name
       end
     end
   end
 
+  def extracted_input_device_from(line)
+    return unless line =~ /^Kernel: /
+    @device_name = line.match(/event[0-9]/).to_s
+  end
+
+  def touch_is_available?(line)
+    return false unless line =~ /^Tap-to-click: /
+    return false if line =~ %r{n/a}
+    true
+  end
+
   def trigger_keyevent(gesture_info)
-    action    = gesture_info[:action]
-    finger    = gesture_info[:finger]
-    direction = gesture_info[:direction]
-    case action
+    case gesture_info.action
     when 'swipe'
-      @logger.debug('swipe')
-      swipe(finger, direction[:move])
+      swipe(gesture_info.finger, gesture_info.direction.move)
     when 'pinch'
-      pinch(direction[:pinch])
-      @logger.debug('pinch')
+      pinch(gesture_info.direction.pinch)
     end
   end
 
   def swipe(finger, direction)
-    shortcut = event_map[:swipe][finger][direction.to_sym][:shortcut]
+    @logger.debug("finger: #{finger}, direction: #{direction.to_sym}")
+    shortcut = event_map['swipe'][finger.to_i][direction]['shortcut']
     `xdotool key #{shortcut}`
   end
 
   def pinch(zoom)
-    shortcut = event_map[:pinch][zoom.to_sym][:shortcut]
+    shortcut = event_map['pinch'][zoom]['shortcut']
     `xdotool key #{shortcut}`
   end
 
   def event_map
-    {
-      swipe: {
-        '3' => {
-          left:  { shortcut: 'alt+Right' },
-          right: { shortcut: 'alt+Left' },
-          up:    { shortcut: 'ctrl+t' },
-          down:  { shortcut: 'ctrl+w' }
-        },
-        '4' => {
-          left:  { shortcut: 'super+Right' },
-          right: { shortcut: 'super+Left' },
-          up:    { shortcut: 'super+a' },
-          down:  { shortcut: 'super+s' }
-        }
-      },
-      pinch: {
-        in:  { shortcut: 'ctrl+plus' },
-        out: { shortcut: 'ctrl+minus' }
-      }
-    }
+    @event_map ||= load_config
+  end
+
+  def load_config
+    file = File.expand_path('../config.yml', __FILE__)
+    YAML.load_file(file)
   end
 
   Fusuma.new.run if __FILE__ == $PROGRAM_NAME
