@@ -9,7 +9,6 @@ require 'yaml'
 module Fusuma
   class << self
     def run
-      @logger = Logger.new(STDOUT)
       read_libinput
     end
 
@@ -65,7 +64,6 @@ module Fusuma
     end
 
     def swipe(finger, direction)
-      @logger.debug("finger: #{finger}, direction: #{direction.to_sym}")
       shortcut = event_map['swipe'][finger.to_i][direction]['shortcut']
       `xdotool key #{shortcut}`
     end
@@ -76,12 +74,14 @@ module Fusuma
     end
 
     def event_map
-      @event_map ||= load_config
+      @event_map ||= YAML.load_file(config_file)
     end
 
-    def load_config
-      file = File.expand_path('../fusuma/config.yml', __FILE__)
-      YAML.load_file(file)
+    def config_file
+      filename = 'fusuma/config.yml'
+      original_path = File.expand_path "~/.config/#{filename}"
+      default_path = File.expand_path "../#{filename}"
+      File.exist?(original_path) ? original_path : default_path
     end
   end
 end

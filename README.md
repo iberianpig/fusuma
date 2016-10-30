@@ -33,6 +33,40 @@ Install Fusuma
 
     $ fusuma
 
+## Customize
+
+
+You can customize the settings for gestues to put and edit `~/.config/fusuma/config.yml`.
+
+### Sample (default keymap for Elementary OS)
+
+```yaml
+swipe:
+  3: 
+    left: 
+      shortcut: 'alt+Right'
+    right: 
+      shortcut: 'alt+Left'
+    up: 
+      shortcut: 'ctrl+t'
+    down: 
+      shortcut: 'ctrl+w'
+  4:
+    left: 
+      shortcut: 'super+Right'
+    right: 
+      shortcut: 'super+Left'
+    up: 
+      shortcut: 'super+a'
+    down: 
+      shortcut: 'super+s'
+pinch:
+  in:
+    shortcut: 'ctrl+plus'
+  out:
+     shortcut: 'ctrl+minus'
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

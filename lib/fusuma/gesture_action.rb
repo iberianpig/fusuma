@@ -10,17 +10,16 @@ module Fusuma
       @pinch  = directions[:pinch].to_f
     end
     attr_reader :time, :action, :finger,
-      :move_x, :move_y, :pinch
+                :move_x, :move_y, :pinch
 
     class << self
       def initialize_by_libinput(line, device_name)
-        @logger ||= Logger.new(STDOUT)
         return unless line.to_s =~ /^#{device_name}/
         return if line.to_s =~ /_BEGIN/
         return unless line.to_s =~ /GESTURE_SWIPE|GESTURE_PINCH/
         time, action, finger, directions = gesture_action_arguments(line)
-        @logger.debug(line)
-        @logger.debug(directions)
+        logger.debug(line)
+        logger.debug(directions)
         GestureAction.new(time, action, finger, directions)
       end
 
@@ -44,7 +43,14 @@ module Fusuma
           finger_directions_line.tr('/', ' ').split
         [finger_num, move_x, move_y, pinch]
       end
+
+      def logger
+        @logger ||= begin
+                      log = Logger.new(STDOUT)
+                      log.level = Logger::WARN
+                      log
+                    end
+      end
     end
-    
   end
 end

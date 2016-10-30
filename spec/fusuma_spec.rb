@@ -5,7 +5,8 @@ describe Fusuma do
     expect(Fusuma::VERSION).not_to be nil
   end
 
-  it "does something useful" do
-    expect(false).to eq(true)
+  it "#run" do
+    expect(Fusuma).to receive :read_libinput
+    Fusuma.run
   end
 end

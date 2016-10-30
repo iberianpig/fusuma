@@ -3,7 +3,6 @@ module Fusuma
   class ActionStack < Array
     def initialize(*args)
       super(*args)
-      @logger = Logger.new(STDOUT)
     end
 
     # return { finger:, direction:, action: } or nil
@@ -89,4 +88,3 @@ module Fusuma
     end
   end
 end
-
