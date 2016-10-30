@@ -1,8 +1,11 @@
 # Fusuma
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/fusuma`. To experiment with that code, run `bin/console` for an interactive prompt.
+Fusuma is multitouch gesture recognizer.
+This gem makes your linux PC able to recognize swipes or pinchs and assign shortcuts to them.
 
-TODO: Delete this and the text above, and describe your gem
+[![https://gyazo.com/757fef526310b9d68f68e80eb1e4540f](https://i.gyazo.com/757fef526310b9d68f68e80eb1e4540f.png)](https://gyazo.com/757fef526310b9d68f68e80eb1e4540f)
+
+襖(Fusuma) means sliding door used to partition off rooms in a Japanese house.
 
 ## Installation
 
@@ -28,7 +31,7 @@ Install Fusuma
 
 ## Usage
 
-TODO: Write usage instructions here
+    $ fusuma
 
 ## Development
 
