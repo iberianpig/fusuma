@@ -14,18 +14,15 @@ to read the touchpad device:
 
     $ sudo gpasswd -a $USER input  # Log out and back in to assign this group
 
-You need libinput release 1.0 or later. Install prerequisites:
+You need libinput release 1.0 or later. Install libinput-tools: 
 
-If you are using pacman (for archlinux).
+    $ sudo apt-get install libinput-tools
 
-    $ sudo pacman -S xdotool
-
-If you are using apt (for ubuntu/debian based distributions).
+For sending shortcuts:
 
     $ sudo apt-get install xdotool
 
-
-Install Fusuma
+Install Fusuma:
 
     $ gem install fusuma
 
