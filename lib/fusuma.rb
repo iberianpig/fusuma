@@ -80,7 +80,7 @@ module Fusuma
     def config_file
       filename = 'fusuma/config.yml'
       original_path = File.expand_path "~/.config/#{filename}"
-      default_path = File.expand_path "../#{filename}"
+      default_path = File.expand_path "../#{filename}", __FILE__
       File.exist?(original_path) ? original_path : default_path
     end
   end
