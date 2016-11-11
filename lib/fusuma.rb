@@ -13,6 +13,7 @@ module Fusuma
     end
 
     private
+    @@trigger_timeout = Time.new
 
     def read_libinput
       Open3.popen3(libinput_command) do |_i, o, _e, _w|
@@ -20,7 +21,7 @@ module Fusuma
           gesture_action = GestureAction.initialize_by_libinput(line, device_name)
           next if gesture_action.nil?
           @action_stack ||= ActionStack.new
-          @action_stack.push gesture_action
+          @action_stack.push gesture_action unless Time.new < @@trigger_timeout
           gesture_info = @action_stack.gesture_info
           trigger_keyevent(gesture_info) unless gesture_info.nil?
         end
@@ -58,8 +59,10 @@ module Fusuma
       case gesture_info.action
       when 'swipe'
         swipe(gesture_info.finger, gesture_info.direction.move)
+        @@trigger_timeout = Time.new + 0.5
       when 'pinch'
         pinch(gesture_info.direction.pinch)
+        @@trigger_timeout = Time.new + 0.05
       end
     end
 
