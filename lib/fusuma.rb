@@ -45,7 +45,7 @@ module Fusuma
 
     def extracted_input_device_from(line)
       return unless line =~ /^Kernel: /
-      @device_name = line.match(/event[0-9]/).to_s
+      @device_name = line.match(/event[0-9]+/).to_s
     end
 
     def touch_is_available?(line)
