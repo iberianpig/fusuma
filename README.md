@@ -41,18 +41,18 @@ You can customize the settings for gestues to put and edit `~/.config/fusuma/con
 swipe:
   3: 
     left: 
-      shortcut: 'alt+Right'
-    right: 
       shortcut: 'alt+Left'
+    right: 
+      shortcut: 'alt+Right'
     up: 
       shortcut: 'ctrl+t'
     down: 
       shortcut: 'ctrl+w'
   4:
     left: 
-      shortcut: 'super+Right'
-    right: 
       shortcut: 'super+Left'
+    right: 
+      shortcut: 'super+Right'
     up: 
       shortcut: 'super+a'
     down: 
