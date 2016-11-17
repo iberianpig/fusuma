@@ -7,10 +7,10 @@ module Fusuma
       @finger = finger
       @move_x = directions[:move][:x].to_f
       @move_y = directions[:move][:y].to_f
-      @pinch  = directions[:pinch].to_f
+      @zoom   = directions[:zoom].to_f
     end
     attr_reader :time, :action, :finger,
-                :move_x, :move_y, :pinch
+                :move_x, :move_y, :zoom
 
     class << self
       def initialize_by(line, device_name)
@@ -27,9 +27,9 @@ module Fusuma
 
       def gesture_action_arguments(libinput_line)
         action, time, finger_directions = parse_libinput(libinput_line)
-        finger, move_x, move_y, pinch =
+        finger, move_x, move_y, zoom =
           parse_finger_directions(finger_directions)
-        directions = { move: { x: move_x, y: move_y }, pinch: pinch }
+        directions = { move: { x: move_x, y: move_y }, zoom: zoom }
         [time, action, finger, directions]
       end
 
@@ -40,9 +40,9 @@ module Fusuma
       end
 
       def parse_finger_directions(finger_directions_line)
-        finger_num, move_x, move_y, _, _, _, pinch =
+        finger_num, move_x, move_y, _, _, _, zoom =
           finger_directions_line.tr('/', ' ').split
-        [finger_num, move_x, move_y, pinch]
+        [finger_num, move_x, move_y, zoom]
       end
     end
   end

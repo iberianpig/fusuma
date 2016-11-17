@@ -9,12 +9,20 @@ module Fusuma
     def gesture_info
       return unless enough_actions?
       MultiLogger.debug(enough_actions?: enough_actions?)
-      direction = detect_direction
-      finger    = detect_finger
-      action    = detect_action
+      action_type = detect_action_type
+      case action_type
+      when 'swipe'
+        direction = detect_move
+      when 'pinch'
+        direction = detect_zoom
+      else
+        return
+      end
+      return if direction.nil?
+      finger = detect_finger
       clear
-      MultiLogger.debug(finger: finger, direction: direction, action: action)
-      GestureInfo.new(finger, direction, action)
+      MultiLogger.debug(finger: finger, direction: direction, action_type: action_type)
+      GestureInfo.new(finger, direction, action_type)
     end
 
     def push(gesture_action)
@@ -25,36 +33,41 @@ module Fusuma
 
     private
 
-    GestureInfo = Struct.new(:finger, :direction, :action)
-    Direction = Struct.new(:move, :pinch)
+    GestureInfo = Struct.new(:finger, :direction, :action_type)
 
-    def detect_direction
-      direction_hash = sum_direction
-      move = detect_move(direction_hash)
-      pinch = detect_pinch(direction_hash)
-      Direction.new(move, pinch)
-    end
-
-    def detect_move(direction_hash)
-      if direction_hash[:move][:x].abs > direction_hash[:move][:y].abs
-        return direction_hash[:move][:x] > 0 ? 'right' : 'left'
+    def detect_move
+      moves = sum_moves
+      return nil if moves[:x].zero? && moves[:y].zero?
+      if moves[:x].abs > moves[:y].abs
+        return moves[:x] > 0 ? 'right' : 'left'
       end
-      direction_hash[:move][:y] > 0 ? 'down' : 'up'
+      moves[:y] > 0 ? 'down' : 'up'
     end
 
-    def detect_pinch(direction_hash)
-      direction_hash[:pinch] > 1 ? 'in' : 'out'
+    def detect_zoom
+      diameter = mul_diameter
+      # TODO: change threshold from config files
+      if diameter > 10
+        'in'
+      elsif diameter < 0.1
+        'out'
+      else
+        nil
+      end
     end
 
     def detect_finger
       last.finger
     end
 
-    def sum_direction
+    def sum_moves
       move_x = sum_attrs(:move_x)
       move_y = sum_attrs(:move_y)
-      pinch  = mul_attrs(:pinch)
-      { move: { x: move_x, y: move_y }, pinch: pinch }
+      { x: move_x, y: move_y }
+    end
+
+    def mul_diameter
+      mul_attrs(:zoom)
     end
 
     def sum_attrs(attr)
@@ -84,7 +97,7 @@ module Fusuma
       length > 7 # TODO: should be detected by move per time
     end
 
-    def detect_action
+    def detect_action_type
       first.action =~ /GESTURE_(.*?)_/
       Regexp.last_match(1).downcase
     end
