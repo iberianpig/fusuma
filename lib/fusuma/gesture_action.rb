@@ -13,13 +13,13 @@ module Fusuma
                 :move_x, :move_y, :pinch
 
     class << self
-      def initialize_by_libinput(line, device_name)
+      def initialize_by(line, device_name)
         return unless line.to_s =~ /^#{device_name}/
         return if line.to_s =~ /_BEGIN/
         return unless line.to_s =~ /GESTURE_SWIPE|GESTURE_PINCH/
         time, action, finger, directions = gesture_action_arguments(line)
-        logger.debug(line)
-        logger.debug(directions)
+        MultiLogger.debug(time: time, action: action,
+                          finger: finger, directions: directions)
         GestureAction.new(time, action, finger, directions)
       end
 
@@ -27,7 +27,8 @@ module Fusuma
 
       def gesture_action_arguments(libinput_line)
         action, time, finger_directions = parse_libinput(libinput_line)
-        finger, move_x, move_y, pinch = parse_finger_directions(finger_directions)
+        finger, move_x, move_y, pinch =
+          parse_finger_directions(finger_directions)
         directions = { move: { x: move_x, y: move_y }, pinch: pinch }
         [time, action, finger, directions]
       end
@@ -42,14 +43,6 @@ module Fusuma
         finger_num, move_x, move_y, _, _, _, pinch =
           finger_directions_line.tr('/', ' ').split
         [finger_num, move_x, move_y, pinch]
-      end
-
-      def logger
-        @logger ||= begin
-                      log = Logger.new(STDOUT)
-                      log.level = Logger::WARN
-                      log
-                    end
       end
     end
   end

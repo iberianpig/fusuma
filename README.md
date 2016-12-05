@@ -32,7 +32,6 @@ Install Fusuma:
 
 ## Customize
 
-
 You can customize the settings for gestues to put and edit `~/.config/fusuma/config.yml`.
 
 ### Sample (default keymap for Elementary OS)
@@ -63,6 +62,10 @@ pinch:
   out:
      shortcut: 'ctrl+minus'
 ```
+
+## Options
+
+*   `-v` : Enable debug mode.
 
 ## Contributing
 

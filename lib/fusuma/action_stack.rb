@@ -8,10 +8,12 @@ module Fusuma
     # return { finger:, direction:, action: } or nil
     def gesture_info
       return unless enough_actions?
+      MultiLogger.debug(enough_actions?: enough_actions?)
       direction = detect_direction
       finger    = detect_finger
       action    = detect_action
       clear
+      MultiLogger.debug(finger: finger, direction: direction, action: action)
       GestureInfo.new(finger, direction, action)
     end
 
