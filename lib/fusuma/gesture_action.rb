@@ -14,7 +14,7 @@ module Fusuma
 
     class << self
       def initialize_by(line, device_name)
-        return unless line.to_s =~ /^#{device_name}/
+        return unless line.to_s =~ /^\s?#{device_name}/
         return if line.to_s =~ /_BEGIN/
         return unless line.to_s =~ /GESTURE_SWIPE|GESTURE_PINCH/
         time, action, finger, directions = gesture_action_arguments(line)
