@@ -10,18 +10,12 @@ module Fusuma
       return unless enough_actions?
       MultiLogger.debug(enough_actions?: enough_actions?)
       action_type = detect_action_type
-      case action_type
-      when 'swipe'
-        direction = detect_move
-      when 'pinch'
-        direction = detect_zoom
-      else
-        return
-      end
+      direction = detect_direction(action_type)
       return if direction.nil?
       finger = detect_finger
       clear
-      MultiLogger.debug(finger: finger, direction: direction, action_type: action_type)
+      MultiLogger.debug(finger: finger, direction: direction,
+                        action_type: action_type)
       GestureInfo.new(finger, direction, action_type)
     end
 
@@ -35,12 +29,19 @@ module Fusuma
 
     GestureInfo = Struct.new(:finger, :direction, :action_type)
 
+    def detect_direction(action_type)
+      case action_type
+      when 'swipe'
+        detect_move
+      when 'pinch'
+        detect_zoom
+      end
+    end
+
     def detect_move
       moves = sum_moves
       return nil if moves[:x].zero? && moves[:y].zero?
-      if moves[:x].abs > moves[:y].abs
-        return moves[:x] > 0 ? 'right' : 'left'
-      end
+      return moves[:x] > 0 ? 'right' : 'left' if moves[:x].abs > moves[:y].abs
       moves[:y] > 0 ? 'down' : 'up'
     end
 
@@ -51,8 +52,6 @@ module Fusuma
         'in'
       elsif diameter < 0.1
         'out'
-      else
-        nil
       end
     end
 
