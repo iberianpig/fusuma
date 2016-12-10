@@ -14,12 +14,31 @@ require 'optparse'
 module Fusuma
   # main class
   class Runner
-    def self.run(args = {})
-      debug = args.fetch(:v, false)
-      MultiLogger.instance.debug_mode = true if debug
-      instance = new
-      MultiLogger.debug('Enable debug lines')
-      instance.read_libinput
+    class << self
+      def run(args = {})
+        read_options(args)
+        return if @stop
+        instance = new
+        instance.read_libinput
+      end
+
+      def read_options(args)
+        debug = args.fetch(:v, false)
+        help  = args.fetch(:h, false)
+        MultiLogger.instance.debug_mode = true if debug
+        @stop = if help
+                  print_help
+                  true
+                else
+                  false
+                end
+      end
+
+      def print_help
+        puts 'Options:
+        -h, print this help.
+        -v, print to STDOUT with debug mode.'
+      end
     end
 
     def read_libinput

@@ -2,5 +2,5 @@
 
 require_relative '../lib/fusuma'
 
-options = ARGV.getopts('v')
-Fusuma::Runner.run(v: options['v'])
+options = ARGV.getopts('hv')
+Fusuma::Runner.run(v: options['v'], h: options['h'])
