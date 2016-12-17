@@ -2,7 +2,7 @@ module Fusuma
   # pinch or swipe action
   class GestureAction
     def initialize(time, action, finger, directions)
-      @time   = time
+      @time   = time.to_f
       @action = action
       @finger = finger
       @move_x = directions[:move][:x].to_f

@@ -7,11 +7,11 @@ module Fusuma
 
     # return { finger:, direction:, action: } or nil
     def gesture_info
-      return unless enough_actions?
-      MultiLogger.debug(enough_actions?: enough_actions?)
+      return unless enough_actions? && enough_time_passed?
       action_type = detect_action_type
       direction = detect_direction(action_type)
       return if direction.nil?
+      @last_triggered_time = last.time
       finger = detect_finger
       clear
       MultiLogger.debug(finger: finger, direction: direction,
@@ -29,6 +29,11 @@ module Fusuma
 
     GestureInfo = Struct.new(:finger, :direction, :action_type)
 
+    def elapsed_time
+      return 0 if length == 0
+      last.time - first.time
+    end
+
     def detect_direction(action_type)
       case action_type
       when 'swipe'
@@ -41,8 +46,13 @@ module Fusuma
     def detect_move
       moves = sum_moves
       return nil if moves[:x].zero? && moves[:y].zero?
-      return moves[:x] > 0 ? 'right' : 'left' if moves[:x].abs > moves[:y].abs
-      moves[:y] > 0 ? 'down' : 'up'
+      # MultiLogger.debug(moves: moves)
+      return nil if (moves[:x].abs < 200) && (moves[:y].abs < 200)
+      if moves[:x].abs > moves[:y].abs
+        return moves[:x] > 0 ? 'right' : 'left'
+      else
+        moves[:y] > 0 ? 'down' : 'up'
+      end
     end
 
     def detect_zoom
@@ -93,7 +103,15 @@ module Fusuma
     end
 
     def enough_actions?
-      length > 7 # TODO: should be detected by move per time
+      (length > 1) && (elapsed_time > 0.1)
+    end
+
+    def enough_time_passed?
+      (last.time - last_triggerd_time) > 0.5
+    end
+
+    def last_triggerd_time
+      @last_triggered_time || 0
     end
 
     def detect_action_type
