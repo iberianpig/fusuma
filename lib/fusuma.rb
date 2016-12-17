@@ -82,12 +82,12 @@ module Fusuma
 
     def swipe(finger, direction)
       shortcut = event_map['swipe'][finger.to_i][direction]['shortcut']
-      `xdotool key #{shortcut}`
+      `xdotool key #{shortcut}` unless shortcut.nil?
     end
 
     def pinch(zoom)
       shortcut = event_map['pinch'][zoom]['shortcut']
-      `xdotool key #{shortcut}`
+      `xdotool key #{shortcut}` unless shortcut.nil?
     end
 
     def event_map

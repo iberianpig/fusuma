@@ -63,6 +63,8 @@ pinch:
      shortcut: 'ctrl+minus'
 ```
 
+if `shortcut: ` is blank, the swipe/pinch doesn't trigger a keyevent.
+
 ## Options
 
 *   `-v` : Enable debug mode.
