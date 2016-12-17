@@ -5,7 +5,6 @@ require_relative 'fusuma/multi_logger'
 require 'logger'
 require 'open3'
 require 'yaml'
-require 'optparse'
 
 # for debug
 # require 'pry-byebug'
@@ -15,29 +14,15 @@ module Fusuma
   # main class
   class Runner
     class << self
-      def run(args = {})
-        read_options(args)
-        return if @stop
+      def run(option = {})
+        read_options(option)
         instance = new
         instance.read_libinput
       end
 
-      def read_options(args)
-        debug = args.fetch(:v, false)
-        help  = args.fetch(:h, false)
+      def read_options(option)
+        debug = option.fetch(:verbose, false)
         MultiLogger.instance.debug_mode = true if debug
-        @stop = if help
-                  print_help
-                  true
-                else
-                  false
-                end
-      end
-
-      def print_help
-        puts 'Options:
-        -h, print this help.
-        -v, print to STDOUT with debug mode.'
       end
     end
 

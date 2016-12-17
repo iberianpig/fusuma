@@ -1,6 +1,16 @@
 #!/usr/bin/env ruby
 
+require 'optparse'
 require_relative '../lib/fusuma'
 
-options = ARGV.getopts('hv')
-Fusuma::Runner.run(v: options['v'], h: options['h'])
+option = {}
+OptionParser.new do |opt|
+  opt.on('-v',
+         '--verbose',
+         'shows details about the results of running fusuma') do |v|
+    option[:verbose] = v
+  end
+  opt.parse!(ARGV)
+end
+
+Fusuma::Runner.run(option)
