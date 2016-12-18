@@ -14,8 +14,6 @@ module Fusuma
       @last_triggered_time = last.time
       finger = detect_finger
       clear
-      MultiLogger.debug(finger: finger, direction: direction,
-                        action_type: action_type)
       GestureInfo.new(finger, direction, action_type)
     end
 
@@ -30,7 +28,7 @@ module Fusuma
     GestureInfo = Struct.new(:finger, :direction, :action_type)
 
     def elapsed_time
-      return 0 if length == 0
+      return 0 if length.zero?
       last.time - first.time
     end
 
@@ -44,39 +42,32 @@ module Fusuma
     end
 
     def detect_move
-      moves = sum_moves
-      return nil if moves[:x].zero? && moves[:y].zero?
-      # MultiLogger.debug(moves: moves)
-      return nil if (moves[:x].abs < 200) && (moves[:y].abs < 200)
-      if moves[:x].abs > moves[:y].abs
-        return moves[:x] > 0 ? 'right' : 'left'
-      else
-        moves[:y] > 0 ? 'down' : 'up'
-      end
+      move = avg_moves
+      MultiLogger.debug(move: move)
+      return unless enough_distance?(move)
+      return move[:x] > 0 ? 'right' : 'left' if move[:x].abs > move[:y].abs
+      move[:y] > 0 ? 'down' : 'up'
     end
 
     def detect_zoom
-      diameter = mul_diameter
+      diameter = avg_attrs(:zoom)
+      MultiLogger.debug(diameter: diameter)
       # TODO: change threshold from config files
-      if diameter > 10
-        'in'
-      elsif diameter < 0.1
-        'out'
-      end
+      return unless enough_diameter?(diameter)
+      return 'in' if diameter > 1
+      'out'
     end
 
     def detect_finger
       last.finger
     end
 
-    def sum_moves
-      move_x = sum_attrs(:move_x)
-      move_y = sum_attrs(:move_y)
-      { x: move_x, y: move_y }
-    end
+    Distance = Struct.new(:x, :y)
 
-    def mul_diameter
-      mul_attrs(:zoom)
+    def avg_moves
+      move_x = sum_attrs(:move_x) / length
+      move_y = sum_attrs(:move_y) / length
+      Distance.new(move_x, move_y)
     end
 
     def sum_attrs(attr)
@@ -85,12 +76,8 @@ module Fusuma
       end.compact.inject(:+)
     end
 
-    def mul_attrs(attr)
-      send('map') do |gesture_action|
-        num = gesture_action.send(attr.to_sym.to_s)
-        # NOTE: ignore 0.0, treat as 1(immutable)
-        num.zero? ? 1 : num
-      end.compact.inject(:*)
+    def avg_attrs(attr)
+      sum_attrs(attr) / length
     end
 
     def action_end?
@@ -100,6 +87,19 @@ module Fusuma
     def last_action_name
       return false if last.class != GestureAction
       last.action
+    end
+
+    def enough_distance?(move)
+      (move[:x].abs > 20) || (move[:y].abs > 20)
+    end
+
+    def enough_diameter?(avg_diameter)
+      delta_diameter = if avg_diameter > 1
+                         avg_diameter - first.zoom
+                       else
+                         first.zoom - avg_diameter
+                       end
+      delta_diameter > 0.3
     end
 
     def enough_actions?
