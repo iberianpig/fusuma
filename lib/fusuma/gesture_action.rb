@@ -41,7 +41,7 @@ module Fusuma
 
       def parse_finger_directions(finger_directions_line)
         finger_num, move_x, move_y, _, _, _, zoom =
-          finger_directions_line.tr('/', ' ').split
+          finger_directions_line.tr('/|(|)', ' ').split
         [finger_num, move_x, move_y, zoom]
       end
     end
