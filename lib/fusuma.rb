@@ -2,6 +2,7 @@ require_relative 'fusuma/version'
 require_relative 'fusuma/action_stack'
 require_relative 'fusuma/gesture_action'
 require_relative 'fusuma/multi_logger'
+require_relative 'fusuma/config.rb'
 require 'logger'
 require 'open3'
 require 'yaml'
@@ -82,24 +83,18 @@ module Fusuma
     end
 
     def swipe(finger, direction)
-      shortcut = event_map['swipe'][finger.to_i][direction]['shortcut']
+      shortcut = keymap['swipe'][finger.to_i][direction]['shortcut']
       `xdotool key #{shortcut}` unless shortcut.nil?
     end
 
     def pinch(direction)
-      shortcut = event_map['pinch'][direction]['shortcut']
+      shortcut = keymap['pinch'][direction]['shortcut']
       `xdotool key #{shortcut}` unless shortcut.nil?
     end
 
-    def event_map
-      @event_map ||= YAML.load_file(config_file)
-    end
-
-    def config_file
-      filename = 'fusuma/config.yml'
-      original_path = File.expand_path "~/.config/#{filename}"
-      default_path = File.expand_path "../#{filename}", __FILE__
-      File.exist?(original_path) ? original_path : default_path
+    def keymap
+      @config ||= Config.new
+      @config.keymap
     end
   end
 end

@@ -5,7 +5,8 @@ module Fusuma
       super(*args)
     end
 
-    # return { finger:, direction:, action: } or nil
+    GestureInfo = Struct.new(:finger, :direction, :action_type)
+
     def gesture_info
       return unless enough_actions? && enough_time_passed?
       action_type = detect_action_type
@@ -24,8 +25,6 @@ module Fusuma
     alias << push
 
     private
-
-    GestureInfo = Struct.new(:finger, :direction, :action_type)
 
     def elapsed_time
       return 0 if length.zero?
