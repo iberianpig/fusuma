@@ -28,9 +28,11 @@ module Fusuma
       }
     end
     let(:config) { Config.new }
-    let(:gesture_info) { ActionStack::GestureInfo.new(@finger, @direction, @action) }
+    let(:gesture_info) do
+      ActionStack::GestureInfo.new(@finger, @direction, @action)
+    end
 
-    context 'when correct keymap' do
+    context 'default keymap' do
       before do
         allow(YAML).to receive(:load_file).and_return keymap
       end
@@ -39,12 +41,12 @@ module Fusuma
         before { @action = 'swipe' }
         context 'when 3 finger' do
           before { @finger = 3 }
-          it 'return swipe shourtcut' do
+          it 'should swipe left shourtcut' do
             @direction = 'left'
             expect(config.shortcut(gesture_info)).to eq 'alt+Left'
           end
 
-          it 'return swipe shourtcut' do
+          it 'should swipe right shourtcut' do
             @direction = 'right'
             expect(config.shortcut(gesture_info)).to eq 'alt+Right'
           end
@@ -52,14 +54,14 @@ module Fusuma
 
         context 'when 4 finger' do
           before { @finger = 4 }
-          it 'return swipe shourtcut' do
+          it 'should swipe left shourtcut' do
             @direction = 'left'
             expect(config.shortcut(gesture_info)).to eq 'super+Left'
           end
 
-          it 'return swipe left shourtcut' do
-            @direction = 'left'
-            expect(config.shortcut(gesture_info)).to eq 'super+Left'
+          it 'should swipe right shourtcut' do
+            @direction = 'right'
+            expect(config.shortcut(gesture_info)).to eq 'super+Right'
           end
         end
       end
@@ -69,24 +71,24 @@ module Fusuma
           @action = 'pinch'
           @finger = rand(5)
         end
-        it 'return swipe shourtcut' do
+        it 'should pinch in shourtcut' do
           @direction = 'in'
           expect(config.shortcut(gesture_info)).to eq 'ctrl+plus'
         end
 
-        it 'return pinch shourtcut' do
+        it 'should pinch out shourtcut' do
           @direction = 'out'
           expect(config.shortcut(gesture_info)).to eq 'ctrl+minus'
         end
       end
     end
 
-    context 'when config without finger' do
+    context 'when keymap without finger' do
       before do
         allow(YAML).to receive(:load_file).and_return keymap_without_finger
         @finger = nil
       end
-      it 'return swipe shourtcut' do
+      it 'should swipe shourtcut' do
         @action    = 'swipe'
         @direction = 'left'
         expect(config.shortcut(gesture_info)).to eq 'alt+Left'
