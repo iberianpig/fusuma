@@ -7,7 +7,10 @@ module Fusuma
         'swipe' => {
           3 => {
             'left'  => { 'shortcut' => 'alt+Left' },
-            'right' => { 'shortcut' => 'alt+Right' }
+            'right' => {
+              'shortcut'  => 'alt+Right',
+              'threshold' => 0.5
+            }
           },
           4 => {
             'left'  => { 'shortcut' => 'super+Left' },
@@ -20,6 +23,7 @@ module Fusuma
         }
       }
     end
+
     let(:keymap_without_finger) do
       {
         'swipe' => {
@@ -27,12 +31,14 @@ module Fusuma
         }
       }
     end
+
     let(:config) { Config.new }
+
     let(:gesture_info) do
       ActionStack::GestureInfo.new(@finger, @direction, @action)
     end
 
-    context 'default keymap' do
+    context 'when keymap with finger' do
       before do
         allow(YAML).to receive(:load_file).and_return keymap
       end
@@ -80,6 +86,19 @@ module Fusuma
           @direction = 'out'
           expect(config.shortcut(gesture_info)).to eq 'ctrl+minus'
         end
+      end
+
+      it 'should return threshold' do
+        @action    = 'swipe'
+        @finger    = 3
+        @direction = 'right'
+        expect(config.threshold(gesture_info)).to eq 0.5
+      end
+      it 'should not return threshold' do
+        @action    = 'swipe'
+        @finger    = 3
+        @direction = 'left'
+        expect(config.threshold(gesture_info)).to eq nil
       end
     end
 

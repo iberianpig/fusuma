@@ -7,22 +7,22 @@ module Fusuma
     attr_reader :keymap
 
     def shortcut(gesture_info)
-      action_type = gesture_info[:action_type]
-      finger      = gesture_info[:finger].to_i
-      direction   = gesture_info[:direction]
-      seek_keyevent(action_type, finger, direction)
+      seek_index = [*index(gesture_info), 'shortcut']
+      cache(seek_index) { search_config(keymap, seek_index) }
+    end
+
+    def threshold(gesture_info)
+      seek_index = [*index(gesture_info), 'threshold']
+      cache(seek_index) { search_config(keymap, seek_index) }
     end
 
     private
 
-    def seek_keyevent(action_type, finger, direction)
-      seek_index = [action_type, finger, direction, 'shortcut']
-      cache_key  = seek_index.join(',')
-      cache(cache_key) { search_config(keymap, seek_index) }
-    end
-
     def search_config(keymap_node, seek_index)
-      return keymap_node if seek_index == []
+      if seek_index == []
+        return nil if keymap_node.is_a? Hash
+        return keymap_node
+      end
       key = seek_index.shift
       child_node = keymap_node[key]
       return search_config(child_node, seek_index) if child_node
@@ -36,8 +36,16 @@ module Fusuma
       File.exist?(original_path) ? original_path : default_path
     end
 
+    def index(gesture_info)
+      action_type = gesture_info[:action_type]
+      finger      = gesture_info[:finger].to_i
+      direction   = gesture_info[:direction]
+      [action_type, finger, direction]
+    end
+
     def cache(key)
       @cache ||= {}
+      key = key.join(',') if key.is_a? Hash
       @cache[key] ||= yield
     end
   end
