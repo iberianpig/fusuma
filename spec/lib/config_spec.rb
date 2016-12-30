@@ -94,5 +94,12 @@ module Fusuma
         expect(config.shortcut(gesture_info)).to eq 'alt+Left'
       end
     end
+
+    it 'should cache shortcut' do
+      key = %w(action_type finger direction shortcut).join(',')
+      value = 'shourtcut string'
+      config.send(:cache, key) { value }
+      expect(config.send(:cache, key)).to eq value
+    end
   end
 end

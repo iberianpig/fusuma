@@ -8,18 +8,17 @@ module Fusuma
 
     def shortcut(gesture_info)
       action_type = gesture_info[:action_type]
-      direction   = gesture_info[:direction]
       finger      = gesture_info[:finger].to_i
-      key = seek_keyevent(action_type, direction, finger)
-      MultiLogger.debug(key: key)
-      key
+      direction   = gesture_info[:direction]
+      seek_keyevent(action_type, finger, direction)
     end
 
     private
 
-    def seek_keyevent(action_type, direction, finger)
+    def seek_keyevent(action_type, finger, direction)
       seek_index = [action_type, finger, direction, 'shortcut']
-      search_config(keymap, seek_index)
+      cache_key  = seek_index.join(',')
+      cache(cache_key) { search_config(keymap, seek_index) }
     end
 
     def search_config(keymap_node, seek_index)
@@ -35,6 +34,11 @@ module Fusuma
       original_path = File.expand_path "~/.config/#{filename}"
       default_path  = File.expand_path "../#{filename}", __FILE__
       File.exist?(original_path) ? original_path : default_path
+    end
+
+    def cache(key)
+      @cache ||= {}
+      @cache[key] ||= yield
     end
   end
 end
