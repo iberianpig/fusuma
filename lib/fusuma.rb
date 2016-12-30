@@ -34,8 +34,7 @@ module Fusuma
           next if gesture_action.nil?
           @action_stack ||= ActionStack.new
           @action_stack.push gesture_action
-          gesture_info = @action_stack.gesture_info
-          trigger_keyevent(gesture_info) unless gesture_info.nil?
+          trigger_keyevent(@action_stack.gesture_info)
         end
       end
     end
@@ -74,27 +73,18 @@ module Fusuma
     end
 
     def trigger_keyevent(gesture_info)
-      case gesture_info.action_type
-      when 'swipe'
-        swipe(gesture_info.finger, gesture_info.direction)
-      when 'pinch'
-        pinch(gesture_info.direction)
-      end
+      return if gesture_info.nil?
+      keys = shortcut(gesture_info)
+      exec_xdotool(keys)
     end
 
-    def swipe(finger, direction)
-      shortcut = keymap['swipe'][finger.to_i][direction]['shortcut']
-      `xdotool key #{shortcut}` unless shortcut.nil?
-    end
-
-    def pinch(direction)
-      shortcut = keymap['pinch'][direction]['shortcut']
-      `xdotool key #{shortcut}` unless shortcut.nil?
-    end
-
-    def keymap
+    def shortcut(gesture_info)
       @config ||= Config.new
-      @config.keymap
+      @config.shortcut(gesture_info)
+    end
+
+    def exec_xdotool(keys)
+      `xdotool key #{keys}` unless keys.nil?
     end
   end
 end
