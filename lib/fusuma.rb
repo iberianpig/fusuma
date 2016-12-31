@@ -1,6 +1,9 @@
 require_relative 'fusuma/version'
 require_relative 'fusuma/action_stack'
 require_relative 'fusuma/gesture_action'
+require_relative 'fusuma/gesture_info'
+require_relative 'fusuma/swipe.rb'
+require_relative 'fusuma/pinch.rb'
 require_relative 'fusuma/multi_logger'
 require_relative 'fusuma/config.rb'
 require 'logger'
@@ -8,7 +11,7 @@ require 'open3'
 require 'yaml'
 
 # for debug
-# require 'pry-byebug'
+require 'pry-byebug'
 
 # this is top level module
 module Fusuma
@@ -34,7 +37,8 @@ module Fusuma
           next if gesture_action.nil?
           @action_stack ||= ActionStack.new
           @action_stack.push gesture_action
-          trigger_keyevent(@action_stack.gesture_info)
+          gesture_info = @action_stack.gesture_info
+          gesture_info.trigger_keyevent unless gesture_info.nil?
         end
       end
     end
@@ -70,21 +74,6 @@ module Fusuma
       return false unless line =~ /^Tap-to-click: /
       return false if line =~ %r{n/a}
       true
-    end
-
-    def trigger_keyevent(gesture_info)
-      return if gesture_info.nil?
-      keys = shortcut(gesture_info)
-      exec_xdotool(keys)
-    end
-
-    def shortcut(gesture_info)
-      @config ||= Config.new
-      @config.shortcut(gesture_info)
-    end
-
-    def exec_xdotool(keys)
-      `xdotool key #{keys}` unless keys.nil?
     end
   end
 end

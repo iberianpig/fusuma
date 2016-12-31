@@ -41,7 +41,7 @@ module Fusuma
     let(:config) { Config.new }
 
     let(:gesture_info) do
-      ActionStack::GestureInfo.new(@finger, @direction, @action)
+      GestureInfo.new(@finger, @direction, @action)
     end
 
     describe '#shortcut' do
