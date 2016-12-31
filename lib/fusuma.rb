@@ -11,7 +11,7 @@ require 'open3'
 require 'yaml'
 
 # for debug
-require 'pry-byebug'
+# require 'pry-byebug'
 
 # this is top level module
 module Fusuma

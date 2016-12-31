@@ -1,11 +1,34 @@
+# module as namespace
 module Fusuma
+  require 'singleton'
   # read keymap from yaml file
   class Config
     include Singleton
-    def initialize
-      @keymap ||= YAML.load_file(file_path)
+
+    class << self
+      def shortcut(gesture_info)
+        instance.shortcut(gesture_info)
+      end
+
+      def threshold(action_type)
+        instance.threshold(action_type)
+      end
+
+      def reload
+        instance.reload
+      end
     end
-    attr_reader :keymap
+
+    def initialize
+      reload
+    end
+    attr_accessor :keymap
+
+    def reload
+      @cache  = nil
+      @keymap = YAML.load_file(file_path)
+      self
+    end
 
     def shortcut(gesture_info)
       seek_index = [*action_index(gesture_info), 'shortcut']
@@ -24,10 +47,11 @@ module Fusuma
         return nil if keymap_node.is_a? Hash
         return keymap_node
       end
-      key = seek_index.shift
+      key = seek_index[0]
       child_node = keymap_node[key]
-      return search_config(child_node, seek_index) if child_node
-      search_config(keymap_node, seek_index)
+      next_index = seek_index[1..-1]
+      return search_config(child_node, next_index) if child_node
+      search_config(keymap_node, next_index)
     end
 
     def file_path
@@ -46,8 +70,8 @@ module Fusuma
 
     def cache(key)
       @cache ||= {}
-      key = key.join(',') if key.is_a? Hash
-      @cache[key] ||= yield
+      key = key.join(',') if key.is_a? Array
+      @cache[key] ||= block_given? ? yield : nil
     end
   end
 end

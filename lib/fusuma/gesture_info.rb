@@ -19,8 +19,7 @@ module Fusuma
     end
 
     def shortcut
-      @config ||= Config.instance
-      @config.shortcut(self)
+      Config.shortcut(self)
     end
   end
 end

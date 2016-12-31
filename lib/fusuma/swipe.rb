@@ -20,11 +20,7 @@ module Fusuma
     end
 
     def threshold
-      @threshold ||= BASE_THERESHOLD * config.threshold('swipe')
-    end
-
-    def config
-      @config ||= Config.new
+      @threshold ||= BASE_THERESHOLD * Config.threshold('swipe')
     end
   end
 end

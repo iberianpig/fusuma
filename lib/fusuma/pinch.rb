@@ -20,11 +20,7 @@ module Fusuma
     end
 
     def threshold
-      @threshold ||= BASE_THERESHOLD * config.threshold('pinch')
-    end
-
-    def config
-      @config ||= Config.new
+      @threshold ||= BASE_THERESHOLD * Config.threshold('pinch')
     end
   end
 end
