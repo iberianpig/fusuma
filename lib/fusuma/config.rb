@@ -11,9 +11,9 @@ module Fusuma
       cache(seek_index) { search_config(keymap, seek_index) }
     end
 
-    def threshold(gesture_info)
-      seek_index = [*index(gesture_info), 'threshold']
-      cache(seek_index) { search_config(keymap, seek_index) }
+    def threshold(action_type)
+      seek_index = ['threshold', action_type]
+      cache(seek_index) { search_config(keymap, seek_index) } || 1
     end
 
     private
@@ -32,7 +32,7 @@ module Fusuma
     def file_path
       filename = 'fusuma/config.yml'
       original_path = File.expand_path "~/.config/#{filename}"
-      default_path  = File.expand_path "../#{filename}", __FILE__
+      default_path  = File.expand_path "../../#{filename}", __FILE__
       File.exist?(original_path) ? original_path : default_path
     end
 

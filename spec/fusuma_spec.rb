@@ -18,7 +18,7 @@ describe Fusuma do
     it 'should enable debug mode' do
       allow_any_instance_of(Fusuma::Runner).to receive(:read_libinput)
       multi_logger = Fusuma::MultiLogger.instance
-      Fusuma::Runner.run(v: true)
+      Fusuma::Runner.run(verbose: true)
       expect(multi_logger).to be_debug_mode
     end
   end

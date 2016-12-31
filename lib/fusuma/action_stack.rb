@@ -42,17 +42,16 @@ module Fusuma
 
     def detect_move
       move = avg_moves
-      MultiLogger.debug(move: move)
       return unless enough_distance?(move)
+      MultiLogger.debug(move: move)
       return move[:x] > 0 ? 'right' : 'left' if move[:x].abs > move[:y].abs
       move[:y] > 0 ? 'down' : 'up'
     end
 
     def detect_zoom
       diameter = avg_attrs(:zoom)
-      MultiLogger.debug(diameter: diameter)
-      # TODO: change threshold from config files
       return unless enough_diameter?(diameter)
+      MultiLogger.debug(diameter: diameter)
       return 'in' if diameter > 1
       'out'
     end
@@ -89,7 +88,7 @@ module Fusuma
     end
 
     def enough_distance?(move)
-      (move[:x].abs > 20) || (move[:y].abs > 20)
+      (move[:x].abs > threshold_swipe) || (move[:y].abs > threshold_swipe)
     end
 
     def enough_diameter?(avg_diameter)
@@ -98,11 +97,11 @@ module Fusuma
                        else
                          first.zoom - avg_diameter
                        end
-      delta_diameter > 0.3
+      delta_diameter > threshold_pinch
     end
 
     def enough_actions?
-      (length > 1) && (elapsed_time > 0.1)
+      (length > 1) && (elapsed_time > 0.05)
     end
 
     def enough_time_passed?
@@ -110,12 +109,26 @@ module Fusuma
     end
 
     def last_triggerd_time
-      @last_triggered_time || 0
+      @last_triggered_time ||= 0
     end
 
     def detect_action_type
       first.action =~ /GESTURE_(.*?)_/
       Regexp.last_match(1).downcase
+    end
+
+    def config
+      @config ||= Config.new
+    end
+
+    def threshold_swipe
+      base = 20
+      @threshold_swipe ||= base * config.threshold('swipe')
+    end
+
+    def threshold_pinch
+      base = 0.3
+      @threshold_pinch ||= base * config.threshold('pinch')
     end
   end
 end
