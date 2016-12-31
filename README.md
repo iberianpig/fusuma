@@ -61,9 +61,16 @@ pinch:
     shortcut: 'ctrl+plus'
   out:
      shortcut: 'ctrl+minus'
+
+threshold:
+  swipe: 1
+  pinch: 1
 ```
 
 if `shortcut: ` is blank, the swipe/pinch doesn't trigger a keyevent.
+
+`threshold:` is sensitivity to swipe/pinch. Default value is 1.
+if the swipe's threshold change to `0.5`, shorten swipe-length by half
 
 ## Options
 
