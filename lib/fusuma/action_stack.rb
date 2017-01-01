@@ -1,12 +1,14 @@
 module Fusuma
   # manage actions
   class ActionStack < Array
+    ELAPSED_TIME = 0.01
+
     def initialize(*args)
       super(*args)
     end
 
     def gesture_info
-      return unless enough_actions? && enough_time_passed?
+      return unless enough_actions?
       action_type = detect_action_type
       direction = detect_direction(action_type)
       return if direction.nil?
@@ -24,30 +26,19 @@ module Fusuma
 
     private
 
-    def elapsed_time
-      return 0 if length.zero?
-      last.time - first.time
+    def detect_direction(action_type)
+      vector = generate_vector(action_type)
+      return if vector && !vector.enough?
+      vector.direction
     end
 
-    def detect_direction(action_type)
+    def generate_vector(action_type)
       case action_type
       when 'swipe'
-        detect_swipe
+        avg_swipe
       when 'pinch'
-        detect_pinch
+        avg_pinch
       end
-    end
-
-    def detect_swipe
-      swipe = avg_swipe
-      return unless swipe.enough_distance?
-      swipe.direction
-    end
-
-    def detect_pinch
-      pinch = avg_pinch
-      return unless pinch.enough_diameter?
-      pinch.direction
     end
 
     def detect_finger
@@ -86,14 +77,15 @@ module Fusuma
     end
 
     def enough_actions?
-      (length > 1) && (elapsed_time > 0.05)
+      length > 2
     end
 
-    def enough_time_passed?
-      (last.time - last_triggerd_time) > 0.5
+    def enough_elapsed_time?
+      return false if length.zero?
+      (last.time - first.time) > ELAPSED_TIME
     end
 
-    def last_triggerd_time
+    def last_triggered_time
       @last_triggered_time ||= 0
     end
 

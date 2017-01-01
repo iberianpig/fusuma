@@ -21,7 +21,7 @@ pinch:
   in:
     shortcut: 'ctrl+plus'
   out:
-     shortcut: 'ctrl+minus'
+    shortcut: 'ctrl+minus'
 
 threshold:
   swipe: 1

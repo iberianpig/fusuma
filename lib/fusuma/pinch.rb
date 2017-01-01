@@ -1,7 +1,8 @@
 module Fusuma
-  # manage actions
+  # vector data
   class Pinch
     BASE_THERESHOLD = 0.3
+    INTERVAL_TIME = 0.05
 
     def initialize(diameter)
       @diameter = diameter.to_f
@@ -14,13 +15,37 @@ module Fusuma
       'out'
     end
 
-    def enough_diameter?
+    def enough?
       MultiLogger.debug(diameter: diameter)
+      enough_diameter? && enough_interval? && self.class.touch_last_time
+    end
+
+    private
+
+    def enough_diameter?
       diameter.abs > threshold
+    end
+
+    def enough_interval?
+      return true if first_time?
+      return true if (Time.now - self.class.last_time) > INTERVAL_TIME
+      false
+    end
+
+    def first_time?
+      self.class.last_time.nil?
     end
 
     def threshold
       @threshold ||= BASE_THERESHOLD * Config.threshold('pinch')
+    end
+
+    class << self
+      attr_reader :last_time
+
+      def touch_last_time
+        @last_time = Time.now
+      end
     end
   end
 end
