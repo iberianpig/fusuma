@@ -10,9 +10,6 @@ require 'logger'
 require 'open3'
 require 'yaml'
 
-# for debug
-# require 'pry-byebug'
-
 # this is top level module
 module Fusuma
   # main class
