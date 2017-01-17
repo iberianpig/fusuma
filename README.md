@@ -30,10 +30,14 @@ Install Fusuma:
 
     $ fusuma
 
+## Update
+
+    $ gem update fusuma
+
 ## Customize
 
-You can customize the settings for gestures to put and edit `~/.config/fusuma/config.yml`.
-NOTE:You will need to create the `~.config/fusuma` directory if it doesn't exist yet.
+You can customize the settings for gestures to put and edit `~/.config/fusuma/config.yml`.  
+*NOTE*: You will need to create the `~.config/fusuma` directory if it doesn't exist yet.
 
 
 ### Sample (default keymap for Elementary OS)
