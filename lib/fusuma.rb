@@ -30,7 +30,7 @@ module Fusuma
     def read_libinput
       Open3.popen3(libinput_command) do |_i, o, _e, _w|
         o.each do |line|
-          gesture_action = GestureAction.initialize_by(line, device_name)
+          gesture_action = GestureAction.initialize_by(line, device_names)
           next if gesture_action.nil?
           @action_stack ||= ActionStack.new
           @action_stack.push gesture_action
@@ -43,28 +43,34 @@ module Fusuma
     private
 
     def libinput_command
+      return @libinput_command if @libinput_command
       # NOTE: --enable-dwt means "disable while typing"
-      @libinput_command ||= "stdbuf -oL -- libinput-debug-events --device \
-      /dev/input/#{device_name} --enable-dwt"
+      prefix = 'stdbuf -oL --'
+      command = 'libinput-debug-events --enable-dwt'
+      device_option = if device_names.size == 1
+                        "--device /dev/input/#{device_names.first}"
+                      end
+      @libinput_command = [prefix, command, device_option].join(' ')
       MultiLogger.debug(libinput_command: @libinput_command)
       @libinput_command
     end
 
-    def device_name
-      return @device_name unless @device_name.nil?
-      Open3.popen3('libinput-list-devices') do |_i, o, _e, _w|
-        o.each do |line|
+    def device_names
+      @device_names ||= Open3.popen3('libinput-list-devices') do |_i, o, _e, _w|
+        device_names = []
+        o.map do |line|
           MultiLogger.debug(line)
-          extracted_input_device_from(line)
+          device_name = extracted_input_device_from(line)
+          device_names << device_name unless device_name.nil?
           next unless touch_is_available?(line)
-          return @device_name
+          device_names.pop
         end
-      end
+      end.compact
     end
 
     def extracted_input_device_from(line)
       return unless line =~ /^Kernel: /
-      @device_name = line.match(/event[0-9]+/).to_s
+      line.match(/event[0-9]+/).to_s
     end
 
     def touch_is_available?(line)

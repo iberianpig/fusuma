@@ -13,8 +13,10 @@ module Fusuma
                 :move_x, :move_y, :zoom
 
     class << self
-      def initialize_by(line, device_name)
-        return unless line.to_s =~ /^\s?#{device_name}/
+      def initialize_by(line, device_names)
+        return if device_names.none? do |device_name|
+          line.to_s =~ /^\s?#{device_name}/
+        end
         return if line.to_s =~ /_BEGIN/
         return unless line.to_s =~ /GESTURE_SWIPE|GESTURE_PINCH/
         time, action, finger, directions = gesture_action_arguments(line)
