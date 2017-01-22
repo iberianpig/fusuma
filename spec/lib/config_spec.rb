@@ -119,10 +119,6 @@ module Fusuma
           action_type = 'swipe'
           expect(Config.threshold(action_type)).to eq 0.5
         end
-        it 'should return custom threshold' do
-          action_type = 'missing_property'
-          expect(Config.threshold(action_type)).to eq 1
-        end
       end
 
       context 'when threshold is unset' do
