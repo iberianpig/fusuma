@@ -22,7 +22,12 @@ module Fusuma
       end
 
       def read_options(option)
-        debug = option.fetch(:verbose, false)
+        config_path = option.fetch(:config, nil)
+        if config_path
+          Config.instance.custom_path = config_path
+          Config.reload
+        end
+        debug = option.fetch(:verbose, nil)
         MultiLogger.instance.debug_mode = true if debug
       end
     end

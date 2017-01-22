@@ -22,4 +22,13 @@ describe Fusuma do
       expect(multi_logger).to be_debug_mode
     end
   end
+
+  context 'when run with argument "-c path/to/config.yml"' do
+    it 'should assign custom_path' do
+      allow_any_instance_of(Fusuma::Runner).to receive(:read_libinput)
+      config = Fusuma::Config.instance
+      Fusuma::Runner.run(config: 'path/to/config.yml')
+      expect(config.custom_path).to eq 'path/to/config.yml'
+    end
+  end
 end

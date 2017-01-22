@@ -7,8 +7,13 @@ option = {}
 OptionParser.new do |opt|
   opt.on('-v',
          '--verbose',
-         'shows details about the results of running fusuma') do |v|
+         'Shows details about the results of running fusuma') do |v|
     option[:verbose] = v
+  end
+  opt.on('-c',
+         '--config=path/to/file',
+         'Use an alternative config file') do |v|
+    option[:config] = v
   end
   opt.parse!(ARGV)
 end

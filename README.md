@@ -80,7 +80,8 @@ if the swipe's threshold change to `0.5`, shorten swipe-length by half
 
 ## Options
 
-*   `-v` : Enable debug mode.
+*   `-v`, `--verbose`             : Shows details about the results of running fusuma
+*   `-c`, `--config=path/to/file` : Use an alternative config file
 
 ## Contributing
 

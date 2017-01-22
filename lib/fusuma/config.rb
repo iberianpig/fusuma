@@ -19,10 +19,13 @@ module Fusuma
       end
     end
 
+    attr_reader :keymap
+    attr_accessor :custom_path
+
     def initialize
+      @custom_path = nil
       reload
     end
-    attr_accessor :keymap
 
     def reload
       @cache  = nil
@@ -56,9 +59,25 @@ module Fusuma
 
     def file_path
       filename = 'fusuma/config.yml'
-      original_path = File.expand_path "~/.config/#{filename}"
-      default_path  = File.expand_path "../../#{filename}", __FILE__
-      File.exist?(original_path) ? original_path : default_path
+      if custom_path && File.exist?(expand_custom_path)
+        expand_custom_path
+      elsif File.exist?(expand_config_path(filename))
+        expand_config_path(filename)
+      else
+        expand_default_path(filename)
+      end
+    end
+
+    def expand_custom_path
+      File.expand_path(custom_path)
+    end
+
+    def expand_config_path(filename)
+      File.expand_path "~/.config/#{filename}"
+    end
+
+    def expand_default_path(filename)
+      File.expand_path "../../#{filename}", __FILE__
     end
 
     def action_index(gesture_info)

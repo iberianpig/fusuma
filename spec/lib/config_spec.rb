@@ -149,7 +149,7 @@ module Fusuma
         reloaded_keymap = Config.reload.keymap
         expect(keymap).not_to eq reloaded_keymap
       end
-      it 'should reload keymap file' do
+      it 'remove cached value' do
         key = 'key'
         val = 'val'
         Config.instance.send(:cache, key) { val }

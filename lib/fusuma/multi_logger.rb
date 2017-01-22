@@ -5,13 +5,15 @@ module Fusuma
   # logger separate between stdout and strerr
   class MultiLogger < Logger
     include Singleton
+
+    attr_reader :err_logger
+    attr_accessor :debug_mode
+
     def initialize
       super(STDOUT)
       @err_logger = Logger.new(STDERR)
       @debug_mode = false
     end
-    attr_reader :err_logger
-    attr_accessor :debug_mode
 
     def info(msg)
       return unless debug_mode?
