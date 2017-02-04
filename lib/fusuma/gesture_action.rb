@@ -28,23 +28,23 @@ module Fusuma
       private
 
       def gesture_action_arguments(libinput_line)
-        action, time, finger_directions = parse_libinput(libinput_line)
-        finger, move_x, move_y, zoom =
-          parse_finger_directions(finger_directions)
+        action, time, finger, other = parse_libinput(libinput_line)
+        move_x, move_y, zoom =
+          parse_finger_directions(other)
         directions = { move: { x: move_x, y: move_y }, zoom: zoom }
         [time, action, finger, directions]
       end
 
       def parse_libinput(line)
-        _device, action_time, finger_directions = line.split("\t").map(&:strip)
-        action, time = action_time.split
-        [action, time, finger_directions]
+        _device, action, time, other = line.strip.split(nil, 4)
+        finger, other = other.split(nil, 2)
+        [action, time, finger, other]
       end
 
-      def parse_finger_directions(finger_directions_line)
-        finger_num, move_x, move_y, _, _, _, zoom =
-          finger_directions_line.tr('/|(|)', ' ').split
-        [finger_num, move_x, move_y, zoom]
+      def parse_finger_directions(line)
+        return [] if line.nil?
+        move_x, move_y, _, _, _, zoom = line.tr('/|(|)', ' ').split
+        [move_x, move_y, zoom]
       end
     end
   end
