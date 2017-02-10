@@ -26,6 +26,12 @@ Install Fusuma:
 
     $ gem install fusuma
 
+### Touchpad not working in GNOME
+
+Ensure the touchpad events are being sent to the GNOME desktop by running the following command:
+
+    $ gsettings set org.gnome.desktop.peripherals.touchpad send-events enabled
+
 ## Usage
 
     $ fusuma
