@@ -2,7 +2,6 @@ module Fusuma
   # vector data
   class Swipe
     BASE_THERESHOLD = 20
-    INTERVAL_TIME   = 0.5
 
     def initialize(x, y)
       @x = x
@@ -28,7 +27,7 @@ module Fusuma
 
     def enough_interval?
       return true if first_time?
-      return true if (Time.now - self.class.last_time) > INTERVAL_TIME
+      return true if (Time.now - self.class.last_time) > interval_time
       false
     end
 
@@ -38,6 +37,10 @@ module Fusuma
 
     def threshold
       @threshold ||= BASE_THERESHOLD * Config.threshold('swipe')
+    end
+
+    def interval_time
+      @interval_time ||= Config.interval('swipe')
     end
 
     class << self
