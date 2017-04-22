@@ -14,6 +14,10 @@ module Fusuma
         instance.threshold(action_type)
       end
 
+      def interval(action_type)
+        instance.interval(action_type)
+      end
+
       def reload
         instance.reload
       end
@@ -41,6 +45,11 @@ module Fusuma
     def threshold(action_type)
       seek_index = ['threshold', action_type]
       cache(seek_index) { search_config(keymap, seek_index) } || 1
+    end
+
+    def interval(action_type)
+      seek_index = ['interval', action_type]
+      cache(seek_index) { search_config(keymap, seek_index) } || 0.5
     end
 
     private

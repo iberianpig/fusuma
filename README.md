@@ -79,12 +79,19 @@ pinch:
 threshold:
   swipe: 1
   pinch: 1
+
+interval:
+  swipe: 0.5
+  pinch: 0.05
 ```
 
 if `shortcut: ` is blank, the swipe/pinch doesn't trigger a keyevent.
 
 `threshold:` is sensitivity to swipe/pinch. Default value is 1.
-if the swipe's threshold change to `0.5`, shorten swipe-length by half
+If the swipe's threshold change to `0.5`, shorten swipe-length by half.
+
+`interval:` is delay between swipes/pinches. Default value is 0.5.
+If the swipe's interval is `0.1`, ignore other swipes for 0.1 seconds after a swipe.
 
 ## Options
 
