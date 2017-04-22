@@ -37,11 +37,7 @@ module Fusuma
 
     describe '#device_name' do
       let(:runner) { Fusuma::Runner.new }
-      it do
-        expect(runner.device_names).to be_kind_of Array
-      end
-
-      context 'with non tap to click like a bluetooth apple trackpad' do
+      context 'with no tap to click device (like a bluetooth apple trackpad)' do
         let(:apple_bluetooth_keyboard_log) do
           File.open(
             'spec/lib/libinput-list-devices_apple_bluetooth_keyboard.txt'
