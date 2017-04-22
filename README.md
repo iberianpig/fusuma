@@ -10,7 +10,7 @@ This gem makes your linux PC able to recognize swipes or pinchs and assign short
 ## Installation
 
 IMPORTANT: You must be a member of the _input_ group to have permission
-to read the touchpad device:
+ to read the touchpad device:
 
     $ sudo gpasswd -a $USER input
 

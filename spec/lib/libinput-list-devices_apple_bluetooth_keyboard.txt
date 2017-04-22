@@ -1,0 +1,51 @@
+Device: Christopher’s Trackpad
+Kernel: /dev/input/event8
+Group: 7
+Seat: seat0, default
+Capabilities: pointer
+Tap-to-click: n/a
+Tap-and-drag: n/a
+Tap drag lock: n/a
+Left-handed: disabled
+Nat.scrolling: disabled
+Middle emulation: n/a
+Calibration: n/a
+Scroll methods: button
+Click methods: none
+Disable-w-typing: n/a
+Accel profiles: flat*adaptive
+
+Device: Apple Inc. Apple Internal Keyboard / Trackpad
+Kernel: /dev/input/event6
+Group: 8
+Seat: seat0, default
+Capabilities: keyboard
+Tap-to-click: n/a
+Tap-and-drag: n/a
+Tap drag lock: n/a
+Left-handed: n/a
+Nat.scrolling: n/a
+Middle emulation: n/a
+Calibration: n/a
+Scroll methods: none
+Click methods: none
+Disable-w-typing: n/a
+Accel profiles: n/a
+
+Device: bcm5974
+Kernel: /dev/input/event9
+Group: 9
+Seat: seat0, default
+Size: 69.17x50.22mm
+Capabilities: pointer
+Tap-to-click: disabled
+Tap-and-drag: enabled
+Tap drag lock: disabled
+Left-handed: disabled
+Nat.scrolling: disabled
+Middle emulation: n/a
+Calibration: n/a
+Scroll methods: *two-finger edge
+Click methods: button-areas *clickfinger
+Disable-w-typing: enabled
+Accel profiles: none

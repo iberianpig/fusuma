@@ -45,7 +45,25 @@ module Fusuma
       end
     end
 
+    def device_names
+      return @device_names unless @device_names.nil?
+      names = []
+      @device_names = list_devices_logs.map do |line|
+        MultiLogger.debug(line)
+        name = extracted_input_device_from(line)
+        names << name unless name.nil?
+        next unless natural_scroll_is_available?(line)
+        names.pop
+      end.compact
+    end
+
     private
+
+    def list_devices_logs
+      Open3.popen3('libinput-list-devices') do |_i, o, _e, _w|
+        return o.to_a
+      end
+    end
 
     def libinput_command
       return @libinput_command if @libinput_command
@@ -60,26 +78,13 @@ module Fusuma
       @libinput_command
     end
 
-    def device_names
-      @device_names ||= Open3.popen3('libinput-list-devices') do |_i, o, _e, _w|
-        device_names = []
-        o.map do |line|
-          MultiLogger.debug(line)
-          device_name = extracted_input_device_from(line)
-          device_names << device_name unless device_name.nil?
-          next unless touch_is_available?(line)
-          device_names.pop
-        end
-      end.compact
-    end
-
     def extracted_input_device_from(line)
       return unless line =~ /^Kernel: /
       line.match(/event[0-9]+/).to_s
     end
 
-    def touch_is_available?(line)
-      return false unless line =~ /^Tap-to-click: /
+    def natural_scroll_is_available?(line)
+      return false unless line =~ /^Nat.scrolling: /
       return false if line =~ %r{n/a}
       true
     end
