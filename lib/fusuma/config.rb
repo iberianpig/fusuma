@@ -49,7 +49,7 @@ module Fusuma
 
     def interval(action_type)
       seek_index = ['interval', action_type]
-      cache(seek_index) { search_config(keymap, seek_index) } || 0.5
+      cache(seek_index) { search_config(keymap, seek_index) } || 1
     end
 
     private

@@ -38,6 +38,15 @@ module Fusuma
       }
     end
 
+    let(:keymap_with_interval) do
+      {
+        'interval' => {
+          'swipe' => 0.3,
+          'pinch' => 0.5
+        }
+      }
+    end
+
     let(:gesture_info) do
       GestureInfo.new(@finger, @direction, @action)
     end
@@ -134,6 +143,37 @@ module Fusuma
 
       context 'with irregular action_type' do
         it 'should return default threshold' do
+          action_type = 'missing_property'
+          expect(Config.threshold(action_type)).to eq 1
+        end
+      end
+    end
+
+    describe '.interval' do
+      context 'when interval is set to keymap' do
+        before do
+          allow(YAML).to receive(:load_file).and_return keymap_with_interval
+          Config.reload
+        end
+        it 'should return custom interval' do
+          action_type = 'swipe'
+          expect(Config.interval(action_type)).to eq 0.3
+        end
+      end
+
+      context 'when interval is unset' do
+        before do
+          allow(YAML).to receive(:load_file).and_return keymap
+          Config.reload
+        end
+        it 'should return default interval' do
+          action_type = 'swipe'
+          expect(Config.threshold(action_type)).to eq 1
+        end
+      end
+
+      context 'with irregular action_type' do
+        it 'should return default interval' do
           action_type = 'missing_property'
           expect(Config.threshold(action_type)).to eq 1
         end

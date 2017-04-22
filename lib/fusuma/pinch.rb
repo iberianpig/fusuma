@@ -2,6 +2,7 @@ module Fusuma
   # vector data
   class Pinch
     BASE_THERESHOLD = 0.3
+    BASE_INTERVAL   = 0.05
 
     def initialize(diameter)
       @diameter = diameter.to_f
@@ -40,7 +41,7 @@ module Fusuma
     end
 
     def interval_time
-      @interval_time ||= Config.interval('pinch')
+      @interval_time ||= BASE_INTERVAL * Config.interval('pinch')
     end
 
     class << self

@@ -2,6 +2,7 @@ module Fusuma
   # vector data
   class Swipe
     BASE_THERESHOLD = 20
+    BASE_INTERVAL   = 0.5
 
     def initialize(x, y)
       @x = x
@@ -40,7 +41,7 @@ module Fusuma
     end
 
     def interval_time
-      @interval_time ||= Config.interval('swipe')
+      @interval_time ||= BASE_INTERVAL * Config.interval('swipe')
     end
 
     class << self
