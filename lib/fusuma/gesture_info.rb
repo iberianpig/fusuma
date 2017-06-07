@@ -9,6 +9,7 @@ module Fusuma
     attr_reader :finger, :direction, :action_type
 
     def trigger_keyevent
+      MultiLogger.debug("trigger keyevent: #{shortcut}")
       exec_xdotool(shortcut)
     end
 
