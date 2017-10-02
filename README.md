@@ -14,7 +14,7 @@ IMPORTANT: You must be a member of the _input_ group to have permission
 
     $ sudo gpasswd -a $USER input
 
-You must log out and back in or restart to assign this group.
+**You must log out and back in or restart** to assign this group.
 
 You need libinput release 1.0 or later. Install libinput-tools: 
 
