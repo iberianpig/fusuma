@@ -16,7 +16,6 @@ module Fusuma
     end
 
     def info(msg)
-      return unless debug_mode?
       super(msg)
     end
 
@@ -31,7 +30,6 @@ module Fusuma
     end
 
     def error(msg)
-      return unless debug_mode?
       err_logger.error(msg)
     end
 
