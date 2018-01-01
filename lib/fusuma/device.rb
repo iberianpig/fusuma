@@ -2,6 +2,8 @@ module Fusuma
   # detect input device
   class Device
     class << self
+      attr_writer :names
+
       def names
         return @names unless @names.nil?
         device_names = fetch_device_names

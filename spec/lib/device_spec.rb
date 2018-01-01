@@ -2,6 +2,7 @@ require 'spec_helper'
 module Fusuma
   describe 'Device' do
     describe '.name' do
+      before { Device.names = nil }
       context 'with no tap to click device (like a bluetooth apple trackpad)' do
         let(:magic_trackpad_log) do
           File.open('spec/lib/libinput-list-devices_magic_trackpad.txt')
