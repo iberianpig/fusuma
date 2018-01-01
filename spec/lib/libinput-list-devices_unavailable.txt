@@ -1,0 +1,36 @@
+Device:           AT Translated Set 2 keyboard
+Kernel:           /dev/input/event4
+Group:            9
+Seat:             seat0, default
+Capabilities:     keyboard 
+Tap-to-click:     n/a
+Tap-and-drag:     n/a
+Tap drag lock:    n/a
+Left-handed:      n/a
+Nat.scrolling:    n/a
+Middle emulation: n/a
+Calibration:      n/a
+Scroll methods:   none
+Click methods:    none
+Disable-w-typing: n/a
+Accel profiles:   n/a
+Rotation:         n/a
+
+Device:           Dell WMI hotkeys
+Kernel:           /dev/input/event9
+Group:            10
+Seat:             seat0, default
+Capabilities:     keyboard 
+Tap-to-click:     n/a
+Tap-and-drag:     n/a
+Tap drag lock:    n/a
+Left-handed:      n/a
+Nat.scrolling:    n/a
+Middle emulation: n/a
+Calibration:      n/a
+Scroll methods:   none
+Click methods:    none
+Disable-w-typing: n/a
+Accel profiles:   n/a
+Rotation:         n/a
+
