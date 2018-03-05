@@ -6,8 +6,8 @@ module Fusuma
     include Singleton
 
     class << self
-      def shortcut(gesture_info)
-        instance.shortcut(gesture_info)
+      def shortcut(event_trigger)
+        instance.shortcut(event_trigger)
       end
 
       def threshold(action_type)
@@ -37,8 +37,8 @@ module Fusuma
       self
     end
 
-    def shortcut(gesture_info)
-      seek_index = [*action_index(gesture_info), 'shortcut']
+    def shortcut(event_trigger)
+      seek_index = [*action_index(event_trigger), 'shortcut']
       cache(seek_index) { search_config(keymap, seek_index) }
     end
 
@@ -89,10 +89,10 @@ module Fusuma
       File.expand_path "../../#{filename}", __FILE__
     end
 
-    def action_index(gesture_info)
-      action_type = gesture_info.action_type
-      finger      = gesture_info.finger
-      direction   = gesture_info.direction
+    def action_index(event_trigger)
+      action_type = event_trigger.action_type
+      finger      = event_trigger.finger
+      direction   = event_trigger.direction
       [action_type, finger, direction]
     end
 

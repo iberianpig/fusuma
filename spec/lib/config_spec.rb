@@ -47,8 +47,8 @@ module Fusuma
       }
     end
 
-    let(:gesture_info) do
-      GestureInfo.new(@finger, @direction, @action)
+    let(:event_trigger) do
+      EventTrigger.new(@finger, @direction, @action)
     end
 
     describe '.shortcut' do
@@ -64,12 +64,12 @@ module Fusuma
             before { @finger = 3 }
             it 'should swipe left shourtcut' do
               @direction = 'left'
-              expect(Config.shortcut(gesture_info)).to eq 'alt+Left'
+              expect(Config.shortcut(event_trigger)).to eq 'alt+Left'
             end
 
             it 'should swipe right shourtcut' do
               @direction = 'right'
-              expect(Config.shortcut(gesture_info)).to eq 'alt+Right'
+              expect(Config.shortcut(event_trigger)).to eq 'alt+Right'
             end
           end
 
@@ -77,12 +77,12 @@ module Fusuma
             before { @finger = 4 }
             it 'should swipe left shourtcut' do
               @direction = 'left'
-              expect(Config.shortcut(gesture_info)).to eq 'super+Left'
+              expect(Config.shortcut(event_trigger)).to eq 'super+Left'
             end
 
             it 'should swipe right shourtcut' do
               @direction = 'right'
-              expect(Config.shortcut(gesture_info)).to eq 'super+Right'
+              expect(Config.shortcut(event_trigger)).to eq 'super+Right'
             end
           end
         end
@@ -94,12 +94,12 @@ module Fusuma
           end
           it 'should pinch in shourtcut' do
             @direction = 'in'
-            expect(Config.shortcut(gesture_info)).to eq 'ctrl+plus'
+            expect(Config.shortcut(event_trigger)).to eq 'ctrl+plus'
           end
 
           it 'should pinch out shourtcut' do
             @direction = 'out'
-            expect(Config.shortcut(gesture_info)).to eq 'ctrl+minus'
+            expect(Config.shortcut(event_trigger)).to eq 'ctrl+minus'
           end
         end
       end
@@ -113,7 +113,7 @@ module Fusuma
         it 'should swipe shourtcut' do
           @action    = 'swipe'
           @direction = 'left'
-          expect(Config.shortcut(gesture_info)).to eq 'alt+Left'
+          expect(Config.shortcut(event_trigger)).to eq 'alt+Left'
         end
       end
     end
@@ -201,7 +201,7 @@ module Fusuma
 
     describe 'private_method: :cache' do
       it 'should cache shortcut' do
-        key   = %w(action_type finger direction shortcut).join(',')
+        key   = %w[action_type finger direction shortcut].join(',')
         value = 'shourtcut string'
         Config.reload
         Config.instance.send(:cache, key) { value }

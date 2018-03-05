@@ -1,6 +1,6 @@
 module Fusuma
   # manage actions
-  class GestureInfo
+  class EventTrigger
     def initialize(finger, direction, action_type)
       @finger      = finger.to_i
       @direction   = direction
@@ -8,7 +8,7 @@ module Fusuma
     end
     attr_reader :finger, :direction, :action_type
 
-    def trigger_keyevent
+    def send_keyevent
       MultiLogger.info("trigger keyevent: #{shortcut}")
       exec_xdotool(shortcut)
     end

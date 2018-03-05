@@ -7,7 +7,7 @@ module Fusuma
       super(*args)
     end
 
-    def gesture_info
+    def generate_event_trigger
       return unless enough_actions?
       action_type = detect_action_type
       direction = detect_direction(action_type)
@@ -15,7 +15,7 @@ module Fusuma
       @last_triggered_time = last.time
       finger = detect_finger
       clear
-      GestureInfo.new(finger, direction, action_type)
+      EventTrigger.new(finger, direction, action_type)
     end
 
     def push(gesture_action)

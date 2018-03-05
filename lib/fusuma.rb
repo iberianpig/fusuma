@@ -1,7 +1,7 @@
 require_relative 'fusuma/version'
 require_relative 'fusuma/action_stack'
 require_relative 'fusuma/gesture_action'
-require_relative 'fusuma/gesture_info'
+require_relative 'fusuma/event_trigger'
 require_relative 'fusuma/swipe.rb'
 require_relative 'fusuma/pinch.rb'
 require_relative 'fusuma/multi_logger'
@@ -40,8 +40,8 @@ module Fusuma
           next if gesture_action.nil?
           @action_stack ||= ActionStack.new
           @action_stack.push gesture_action
-          gesture_info = @action_stack.gesture_info
-          gesture_info.trigger_keyevent unless gesture_info.nil?
+          event_trigger = @action_stack.generate_event_trigger
+          event_trigger.send_keyevent unless event_trigger.nil?
         end
       end
     end
