@@ -31,11 +31,11 @@ module Fusuma
           expect { Device.names }.to raise_error(SystemExit)
         end
 
-        it 'should output with logger' do
+        it 'should failed with printing error log' do
           allow(Open3).to receive(:popen3).with('libinput-list-devices')
             .and_return(unavailable_log)
           expect(MultiLogger).to receive(:error)
-          Device.names
+          expect { Device.names }.to raise_error(SystemExit)
         end
       end
     end
