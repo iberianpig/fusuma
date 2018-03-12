@@ -6,8 +6,8 @@ module Fusuma
     include Singleton
 
     class << self
-      def shortcut(event_trigger)
-        instance.shortcut(event_trigger)
+      def command(event_trigger)
+        instance.command(event_trigger)
       end
 
       def threshold(action_type)
@@ -37,8 +37,8 @@ module Fusuma
       self
     end
 
-    def shortcut(event_trigger)
-      seek_index = [*action_index(event_trigger), 'shortcut']
+    def command(event_trigger)
+      seek_index = [*action_index(event_trigger), 'command']
       cache(seek_index) { search_config(keymap, seek_index) }
     end
 

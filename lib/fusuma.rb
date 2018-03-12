@@ -41,7 +41,7 @@ module Fusuma
           @action_stack ||= ActionStack.new
           @action_stack.push gesture_action
           event_trigger = @action_stack.generate_event_trigger
-          event_trigger.send_keyevent unless event_trigger.nil?
+          event_trigger.send_command unless event_trigger.nil?
         end
       end
     end

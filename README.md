@@ -54,27 +54,27 @@ You can customize the settings for gestures to put and edit `~/.config/fusuma/co
 swipe:
   3: 
     left: 
-      shortcut: 'alt+Left'
+      command: 'xdotool key alt+Left'
     right: 
-      shortcut: 'alt+Right'
+      command: 'xdotool key alt+Right'
     up: 
-      shortcut: 'ctrl+t'
+      command: 'xdotool key ctrl+t'
     down: 
-      shortcut: 'ctrl+w'
+      command: 'xdotool key ctrl+w'
   4:
     left: 
-      shortcut: 'super+Left'
+      command: 'xdotool key super+Left'
     right: 
-      shortcut: 'super+Right'
+      command: 'xdotool key super+Right'
     up: 
-      shortcut: 'super+a'
+      command: 'xdotool key super+a'
     down: 
-      shortcut: 'super+s'
+      command: 'xdotool key super+s'
 pinch:
   in:
-    shortcut: 'ctrl+plus'
+    command: 'xdotool key ctrl+plus'
   out:
-     shortcut: 'ctrl+minus'
+     command: 'xdotool key ctrl+minus'
 
 threshold:
   swipe: 1
