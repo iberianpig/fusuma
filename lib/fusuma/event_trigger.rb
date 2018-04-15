@@ -8,19 +8,19 @@ module Fusuma
     end
     attr_reader :finger, :direction, :action_type
 
-    def send_keyevent
-      MultiLogger.info("trigger keyevent: #{shortcut}")
-      exec_xdotool(shortcut)
+    def send_command
+      MultiLogger.info("trigger event: #{command}")
+      exec_command(command)
     end
 
     private
 
-    def exec_xdotool(keys)
-      `xdotool key #{keys}` unless keys.nil?
+    def exec_command(command)
+      `#{command}` unless command.nil?
     end
 
-    def shortcut
-      Config.shortcut(self)
+    def command
+      Config.command(self) || "xdotool key #{Config.shortcut(self)}"
     end
   end
 end

@@ -1,7 +1,7 @@
 # Fusuma [![Gem Version](https://badge.fury.io/rb/fusuma.svg)](https://badge.fury.io/rb/fusuma) [![Build Status](https://travis-ci.org/iberianpig/fusuma.svg?branch=master)](https://travis-ci.org/iberianpig/fusuma)
 
 Fusuma is multitouch gesture recognizer.
-This gem makes your linux PC able to recognize swipes or pinchs and assign shortcuts to them.
+This gem makes your linux PC able to recognize swipes or pinchs and assign commands to them.
 
 [![https://gyazo.com/757fef526310b9d68f68e80eb1e4540f](https://i.gyazo.com/757fef526310b9d68f68e80eb1e4540f.png)](https://gyazo.com/757fef526310b9d68f68e80eb1e4540f)
 
@@ -20,7 +20,7 @@ You need libinput release 1.0 or later. Install libinput-tools:
 
     $ sudo apt-get install libinput-tools
 
-For sending shortcuts:
+For sending shortcuts(optional):
 
     $ sudo apt-get install xdotool
 
@@ -47,8 +47,15 @@ Ensure the touchpad events are being sent to the GNOME desktop by running the fo
 You can customize the settings for gestures to put and edit `~/.config/fusuma/config.yml`.  
 *NOTE*: You will need to create the `~/.config/fusuma` directory if it doesn't exist yet.
 
+### `Command: ` property
+On fusuma version 1.0 `Command: ` property is available!
+You can assign any command each gestures.
 
-### Sample (default keymap for Elementary OS)
+**`shortcut: ` property is deprecated**, **it will be removed on fusuma version 1.0**.
+You need to replace to `command: ` property.
+
+
+#### before
 
 ```yaml
 swipe:
@@ -57,24 +64,46 @@ swipe:
       shortcut: 'alt+Left'
     right: 
       shortcut: 'alt+Right'
+```
+
+#### after
+
+```yaml
+swipe:
+  3: 
+    left: 
+      command: 'xdotool key alt+Left'
+    right: 
+      command: 'xdotool key alt+Right'
+```
+
+### Sample (default keymap for Elementary OS)
+
+```yaml
+swipe:
+  3: 
+    left: 
+      command: 'xdotool key alt+Left'
+    right: 
+      command: 'xdotool key alt+Right'
     up: 
-      shortcut: 'ctrl+t'
+      command: 'xdotool key ctrl+t'
     down: 
-      shortcut: 'ctrl+w'
+      command: 'xdotool key ctrl+w'
   4:
     left: 
-      shortcut: 'super+Left'
+      command: 'xdotool key super+Left'
     right: 
-      shortcut: 'super+Right'
+      command: 'xdotool key super+Right'
     up: 
-      shortcut: 'super+a'
+      command: 'xdotool key super+a'
     down: 
-      shortcut: 'super+s'
+      command: 'xdotool key super+s'
 pinch:
   in:
-    shortcut: 'ctrl+plus'
+    command: 'xdotool key ctrl+plus'
   out:
-     shortcut: 'ctrl+minus'
+    command: 'xdotool key ctrl+minus'
 
 threshold:
   swipe: 1
@@ -85,7 +114,7 @@ interval:
   pinch: 1
 ```
 
-if `shortcut: ` is blank, the swipe/pinch doesn't trigger a keyevent.
+if `command: ` properties are blank, the swipe/pinch doesn't trigger command.
 
 `threshold:` is sensitivity to swipe/pinch. Default value is 1.
 If the swipe's threshold is `0.5`, shorten swipe-length by half.

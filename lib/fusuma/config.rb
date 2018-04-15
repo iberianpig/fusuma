@@ -6,6 +6,10 @@ module Fusuma
     include Singleton
 
     class << self
+      def command(event_trigger)
+        instance.command(event_trigger)
+      end
+
       def shortcut(event_trigger)
         instance.shortcut(event_trigger)
       end
@@ -35,6 +39,11 @@ module Fusuma
       @cache  = nil
       @keymap = YAML.load_file(file_path)
       self
+    end
+
+    def command(event_trigger)
+      seek_index = [*action_index(event_trigger), 'command']
+      cache(seek_index) { search_config(keymap, seek_index) }
     end
 
     def shortcut(event_trigger)
