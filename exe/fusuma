@@ -12,8 +12,8 @@ OptionParser.new do |opt|
   end
   opt.on('-c',
          '--config=path/to/file',
-         'Use an alternative config file') do |v|
-    option[:config] = v
+         'Use an alternative config file') do |c|
+    option[:config] = c
   end
   opt.parse!(ARGV)
 end

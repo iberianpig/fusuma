@@ -34,7 +34,5 @@ module Fusuma
         end
       end
     end
-
-
   end
 end

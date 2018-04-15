@@ -20,11 +20,7 @@ module Fusuma
     end
 
     def command
-      Config.command(self)
-    end
-
-    def shortcut
-      Config.shortcut(self)
+      Config.command(self) || "xdotool key #{Config.shortcut(self)}"
     end
   end
 end

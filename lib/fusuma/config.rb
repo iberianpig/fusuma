@@ -10,6 +10,10 @@ module Fusuma
         instance.command(event_trigger)
       end
 
+      def shortcut(event_trigger)
+        instance.shortcut(event_trigger)
+      end
+
       def threshold(action_type)
         instance.threshold(action_type)
       end
@@ -39,6 +43,11 @@ module Fusuma
 
     def command(event_trigger)
       seek_index = [*action_index(event_trigger), 'command']
+      cache(seek_index) { search_config(keymap, seek_index) }
+    end
+
+    def shortcut(event_trigger)
+      seek_index = [*action_index(event_trigger), 'shortcut']
       cache(seek_index) { search_config(keymap, seek_index) }
     end
 
