@@ -27,7 +27,7 @@ module Fusuma
       end
 
       def list_devices_logs
-        Open3.popen3('libinput-list-devices') do |_i, o, _e, _w|
+        Open3.popen3('libinput list-devices') do |_i, o, _e, _w|
           return o.to_a
         end
       end
