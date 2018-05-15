@@ -50,9 +50,8 @@ module Fusuma
 
     def libinput_command
       return @libinput_command if @libinput_command
-      # NOTE: --enable-dwt means "disable while typing"
       prefix = 'stdbuf -oL --'
-      command = 'libinput-debug-events --enable-dwt'
+      command = 'libinput-debug-events'
       device_option = if Device.names.size == 1
                         "--device /dev/input/#{Device.names.first}"
                       end
