@@ -48,7 +48,7 @@ You can customize the settings for gestures to put and edit `~/.config/fusuma/co
 *NOTE*: You will need to create the `~/.config/fusuma` directory if it doesn't exist yet.
 
 ### `Command: ` property
-On fusuma version 1.0 `Command: ` property is available!
+On fusuma version 0.4 `Command: ` property is available!
 You can assign any command each gestures.
 
 **`shortcut: ` property is deprecated**, **it will be removed on fusuma version 1.0**.
