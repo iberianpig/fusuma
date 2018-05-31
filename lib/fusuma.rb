@@ -23,6 +23,7 @@ module Fusuma
       end
 
       def read_options(option)
+        option.fetch(:version, nil)
         config_path = option.fetch(:config, nil)
         if config_path
           Config.instance.custom_path = config_path

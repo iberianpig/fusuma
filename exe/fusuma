@@ -7,20 +7,29 @@ option = {}
 OptionParser.new do |opt|
   opt.on('-c',
          '--config=path/to/file',
-         'Use an alternative config file') do |c|
-    option[:config] = c
+         'Use an alternative config file') do |config|
+    option[:config] = config
   end
 
   opt.on('-d',
          '--daemon',
-         'Daemonize process') do |d|
-    option[:daemon] = d
+         'Daemonize process') do |daemon|
+    option[:daemon] = daemon
   end
 
   opt.on('-v',
          '--verbose',
-         'Shows details about the results of running fusuma') do |v|
-    option[:verbose] = v
+         'Show details about the results of running fusuma') do |verbose|
+    option[:verbose] = verbose
+  end
+
+  opt.on('--version',
+         'Show fusuma version') do |_version|
+    puts "Fusuma: #{Fusuma::VERSION}"
+    puts "OS: #{`uname -rsv`}"
+    puts "Distribution: #{`cat /etc/issue`}"
+    puts "Desktop session: #{`echo $DESKTOP_SESSION`}"
+    exit 0
   end
 
   opt.parse!(ARGV)
