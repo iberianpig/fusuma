@@ -10,7 +10,7 @@ module Fusuma
         MultiLogger.debug(device_names: device_names)
         raise 'Touchpad is not found' if device_names.empty?
         @names = device_names
-      rescue => ex
+      rescue RuntimeError => ex
         MultiLogger.error(ex.message)
         exit 1
       end
