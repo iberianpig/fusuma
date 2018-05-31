@@ -5,16 +5,24 @@ require_relative '../lib/fusuma'
 
 option = {}
 OptionParser.new do |opt|
-  opt.on('-v',
-         '--verbose',
-         'Shows details about the results of running fusuma') do |v|
-    option[:verbose] = v
-  end
   opt.on('-c',
          '--config=path/to/file',
          'Use an alternative config file') do |c|
     option[:config] = c
   end
+
+  opt.on('-d',
+         '--daemon',
+         'Daemonize process') do |d|
+    option[:daemon] = d
+  end
+
+  opt.on('-v',
+         '--verbose',
+         'Shows details about the results of running fusuma') do |v|
+    option[:verbose] = v
+  end
+
   opt.parse!(ARGV)
 end
 

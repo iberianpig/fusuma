@@ -28,8 +28,8 @@ module Fusuma
           Config.instance.custom_path = config_path
           Config.reload
         end
-        debug = option.fetch(:verbose, nil)
-        MultiLogger.instance.debug_mode = true if debug
+        MultiLogger.instance.debug_mode = true if option.fetch(:verbose, nil)
+        Process.daemon if option.fetch(:daemon, nil)
       end
     end
 
