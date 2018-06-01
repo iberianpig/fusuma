@@ -40,7 +40,7 @@ module Fusuma
           gesture_action = GestureAction.initialize_by(line, Device.names)
           next if gesture_action.nil?
           @action_stack ||= ActionStack.new
-          @action_stack.push gesture_action
+          @action_stack << gesture_action
           event_trigger = @action_stack.generate_event_trigger
           event_trigger.send_command unless event_trigger.nil?
         end
