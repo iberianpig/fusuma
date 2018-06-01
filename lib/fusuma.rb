@@ -17,6 +17,9 @@ module Fusuma
   class Runner
     class << self
       def run(option = {})
+        Signal.trap('INT') { exit } # Trap ^C
+        Signal.trap('TERM') { exit } # Trap `Kill `
+
         read_options(option)
         instance = new
         instance.read_libinput
