@@ -7,8 +7,8 @@ option = {}
 OptionParser.new do |opt|
   opt.on('-c',
          '--config=path/to/file',
-         'Use an alternative config file') do |config|
-    option[:config] = config
+         'Use an alternative config file') do |config_path|
+    option[:config_path] = config_path
   end
 
   opt.on('-d',
@@ -24,12 +24,8 @@ OptionParser.new do |opt|
   end
 
   opt.on('--version',
-         'Show fusuma version') do |_version|
-    puts "Fusuma: #{Fusuma::VERSION}"
-    puts "OS: #{`uname -rsv`}"
-    puts "Distribution: #{`cat /etc/issue`}"
-    puts "Desktop session: #{`echo $DESKTOP_SESSION`}"
-    exit 0
+         'Show fusuma version') do |version|
+    option[:version] = version
   end
 
   opt.parse!(ARGV)

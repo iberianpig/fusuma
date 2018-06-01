@@ -30,15 +30,26 @@ module Fusuma
         Signal.trap('TERM') { puts exit } # Trap `Kill `
       end
 
+      def print_version
+        puts "---------------------------------------------"
+        puts "Fusuma: #{Fusuma::VERSION}"
+        puts "OS: #{`uname -rsv`}"
+        puts "Distribution: #{`cat /etc/issue`}"
+        puts "Desktop session: #{`echo $DESKTOP_SESSION`}"
+        puts "---------------------------------------------"
+      end
+
+      def reload_custom_config(config_path)
+        MultiLogger.info "use custom path: #{config_path}"
+        Config.instance.custom_path = config_path
+        Config.reload
+      end
+
       def read_options(option)
-        option.fetch(:version, nil)
-        config_path = option.fetch(:config, nil)
-        if config_path
-          Config.instance.custom_path = config_path
-          Config.reload
-        end
-        MultiLogger.instance.debug_mode = true if option.fetch(:verbose, nil)
-        Process.daemon if option.fetch(:daemon, nil)
+        print_version if option[:version] || option[:verbose]
+        reload_custom_config(option[:config_path]) if option[:config_path]
+        MultiLogger.instance.debug_mode = true if option[:verbose]
+        Process.daemon if option[:daemon]
       end
     end
 

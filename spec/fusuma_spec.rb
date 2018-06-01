@@ -29,7 +29,7 @@ module Fusuma
         it 'should assign custom_path' do
           allow_any_instance_of(Fusuma::Runner).to receive(:read_libinput)
           config = Fusuma::Config.instance
-          expect { Fusuma::Runner.run(config: 'path/to/config.yml') }
+          expect { Fusuma::Runner.run(config_path: 'path/to/config.yml') }
             .to change { config.custom_path }.from(nil).to('path/to/config.yml')
         end
       end
