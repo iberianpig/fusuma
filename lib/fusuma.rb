@@ -31,12 +31,12 @@ module Fusuma
       end
 
       def print_version
-        puts "---------------------------------------------"
+        puts '---------------------------------------------'
         puts "Fusuma: #{Fusuma::VERSION}"
         puts "OS: #{`uname -rsv`}"
         puts "Distribution: #{`cat /etc/issue`}"
         puts "Desktop session: #{`echo $DESKTOP_SESSION`}"
-        puts "---------------------------------------------"
+        puts '---------------------------------------------'
       end
 
       def reload_custom_config(config_path)
