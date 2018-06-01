@@ -17,12 +17,17 @@ module Fusuma
   class Runner
     class << self
       def run(option = {})
-        Signal.trap('INT') { exit } # Trap ^C
-        Signal.trap('TERM') { exit } # Trap `Kill `
-
+        set_trap
         read_options(option)
         instance = new
         instance.read_libinput
+      end
+
+      private
+
+      def set_trap
+        Signal.trap('INT') { puts exit } # Trap ^C
+        Signal.trap('TERM') { puts exit } # Trap `Kill `
       end
 
       def read_options(option)
