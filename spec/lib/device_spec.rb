@@ -1,6 +1,6 @@
 require 'spec_helper'
 module Fusuma
-  describe 'Device' do
+  describe Device do
     describe '.name' do
       before { Device.names = nil }
       context 'with no tap to click device (like a bluetooth apple trackpad)' do
@@ -16,7 +16,7 @@ module Fusuma
         it 'should return correct devices' do
           allow(Open3).to receive(:popen3).with('libinput-list-devices')
                                           .and_return(magic_trackpad_log)
-          expect(Device.names).to eq %w(event8 event9)
+          expect(Device.names).to eq %w[event8 event9]
         end
       end
 
