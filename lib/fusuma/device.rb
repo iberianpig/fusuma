@@ -19,17 +19,13 @@ module Fusuma
 
       def fetch_device_names
         current_device = nil
-        list_devices_logs.map do |line|
+        devices = []
+        LibinputCommands.new.list_devices do |line|
           current_device = extracted_input_device_from(line) || current_device
           next unless natural_scroll_is_available?(line)
-          current_device
-        end.compact
-      end
-
-      def list_devices_logs
-        Open3.popen3('libinput-list-devices') do |_i, o, _e, _w|
-          return o.to_a
+          devices << current_device
         end
+        devices.compact
       end
 
       def extracted_input_device_from(line)

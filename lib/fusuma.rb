@@ -7,6 +7,7 @@ require_relative 'fusuma/pinch.rb'
 require_relative 'fusuma/multi_logger'
 require_relative 'fusuma/config.rb'
 require_relative 'fusuma/device.rb'
+require_relative 'fusuma/libinput_commands.rb'
 require 'logger'
 require 'open3'
 require 'yaml'
@@ -20,7 +21,7 @@ module Fusuma
         set_trap
         read_options(option)
         instance = new
-        instance.read_libinput
+        instance.run
       end
 
       private
@@ -33,6 +34,7 @@ module Fusuma
       def print_version
         puts '---------------------------------------------'
         puts "Fusuma: #{Fusuma::VERSION}"
+        puts "libinput: #{LibinputCommands.new.version}"
         puts "OS: #{`uname -rsv`}"
         puts "Distribution: #{`cat /etc/issue`}"
         puts "Desktop session: #{`echo $DESKTOP_SESSION`}"
@@ -53,31 +55,15 @@ module Fusuma
       end
     end
 
-    def read_libinput
-      Open3.popen3(libinput_command) do |_i, o, _e, _w|
-        o.each do |line|
-          gesture_action = GestureAction.initialize_by(line, Device.names)
-          next if gesture_action.nil?
-          @action_stack ||= ActionStack.new
-          @action_stack << gesture_action
-          event_trigger = @action_stack.generate_event_trigger
-          event_trigger.send_command unless event_trigger.nil?
-        end
+    def run
+      LibinputCommands.new.debug_events do |line|
+        gesture_action = GestureAction.initialize_by(line, Device.names)
+        next if gesture_action.nil?
+        @action_stack ||= ActionStack.new
+        @action_stack << gesture_action
+        event_trigger = @action_stack.generate_event_trigger
+        event_trigger.send_command unless event_trigger.nil?
       end
-    end
-
-    private
-
-    def libinput_command
-      return @libinput_command if @libinput_command
-      prefix = 'stdbuf -oL --'
-      command = 'libinput-debug-events'
-      device_option = if Device.names.size == 1
-                        "--device /dev/input/#{Device.names.first}"
-                      end
-      @libinput_command = [prefix, command, device_option].join(' ')
-      MultiLogger.debug(libinput_command: @libinput_command)
-      @libinput_command
     end
   end
 end
