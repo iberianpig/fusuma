@@ -32,4 +32,5 @@ interval:
   pinch: 1
 
 misc:
+  calc: 'sum'
   actioncount: 1

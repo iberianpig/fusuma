@@ -33,11 +33,21 @@ module Fusuma
     end
 
     def generate_vector(action_type)
-      case action_type
-      when 'swipe'
-        sum_swipe
-      when 'pinch'
-        sum_swipe
+      case Config.misc('calc') ? Config.misc('calc') : 'avg'
+      when 'sum' 
+        case action_type
+        when 'swipe'
+          sum_swipe
+        when 'pinch'
+          sum_swipe
+        end
+      when 'avg'
+        case action_type
+        when 'swipe'
+          avg_swipe
+        when 'pinch'
+          avg_swipe
+        end
       end
     end
 
