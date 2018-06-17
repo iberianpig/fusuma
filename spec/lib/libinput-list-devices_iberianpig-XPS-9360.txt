@@ -1,0 +1,181 @@
+Device:           Power Button
+Kernel:           /dev/input/event3
+Group:            1
+Seat:             seat0, default
+Capabilities:     keyboard 
+Tap-to-click:     n/a
+Tap-and-drag:     n/a
+Tap drag lock:    n/a
+Left-handed:      n/a
+Nat.scrolling:    n/a
+Middle emulation: n/a
+Calibration:      n/a
+Scroll methods:   none
+Click methods:    none
+Disable-w-typing: n/a
+Accel profiles:   n/a
+Rotation:         n/a
+
+Device:           Video Bus
+Kernel:           /dev/input/event5
+Group:            2
+Seat:             seat0, default
+Capabilities:     keyboard 
+Tap-to-click:     n/a
+Tap-and-drag:     n/a
+Tap drag lock:    n/a
+Left-handed:      n/a
+Nat.scrolling:    n/a
+Middle emulation: n/a
+Calibration:      n/a
+Scroll methods:   none
+Click methods:    none
+Disable-w-typing: n/a
+Accel profiles:   n/a
+Rotation:         n/a
+
+Device:           Power Button
+Kernel:           /dev/input/event1
+Group:            3
+Seat:             seat0, default
+Capabilities:     keyboard 
+Tap-to-click:     n/a
+Tap-and-drag:     n/a
+Tap drag lock:    n/a
+Left-handed:      n/a
+Nat.scrolling:    n/a
+Middle emulation: n/a
+Calibration:      n/a
+Scroll methods:   none
+Click methods:    none
+Disable-w-typing: n/a
+Accel profiles:   n/a
+Rotation:         n/a
+
+Device:           Sleep Button
+Kernel:           /dev/input/event2
+Group:            4
+Seat:             seat0, default
+Capabilities:     keyboard 
+Tap-to-click:     n/a
+Tap-and-drag:     n/a
+Tap drag lock:    n/a
+Left-handed:      n/a
+Nat.scrolling:    n/a
+Middle emulation: n/a
+Calibration:      n/a
+Scroll methods:   none
+Click methods:    none
+Disable-w-typing: n/a
+Accel profiles:   n/a
+Rotation:         n/a
+
+Device:           Integrated_Webcam_HD
+Kernel:           /dev/input/event15
+Group:            5
+Seat:             seat0, default
+Capabilities:     keyboard 
+Tap-to-click:     n/a
+Tap-and-drag:     n/a
+Tap drag lock:    n/a
+Left-handed:      n/a
+Nat.scrolling:    n/a
+Middle emulation: n/a
+Calibration:      n/a
+Scroll methods:   none
+Click methods:    none
+Disable-w-typing: n/a
+Accel profiles:   n/a
+Rotation:         n/a
+
+Device:           DLL075B:01 06CB:76AF Touchpad
+Kernel:           /dev/input/event14
+Group:            6
+Seat:             seat0, default
+Size:             101.33x56.67mm
+Capabilities:     pointer 
+Tap-to-click:     disabled
+Tap-and-drag:     enabled
+Tap drag lock:    disabled
+Left-handed:      disabled
+Nat.scrolling:    disabled
+Middle emulation: disabled
+Calibration:      n/a
+Scroll methods:   *two-finger edge 
+Click methods:    *button-areas clickfinger 
+Disable-w-typing: enabled
+Accel profiles:   none
+Rotation:         n/a
+
+Device:           Intel Virtual Button driver
+Kernel:           /dev/input/event8
+Group:            7
+Seat:             seat0, default
+Capabilities:     keyboard 
+Tap-to-click:     n/a
+Tap-and-drag:     n/a
+Tap drag lock:    n/a
+Left-handed:      n/a
+Nat.scrolling:    n/a
+Middle emulation: n/a
+Calibration:      n/a
+Scroll methods:   none
+Click methods:    none
+Disable-w-typing: n/a
+Accel profiles:   n/a
+Rotation:         n/a
+
+Device:           Intel HID events
+Kernel:           /dev/input/event7
+Group:            8
+Seat:             seat0, default
+Capabilities:     keyboard 
+Tap-to-click:     n/a
+Tap-and-drag:     n/a
+Tap drag lock:    n/a
+Left-handed:      n/a
+Nat.scrolling:    n/a
+Middle emulation: n/a
+Calibration:      n/a
+Scroll methods:   none
+Click methods:    none
+Disable-w-typing: n/a
+Accel profiles:   n/a
+Rotation:         n/a
+
+Device:           AT Translated Set 2 keyboard
+Kernel:           /dev/input/event4
+Group:            9
+Seat:             seat0, default
+Capabilities:     keyboard 
+Tap-to-click:     n/a
+Tap-and-drag:     n/a
+Tap drag lock:    n/a
+Left-handed:      n/a
+Nat.scrolling:    n/a
+Middle emulation: n/a
+Calibration:      n/a
+Scroll methods:   none
+Click methods:    none
+Disable-w-typing: n/a
+Accel profiles:   n/a
+Rotation:         n/a
+
+Device:           Dell WMI hotkeys
+Kernel:           /dev/input/event9
+Group:            10
+Seat:             seat0, default
+Capabilities:     keyboard 
+Tap-to-click:     n/a
+Tap-and-drag:     n/a
+Tap drag lock:    n/a
+Left-handed:      n/a
+Nat.scrolling:    n/a
+Middle emulation: n/a
+Calibration:      n/a
+Scroll methods:   none
+Click methods:    none
+Disable-w-typing: n/a
+Accel profiles:   n/a
+Rotation:         n/a
+
