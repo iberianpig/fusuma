@@ -30,3 +30,6 @@ threshold:
 interval:
   swipe: 1
   pinch: 1
+
+misc:
+  actioncount: 1

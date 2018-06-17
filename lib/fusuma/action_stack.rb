@@ -35,14 +35,28 @@ module Fusuma
     def generate_vector(action_type)
       case action_type
       when 'swipe'
-        avg_swipe
+        sum_swipe
       when 'pinch'
-        avg_pinch
+        sum_swipe
       end
     end
 
     def detect_finger
       last.finger
+    end
+
+    def sum_swipe
+      move_x = sum_attrs(:move_x)
+      move_y = sum_attrs(:move_y)
+      Swipe.new(move_x, move_y)
+    end
+
+    def sum_pinch
+      move_x = sum_attrs(:move_x)
+      move_y = sum_attrs(:move_y)
+      diameter = sum_attrs(:zoom)
+      delta_diameter = diameter - first.zoom
+      Pinch.new(move_x, move_y, delta_diameter)
     end
 
     def avg_swipe
@@ -52,9 +66,11 @@ module Fusuma
     end
 
     def avg_pinch
+      move_x = avg_attrs(:move_x)
+      move_y = avg_attrs(:move_y)
       diameter = avg_attrs(:zoom)
       delta_diameter = diameter - first.zoom
-      Pinch.new(delta_diameter)
+      Pinch.new(move_x, move_y, delta_diameter)
     end
 
     def sum_attrs(attr)
@@ -77,7 +93,7 @@ module Fusuma
     end
 
     def enough_actions?
-      length > 2
+      length >= if Config.misc('actioncount') != false then Config.misc('actioncount') else 2 end
     end
 
     def enough_elapsed_time?
