@@ -17,15 +17,16 @@ module Fusuma
 
       private
 
+      # @return [Array]
       def fetch_device_names
-        current_device = nil
-        devices = []
-        LibinputCommands.new.list_devices do |line|
-          current_device = extracted_input_device_from(line) || current_device
-          next unless natural_scroll_is_available?(line)
-          devices << current_device
-        end
-        devices.compact
+        [].tap do |devices|
+          current_device = nil
+          LibinputCommands.new.list_devices do |line|
+            current_device = extracted_input_device_from(line) || current_device
+            next unless natural_scroll_is_available?(line)
+            devices << current_device
+          end
+        end.compact
       end
 
       def extracted_input_device_from(line)
