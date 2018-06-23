@@ -126,7 +126,9 @@ If the swipe's interval is `0.5`, shorten swipe-interval by half to recognize a 
 
 *   `-c`, `--config=path/to/file` : Use an alternative config file
 *   `-d`, `--daemon`              : Daemonize process
+*   `-l`, `--list-devices`        : List available devices
 *   `-v`, `--verbose`             : Show details about the results of running fusuma
+*   `--device=event14`            : Open the given device only
 *   `--version`                   : Show fusuma version
 
 ## Contributing

@@ -31,27 +31,40 @@ module Fusuma
         Signal.trap('TERM') { puts exit } # Trap `Kill `
       end
 
-      def print_version
-        puts '---------------------------------------------'
-        puts "Fusuma: #{Fusuma::VERSION}"
-        puts "libinput: #{LibinputCommands.new.version}"
-        puts "OS: #{`uname -rsv`}"
-        puts "Distribution: #{`cat /etc/issue`}"
-        puts "Desktop session: #{`echo $DESKTOP_SESSION`}"
-        puts '---------------------------------------------'
+      def read_options(option)
+        print_version && exit(0) if option[:version]
+        print_device_list if option[:list]
+        reload_custom_config(option[:config_path])
+        debug_mode if option[:verbose]
+        Device.given_device = option[:device]
+        Process.daemon if option[:daemon]
       end
 
-      def reload_custom_config(config_path)
+      def print_version
+        MultiLogger.info '---------------------------------------------'
+        MultiLogger.info "Fusuma: #{Fusuma::VERSION}"
+        MultiLogger.info "libinput: #{LibinputCommands.new.version}"
+        MultiLogger.info "OS: #{`uname -rsv`}".strip
+        MultiLogger.info "Distribution: #{`cat /etc/issue`}".strip
+        MultiLogger.info "Desktop session: #{`echo $DESKTOP_SESSION`}".strip
+        MultiLogger.info '---------------------------------------------'
+      end
+
+      def print_device_list
+        puts Device.names
+        exit(0)
+      end
+
+      def reload_custom_config(config_path = nil)
+        return unless config_path
         MultiLogger.info "use custom path: #{config_path}"
         Config.instance.custom_path = config_path
         Config.reload
       end
 
-      def read_options(option)
-        print_version if option[:version] || option[:verbose]
-        reload_custom_config(option[:config_path]) if option[:config_path]
-        MultiLogger.instance.debug_mode = true if option[:verbose]
-        Process.daemon if option[:daemon]
+      def debug_mode
+        print_version
+        MultiLogger.instance.debug_mode = true
       end
     end
 
