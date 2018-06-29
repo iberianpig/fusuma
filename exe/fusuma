@@ -4,31 +4,37 @@ require 'optparse'
 require_relative '../lib/fusuma'
 
 option = {}
-OptionParser.new do |opt|
-  opt.on('-c',
-         '--config=path/to/file',
-         'Use an alternative config file') do |config_path|
-    option[:config_path] = config_path
-  end
+opt = OptionParser.new
 
-  opt.on('-d',
-         '--daemon',
-         'Daemonize process') do |daemon|
-    option[:daemon] = daemon
-  end
-
-  opt.on('-v',
-         '--verbose',
-         'Show details about the results of running fusuma') do |verbose|
-    option[:verbose] = verbose
-  end
-
-  opt.on('--version',
-         'Show fusuma version') do |version|
-    option[:version] = version
-  end
-
-  opt.parse!(ARGV)
+opt.on('-c', '--config=path/to/file',
+       'Use an alternative config file') do |v|
+  option[:config_path] = v
 end
+
+opt.on('-d', '--daemon',
+       'Daemonize process') do |v|
+  option[:daemon] = v
+end
+
+opt.on('-l', '--list-devices',
+       'List available devices') do |v|
+  option[:list] = v
+end
+
+opt.on('--device=event14',
+       'Open the given device only') do |v|
+  option[:device] = v
+end
+
+opt.on('-v', '--verbose',
+       'Show details about the results of running fusuma') do |v|
+  option[:verbose] = v
+end
+
+opt.on('--version', 'Show fusuma version') do |v|
+  option[:version] = v
+end
+
+opt.parse!(ARGV)
 
 Fusuma::Runner.run(option)

@@ -79,7 +79,7 @@ module Fusuma
         it 'call `libinput list-devices`' do
           command = 'libinput list-devices'
           expect(Open3).to receive(:popen3)
-            .with("#{command}")
+            .with(command)
         end
       end
       context 'with old cli version' do
@@ -91,7 +91,7 @@ module Fusuma
         it 'call `libinput-list-devices`' do
           command = 'libinput-list-devices'
           expect(Open3).to receive(:popen3)
-            .with("#{command}")
+            .with(command)
         end
       end
     end

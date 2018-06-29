@@ -5,7 +5,7 @@ module Fusuma
       attr_writer :names
 
       def names
-        return @names unless @names.nil?
+        return @names unless no_name?
         device_names = fetch_device_names
         MultiLogger.debug(device_names: device_names)
         raise 'Touchpad is not found' if device_names.empty?
@@ -15,17 +15,33 @@ module Fusuma
         exit 1
       end
 
+      # @params [String]
+      def given_device=(name)
+        return if name.nil?
+        if names.include? name
+          self.names = [name]
+          return
+        end
+        MultiLogger.error("Device #{name} is not found")
+        exit 1
+      end
+
       private
 
+      def no_name?
+        @names.nil? || @names.empty?
+      end
+
+      # @return [Array]
       def fetch_device_names
-        current_device = nil
-        devices = []
-        LibinputCommands.new.list_devices do |line|
-          current_device = extracted_input_device_from(line) || current_device
-          next unless natural_scroll_is_available?(line)
-          devices << current_device
-        end
-        devices.compact
+        [].tap do |devices|
+          current_device = nil
+          LibinputCommands.new.list_devices do |line|
+            current_device = extracted_input_device_from(line) || current_device
+            next unless natural_scroll_is_available?(line)
+            devices << current_device
+          end
+        end.compact
       end
 
       def extracted_input_device_from(line)

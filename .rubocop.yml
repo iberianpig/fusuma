@@ -5,3 +5,7 @@ Metrics/ModuleLength:
 Metrics/BlockLength:
   Exclude:
     - "**/*_spec.rb"
+
+Metrics/LineLength:
+  Exclude:
+    - "fusuma.gemspec"
