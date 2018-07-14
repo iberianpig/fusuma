@@ -21,7 +21,7 @@ opt.on('-l', '--list-devices',
   option[:list] = v
 end
 
-opt.on('--device=event14',
+opt.on('--device="Device name"',
        'Open the given device only') do |v|
   option[:device] = v
 end

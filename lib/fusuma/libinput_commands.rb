@@ -70,9 +70,11 @@ module Fusuma
     end
 
     private
-
+    # use device option only if libinput detect only 1 device
+    # @return [String]
     def device_option
-      "--device /dev/input/#{Device.names.first}" if Device.names.size == 1
+      return unless Device.available.size == 1
+      "--device /dev/input/#{Device.available.first.id}"
     end
 
     # which in ruby: Checking if program exists in $PATH from ruby

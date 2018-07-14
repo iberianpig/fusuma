@@ -70,7 +70,7 @@ module Fusuma
 
     def run
       LibinputCommands.new.debug_events do |line|
-        gesture_action = GestureAction.initialize_by(line, Device.names)
+        gesture_action = GestureAction.initialize_by(line, Device.ids)
         next if gesture_action.nil?
         @action_stack ||= ActionStack.new
         @action_stack << gesture_action

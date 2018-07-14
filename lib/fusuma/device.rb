@@ -1,58 +1,118 @@
 module Fusuma
   # detect input device
   class Device
-    class << self
-      attr_writer :names
+    attr_accessor :id
+    attr_accessor :name
+    attr_accessor :available
 
+    def initialize(id: nil, name: nil, available: nil)
+      @id = id
+      @name = name
+      @available = available
+    end
+
+    class << self
+      # @return [Array]
+      def ids
+        available.map(&:id)
+      end
+
+      # @return [Array]
       def names
-        return @names unless no_name?
-        device_names = fetch_device_names
-        MultiLogger.debug(device_names: device_names)
-        raise 'Touchpad is not found' if device_names.empty?
-        @names = device_names
+        available.map(&:name)
+      end
+
+      # @raise [SystemExit]
+      # @return [Array]
+      def available
+        @available ||= fetch_available.tap do |d|
+          MultiLogger.debug(available_devices: d)
+          raise 'Touchpad is not found' if d.empty?
+        end
       rescue RuntimeError => ex
         MultiLogger.error(ex.message)
         exit 1
       end
 
+      def reset
+        @available = nil
+      end
+
       # @params [String]
       def given_device=(name)
         return if name.nil?
-        if names.include? name
-          self.names = [name]
-          return
-        end
-        MultiLogger.error("Device #{name} is not found")
+        @available = available.select { |d| d.name == name }
+        return unless names.empty?
+        MultiLogger.error("Device #{name} is not found.\n
+           Check available device with: $ fusuma --list-devices\n")
         exit 1
       end
 
       private
 
-      def no_name?
-        @names.nil? || @names.empty?
-      end
-
       # @return [Array]
-      def fetch_device_names
-        [].tap do |devices|
-          current_device = nil
-          LibinputCommands.new.list_devices do |line|
-            current_device = extracted_input_device_from(line) || current_device
-            next unless natural_scroll_is_available?(line)
-            devices << current_device
+      def fetch_available
+        line_parser = LineParser.new
+        LibinputCommands.new.list_devices do |line|
+          line_parser.push(line)
+        end
+        line_parser.generate_devices
+      end
+
+      # parse line and generate devices
+      class LineParser
+        attr_reader :lines
+
+        def initialize
+          @lines = []
+        end
+
+        # @param line [String]
+        def push(line)
+          lines.push(line)
+        end
+
+        def generate_devices
+          device = nil
+          lines.each_with_object([]) do |line, devices|
+            device ||= Device.new
+            device = parse(device: device, line: line)
+            if device.available
+              devices << device
+              device = nil
+            end
           end
-        end.compact
-      end
+        end
 
-      def extracted_input_device_from(line)
-        return unless line =~ /^Kernel: /
-        line.match(/event[0-9]+/).to_s
-      end
+        # @return [Device]
+        def parse(device:, line:)
+          if (id = id_from(line))
+            device.id = id
+          elsif (name = name_from(line))
+            device.name = name
+          elsif (available = natural_scroll_is_available?(line))
+            device.available = available
+          end
+          device
+        end
 
-      def natural_scroll_is_available?(line)
-        return false unless line =~ /^Nat.scrolling: /
-        return false if line =~ %r{n/a}
-        true
+        def id_from(line)
+          line.match('^Kernel:[[:space:]]*') do |m|
+            m.post_match.match(/event[0-9]+/).to_s
+          end
+        end
+
+        def name_from(line)
+          line.match('^Device:[[:space:]]*') do |m|
+            m.post_match.strip
+          end
+        end
+
+        def natural_scroll_is_available?(line)
+          return false unless line =~ /^Nat.scrolling: /
+          return false if line =~ %r{n/a}
+          true
+        end
       end
     end
   end
