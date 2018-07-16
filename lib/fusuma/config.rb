@@ -22,6 +22,10 @@ module Fusuma
         instance.interval(action_type)
       end
 
+      def misc(value)
+        instance.misc(value)
+      end
+
       def reload
         instance.reload
       end
@@ -50,7 +54,7 @@ module Fusuma
       seek_index = [*action_index(event_trigger), 'shortcut']
       cache(seek_index) { search_config(keymap, seek_index) }
     end
-
+    
     def threshold(action_type)
       seek_index = ['threshold', action_type]
       cache(seek_index) { search_config(keymap, seek_index) } || 1
@@ -61,6 +65,11 @@ module Fusuma
       cache(seek_index) { search_config(keymap, seek_index) } || 1
     end
 
+    def misc(value)
+      seek_index = ['misc', value]
+      cache(seek_index) { search_config(keymap, seek_index) } || false
+    end
+    
     private
 
     def search_config(keymap_node, seek_index)

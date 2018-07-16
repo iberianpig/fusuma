@@ -22,7 +22,24 @@ pinch:
     command: 'xdotool key ctrl+plus'
   out:
     command: 'xdotool key ctrl+minus'
-
+  3:
+    left:
+      command: 'xdotool key alt+Right'
+    right:
+      command: 'xdotool key alt+Left'
+    up:
+      command: 'xdotool key ctrl+t'
+    down:
+      command: 'xdotool key ctrl+w'
+  4:
+    left:
+      command: 'xdotool key super+Right'
+    right:
+      command: 'xdotool key super+Left'
+    up:
+      command: 'xdotool key super+a'
+    down:
+      command: 'xdotool key super+s'
 threshold:
   swipe: 0.3
   pinch: 0.1
@@ -30,3 +47,7 @@ threshold:
 interval:
   swipe: 1
   pinch: 1
+
+misc:
+  calc: 'sum'
+  actioncount: 1
