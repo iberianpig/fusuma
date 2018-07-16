@@ -9,7 +9,8 @@ This gem makes your linux PC able to recognize swipes or pinchs and assign comma
 
 ## Installation
 
-### 1. **IMPORTANT**: You **MUST** be a member of the _input_ group to have permission to read the touchpad device:
+### 1. Grant permission to read the touchpad device
+**IMPORTANT**: You **MUST** be a member of the **INPUT** group to read touchpad by Fusuma.
 
 ```bash
 $ sudo gpasswd -a $USER input
@@ -17,23 +18,24 @@ $ sudo gpasswd -a $USER input
 
 Then, You **MUST** **LOGOUT/LOGIN or REBOOT** to assign this group.
 
-### 2. You need `libinput` release 1.0 or later.
-Install `libinput-tools`: 
+### 2. Install libinput-tools
+You need `libinput` release 1.0 or later.
 
 ```bash
 $ sudo apt-get install libinput-tools
 ```
 
-### 3. For sending shortcuts(optional):
-
-```bash
-$ sudo apt-get install xdotool
-```
-
-### 4. Install Fusuma:
+### 3. Install Fusuma
 
 ```bash
 $ sudo gem install fusuma
+```
+
+### 4. Install xdotool(optional) 
+
+For sending shortcuts:
+```bash
+$ sudo apt-get install xdotool
 ```
 
 ### Touchpad not working in GNOME
@@ -140,7 +142,7 @@ swipe:
 *   `--device="Device name"`      : Open the given device only
 *   `--version`                   : Show fusuma version
 
-## AutoStart(gnome-session-properties)
+## Autostart(gnome-session-properties)
 1. Check where you installed fusuma
 2. Open `$ gnome-session-properties`
 3. Add Fusuma and input location where you checked above's path
