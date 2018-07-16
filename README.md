@@ -9,75 +9,65 @@ This gem makes your linux PC able to recognize swipes or pinchs and assign comma
 
 ## Installation
 
-IMPORTANT: You must be a member of the _input_ group to have permission
- to read the touchpad device:
+### 1. **IMPORTANT**: You **MUST** be a member of the _input_ group to have permission to read the touchpad device:
 
-    $ sudo gpasswd -a $USER input
+```bash
+$ sudo gpasswd -a $USER input
+```
 
-**You must log out and back in or restart** to assign this group.
+Then, You **MUST** **LOGOUT/LOGIN or REBOOT** to assign this group.
 
-You need libinput release 1.0 or later. Install libinput-tools: 
+### 2. You need `libinput` release 1.0 or later.
+Install `libinput-tools`: 
 
-    $ sudo apt-get install libinput-tools
+```bash
+$ sudo apt-get install libinput-tools
+```
 
-For sending shortcuts(optional):
+### 3. For sending shortcuts(optional):
 
-    $ sudo apt-get install xdotool
+```bash
+$ sudo apt-get install xdotool
+```
 
-Install Fusuma:
+### 4. Install Fusuma:
 
-    $ gem install fusuma
+```bash
+$ sudo gem install fusuma
+```
 
 ### Touchpad not working in GNOME
 
 Ensure the touchpad events are being sent to the GNOME desktop by running the following command:
 
-    $ gsettings set org.gnome.desktop.peripherals.touchpad send-events enabled
+
+```bash
+$ gsettings set org.gnome.desktop.peripherals.touchpad send-events enabled
+```
 
 ## Usage
 
-    $ fusuma
+```bash
+$ fusuma
+```
 
 ## Update
 
-    $ gem update fusuma
+```bash
+$ sudo gem update fusuma
+```
 
-## Customize
+## Customize Gesture Mapping
 
 You can customize the settings for gestures to put and edit `~/.config/fusuma/config.yml`.  
-*NOTE*: You will need to create the `~/.config/fusuma` directory if it doesn't exist yet.
+**NOTE: You will need to create the `~/.config/fusuma` directory if it doesn't exist yet.**
 
-### `Command: ` property
-On fusuma version 0.4 `Command: ` property is available!
-You can assign any command each gestures.
-
-**`shortcut: ` property is deprecated**, **it will be removed on fusuma version 1.0**.
-You need to replace to `command: ` property.
-
-
-#### before
-
-```yaml
-swipe:
-  3: 
-    left: 
-      shortcut: 'alt+Left'
-    right: 
-      shortcut: 'alt+Right'
+```bash
+$ mkdir -p ~/.config/fusuma        # create config directory
+$ nano ~/.config/fusuma/config.yml # edit config file.
 ```
 
-#### after
-
-```yaml
-swipe:
-  3: 
-    left: 
-      command: 'xdotool key alt+Left'
-    right: 
-      command: 'xdotool key alt+Right'
-```
-
-### Sample (default keymap for Elementary OS)
+### Example (Gesture Mapping for Elementary OS)
 
 ```yaml
 swipe:
@@ -122,6 +112,25 @@ If the swipe's threshold is `0.5`, shorten swipe-length by half.
 `interval:` is delay between swipes/pinches. Default value is 1.
 If the swipe's interval is `0.5`, shorten swipe-interval by half to recognize a next swipe.
 
+### `command: ` property for assigning commands
+On fusuma version 0.4 `command: ` property is available!
+You can assign any command each gestures.
+
+**`shortcut: ` property is deprecated**, **it will be removed on fusuma version 1.0**.
+You need to replace to `command: ` property.
+
+
+```diff
+swipe:
+  3: 
+    left: 
+-      shortcut: 'alt+Left'
++      command: 'xdotool key alt+Left'
+    right: 
+-      shortcut: 'alt+Right'
++      command: 'xdotool key alt+Right'
+```
+
 ## Options
 
 *   `-c`, `--config=path/to/file` : Use an alternative config file
@@ -130,6 +139,11 @@ If the swipe's interval is `0.5`, shorten swipe-interval by half to recognize a 
 *   `-v`, `--verbose`             : Show details about the results of running fusuma
 *   `--device="Device name"`      : Open the given device only
 *   `--version`                   : Show fusuma version
+
+## AutoStart(gnome-session-properties)
+1. Check where you installed fusuma
+2. Open `$ gnome-session-properties`
+3. Add Fusuma and input location where you checked above's path
 
 ## Contributing
 
