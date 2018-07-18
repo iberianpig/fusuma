@@ -3,7 +3,7 @@
 Fusuma is multitouch gesture recognizer.
 This gem makes your linux PC able to recognize swipes or pinchs and assign commands to them.
 
-[![https://gyazo.com/757fef526310b9d68f68e80eb1e4540f](https://i.gyazo.com/757fef526310b9d68f68e80eb1e4540f.png)](https://gyazo.com/757fef526310b9d68f68e80eb1e4540f)
+![fusuma_image](https://i.gyazo.com/757fef526310b9d68f68e80eb1e4540f.png)
 
 襖(Fusuma) means sliding door used to partition off rooms in a Japanese house.
 
