@@ -18,7 +18,7 @@ module Fusuma
 
     def command
       Config.command(self).tap { |c| return c if c }
-      Config.shortcut(self).tap { |s| return "xdotool key #{shortcut}" if s }
+      Config.shortcut(self).tap { |s| return "xdotool key #{s}" if s }
     end
   end
 end
