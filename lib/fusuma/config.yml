@@ -17,11 +17,18 @@ swipe:
       command: 'xdotool key super+a'
     down:
       command: 'xdotool key super+s'
+
 pinch:
-  in:
-    command: 'xdotool key ctrl+plus'
-  out:
-    command: 'xdotool key ctrl+minus'
+  2:
+    in:
+      command: 'xdotool key ctrl+equal'
+    out:
+      command: 'xdotool key ctrl+minus'
+  4:
+    in:
+      command: 'xdotool key super+a'
+    out:
+      command: 'xdotool key super+s'
 
 threshold:
   swipe: 0.3

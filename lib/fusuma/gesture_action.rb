@@ -29,8 +29,7 @@ module Fusuma
 
       def gesture_action_arguments(libinput_line)
         action, time, finger, other = parse_libinput(libinput_line)
-        move_x, move_y, zoom =
-          parse_finger_directions(other)
+        move_x, move_y, zoom = parse_finger_directions(other)
         directions = { move: { x: move_x, y: move_y }, zoom: zoom }
         [time, action, finger, directions]
       end

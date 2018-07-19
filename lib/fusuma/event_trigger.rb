@@ -8,19 +8,17 @@ module Fusuma
     end
     attr_reader :finger, :direction, :action_type
 
-    def send_command
+    def exec_command
+      return if command.nil?
+      `#{command}`
       MultiLogger.info("trigger event: #{command}")
-      exec_command(command)
     end
 
     private
 
-    def exec_command(command)
-      `#{command}` unless command.nil?
-    end
-
     def command
-      Config.command(self) || "xdotool key #{Config.shortcut(self)}"
+      Config.command(self).tap { |c| return c if c }
+      Config.shortcut(self).tap { |s| return "xdotool key #{shortcut}" if s }
     end
   end
 end
