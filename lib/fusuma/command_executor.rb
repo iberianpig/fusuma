@@ -1,17 +1,17 @@
 module Fusuma
-  # manage actions
-  class EventTrigger
-    def initialize(finger, direction, action_type)
+  # Execute Command
+  class CommandExecutor
+    def initialize(finger, direction, event_type)
       @finger      = finger.to_i
       @direction   = direction
-      @action_type = action_type
+      @event_type = event_type
     end
-    attr_reader :finger, :direction, :action_type
+    attr_reader :finger, :direction, :event_type
 
-    def exec_command
+    def execute
       return if command.nil?
       `#{command}`
-      MultiLogger.info("trigger event: #{command}")
+      MultiLogger.info("Execute: #{command}")
     end
 
     private

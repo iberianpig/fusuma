@@ -47,8 +47,8 @@ module Fusuma
       }
     end
 
-    let(:event_trigger) do
-      EventTrigger.new(@finger, @direction, @action)
+    let(:command_executor) do
+      CommandExecutor.new(@finger, @direction, @event)
     end
 
     describe '.shortcut' do
@@ -59,17 +59,17 @@ module Fusuma
         end
 
         context 'when swipe' do
-          before { @action = 'swipe' }
+          before { @event = 'swipe' }
           context 'when 3 finger' do
             before { @finger = 3 }
             it 'should swipe left shourtcut' do
               @direction = 'left'
-              expect(Config.shortcut(event_trigger)).to eq 'alt+Left'
+              expect(Config.shortcut(command_executor)).to eq 'alt+Left'
             end
 
             it 'should swipe right shourtcut' do
               @direction = 'right'
-              expect(Config.shortcut(event_trigger)).to eq 'alt+Right'
+              expect(Config.shortcut(command_executor)).to eq 'alt+Right'
             end
           end
 
@@ -77,29 +77,29 @@ module Fusuma
             before { @finger = 4 }
             it 'should swipe left shourtcut' do
               @direction = 'left'
-              expect(Config.shortcut(event_trigger)).to eq 'super+Left'
+              expect(Config.shortcut(command_executor)).to eq 'super+Left'
             end
 
             it 'should swipe right shourtcut' do
               @direction = 'right'
-              expect(Config.shortcut(event_trigger)).to eq 'super+Right'
+              expect(Config.shortcut(command_executor)).to eq 'super+Right'
             end
           end
         end
 
         context 'when pinch' do
           before do
-            @action = 'pinch'
+            @event = 'pinch'
             @finger = rand(5)
           end
           it 'should pinch in shourtcut' do
             @direction = 'in'
-            expect(Config.shortcut(event_trigger)).to eq 'ctrl+plus'
+            expect(Config.shortcut(command_executor)).to eq 'ctrl+plus'
           end
 
           it 'should pinch out shourtcut' do
             @direction = 'out'
-            expect(Config.shortcut(event_trigger)).to eq 'ctrl+minus'
+            expect(Config.shortcut(command_executor)).to eq 'ctrl+minus'
           end
         end
       end
@@ -111,9 +111,9 @@ module Fusuma
           @finger = nil
         end
         it 'should swipe shourtcut' do
-          @action    = 'swipe'
+          @event    = 'swipe'
           @direction = 'left'
-          expect(Config.shortcut(event_trigger)).to eq 'alt+Left'
+          expect(Config.shortcut(command_executor)).to eq 'alt+Left'
         end
       end
     end
@@ -125,8 +125,8 @@ module Fusuma
           Config.reload
         end
         it 'should return custom threshold' do
-          action_type = 'swipe'
-          expect(Config.threshold(action_type)).to eq 0.5
+          event_type = 'swipe'
+          expect(Config.threshold(event_type)).to eq 0.5
         end
       end
 
@@ -136,15 +136,15 @@ module Fusuma
           Config.reload
         end
         it 'should return default threshold' do
-          action_type = 'swipe'
-          expect(Config.threshold(action_type)).to eq 1
+          event_type = 'swipe'
+          expect(Config.threshold(event_type)).to eq 1
         end
       end
 
-      context 'with irregular action_type' do
+      context 'with irregular event_type' do
         it 'should return default threshold' do
-          action_type = 'missing_property'
-          expect(Config.threshold(action_type)).to eq 1
+          event_type = 'missing_property'
+          expect(Config.threshold(event_type)).to eq 1
         end
       end
     end
@@ -156,8 +156,8 @@ module Fusuma
           Config.reload
         end
         it 'should return custom interval' do
-          action_type = 'swipe'
-          expect(Config.interval(action_type)).to eq 0.3
+          event_type = 'swipe'
+          expect(Config.interval(event_type)).to eq 0.3
         end
       end
 
@@ -167,15 +167,15 @@ module Fusuma
           Config.reload
         end
         it 'should return default interval' do
-          action_type = 'swipe'
-          expect(Config.threshold(action_type)).to eq 1
+          event_type = 'swipe'
+          expect(Config.threshold(event_type)).to eq 1
         end
       end
 
-      context 'with irregular action_type' do
+      context 'with irregular event_type' do
         it 'should return default interval' do
-          action_type = 'missing_property'
-          expect(Config.threshold(action_type)).to eq 1
+          event_type = 'missing_property'
+          expect(Config.threshold(event_type)).to eq 1
         end
       end
     end
@@ -201,7 +201,7 @@ module Fusuma
 
     describe 'private_method: :cache' do
       it 'should cache shortcut' do
-        key   = %w[action_type finger direction shortcut].join(',')
+        key   = %w[event_type finger direction shortcut].join(',')
         value = 'shourtcut string'
         Config.reload
         Config.instance.send(:cache, key) { value }

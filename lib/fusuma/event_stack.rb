@@ -1,39 +1,39 @@
 module Fusuma
-  # manage actions
-  class ActionStack < Array
+  # manage events
+  class EventStack < Array
     ELAPSED_TIME = 0.01
 
     def initialize(*args)
       super(*args)
     end
 
-    def generate_event_trigger
-      return unless enough_actions?
-      action_type = detect_action_type
-      direction = detect_direction(action_type)
+    # @return [CommandExecutor, nil]
+    def generate_command_executor
+      return unless enough_events?
+      event_type = detect_event_type # swipe or pinch or rotate
+      direction = detect_direction(event_type) # right/left or in/out or clockwise/counterclockwise
       return if direction.nil?
-      @last_triggered_time = last.time
       finger = detect_finger
       clear
-      EventTrigger.new(finger, direction, action_type)
+      CommandExecutor.new(finger, direction, event_type)
     end
 
-    def push(gesture_action)
-      super(gesture_action)
-      clear if action_end?
+    def push(gesture_event)
+      super(gesture_event)
+      clear if event_end?
     end
     alias << push
 
     private
 
-    def detect_direction(action_type)
-      vector = generate_vector(action_type)
+    def detect_direction(event_type)
+      vector = generate_vector(event_type)
       return if vector && !vector.enough?
       vector.direction
     end
 
-    def generate_vector(action_type)
-      case action_type
+    def generate_vector(event_type)
+      case event_type
       when 'swipe'
         avg_swipe
       when 'pinch'
@@ -58,8 +58,8 @@ module Fusuma
     end
 
     def sum_attrs(attr)
-      send('map') do |gesture_action|
-        gesture_action.send(attr.to_sym.to_s)
+      send('map') do |gesture_event|
+        gesture_event.send(attr.to_sym.to_s)
       end.compact.inject(:+)
     end
 
@@ -67,16 +67,16 @@ module Fusuma
       sum_attrs(attr) / length
     end
 
-    def action_end?
-      last_action_name =~ /_END$/
+    def event_end?
+      last_event_name =~ /_END$/
     end
 
-    def last_action_name
-      return false if last.class != GestureAction
-      last.action
+    def last_event_name
+      return false if last.class != GestureEvent
+      last.event
     end
 
-    def enough_actions?
+    def enough_events?
       length > 2
     end
 
@@ -85,12 +85,8 @@ module Fusuma
       (last.time - first.time) > ELAPSED_TIME
     end
 
-    def last_triggered_time
-      @last_triggered_time ||= 0
-    end
-
-    def detect_action_type
-      first.action =~ /GESTURE_(.*?)_/
+    def detect_event_type
+      first.event =~ /GESTURE_(.*?)_/
       Regexp.last_match(1).downcase
     end
   end

@@ -1,7 +1,7 @@
 require_relative 'fusuma/version'
-require_relative 'fusuma/action_stack'
-require_relative 'fusuma/gesture_action'
-require_relative 'fusuma/event_trigger'
+require_relative 'fusuma/event_stack'
+require_relative 'fusuma/gesture_event'
+require_relative 'fusuma/command_executor'
 require_relative 'fusuma/swipe.rb'
 require_relative 'fusuma/pinch.rb'
 require_relative 'fusuma/multi_logger'
@@ -69,13 +69,13 @@ module Fusuma
     end
 
     def run
+      event_stack = EventStack.new
       LibinputCommands.new.debug_events do |line|
-        gesture_action = GestureAction.initialize_by(line, Device.ids)
-        next if gesture_action.nil?
-        @action_stack ||= ActionStack.new
-        @action_stack << gesture_action
-        event_trigger = @action_stack.generate_event_trigger
-        event_trigger.exec_command unless event_trigger.nil?
+        gesture_event = GestureEvent.initialize_by(line, Device.ids)
+        next if gesture_event.nil?
+        event_stack << gesture_event
+        command_executor = event_stack.generate_command_executor
+        command_executor.execute unless command_executor.nil?
       end
     end
   end

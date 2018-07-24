@@ -6,20 +6,20 @@ module Fusuma
     include Singleton
 
     class << self
-      def command(event_trigger)
-        instance.command(event_trigger)
+      def command(command_executor)
+        instance.command(command_executor)
       end
 
-      def shortcut(event_trigger)
-        instance.shortcut(event_trigger)
+      def shortcut(command_executor)
+        instance.shortcut(command_executor)
       end
 
-      def threshold(action_type)
-        instance.threshold(action_type)
+      def threshold(event_type)
+        instance.threshold(event_type)
       end
 
-      def interval(action_type)
-        instance.interval(action_type)
+      def interval(event_type)
+        instance.interval(event_type)
       end
 
       def reload
@@ -41,23 +41,23 @@ module Fusuma
       self
     end
 
-    def command(event_trigger)
-      seek_index = [*action_index(event_trigger), 'command']
+    def command(command_executor)
+      seek_index = [*event_index(command_executor), 'command']
       cache(seek_index) { search_config(keymap, seek_index) }
     end
 
-    def shortcut(event_trigger)
-      seek_index = [*action_index(event_trigger), 'shortcut']
+    def shortcut(command_executor)
+      seek_index = [*event_index(command_executor), 'shortcut']
       cache(seek_index) { search_config(keymap, seek_index) }
     end
 
-    def threshold(action_type)
-      seek_index = ['threshold', action_type]
+    def threshold(event_type)
+      seek_index = ['threshold', event_type]
       cache(seek_index) { search_config(keymap, seek_index) } || 1
     end
 
-    def interval(action_type)
-      seek_index = ['interval', action_type]
+    def interval(event_type)
+      seek_index = ['interval', event_type]
       cache(seek_index) { search_config(keymap, seek_index) } || 1
     end
 
@@ -98,11 +98,11 @@ module Fusuma
       File.expand_path "../../#{filename}", __FILE__
     end
 
-    def action_index(event_trigger)
-      action_type = event_trigger.action_type
-      finger      = event_trigger.finger
-      direction   = event_trigger.direction
-      [action_type, finger, direction]
+    def event_index(command_executor)
+      event_type = command_executor.event_type
+      finger      = command_executor.finger
+      direction   = command_executor.direction
+      [event_type, finger, direction]
     end
 
     def cache(key)

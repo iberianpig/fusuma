@@ -1,9 +1,9 @@
 require 'spec_helper'
 module Fusuma
-  describe EventTrigger do
-    describe 'exec_command' do
-      subject { event_trigger.exec_command }
-      let(:event_trigger) { EventTrigger.new(3, :right, :swipe) }
+  describe CommandExecutor do
+    describe 'execute' do
+      subject { command_executor.execute }
+      let(:command_executor) { CommandExecutor.new(3, :right, :swipe) }
 
       context 'with command' do
         context 'with valid condition' do
