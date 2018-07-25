@@ -69,7 +69,7 @@ $ mkdir -p ~/.config/fusuma        # create config directory
 $ nano ~/.config/fusuma/config.yml # edit config file.
 ```
 
-### Example (Gesture Mapping for Elementary OS)
+### Example (Gesture Mapping for elementary OS)
 
 ```yaml
 swipe:
