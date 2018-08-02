@@ -1,5 +1,5 @@
 module Fusuma
-  # manage events
+  # manage events and generate command
   class EventStack < Array
     ELAPSED_TIME = 0.01
 
@@ -18,6 +18,7 @@ module Fusuma
       CommandExecutor.new(finger, direction, event_type)
     end
 
+    # @params [GestureEvent]
     def push(gesture_event)
       super(gesture_event)
       clear if event_end?
