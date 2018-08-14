@@ -12,7 +12,6 @@ module Fusuma
       action_type = detect_action_type
       direction = detect_direction(action_type)
       return if direction.nil?
-      @last_triggered_time = last.time
       finger = detect_finger
       clear
       EventTrigger.new(finger, direction, action_type)
@@ -83,10 +82,6 @@ module Fusuma
     def enough_elapsed_time?
       return false if length.zero?
       (last.time - first.time) > ELAPSED_TIME
-    end
-
-    def last_triggered_time
-      @last_triggered_time ||= 0
     end
 
     def detect_action_type
