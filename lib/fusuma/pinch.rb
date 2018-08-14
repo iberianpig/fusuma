@@ -15,20 +15,21 @@ module Fusuma
       'out'
     end
 
-    def enough?
+    def enough?(trigger)
       MultiLogger.debug(diameter: diameter)
-      enough_diameter? && enough_interval? && self.class.touch_last_time
+      enough_diameter?(trigger) && enough_interval?(trigger) &&
+        self.class.touch_last_time
     end
 
     private
 
-    def enough_diameter?
-      diameter.abs > threshold
+    def enough_diameter?(trigger)
+      diameter.abs > threshold(trigger)
     end
 
-    def enough_interval?
+    def enough_interval?(trigger)
       return true if first_time?
-      return true if (Time.now - self.class.last_time) > interval_time
+      return true if (Time.now - self.class.last_time) > interval_time(trigger)
       false
     end
 
@@ -36,12 +37,12 @@ module Fusuma
       self.class.last_time.nil?
     end
 
-    def threshold
-      @threshold ||= BASE_THERESHOLD * Config.threshold('pinch')
+    def threshold(trigger)
+      @threshold ||= BASE_THERESHOLD * Config.threshold('pinch', trigger)
     end
 
-    def interval_time
-      @interval_time ||= BASE_INTERVAL * Config.interval('pinch')
+    def interval_time(trigger)
+      @interval_time ||= BASE_INTERVAL * Config.interval('pinch', trigger)
     end
 
     class << self
