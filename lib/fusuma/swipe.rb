@@ -15,20 +15,21 @@ module Fusuma
       y > 0 ? 'down' : 'up'
     end
 
-    def enough?
+    def enough?(trigger)
       MultiLogger.debug(x: x, y: y)
-      enough_distance? && enough_interval? && self.class.touch_last_time
+      enough_distance?(trigger) && enough_interval?(trigger) &&
+        self.class.touch_last_time
     end
 
     private
 
-    def enough_distance?
-      (x.abs > threshold) || (y.abs > threshold)
+    def enough_distance?(trigger)
+      (x.abs > threshold(trigger)) || (y.abs > threshold(trigger))
     end
 
-    def enough_interval?
+    def enough_interval?(trigger)
       return true if first_time?
-      return true if (Time.now - self.class.last_time) > interval_time
+      return true if (Time.now - self.class.last_time) > interval_time(trigger)
       false
     end
 
@@ -36,12 +37,12 @@ module Fusuma
       self.class.last_time.nil?
     end
 
-    def threshold
-      @threshold ||= BASE_THERESHOLD * Config.threshold('swipe')
+    def threshold(trigger)
+      @threshold ||= BASE_THERESHOLD * Config.threshold('swipe', trigger)
     end
 
-    def interval_time
-      @interval_time ||= BASE_INTERVAL * Config.interval('swipe')
+    def interval_time(trigger)
+      @interval_time ||= BASE_INTERVAL * Config.interval('swipe', trigger)
     end
 
     class << self

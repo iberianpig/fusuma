@@ -10,11 +10,12 @@ module Fusuma
     def generate_event_trigger
       return unless enough_actions?
       action_type = detect_action_type
-      direction = detect_direction(action_type)
-      return if direction.nil?
+      vector = generate_vector(action_type)
       finger = detect_finger
+      trigger = EventTrigger.new(finger, vector.direction, action_type)
+      return unless vector.enough?(trigger)
       clear
-      EventTrigger.new(finger, direction, action_type)
+      trigger
     end
 
     def push(gesture_action)
@@ -24,12 +25,6 @@ module Fusuma
     alias << push
 
     private
-
-    def detect_direction(action_type)
-      vector = generate_vector(action_type)
-      return if vector && !vector.enough?
-      vector.direction
-    end
 
     def generate_vector(action_type)
       case action_type
