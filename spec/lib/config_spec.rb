@@ -45,7 +45,7 @@ module Fusuma
             'left' => {
               'shortcut' => 'alt+Left',
               'threshold' => 0.8
-            },
+            }
           }
         }
       }
@@ -64,10 +64,10 @@ module Fusuma
       {
         'swipe' => {
           4 => {
-            'right'  => {
+            'right' => {
               'shortcut' => 'alt+Right',
               'interval' => 0.3
-            },
+            }
           }
         }
       }
@@ -158,7 +158,8 @@ module Fusuma
 
       context 'when threshold is set on the trigger' do
         before do
-          allow(YAML).to receive(:load_file).and_return keymap_with_trigger_threshold
+          allow(YAML).to receive(:load_file)
+            .and_return keymap_with_trigger_threshold
           Config.reload
           @finger    = 3
           @action    = 'swipe'
@@ -203,7 +204,8 @@ module Fusuma
 
       context 'when interval is set on the trigger' do
         before do
-          allow(YAML).to receive(:load_file).and_return keymap_with_trigger_interval
+          allow(YAML).to receive(:load_file)
+            .and_return keymap_with_trigger_interval
           Config.reload
           @finger    = 4
           @action    = 'swipe'
