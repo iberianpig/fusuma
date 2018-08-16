@@ -38,11 +38,37 @@ module Fusuma
       }
     end
 
+    let(:keymap_with_trigger_threshold) do
+      {
+        'swipe' => {
+          3 => {
+            'left' => {
+              'shortcut' => 'alt+Left',
+              'threshold' => 0.8
+            }
+          }
+        }
+      }
+    end
+
     let(:keymap_with_interval) do
       {
         'interval' => {
           'swipe' => 0.3,
           'pinch' => 0.5
+        }
+      }
+    end
+
+    let(:keymap_with_trigger_interval) do
+      {
+        'swipe' => {
+          4 => {
+            'right' => {
+              'shortcut' => 'alt+Right',
+              'interval' => 0.3
+            }
+          }
         }
       }
     end
@@ -111,7 +137,7 @@ module Fusuma
           @finger = nil
         end
         it 'should swipe shourtcut' do
-          @event    = 'swipe'
+          @event = 'swipe'
           @direction = 'left'
           expect(Config.shortcut(command_executor)).to eq 'alt+Left'
         end
@@ -126,7 +152,22 @@ module Fusuma
         end
         it 'should return custom threshold' do
           event_type = 'swipe'
-          expect(Config.threshold(event_type)).to eq 0.5
+          expect(Config.threshold(event_type, command_executor)).to eq 0.5
+        end
+      end
+
+      context 'when threshold is set on the trigger' do
+        before do
+          allow(YAML).to receive(:load_file)
+            .and_return keymap_with_trigger_threshold
+          Config.reload
+          @finger = 3
+          @event = 'swipe'
+          @direction = 'left'
+        end
+        it 'should return custom threshold' do
+          event_type = 'swipe'
+          expect(Config.threshold(event_type, command_executor)).to eq 0.8
         end
       end
 
@@ -137,14 +178,14 @@ module Fusuma
         end
         it 'should return default threshold' do
           event_type = 'swipe'
-          expect(Config.threshold(event_type)).to eq 1
+          expect(Config.threshold(event_type, command_executor)).to eq 1
         end
       end
 
       context 'with irregular event_type' do
         it 'should return default threshold' do
           event_type = 'missing_property'
-          expect(Config.threshold(event_type)).to eq 1
+          expect(Config.threshold(event_type, command_executor)).to eq 1
         end
       end
     end
@@ -157,7 +198,22 @@ module Fusuma
         end
         it 'should return custom interval' do
           event_type = 'swipe'
-          expect(Config.interval(event_type)).to eq 0.3
+          expect(Config.interval(event_type, command_executor)).to eq 0.3
+        end
+      end
+
+      context 'when interval is set on the trigger' do
+        before do
+          allow(YAML).to receive(:load_file)
+            .and_return keymap_with_trigger_interval
+          Config.reload
+          @finger    = 4
+          @event     = 'swipe'
+          @direction = 'right'
+        end
+        it 'should return custom interval' do
+          event_type = 'swipe'
+          expect(Config.interval(event_type, command_executor)).to eq 0.3
         end
       end
 
@@ -168,14 +224,14 @@ module Fusuma
         end
         it 'should return default interval' do
           event_type = 'swipe'
-          expect(Config.threshold(event_type)).to eq 1
+          expect(Config.threshold(event_type, command_executor)).to eq 1
         end
       end
 
       context 'with irregular event_type' do
         it 'should return default interval' do
           event_type = 'missing_property'
-          expect(Config.threshold(event_type)).to eq 1
+          expect(Config.threshold(event_type, command_executor)).to eq 1
         end
       end
     end

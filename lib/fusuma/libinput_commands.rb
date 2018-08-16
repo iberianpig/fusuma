@@ -70,6 +70,7 @@ module Fusuma
     end
 
     private
+
     # use device option only if libinput detect only 1 device
     # @return [String]
     def device_option

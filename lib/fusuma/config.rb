@@ -14,12 +14,12 @@ module Fusuma
         instance.shortcut(command_executor)
       end
 
-      def threshold(event_type)
-        instance.threshold(event_type)
+      def threshold(event_type, command_executor)
+        instance.threshold(event_type, command_executor)
       end
 
-      def interval(event_type)
-        instance.interval(event_type)
+      def interval(event_type, command_executor)
+        instance.interval(event_type, command_executor)
       end
 
       def reload
@@ -43,25 +43,33 @@ module Fusuma
 
     def command(command_executor)
       seek_index = [*event_index(command_executor), 'command']
-      cache(seek_index) { search_config(keymap, seek_index) }
+      search_config_cached(seek_index)
     end
 
     def shortcut(command_executor)
       seek_index = [*event_index(command_executor), 'shortcut']
-      cache(seek_index) { search_config(keymap, seek_index) }
+      search_config_cached(seek_index)
     end
 
-    def threshold(event_type)
-      seek_index = ['threshold', event_type]
-      cache(seek_index) { search_config(keymap, seek_index) } || 1
+    def threshold(event_type, command_executor)
+      seek_index_trigger = [*event_index(command_executor), 'threshold']
+      seek_index_global = ['threshold', event_type]
+      search_config_cached(seek_index_trigger) ||
+        search_config_cached(seek_index_global) || 1
     end
 
-    def interval(event_type)
-      seek_index = ['interval', event_type]
-      cache(seek_index) { search_config(keymap, seek_index) } || 1
+    def interval(event_type, command_executor)
+      seek_index_trigger = [*event_index(command_executor), 'interval']
+      seek_index_global = ['interval', event_type]
+      search_config_cached(seek_index_trigger) ||
+        search_config_cached(seek_index_global) || 1
     end
 
     private
+
+    def search_config_cached(seek_index)
+      cache(seek_index) { search_config(keymap, seek_index) }
+    end
 
     def search_config(keymap_node, seek_index)
       if seek_index == []

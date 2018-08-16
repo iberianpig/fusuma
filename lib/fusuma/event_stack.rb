@@ -10,12 +10,11 @@ module Fusuma
     # @return [CommandExecutor, nil]
     def generate_command_executor
       return unless enough_events?
-      event_type = detect_event_type # swipe or pinch or rotate
-      direction = detect_direction(event_type) # right/left or in/out or clockwise/counterclockwise
-      return if direction.nil?
-      finger = detect_finger
+      vector = generate_vector(detect_event_type)
+      trigger = CommandExecutor.new(finger, vector)
+      return unless vector.enough?(trigger)
       clear
-      CommandExecutor.new(finger, direction, event_type)
+      trigger
     end
 
     # @params [GestureEvent]
@@ -27,12 +26,6 @@ module Fusuma
 
     private
 
-    def detect_direction(event_type)
-      vector = generate_vector(event_type)
-      return if vector && !vector.enough?
-      vector.direction
-    end
-
     def generate_vector(event_type)
       case event_type
       when 'swipe'
@@ -42,7 +35,7 @@ module Fusuma
       end
     end
 
-    def detect_finger
+    def finger
       last.finger
     end
 

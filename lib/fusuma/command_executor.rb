@@ -1,10 +1,10 @@
 module Fusuma
   # Execute Command
   class CommandExecutor
-    def initialize(finger, direction, event_type)
+    def initialize(finger, vector)
       @finger      = finger.to_i
-      @direction   = direction
-      @event_type = event_type
+      @direction   = vector.direction
+      @event_type = vector.class::TYPE
     end
     attr_reader :finger, :direction, :event_type
 
