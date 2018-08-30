@@ -74,7 +74,7 @@ module Fusuma
 
     def run
       LibinputCommands.new.debug_events do |line|
-        gesture_event = GestureEvent.initialize_by(line, Device.ids)
+        gesture_event = GestureEvent.initialize_by(line.to_s, Device.ids)
         next unless gesture_event
         @event_stack << gesture_event
         @event_stack.generate_command_executor.tap { |c| c.execute if c }

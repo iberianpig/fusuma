@@ -11,6 +11,20 @@ module Fusuma
       @available = available
     end
 
+    # @param [Hash]
+    def assign_attributes(attributes)
+      attributes.each do |k, v|
+        case k
+        when :id
+          self.id = v
+        when :name
+          self.name = v
+        when :available
+          self.available = v
+        end
+      end
+    end
+
     class << self
       # @return [Array]
       def ids
@@ -38,7 +52,7 @@ module Fusuma
         @available = nil
       end
 
-      # @params [String]
+      # @param [String]
       def given_device=(name)
         return if name.nil?
         @available = available.select { |d| d.name == name }
@@ -72,11 +86,12 @@ module Fusuma
           lines.push(line)
         end
 
+        # @return [Array]
         def generate_devices
           device = nil
           lines.each_with_object([]) do |line, devices|
             device ||= Device.new
-            device = parse(device: device, line: line)
+            device.assign_attributes extract_attribute(line: line)
             if device.available
               devices << device
               device = nil
@@ -84,16 +99,18 @@ module Fusuma
           end
         end
 
-        # @return [Device]
-        def parse(device:, line:)
+        # @param  [String]
+        # @return [Hash]
+        def extract_attribute(line:)
           if (id = id_from(line))
-            device.id = id
+            { id: id }
           elsif (name = name_from(line))
-            device.name = name
-          elsif (available = natural_scroll_is_available?(line))
-            device.available = available
+            { name: name }
+          elsif (available = available?(line))
+            { available: available }
+          else
+            {}
           end
-          device
         end
 
         def id_from(line)
@@ -108,7 +125,8 @@ module Fusuma
           end
         end
 
-        def natural_scroll_is_available?(line)
+        def available?(line)
+          # NOTE: natural scroll is available?
           return false unless line =~ /^Nat.scrolling: /
           return false if line =~ %r{n/a}
           true

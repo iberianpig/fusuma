@@ -15,14 +15,14 @@ module Fusuma
     class << self
       def initialize_by(line, device_names)
         return if device_names.none? do |device_name|
-          line.to_s =~ /^\s?#{device_name}/
+          line =~ /^\s?#{device_name}/
         end
-        return if line.to_s =~ /_BEGIN/
-        return unless line.to_s =~ /GESTURE_SWIPE|GESTURE_PINCH/
+        return if line =~ /_BEGIN/
+        return unless line =~ /GESTURE_SWIPE|GESTURE_PINCH/
         time, event, finger, directions = gesture_event_arguments(line)
         MultiLogger.debug(time: time, event: event,
                           finger: finger, directions: directions)
-        GestureEvent.new(time, event, finger, directions)
+        new(time, event, finger, directions)
       end
 
       private
@@ -41,7 +41,7 @@ module Fusuma
       end
 
       def parse_finger_directions(line)
-        return [] if line.nil?
+        return [] unless line
         move_x, move_y, _, _, _, zoom = line.tr('/|(|)', ' ').split
         [move_x, move_y, zoom]
       end
