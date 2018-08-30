@@ -1,12 +1,14 @@
 module Fusuma
   # vector data
   class Swipe
+    TYPE = 'swipe'.freeze
+
     BASE_THERESHOLD = 20
     BASE_INTERVAL   = 0.5
 
-    def initialize(x, y)
-      @x = x
-      @y = y
+    def initialize(move_x, move_y)
+      @x = move_x
+      @y = move_y
     end
     attr_reader :x, :y
 
@@ -24,7 +26,8 @@ module Fusuma
     private
 
     def enough_distance?(trigger)
-      (x.abs > threshold(trigger)) || (y.abs > threshold(trigger))
+      threshold = threshold(trigger)
+      (x.abs > threshold) || (y.abs > threshold)
     end
 
     def enough_interval?(trigger)
@@ -34,15 +37,15 @@ module Fusuma
     end
 
     def first_time?
-      self.class.last_time.nil?
+      !self.class.last_time
     end
 
     def threshold(trigger)
-      @threshold ||= BASE_THERESHOLD * Config.threshold('swipe', trigger)
+      @threshold ||= BASE_THERESHOLD * Config.threshold(trigger)
     end
 
     def interval_time(trigger)
-      @interval_time ||= BASE_INTERVAL * Config.interval('swipe', trigger)
+      @interval_time ||= BASE_INTERVAL * Config.interval(trigger)
     end
 
     class << self

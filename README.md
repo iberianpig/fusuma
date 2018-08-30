@@ -80,8 +80,10 @@ swipe:
       command: 'xdotool key alt+Right'
     up: 
       command: 'xdotool key ctrl+t'
+      threshold: 1.5
     down: 
       command: 'xdotool key ctrl+w'
+      threshold: 1.5
   4:
     left: 
       command: 'xdotool key super+Left'
@@ -94,8 +96,10 @@ swipe:
 pinch:
   in:
     command: 'xdotool key ctrl+plus'
+    threshold: 0.1
   out:
     command: 'xdotool key ctrl+minus'
+    threshold: 0.1
 
 threshold:
   swipe: 1
@@ -106,7 +110,7 @@ interval:
   pinch: 1
 ```
 
-if `command: ` properties are blank, the swipe/pinch doesn't trigger command.
+if `command: ` properties are blank, the swipe/pinch doesn't execute command.
 
 `threshold:` is sensitivity to swipe/pinch. Default value is 1.
 If the swipe's threshold is `0.5`, shorten swipe-length by half.

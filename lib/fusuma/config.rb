@@ -6,20 +6,20 @@ module Fusuma
     include Singleton
 
     class << self
-      def command(event_trigger)
-        instance.command(event_trigger)
+      def command(command_executor)
+        instance.command(command_executor)
       end
 
-      def shortcut(event_trigger)
-        instance.shortcut(event_trigger)
+      def shortcut(command_executor)
+        instance.shortcut(command_executor)
       end
 
-      def threshold(action_type, event_trigger)
-        instance.threshold(action_type, event_trigger)
+      def threshold(command_executor)
+        instance.threshold(command_executor)
       end
 
-      def interval(action_type, event_trigger)
-        instance.interval(action_type, event_trigger)
+      def interval(command_executor)
+        instance.interval(command_executor)
       end
 
       def reload
@@ -31,7 +31,7 @@ module Fusuma
     attr_accessor :custom_path
 
     def initialize
-      @custom_path = nil
+      self.custom_path = nil
       reload
     end
 
@@ -41,27 +41,27 @@ module Fusuma
       self
     end
 
-    def command(event_trigger)
-      seek_index = [*action_index(event_trigger), 'command']
+    def command(command_executor)
+      seek_index = [*event_index(command_executor), 'command']
       search_config_cached(seek_index)
     end
 
-    def shortcut(event_trigger)
-      seek_index = [*action_index(event_trigger), 'shortcut']
+    def shortcut(command_executor)
+      seek_index = [*event_index(command_executor), 'shortcut']
       search_config_cached(seek_index)
     end
 
-    def threshold(action_type, event_trigger)
-      seek_index_trigger = [*action_index(event_trigger), 'threshold']
-      seek_index_global = ['threshold', action_type]
-      search_config_cached(seek_index_trigger) ||
+    def threshold(command_executor)
+      seek_index_specific = [*event_index(command_executor), 'threshold']
+      seek_index_global = ['threshold', command_executor.event_type]
+      search_config_cached(seek_index_specific) ||
         search_config_cached(seek_index_global) || 1
     end
 
-    def interval(action_type, event_trigger)
-      seek_index_trigger = [*action_index(event_trigger), 'interval']
-      seek_index_global = ['interval', action_type]
-      search_config_cached(seek_index_trigger) ||
+    def interval(command_executor)
+      seek_index_specific = [*event_index(command_executor), 'interval']
+      seek_index_global = ['interval', command_executor.event_type]
+      search_config_cached(seek_index_specific) ||
         search_config_cached(seek_index_global) || 1
     end
 
@@ -106,11 +106,11 @@ module Fusuma
       File.expand_path "../../#{filename}", __FILE__
     end
 
-    def action_index(event_trigger)
-      action_type = event_trigger.action_type
-      finger      = event_trigger.finger
-      direction   = event_trigger.direction
-      [action_type, finger, direction]
+    def event_index(command_executor)
+      event_type = command_executor.event_type
+      finger      = command_executor.finger
+      direction   = command_executor.direction
+      [event_type, finger, direction]
     end
 
     def cache(key)
