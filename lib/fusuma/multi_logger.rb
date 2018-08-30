@@ -25,7 +25,6 @@ module Fusuma
     end
 
     def warn(msg)
-      return unless debug_mode?
       err_logger.warn(msg)
     end
 

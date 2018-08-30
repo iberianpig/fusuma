@@ -24,7 +24,12 @@ module Fusuma
     end
 
     def shortcut
-      Config.shortcut(self).tap { |s| return "xdotool key #{s}" if s }
+      s = Config.shortcut(self)
+      return unless s
+      c = "xdotool key #{s}"
+      MultiLogger.warn 'shortcut property is deprecated.'
+      MultiLogger.warn "Use command: #{c} instead of shortcut: #{s}"
+      c
     end
 
     def no_command
