@@ -9,16 +9,26 @@ module Fusuma
     attr_reader :finger, :direction, :event_type
 
     def execute
-      return if command.nil?
-      `#{command}`
-      MultiLogger.info("Execute: #{command}")
+      `#{command_or_shortcut}`
+      MultiLogger.info("Execute: #{command_or_shortcut}")
     end
 
     private
 
+    def command_or_shortcut
+      @command_or_shortcut ||= command || shortcut || no_command
+    end
+
     def command
-      Config.command(self).tap { |c| return c if c }
+      Config.command(self)
+    end
+
+    def shortcut
       Config.shortcut(self).tap { |s| return "xdotool key #{s}" if s }
+    end
+
+    def no_command
+      'echo "Command is not assigned"'
     end
   end
 end

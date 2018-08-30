@@ -14,12 +14,12 @@ module Fusuma
         instance.shortcut(command_executor)
       end
 
-      def threshold(event_type, command_executor)
-        instance.threshold(event_type, command_executor)
+      def threshold(command_executor)
+        instance.threshold(command_executor)
       end
 
-      def interval(event_type, command_executor)
-        instance.interval(event_type, command_executor)
+      def interval(command_executor)
+        instance.interval(command_executor)
       end
 
       def reload
@@ -31,7 +31,7 @@ module Fusuma
     attr_accessor :custom_path
 
     def initialize
-      @custom_path = nil
+      self.custom_path = nil
       reload
     end
 
@@ -51,17 +51,17 @@ module Fusuma
       search_config_cached(seek_index)
     end
 
-    def threshold(event_type, command_executor)
-      seek_index_trigger = [*event_index(command_executor), 'threshold']
-      seek_index_global = ['threshold', event_type]
-      search_config_cached(seek_index_trigger) ||
+    def threshold(command_executor)
+      seek_index_specific = [*event_index(command_executor), 'threshold']
+      seek_index_global = ['threshold', command_executor.event_type]
+      search_config_cached(seek_index_specific) ||
         search_config_cached(seek_index_global) || 1
     end
 
-    def interval(event_type, command_executor)
-      seek_index_trigger = [*event_index(command_executor), 'interval']
-      seek_index_global = ['interval', event_type]
-      search_config_cached(seek_index_trigger) ||
+    def interval(command_executor)
+      seek_index_specific = [*event_index(command_executor), 'interval']
+      seek_index_global = ['interval', command_executor.event_type]
+      search_config_cached(seek_index_specific) ||
         search_config_cached(seek_index_global) || 1
     end
 

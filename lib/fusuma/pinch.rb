@@ -36,15 +36,15 @@ module Fusuma
     end
 
     def first_time?
-      self.class.last_time.nil?
+      !self.class.last_time
     end
 
     def threshold(trigger)
-      @threshold ||= BASE_THERESHOLD * Config.threshold('pinch', trigger)
+      @threshold ||= BASE_THERESHOLD * Config.threshold(trigger)
     end
 
     def interval_time(trigger)
-      @interval_time ||= BASE_INTERVAL * Config.interval('pinch', trigger)
+      @interval_time ||= BASE_INTERVAL * Config.interval(trigger)
     end
 
     class << self
