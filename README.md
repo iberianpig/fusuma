@@ -146,10 +146,11 @@ swipe:
 *   `--device="Device name"`      : Open the given device only
 *   `--version`                   : Show fusuma version
 
-## Autostart(gnome-session-properties)
-1. Check where you installed fusuma
+## Autostart (gnome-session-properties)
+1. Check the path where you installed fusuma with `$ which fusuma`
 2. Open `$ gnome-session-properties`
-3. Add Fusuma and input location where you checked above's path
+3. Add Fusuma and enter the location where the above path was checked in the command input field
+4. Add the `-d` option at the end of the command input field
 
 ## Support
 
