@@ -94,12 +94,13 @@ swipe:
     down: 
       command: 'xdotool key super+s'
 pinch:
-  in:
-    command: 'xdotool key ctrl+plus'
-    threshold: 0.1
-  out:
-    command: 'xdotool key ctrl+minus'
-    threshold: 0.1
+  2:
+    in:
+      command: 'xdotool key ctrl+plus'
+      threshold: 0.1
+    out:
+      command: 'xdotool key ctrl+minus'
+      threshold: 0.1
 
 threshold:
   swipe: 1
@@ -136,6 +137,11 @@ swipe:
 -      shortcut: 'alt+Right'
 +      command: 'xdotool key alt+Right'
 ```
+
+### About xdotool
+
+* xdotool manual (https://github.com/jordansissel/xdotool/blob/master/xdotool.pod)
+* Available keys' hint (https://github.com/jordansissel/xdotool/issues/212#issuecomment-406156157)
 
 ## Options
 
