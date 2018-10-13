@@ -1,5 +1,5 @@
 require 'spec_helper'
-
+# spec for Config
 module Fusuma
   describe Config do
     let(:keymap) do
@@ -73,9 +73,7 @@ module Fusuma
       }
     end
 
-    let(:command_executor) do
-      CommandExecutor.new(@finger, @vector)
-    end
+    let(:vector) { @vector_class.new(@finger) }
 
     describe '.shortcut' do
       context 'when keymap with finger' do
@@ -85,47 +83,47 @@ module Fusuma
         end
 
         context 'when swipe' do
-          before { @vector = Swipe.new(0, 0) }
+          before { @vector_class = Swipe }
           context 'when 3 finger' do
             before { @finger = 3 }
             it 'should swipe left shourtcut' do
-              allow(@vector).to receive(:direction).and_return 'left'
-              expect(Config.shortcut(command_executor)).to eq 'alt+Left'
+              allow(vector).to receive(:direction).and_return 'left'
+              expect(Config.shortcut(vector)).to eq 'alt+Left'
             end
 
             it 'should swipe right shourtcut' do
-              allow(@vector).to receive(:direction).and_return 'right'
-              expect(Config.shortcut(command_executor)).to eq 'alt+Right'
+              allow(vector).to receive(:direction).and_return 'right'
+              expect(Config.shortcut(vector)).to eq 'alt+Right'
             end
           end
 
           context 'when 4 finger' do
             before { @finger = 4 }
             it 'should swipe left shourtcut' do
-              allow(@vector).to receive(:direction).and_return 'left'
-              expect(Config.shortcut(command_executor)).to eq 'super+Left'
+              allow(vector).to receive(:direction).and_return 'left'
+              expect(Config.shortcut(vector)).to eq 'super+Left'
             end
 
             it 'should swipe right shourtcut' do
-              allow(@vector).to receive(:direction).and_return 'right'
-              expect(Config.shortcut(command_executor)).to eq 'super+Right'
+              allow(vector).to receive(:direction).and_return 'right'
+              expect(Config.shortcut(vector)).to eq 'super+Right'
             end
           end
         end
 
         context 'when pinch' do
           before do
-            @vector = Pinch.new(0)
+            @vector_class = Pinch
             @finger = rand(5)
           end
           it 'should pinch in shourtcut' do
-            allow(@vector).to receive(:direction).and_return 'in'
-            expect(Config.shortcut(command_executor)).to eq 'ctrl+plus'
+            allow(vector).to receive(:direction).and_return 'in'
+            expect(Config.shortcut(vector)).to eq 'ctrl+plus'
           end
 
           it 'should pinch out shourtcut' do
-            allow(@vector).to receive(:direction).and_return 'out'
-            expect(Config.shortcut(command_executor)).to eq 'ctrl+minus'
+            allow(vector).to receive(:direction).and_return 'out'
+            expect(Config.shortcut(vector)).to eq 'ctrl+minus'
           end
         end
       end
@@ -137,9 +135,9 @@ module Fusuma
           @finger = nil
         end
         it 'should swipe shourtcut' do
-          @vector = Swipe.new(0, 0)
-          allow(@vector).to receive(:direction).and_return 'left'
-          expect(Config.shortcut(command_executor)).to eq 'alt+Left'
+          @vector_class = Swipe
+          allow(vector).to receive(:direction).and_return 'left'
+          expect(Config.shortcut(vector)).to eq 'alt+Left'
         end
       end
     end
@@ -151,8 +149,8 @@ module Fusuma
           Config.reload
         end
         it 'should return custom threshold' do
-          @vector = Swipe.new(0, 0)
-          expect(Config.threshold(command_executor)).to eq 0.5
+          @vector_class = Swipe
+          expect(Config.threshold(vector)).to eq 0.5
         end
       end
 
@@ -162,11 +160,11 @@ module Fusuma
             .and_return keymap_with_trigger_threshold
           Config.reload
           @finger = 3
-          @vector = Swipe.new(0, 0)
-          allow(@vector).to receive(:direction).and_return 'left'
+          @vector_class = Swipe
+          allow(vector).to receive(:direction).and_return 'left'
         end
         it 'should return custom threshold' do
-          expect(Config.threshold(command_executor)).to eq 0.8
+          expect(Config.threshold(vector)).to eq 0.8
         end
       end
 
@@ -174,19 +172,19 @@ module Fusuma
         before do
           allow(YAML).to receive(:load_file).and_return keymap
           Config.reload
-          @vector = Swipe.new(0, 0)
+          @vector_class = Swipe
         end
         it 'should return default threshold' do
-          expect(Config.threshold(command_executor)).to eq 1
+          expect(Config.threshold(vector)).to eq 1
         end
       end
 
       context 'with irregular event_type' do
         it 'should return default threshold' do
-          @vector = Swipe.new(0, 0)
+          @vector_class = Swipe
           event_type = 'missing_property'
-          allow(command_executor).to receive(:event_type).and_return event_type
-          expect(Config.threshold(command_executor)).to eq 1
+          allow(vector).to receive(:event_type).and_return event_type
+          expect(Config.threshold(vector)).to eq 1
         end
       end
     end
@@ -196,10 +194,10 @@ module Fusuma
         before do
           allow(YAML).to receive(:load_file).and_return keymap_with_interval
           Config.reload
-          @vector = Swipe.new(0, 0)
+          @vector_class = Swipe
         end
         it 'should return custom interval' do
-          expect(Config.interval(command_executor)).to eq 0.3
+          expect(Config.interval(vector)).to eq 0.3
         end
       end
 
@@ -209,11 +207,11 @@ module Fusuma
             .and_return keymap_with_trigger_interval
           Config.reload
           @finger = 4
-          @vector = Swipe.new(0, 0)
-          allow(@vector).to receive(:direction).and_return 'right'
+          @vector_class = Swipe
+          allow(vector).to receive(:direction).and_return 'right'
         end
         it 'should return custom interval' do
-          expect(Config.interval(command_executor)).to eq 0.3
+          expect(Config.interval(vector)).to eq 0.3
         end
       end
 
@@ -221,19 +219,19 @@ module Fusuma
         before do
           allow(YAML).to receive(:load_file).and_return keymap
           Config.reload
-          @vector = Swipe.new(0, 0)
+          @vector_class = Swipe
         end
         it 'should return default interval' do
-          expect(Config.threshold(command_executor)).to eq 1
+          expect(Config.threshold(vector)).to eq 1
         end
       end
 
       context 'with irregular event_type' do
         it 'should return default interval' do
-          @vector = Swipe.new(0, 0)
+          @vector_class = Swipe
           event_type = 'missing_property'
-          allow(command_executor).to receive(:event_type).and_return event_type
-          expect(Config.threshold(command_executor)).to eq 1
+          allow(vector).to receive(:event_type).and_return event_type
+          expect(Config.threshold(vector)).to eq 1
         end
       end
     end

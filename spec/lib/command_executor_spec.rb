@@ -4,8 +4,8 @@ module Fusuma
   describe CommandExecutor do
     describe 'execute' do
       subject { command_executor.execute }
-      let(:vector) { Swipe.new(10, 5) }
-      let(:command_executor) { CommandExecutor.new(3, vector) }
+      let(:vector) { Swipe.new(3, 10, 5) }
+      let(:command_executor) { CommandExecutor.new(vector) }
       let(:set_command) do
         allow(Config).to receive(:command)
           .with(anything)

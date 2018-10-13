@@ -1,3 +1,8 @@
+require_relative 'command_executor'
+require_relative 'swipe.rb'
+require_relative 'pinch.rb'
+require_relative 'rotate.rb'
+
 module Fusuma
   # manage events and generate command
   class EventStack < Array
@@ -10,11 +15,12 @@ module Fusuma
     # @return [CommandExecutor, nil]
     def generate_command_executor
       return unless enough_events?
+
       vector = generate_vector(detect_event_type)
-      trigger = CommandExecutor.new(finger, vector)
-      return unless vector.enough?(trigger)
+      return if vector.nil?
       clear
-      trigger
+      vector.class.touch_last_time
+      CommandExecutor.new(vector)
     end
 
     # @params [GestureEvent]
@@ -26,12 +32,14 @@ module Fusuma
 
     private
 
+    # @return [vector]
     def generate_vector(event_type)
       case event_type
       when 'swipe'
-        avg_swipe
+        generate_swipe
       when 'pinch'
-        avg_pinch
+        # NOTE: put Rotate ahead of Pinch
+        generate_rotate || generate_pinch
       end
     end
 
@@ -39,21 +47,31 @@ module Fusuma
       last.finger
     end
 
-    def avg_swipe
+    def generate_swipe
       move_x = avg_attrs(:move_x)
       move_y = avg_attrs(:move_y)
-      Swipe.new(move_x, move_y)
+      Swipe.new(finger, move_x, move_y).tap do |v|
+        return nil unless v.enough?
+      end
     end
 
-    def avg_pinch
-      diameter = avg_attrs(:zoom)
-      delta_diameter = diameter - first.zoom
-      Pinch.new(delta_diameter)
+    def generate_pinch
+      diameter = avg_attrs(:zoom) - first.direction.zoom
+      Pinch.new(finger, diameter).tap do |v|
+        return nil unless v.enough?
+      end
+    end
+
+    def generate_rotate
+      angle = avg_attrs(:rotate)
+      Rotate.new(finger, angle).tap do |v|
+        return nil unless v.enough?
+      end
     end
 
     def sum_attrs(attr)
-      send('map') do |gesture_event|
-        gesture_event.send(attr.to_sym.to_s)
+      map do |gesture_event|
+        gesture_event.direction[attr]
       end.compact.inject(:+)
     end
 
@@ -66,12 +84,14 @@ module Fusuma
     end
 
     def last_event_name
-      return false if last.class != GestureEvent
+      return if last.class != GestureEvent
+
       last.event
     end
 
     def enough_events?
-      length > 2
+      return true if last_event_name =~ /GESTURE_PINCH_UPDATE/
+      length > 5 && enough_elapsed_time?
     end
 
     def enough_elapsed_time?
