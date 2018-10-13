@@ -1,9 +1,6 @@
 require_relative 'fusuma/version'
 require_relative 'fusuma/event_stack'
 require_relative 'fusuma/gesture_event'
-require_relative 'fusuma/command_executor'
-require_relative 'fusuma/swipe.rb'
-require_relative 'fusuma/pinch.rb'
 require_relative 'fusuma/multi_logger'
 require_relative 'fusuma/config.rb'
 require_relative 'fusuma/device.rb'
@@ -57,6 +54,7 @@ module Fusuma
 
       def reload_custom_config(config_path = nil)
         return unless config_path
+
         MultiLogger.info "use custom path: #{config_path}"
         Config.instance.custom_path = config_path
         Config.reload
@@ -76,6 +74,7 @@ module Fusuma
       LibinputCommands.new.debug_events do |line|
         gesture_event = GestureEvent.initialize_by(line.to_s, Device.ids)
         next unless gesture_event
+
         @event_stack << gesture_event
         @event_stack.generate_command_executor.tap { |c| c.execute if c }
       end

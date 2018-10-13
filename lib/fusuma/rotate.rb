@@ -1,33 +1,33 @@
 module Fusuma
   # vector data
-  class Pinch
-    TYPE = 'pinch'.freeze
+  class Rotate
+    TYPE = 'rotate'.freeze
 
-    BASE_THERESHOLD = 0.3
+    BASE_THERESHOLD = 0.1
     BASE_INTERVAL   = 0.05
 
-    def initialize(finger, diameter = 0)
+    def initialize(finger, angle = 0)
       @finger = finger.to_i
-      @diameter = diameter.to_f
+      @angle = angle.to_f
     end
 
-    attr_reader :finger, :diameter
+    attr_reader :finger, :angle
 
     def direction
-      return 'in' if diameter > 0
+      return 'clockwise' if angle > 0
 
-      'out'
+      'counterclockwise'
     end
 
     def enough?
-      MultiLogger.debug(diameter: diameter)
-      enough_diameter? && enough_interval?
+      MultiLogger.debug(angle: angle)
+      enough_angle? && enough_interval?
     end
 
     private
 
-    def enough_diameter?
-      diameter.abs > threshold
+    def enough_angle?
+      angle.abs > threshold
     end
 
     def enough_interval?

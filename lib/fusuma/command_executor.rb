@@ -1,12 +1,10 @@
 module Fusuma
   # Execute Command
   class CommandExecutor
-    def initialize(finger, vector)
-      @finger      = finger.to_i
-      @direction   = vector.direction
-      @event_type = vector.class::TYPE
+    def initialize(vector)
+      @vector = vector
     end
-    attr_reader :finger, :direction, :event_type
+    attr_reader :vector
 
     def execute
       pid = fork {
@@ -24,12 +22,13 @@ module Fusuma
     end
 
     def command
-      Config.command(self)
+      Config.command(vector)
     end
 
     def shortcut
-      s = Config.shortcut(self)
+      s = Config.shortcut(vector)
       return unless s
+
       c = "xdotool key #{s}"
       MultiLogger.warn 'shortcut property is deprecated.'
       MultiLogger.warn "Use command: #{c} instead of shortcut: #{s}"
@@ -37,7 +36,15 @@ module Fusuma
     end
 
     def no_command
-      'echo "Command is not assigned"'
+      "echo \"Command is not assigned #{config_parameters}\""
+    end
+
+    def config_parameters
+      {
+        gesture: vector.class::TYPE,
+        finger: vector.finger,
+        direction: vector.direction
+      }
     end
   end
 end

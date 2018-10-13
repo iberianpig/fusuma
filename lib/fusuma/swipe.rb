@@ -6,33 +6,34 @@ module Fusuma
     BASE_THERESHOLD = 20
     BASE_INTERVAL   = 0.5
 
-    def initialize(move_x, move_y)
-      @x = move_x
-      @y = move_y
+    def initialize(finger, move_x = 0, move_y = 0)
+      @finger = finger.to_i
+      @x = move_x.to_f
+      @y = move_y.to_f
     end
-    attr_reader :x, :y
+    attr_reader :finger, :x, :y
 
     def direction
       return x > 0 ? 'right' : 'left' if x.abs > y.abs
+
       y > 0 ? 'down' : 'up'
     end
 
-    def enough?(trigger)
+    def enough?
       MultiLogger.debug(x: x, y: y)
-      enough_distance?(trigger) && enough_interval?(trigger) &&
-        self.class.touch_last_time
+      enough_distance? && enough_interval?
     end
 
     private
 
-    def enough_distance?(trigger)
-      threshold = threshold(trigger)
+    def enough_distance?
       (x.abs > threshold) || (y.abs > threshold)
     end
 
-    def enough_interval?(trigger)
+    def enough_interval?
       return true if first_time?
-      return true if (Time.now - self.class.last_time) > interval_time(trigger)
+      return true if (Time.now - self.class.last_time) > interval_time
+
       false
     end
 
@@ -40,12 +41,12 @@ module Fusuma
       !self.class.last_time
     end
 
-    def threshold(trigger)
-      @threshold ||= BASE_THERESHOLD * Config.threshold(trigger)
+    def threshold
+      @threshold ||= BASE_THERESHOLD * Config.threshold(self)
     end
 
-    def interval_time(trigger)
-      @interval_time ||= BASE_INTERVAL * Config.interval(trigger)
+    def interval_time
+      @interval_time ||= BASE_INTERVAL * Config.interval(self)
     end
 
     class << self

@@ -1,49 +1,54 @@
 module Fusuma
-  # pinch or swipe or rotate event
+  # Event
   class GestureEvent
-    def initialize(time, event, finger, directions)
-      @time = time.to_f
-      @event = event
+    Direction = Struct.new(:move_x, :move_y, :zoom, :rotate)
+
+    def initialize(time, event, finger, direction)
+      @time   = time.to_f
+      @event  = event
       @finger = finger
-      @move_x = directions[:move][:x].to_f
-      @move_y = directions[:move][:y].to_f
-      @zoom   = directions[:zoom].to_f
+      @direction = direction
     end
-    attr_reader :time, :event, :finger,
-                :move_x, :move_y, :zoom
+    attr_reader :time, :event, :finger, :direction
 
     class << self
+      # @return [GestureEvent, nil]
       def initialize_by(line, device_names)
         return if device_names.none? do |device_name|
           line =~ /^\s?#{device_name}/
         end
-        return if line =~ /_BEGIN/
-        return unless line =~ /GESTURE_SWIPE|GESTURE_PINCH/
-        time, event, finger, directions = gesture_event_arguments(line)
+        return if line.to_s =~ /_BEGIN/
+        return unless line.to_s =~ /GESTURE_SWIPE|GESTURE_PINCH/
+
+        time, event, finger, direction = pluck_out(line)
         MultiLogger.debug(time: time, event: event,
-                          finger: finger, directions: directions)
-        new(time, event, finger, directions)
+                          finger: finger, direction: direction)
+        new(time, event, finger, direction)
       end
 
       private
 
-      def gesture_event_arguments(libinput_line)
-        event, time, finger, other = parse_libinput(libinput_line)
-        move_x, move_y, zoom = parse_finger_directions(other)
-        directions = { move: { x: move_x, y: move_y }, zoom: zoom }
-        [time, event, finger, directions]
+      # @return direction
+      def pluck_out(libinput_line)
+        event, time, finger, move_x, move_y, zoom, rotate =
+          parse_libinput(libinput_line)
+        direction = Direction.new(move_x.to_f, move_y.to_f,
+                                  zoom.to_f, rotate.to_f)
+        [time, event, finger, direction]
       end
 
       def parse_libinput(line)
         _device, event, time, other = line.strip.split(nil, 4)
         finger, other = other.split(nil, 2)
-        [event, time, finger, other]
+        move_x, move_y, zoom, rotate = parse_finger_direction(other)
+        [event, time, finger, move_x, move_y, zoom, rotate]
       end
 
-      def parse_finger_directions(line)
-        return [] unless line
-        move_x, move_y, _, _, _, zoom = line.tr('/|(|)', ' ').split
-        [move_x, move_y, zoom]
+      def parse_finger_direction(line)
+        return [] if line.nil?
+
+        move_x, move_y, _, _, _, zoom, _, rotate = line.tr('/|(|)', ' ').split
+        [move_x, move_y, zoom, rotate]
       end
     end
   end

@@ -6,20 +6,20 @@ module Fusuma
     include Singleton
 
     class << self
-      def command(command_executor)
-        instance.command(command_executor)
+      def command(vector)
+        instance.command(vector)
       end
 
-      def shortcut(command_executor)
-        instance.shortcut(command_executor)
+      def shortcut(vector)
+        instance.shortcut(vector)
       end
 
-      def threshold(command_executor)
-        instance.threshold(command_executor)
+      def threshold(vector)
+        instance.threshold(vector)
       end
 
-      def interval(command_executor)
-        instance.interval(command_executor)
+      def interval(vector)
+        instance.interval(vector)
       end
 
       def reload
@@ -41,47 +41,31 @@ module Fusuma
       self
     end
 
-    def command(command_executor)
-      seek_index = [*event_index(command_executor), 'command']
-      search_config_cached(seek_index)
+    def command(vector)
+      keys = [*gesture_index(vector), 'command']
+      search_config_cached(keys)
     end
 
-    def shortcut(command_executor)
-      seek_index = [*event_index(command_executor), 'shortcut']
-      search_config_cached(seek_index)
+    def shortcut(vector)
+      keys = [*gesture_index(vector), 'shortcut']
+      search_config_cached(keys)
     end
 
-    def threshold(command_executor)
-      seek_index_specific = [*event_index(command_executor), 'threshold']
-      seek_index_global = ['threshold', command_executor.event_type]
-      search_config_cached(seek_index_specific) ||
-        search_config_cached(seek_index_global) || 1
+    def threshold(vector)
+      keys_specific = [*gesture_index(vector), 'threshold']
+      keys_global = ['threshold', vector.class::TYPE]
+      search_config_cached(keys_specific) ||
+        search_config_cached(keys_global) || 1
     end
 
-    def interval(command_executor)
-      seek_index_specific = [*event_index(command_executor), 'interval']
-      seek_index_global = ['interval', command_executor.event_type]
-      search_config_cached(seek_index_specific) ||
-        search_config_cached(seek_index_global) || 1
+    def interval(vector)
+      keys_specific = [*gesture_index(vector), 'interval']
+      keys_global = ['interval', vector.class::TYPE]
+      search_config_cached(keys_specific) ||
+        search_config_cached(keys_global) || 1
     end
 
     private
-
-    def search_config_cached(seek_index)
-      cache(seek_index) { search_config(keymap, seek_index) }
-    end
-
-    def search_config(keymap_node, seek_index)
-      if seek_index == []
-        return nil if keymap_node.is_a? Hash
-        return keymap_node
-      end
-      key = seek_index[0]
-      child_node = keymap_node[key]
-      next_index = seek_index[1..-1]
-      return search_config(child_node, next_index) if child_node
-      search_config(keymap_node, next_index)
-    end
 
     def file_path
       filename = 'fusuma/config.yml'
@@ -106,11 +90,26 @@ module Fusuma
       File.expand_path "../../#{filename}", __FILE__
     end
 
-    def event_index(command_executor)
-      event_type = command_executor.event_type
-      finger      = command_executor.finger
-      direction   = command_executor.direction
-      [event_type, finger, direction]
+    def gesture_index(vector)
+      gesture_type = vector.class::TYPE
+      finger      = vector.finger
+      direction   = vector.direction
+      [gesture_type, finger, direction]
+    end
+
+    def search_config_cached(keys)
+      cache(keys) { search_config(keymap, keys) }
+    end
+
+    def search_config(keymap_node, keys)
+      if keys == []
+        return nil if keymap_node.is_a? Hash
+        return keymap_node
+      end
+      child_node = keymap_node[keys[0]]
+      next_index = keys[1..-1]
+      return search_config(child_node, next_index) if child_node
+      search_config(keymap_node, next_index)
     end
 
     def cache(key)
