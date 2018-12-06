@@ -29,6 +29,9 @@ pinch:
       command: 'xdotool key super+a'
     out:
       command: 'xdotool key super+s'
+tap:
+  3:
+    command: 'xdotool key super'      
 
 threshold:
   swipe: 0.3

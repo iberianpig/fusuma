@@ -9,7 +9,7 @@ module Fusuma
 
     # @return [CommandExecutor, nil]
     def generate_command_executor
-      return unless enough_events?
+      return unless enough_events? 
       vector = generate_vector(detect_event_type)
       trigger = CommandExecutor.new(finger, vector)
       return unless vector.enough?(trigger)
@@ -32,6 +32,8 @@ module Fusuma
         avg_swipe
       when 'pinch'
         avg_pinch
+      when 'tap'
+        avg_tap
       end
     end
 
@@ -51,6 +53,10 @@ module Fusuma
       Pinch.new(delta_diameter)
     end
 
+    def avg_tap
+      Tap.new()
+    end  
+
     def sum_attrs(attr)
       send('map') do |gesture_event|
         gesture_event.send(attr.to_sym.to_s)
@@ -62,7 +68,7 @@ module Fusuma
     end
 
     def event_end?
-      last_event_name =~ /_END$/
+      last_event_name =~ /_END$/ 
     end
 
     def last_event_name
@@ -71,7 +77,7 @@ module Fusuma
     end
 
     def enough_events?
-      length > 2
+      length > 0
     end
 
     def enough_elapsed_time?

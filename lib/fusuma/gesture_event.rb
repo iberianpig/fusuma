@@ -18,6 +18,24 @@ module Fusuma
           line =~ /^\s?#{device_name}/
         end
         return if line =~ /_BEGIN/
+        
+        if line =~ /BTN_RIGHT/
+          time, event, finger, directions = gesture_event_arguments(line)
+          finger = 2
+          event = event_generator(line)
+          return new(time, event, finger, directions)  
+        elsif line =~ /BTN_LEFT/
+          time, event, finger, directions = gesture_event_arguments(line)
+          finger = 1
+          event = event_generator(line)
+          return new(time, event, finger, directions)
+        elsif line =~ /BTN_MIDDLE/
+          time, event, finger, directions = gesture_event_arguments(line)
+          finger = 3 
+          event = event_generator(line)
+          return new(time, event, finger, directions)
+        end
+
         return unless line =~ /GESTURE_SWIPE|GESTURE_PINCH/
         time, event, finger, directions = gesture_event_arguments(line)
         MultiLogger.debug(time: time, event: event,
@@ -26,7 +44,12 @@ module Fusuma
       end
 
       private
-
+      def event_generator(libinput_line)
+        if libinput_line =~ /released/ 
+          return  'GESTURE_TAP_END'  
+        end
+        'GESTURE_TAP_UPDATED'  
+      end 
       def gesture_event_arguments(libinput_line)
         event, time, finger, other = parse_libinput(libinput_line)
         move_x, move_y, zoom = parse_finger_directions(other)

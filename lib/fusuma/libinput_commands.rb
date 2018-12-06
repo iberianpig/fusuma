@@ -57,15 +57,15 @@ module Fusuma
       if new_cli_option_available?
         'libinput list-devices'
       else
-        'libinput-list-devices'
+        'libinput-list-devices '
       end
     end
 
     def debug_events_command
       if new_cli_option_available?
-        'libinput debug-events'
+        'libinput debug-events --enable-tap'
       else
-        'libinput-debug-events'
+        'libinput-debug-events --enable-tap'
       end
     end
 
