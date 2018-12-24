@@ -23,7 +23,7 @@ module Fusuma
       CommandExecutor.new(vector)
     end
 
-    # @params [GestureEvent]
+    # @param gesture_event [GestureEvent]
     def push(gesture_event)
       super(gesture_event)
       clear if event_end?
@@ -32,6 +32,7 @@ module Fusuma
 
     private
 
+    # @param event_type [String]
     # @return [vector]
     def generate_vector(event_type)
       case event_type

@@ -11,7 +11,7 @@ module Fusuma
       @available = available
     end
 
-    # @param [Hash]
+    # @param attributes [Hash]
     def assign_attributes(attributes)
       attributes.each do |k, v|
         case k
@@ -52,7 +52,7 @@ module Fusuma
         @available = nil
       end
 
-      # @param [String]
+      # @param name [String]
       def given_device=(name)
         return if name.nil?
         @available = available.select { |d| d.name == name }
@@ -99,7 +99,7 @@ module Fusuma
           end
         end
 
-        # @param  [String]
+        # @param line [String]
         # @return [Hash]
         def extract_attribute(line:)
           if (id = id_from(line))
