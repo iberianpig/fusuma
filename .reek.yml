@@ -1,48 +1,96 @@
+
 ---
-
-### Generic smell configuration
-
+### enabled rules
 detectors:
-#   # You can disable smells completely
-#   IrresponsibleModule:
-#     enabled: false
+  TooManyInstanceVariables:
+    enabled: true
+    exclude: []
+    max_instance_variables: 50
+  TooManyMethods:
+    enabled: true
+    exclude: []
+    max_methods: 30
+  TooManyStatements:
+    enabled: true
+    exclude: []
+    max_statements: 80
+  TooManyConstants:
+    enabled: true
+    exclude: []
+    max_constants: 50
+  LongParameterList:
+    enabled: true
+    exclude: []
+    max_params: 8
+  LongYieldList:
+    enabled: true
+    exclude: []
+    max_params: 8
+  NestedIterators:
+    enabled: true
+    exclude: []
+    max_allowed_nesting: 5
+    ignore_iterators:
+    - tap
+  ModuleInitialize:
+    enabled: true
+    exclude: []
+  SubclassedFromCoreClass:
+    enabled: true
+    exclude: []
+
+  ### unanabled rules
+  Attribute:
+    enabled: false
+    exclude: []
+  BooleanParameter:
+    enabled: false
+    exclude: []
+  ClassVariable:
+    enabled: false
+    exclude: []
+  ControlParameter:
+    enabled: false
+    exclude: []
+  DataClump:
+    enabled: false
+    exclude: []
+  DuplicateMethodCall:
+    enabled: false
+    exclude: []
+  FeatureEnvy:
+    enabled: false
+    exclude: []
+  InstanceVariableAssumption:
+    enabled: false
+    exclude: []
+  IrresponsibleModule:
+    enabled: false
+    exclude: []
+  ManualDispatch:
+    enabled: false
+    exclude: []
+  NilCheck:
+    enabled: false
+    exclude: []
+  RepeatedConditional:
+    enabled: false
+    exclude: []
+  UncommunicativeMethodName:
+    enabled: false
+    exclude: []
+  UncommunicativeModuleName:
+    enabled: false
+    exclude: []
+  UncommunicativeParameterName:
+    enabled: false
+    exclude: []
   UncommunicativeVariableName:
-      enabled: false
-
-#
-#   # You can use filters to silence Reek warnings.
-#   # Either because you simply disagree with Reek (we are not the police) or
-#   # because you want to fix this at a later point in time.
-#   NestedIterators:
-#     exclude:
-#       - "MyWorker#self.class_method" # should be refactored
-#       - "AnotherWorker#instance_method" # should be refactored as well
-#
-#   # A lot of smells allow fine tuning their configuration. You can look up all available options
-#   # in the corresponding smell documentation in /docs. In most cases you probably can just go
-#   # with the defaults as documented in defaults.reek.yml.
-#   DataClump:
-#     max_copies: 3
-#     min_clump_size: 3
-
-
-# ### Directory specific configuration
-#
-# # You can configure smells on a per-directory base.
-# # E.g. the classic Rails case: controllers smell of NestedIterators (see /docs/Nested-Iterators.md) and
-# # helpers smell of UtilityFunction (see docs/Utility-Function.md)
-# # Note that we only allow configuration on a directory level, not a file level, so all paths have to point to directories.
-# directories:
-#   "web_app/app/controllers":
-#     NestedIterators:
-#       enabled: false
-#   "web_app/app/helpers":
-#     UtilityFunction:
-#       enabled: false
-
-# ### Excluding directories
-#
-# # Directories below will not be scanned at all
-# exclude_paths:
-#   - lib/legacy
-#   - lib/rake/legacy_tasks
+    enabled: false
+    exclude: []
+  UnusedParameters:
+    enabled: false
+    exclude: []
+  UtilityFunction:
+    enabled: false
+    exclude: []
