@@ -3,51 +3,53 @@ require_relative './plugin_manager.rb'
 module Fusuma
   # vector class
   module Vectors
+    # Inherite this base
     class BaseVector < Plugin
+      def initialize; end
+
+      def direction; end
+
+      def enough?; end
+
       class << self
-        def generate(events)
+        # @param event_buffer [EventBuffer]
+        # @return [BaseVector]
+        def generate; end
+
+        def touch_last_time
+          @last_time = Time.now
         end
       end
     end
 
-    # GenerateVector
+    # Generate vector
     class Generator
       class << self
         attr_writer :prev_vector
         attr_reader :prev_vector
       end
 
-      # @param events [Array]
-      def initialize(events)
-        @events = events
+      # @param event_buffer [EventBuffer]
+      def initialize(event_buffer:)
+        @event_buffer = event_buffer
       end
 
+      # and generate vector
       # @return [vector]
-      def generate
-        BaseVector.plugins.map do |klass|
-          klass.generate(@events)
+      def run
+        plugins.map do |klass|
+          klass.generate(event_buffer: @event_buffer)
         end.compact.first
-        # case @events.first.gesture
-        # when 'pinch'
-        #   generate_pinch_or_rotate
-        # end
       end
 
-      def sum_attrs(attr)
-        @events.map do |gesture_event|
-          gesture_event.direction[attr]
-        end.compact.inject(:+)
+      # vector plugins
+      # @example
+      #  [Fusuma::Vectors::RotateVector, Fusuma::Vectors::PinchVector,
+      #   Fusuma::Vectors::SwipeVector]
+      # @retrun [Array]
+      def plugins
+        BaseVector.plugins
       end
-
-      def avg_attrs(attr)
-        sum_attrs(attr) / @events.length
-      end
-
-      # return [Integer]
-      def finger
-        @events.last.finger
-      end
-
     end
   end
 end

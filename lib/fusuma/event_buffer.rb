@@ -7,12 +7,13 @@ module Fusuma
     def initialize(*args)
       @events = Array.new(*args)
     end
+    attr_reader :events
 
     # @return [Vector, nil]
     def generate_vector
       return unless enough_events?
 
-      Vectors::Generator.new(@events).generate.tap do |vector|
+      Vectors::Generator.new(event_buffer: self).run.tap do |vector|
         return nil if vector.nil?
 
         @events.clear
@@ -27,6 +28,33 @@ module Fusuma
     end
     alias << push
 
+    # @param attr [Symbol]
+    # @retrun [Float]
+    def sum_attrs(attr)
+      @events.map do |gesture_event|
+        gesture_event.direction[attr]
+      end.compact.inject(:+)
+    end
+
+    # @param attr [Symbol]
+    # @retrun [Float]
+    def avg_attrs(attr)
+      sum_attrs(attr) / @events.length
+    end
+
+    # return [Integer]
+    def finger
+      @events.last.finger
+    end
+
+    # @example
+    #  event_buffer.gesture
+    #  => 'swipe'
+    # @return [String]
+    def gesture
+      @events.last.gesture
+    end
+
     private
 
     def reset
@@ -39,11 +67,6 @@ module Fusuma
     end
 
     def enough_events?
-      # # NOTE: Allow continuous Pinch events
-      # if length > 3 && last_event_gesture =~ /GESTURE_PINCH_UPDATE/
-      #   return true
-      # end
-
       @events.length > 3
     end
   end

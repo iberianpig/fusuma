@@ -3,7 +3,7 @@ module Fusuma
     # vector data
     class PinchVector < BaseVector
       TYPE = 'pinch'.freeze
-      EVENT = 'pinch'.freeze
+      GESTURE = 'pinch'.freeze
 
       BASE_THERESHOLD = 0.1
       BASE_INTERVAL   = 0.1
@@ -53,14 +53,12 @@ module Fusuma
       class << self
         attr_reader :last_time
 
-        def generate(events)
-          return if events.first.gesture != EVENT
+        def generate(event_buffer:)
+          return if event_buffer.gesture != GESTURE
           return if Generator.prev_vector && Generator.prev_vector != self
 
-          generator = Generator.new(events)
-
-          diameter = generator.avg_attrs(:zoom) / events.first.direction.zoom
-          Vectors::PinchVector.new(generator.finger, diameter).tap do |v|
+          diameter = calc_diameter(event_buffer)
+          Vectors::PinchVector.new(event_buffer.finger, diameter).tap do |v|
             return nil unless CommandExecutor.new(v).executable?
             return nil unless v.enough?
 
@@ -68,8 +66,12 @@ module Fusuma
           end
         end
 
-        def touch_last_time
-          @last_time = Time.now
+        private
+
+        def calc_diameter(event_buffer)
+          avg_zoom = event_buffer.avg_attrs(:zoom)
+          first_zoom = event_buffer.events.first.direction.zoom
+          avg_zoom / first_zoom
         end
       end
     end
