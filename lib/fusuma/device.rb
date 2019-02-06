@@ -55,8 +55,10 @@ module Fusuma
       # @param name [String]
       def given_device=(name)
         return if name.nil?
+
         @available = available.select { |d| d.name == name }
         return unless names.empty?
+
         MultiLogger.error("Device #{name} is not found.\n
            Check available device with: $ fusuma --list-devices\n")
         exit 1
@@ -129,6 +131,7 @@ module Fusuma
           # NOTE: natural scroll is available?
           return false unless line =~ /^Nat.scrolling: /
           return false if line =~ %r{n/a}
+
           true
         end
       end

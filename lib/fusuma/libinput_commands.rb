@@ -75,6 +75,7 @@ module Fusuma
     # @return [String]
     def device_option
       return unless Device.available.size == 1
+
       "--device /dev/input/#{Device.available.first.id}"
     end
 

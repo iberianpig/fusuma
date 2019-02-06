@@ -104,11 +104,13 @@ module Fusuma
     def search_config(keymap_node, keys)
       if keys == []
         return nil if keymap_node.is_a? Hash
+
         return keymap_node
       end
       child_node = keymap_node[keys[0]]
       next_index = keys[1..-1]
       return search_config(child_node, next_index) if child_node
+
       search_config(keymap_node, next_index)
     end
 

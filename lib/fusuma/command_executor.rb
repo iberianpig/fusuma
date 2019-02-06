@@ -15,6 +15,10 @@ module Fusuma
       MultiLogger.info("Execute: #{command_or_shortcut}")
     end
 
+    def executable?
+      command || shortcut
+    end
+
     private
 
     def command_or_shortcut

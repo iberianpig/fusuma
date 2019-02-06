@@ -21,6 +21,7 @@ module Fusuma
 
     def debug(msg)
       return unless debug_mode?
+
       super(msg)
     end
 

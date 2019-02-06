@@ -3,13 +3,14 @@ module Fusuma
   class GestureEvent
     Direction = Struct.new(:move_x, :move_y, :zoom, :rotate)
 
-    def initialize(time, event, finger, direction)
-      @time   = time.to_f
-      @event  = event
+    def initialize(time, gesture, status, finger, direction)
+      @time = time.to_f
+      @gesture = gesture
+      @status = status
       @finger = finger
       @direction = direction
     end
-    attr_reader :time, :event, :finger, :direction
+    attr_reader :time, :gesture, :status, :finger, :direction
 
     class << self
       # @return [GestureEvent, nil]
@@ -17,31 +18,34 @@ module Fusuma
         return if device_names.none? do |device_name|
           line =~ /^\s?#{device_name}/
         end
-        return if line.to_s =~ /_BEGIN/
         return unless line.to_s =~ /GESTURE_SWIPE|GESTURE_PINCH/
 
-        time, event, finger, direction = pluck_out(line)
-        MultiLogger.debug(time: time, event: event,
-                          finger: finger, direction: direction)
-        new(time, event, finger, direction)
+        time, gesture, status, finger, direction = pluck_out(line)
+        MultiLogger.debug(time: time, gesture: gesture, status: status, finger: finger)
+        new(time, gesture, status, finger, direction)
       end
 
       private
 
       # @return direction
-      def pluck_out(libinput_line)
-        event, time, finger, move_x, move_y, zoom, rotate =
-          parse_libinput(libinput_line)
+      def pluck_out(line)
+        gesture, status, time, finger, move_x, move_y, zoom, rotate =
+          parse_libinput(line)
         direction = Direction.new(move_x.to_f, move_y.to_f,
                                   zoom.to_f, rotate.to_f)
-        [time, event, finger, direction]
+        [time, gesture, status, finger, direction]
       end
 
       def parse_libinput(line)
-        _device, event, time, other = line.strip.split(nil, 4)
+        _device, event_name, time, other = line.strip.split(nil, 4)
         finger, other = other.split(nil, 2)
         move_x, move_y, zoom, rotate = parse_finger_direction(other)
-        [event, time, finger, move_x, move_y, zoom, rotate]
+        [*detect_gesture(event_name), time, finger, move_x, move_y, zoom, rotate]
+      end
+
+      def detect_gesture(event_name)
+        event_name =~ /GESTURE_(SWIPE|PINCH)_(BEGIN|UPDATE|END)/
+        [Regexp.last_match(1).downcase, Regexp.last_match(2).downcase]
       end
 
       def parse_finger_direction(line)
