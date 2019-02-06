@@ -3,7 +3,7 @@ module Fusuma
     # vector data
     class RotateVector < BaseVector
       TYPE = 'rotate'.freeze
-      EVENT = 'pinch'.freeze
+      GESTURE = 'pinch'.freeze
 
       BASE_THERESHOLD = 0.5
       BASE_INTERVAL   = 0.1
@@ -53,22 +53,17 @@ module Fusuma
       class << self
         attr_reader :last_time
 
-        def generate(events)
-          return if events.first.gesture != EVENT
+        def generate(event_buffer:)
+          return if event_buffer.gesture != GESTURE
           return if Generator.prev_vector && Generator.prev_vector != self
 
-          generator = Generator.new(events)
-          angle = generator.avg_attrs(:rotate)
-          Vectors::RotateVector.new(generator.finger, angle).tap do |v|
+          angle = event_buffer.avg_attrs(:rotate)
+          Vectors::RotateVector.new(event_buffer.finger, angle).tap do |v|
             return nil unless CommandExecutor.new(v).executable?
             return nil unless v.enough?
 
             Generator.prev_vector = self
           end
-        end
-
-        def touch_last_time
-          @last_time = Time.now
         end
       end
     end

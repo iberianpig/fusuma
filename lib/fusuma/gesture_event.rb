@@ -21,7 +21,8 @@ module Fusuma
         return unless line.to_s =~ /GESTURE_SWIPE|GESTURE_PINCH/
 
         time, gesture, status, finger, direction = pluck_out(line)
-        MultiLogger.debug(time: time, gesture: gesture, status: status, finger: finger)
+        MultiLogger.debug(time: time, gesture: gesture,
+                          status: status, finger: finger)
         new(time, gesture, status, finger, direction)
       end
 
@@ -40,7 +41,8 @@ module Fusuma
         _device, event_name, time, other = line.strip.split(nil, 4)
         finger, other = other.split(nil, 2)
         move_x, move_y, zoom, rotate = parse_finger_direction(other)
-        [*detect_gesture(event_name), time, finger, move_x, move_y, zoom, rotate]
+        [*detect_gesture(event_name), time, finger,
+         move_x, move_y, zoom, rotate]
       end
 
       def detect_gesture(event_name)

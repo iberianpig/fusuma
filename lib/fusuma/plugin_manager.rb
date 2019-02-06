@@ -1,3 +1,5 @@
+require_relative './multi_logger.rb'
+
 module Fusuma
   # Manage Fusuma plugins
   class PluginManager
@@ -16,26 +18,40 @@ module Fusuma
       end
     end
 
+    # TODO: load from rubygems
     def require_from_gem; end
 
     class << self
+      # @example
+      #  Fusuma::PluginManager.plugins
+      #  => {"Fusuma::Plugin"=>[Fusuma::Vectors::BaseVector],
+      #      "Fusuma::Vectors::BaseVector"=>[Fusuma::Vectors::RotateVector,
+      #                                      Fusuma::Vectors::PinchVector,
+      #                                      Fusuma::Vectors::SwipeVector]}
       attr_reader :plugins
 
+      # @param plugin_class [Class]
       def add(plugin_class:)
         @plugins ||= {}
         @plugins[plugin_class.superclass.name] ||= []
         @plugins[plugin_class.superclass.name] << plugin_class
-        puts "#{plugin_class.name} is added to #{name}"
       end
     end
   end
 
+  # Create a Plugin Class with extending this class
   class Plugin
+    # require_plugins
     def self.inherited(subclass)
       PluginManager.add(plugin_class: subclass)
-      PluginManager.new(path: plugin_dir_name(subclass: subclass)).require_plugins
+      PluginManager.new(path: plugin_dir_name(subclass: subclass))
+                   .require_plugins
     end
 
+    # get inherited classes
+    # @example
+    #  [Fusuma::Vectors::BaseVector]
+    # @return [Array]
     def self.plugins
       PluginManager.plugins[name]
     end

@@ -3,7 +3,7 @@ module Fusuma
     # vector data
     class SwipeVector < BaseVector
       TYPE = 'swipe'.freeze
-      EVENT = 'swipe'.freeze
+      GESTURE = 'swipe'.freeze
 
       BASE_THERESHOLD = 10
       BASE_INTERVAL   = 0.5
@@ -54,21 +54,17 @@ module Fusuma
       class << self
         attr_reader :last_time
 
-        def generate(events)
-          return if events.first.gesture != EVENT
+        def generate(event_buffer:)
+          return if event_buffer.gesture != GESTURE
+          return if Generator.prev_vector && Generator.prev_vector != self
 
-          generator = Generator.new(events)
-          move_x = generator.avg_attrs(:move_x)
-          move_y = generator.avg_attrs(:move_y)
-          new(generator.finger, move_x, move_y).tap do |v|
+          move_x = event_buffer.avg_attrs(:move_x)
+          move_y = event_buffer.avg_attrs(:move_y)
+          new(event_buffer.finger, move_x, move_y).tap do |v|
             return nil unless v.enough?
 
             Generator.prev_vector = self
           end
-        end
-
-        def touch_last_time
-          @last_time = Time.now
         end
       end
     end

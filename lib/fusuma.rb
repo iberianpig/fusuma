@@ -49,6 +49,14 @@ module Fusuma
         MultiLogger.info '---------------------------------------------'
       end
 
+      def available_plugins
+        MultiLogger.info 'Available Plugins: '
+        PluginManager.plugins.each do |base, plugins|
+          plugins.each { |plugin| MultiLogger.info "  #{plugin} < #{base}" }
+        end
+        MultiLogger.info '---------------------------------------------'
+      end
+
       def print_device_list
         puts Device.names
         exit(0)
@@ -64,17 +72,19 @@ module Fusuma
 
       def debug_mode
         print_version
+        available_plugins
         MultiLogger.instance.debug_mode = true
       end
     end
 
     def initialize
+      @libinput_commands = LibinputCommands.new
       @event_buffer = EventBuffer.new
       @vector_buffer = VectorBuffer.new
     end
 
     def run
-      LibinputCommands.new.debug_events do |line|
+      @libinput_commands.debug_events do |line|
         gesture_event = GestureEvent.initialize_by(line.to_s, Device.ids)
         next unless gesture_event
 
