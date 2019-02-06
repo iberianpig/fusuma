@@ -1,10 +1,12 @@
 require_relative 'fusuma/version'
-require_relative 'fusuma/event_stack'
+require_relative 'fusuma/event_buffer'
+require_relative 'fusuma/vector_buffer'
 require_relative 'fusuma/gesture_event'
 require_relative 'fusuma/multi_logger'
 require_relative 'fusuma/config.rb'
 require_relative 'fusuma/device.rb'
 require_relative 'fusuma/libinput_commands.rb'
+
 require 'logger'
 require 'open3'
 require 'yaml'
@@ -67,7 +69,8 @@ module Fusuma
     end
 
     def initialize
-      @event_stack = EventStack.new
+      @event_buffer = EventBuffer.new
+      @vector_buffer = VectorBuffer.new
     end
 
     def run
@@ -75,8 +78,14 @@ module Fusuma
         gesture_event = GestureEvent.initialize_by(line.to_s, Device.ids)
         next unless gesture_event
 
-        @event_stack << gesture_event
-        @event_stack.generate_command_executor.tap { |c| c.execute if c }
+        @event_buffer << gesture_event
+        vector = @event_buffer.generate_vector
+
+        next unless vector
+
+        @vector_buffer << vector
+        command_executor = @vector_buffer.generate_command_executor
+        command_executor.execute if command_executor.executable?
       end
     end
   end
