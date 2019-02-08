@@ -36,7 +36,7 @@ module Fusuma
 
       # and generate vector
       # @return [vector]
-      def run
+      def generate
         plugins.map do |klass|
           klass.generate(event_buffer: @event_buffer)
         end.compact.first

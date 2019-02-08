@@ -13,7 +13,7 @@ module Fusuma
     def generate_vector
       return unless enough_events?
 
-      Vectors::Generator.new(event_buffer: self).run.tap do |vector|
+      Vectors::Generator.new(event_buffer: self).generate.tap do |vector|
         return nil if vector.nil?
 
         @events.clear
@@ -32,7 +32,7 @@ module Fusuma
     # @retrun [Float]
     def sum_attrs(attr)
       @events.map do |gesture_event|
-        gesture_event.direction[attr]
+        gesture_event.body[attr]
       end.compact.inject(:+)
     end
 
@@ -44,7 +44,7 @@ module Fusuma
 
     # return [Integer]
     def finger
-      @events.last.finger
+      @events.last.body.finger
     end
 
     # @example
@@ -52,7 +52,7 @@ module Fusuma
     #  => 'swipe'
     # @return [String]
     def gesture
-      @events.last.gesture
+      @events.last.body.gesture
     end
 
     private

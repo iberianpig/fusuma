@@ -7,7 +7,7 @@ module Fusuma
 
       before do
         Device.reset
-        allow_any_instance_of(LibinputCommands)
+        allow_any_instance_of(Inputs::LibinputCommandInput)
           .to receive(:list_devices_command)
           .and_return(libinput_device_command)
         allow(Open3).to receive(:popen3)
@@ -55,7 +55,7 @@ module Fusuma
 
       before do
         Device.reset
-        allow_any_instance_of(LibinputCommands)
+        allow_any_instance_of(Inputs::LibinputCommandInput)
           .to receive(:list_devices_command)
           .and_return(libinput_device_command)
         allow(Open3).to receive(:popen3)

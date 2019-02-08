@@ -7,7 +7,7 @@ module Fusuma
         Singleton.__init__(MultiLogger)
         Singleton.__init__(Config)
         allow_any_instance_of(Runner).to receive(:run)
-        allow_any_instance_of(LibinputCommands).to receive(:version)
+        allow_any_instance_of(Inputs::LibinputCommandInput).to receive(:version)
           .and_return("test version\n")
       end
 
@@ -25,7 +25,7 @@ module Fusuma
           expect(MultiLogger).to receive(:info)
             .with("Fusuma: #{Fusuma::VERSION}")
           expect(MultiLogger).to receive(:info)
-            .with("libinput: #{LibinputCommands.new.version}")
+            .with("libinput: #{Inputs::LibinputCommandInput.new.version}")
           expect(MultiLogger).to receive(:info)
             .with("OS: #{`uname -rsv`}".strip)
           expect(MultiLogger).to receive(:info)
