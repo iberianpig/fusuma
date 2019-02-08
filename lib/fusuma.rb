@@ -1,11 +1,12 @@
 require_relative 'fusuma/version'
 require_relative 'fusuma/event_buffer'
 require_relative 'fusuma/vector_buffer'
-require_relative 'fusuma/gesture_event'
 require_relative 'fusuma/multi_logger'
 require_relative 'fusuma/config.rb'
 require_relative 'fusuma/device.rb'
-require_relative 'fusuma/libinput_commands.rb'
+require_relative 'fusuma/input.rb'
+require_relative 'fusuma/filter.rb'
+require_relative 'fusuma/parser.rb'
 
 require 'logger'
 require 'open3'
@@ -42,7 +43,7 @@ module Fusuma
       def print_version
         MultiLogger.info '---------------------------------------------'
         MultiLogger.info "Fusuma: #{Fusuma::VERSION}"
-        MultiLogger.info "libinput: #{LibinputCommands.new.version}"
+        MultiLogger.info "libinput: #{Inputs::LibinputCommandInput.new.version}"
         MultiLogger.info "OS: #{`uname -rsv`}".strip
         MultiLogger.info "Distribution: #{`cat /etc/issue`}".strip
         MultiLogger.info "Desktop session: #{`echo $DESKTOP_SESSION`}".strip
@@ -78,17 +79,21 @@ module Fusuma
     end
 
     def initialize
-      @libinput_commands = LibinputCommands.new
+      @input = Inputs::Generator.new.generate
+      @filter = Filters::Generator.new.generate
+      @parser = Parsers::Generator.new.generate
       @event_buffer = EventBuffer.new
       @vector_buffer = VectorBuffer.new
     end
 
     def run
-      @libinput_commands.debug_events do |line|
-        gesture_event = GestureEvent.initialize_by(line.to_s, Device.ids)
-        next unless gesture_event
+      @input.run do |line|
+        line = @filter.filter(line)
+        event = @parser.parse(line)
 
-        @event_buffer << gesture_event
+        next unless event
+
+        @event_buffer << event
         vector = @event_buffer.generate_vector
 
         next unless vector

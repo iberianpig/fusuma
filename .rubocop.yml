@@ -1,3 +1,5 @@
+inherit_from: .rubocop_todo.yml
+
 Metrics/ModuleLength:
   Exclude:
     - "**/*_spec.rb"
