@@ -4,9 +4,9 @@ require_relative 'fusuma/vector_buffer'
 require_relative 'fusuma/multi_logger'
 require_relative 'fusuma/config.rb'
 require_relative 'fusuma/device.rb'
-require_relative 'fusuma/input.rb'
-require_relative 'fusuma/filter.rb'
-require_relative 'fusuma/parser.rb'
+require_relative 'fusuma/plugin/input.rb'
+require_relative 'fusuma/plugin/filter.rb'
+require_relative 'fusuma/plugin/parser.rb'
 
 require 'logger'
 require 'open3'
@@ -43,7 +43,7 @@ module Fusuma
       def print_version
         MultiLogger.info '---------------------------------------------'
         MultiLogger.info "Fusuma: #{Fusuma::VERSION}"
-        MultiLogger.info "libinput: #{Inputs::LibinputCommandInput.new.version}"
+        MultiLogger.info "libinput: #{Plugin::Inputs::LibinputCommandInput.new.version}"
         MultiLogger.info "OS: #{`uname -rsv`}".strip
         MultiLogger.info "Distribution: #{`cat /etc/issue`}".strip
         MultiLogger.info "Desktop session: #{`echo $DESKTOP_SESSION`}".strip
@@ -52,7 +52,7 @@ module Fusuma
 
       def available_plugins
         MultiLogger.info 'Available Plugins: '
-        PluginManager.plugins.each do |base, plugins|
+        Plugin::Manager.plugins.each do |base, plugins|
           plugins.each { |plugin| MultiLogger.info "  #{plugin} < #{base}" }
         end
         MultiLogger.info '---------------------------------------------'
@@ -79,17 +79,20 @@ module Fusuma
     end
 
     def initialize
-      @input = Inputs::Generator.new.generate
-      @filter = Filters::Generator.new.generate
-      @parser = Parsers::Generator.new.generate
+      @input = Plugin::Inputs::Generator.new.generate
+      @filter = Plugin::Filters::Generator.new.generate
+      @parser = Plugin::Parsers::Generator.new.generate
       @event_buffer = EventBuffer.new
       @vector_buffer = VectorBuffer.new
     end
 
     def run
-      @input.run do |line|
-        line = @filter.filter(line)
-        event = @parser.parse(line)
+      @input.run do |event|
+        event = @filter.filter(event)
+
+        next unless event
+
+        event = @parser.parse(event)
 
         next unless event
 

@@ -1,10 +1,10 @@
 require 'spec_helper'
 # spec for CommandExecutor
 module Fusuma
-  describe CommandExecutor do
+  RSpec.describe CommandExecutor do
     describe 'execute' do
       subject { command_executor.execute }
-      let(:vector) { Vectors::SwipeVector.new(3, 10, 5) }
+      let(:vector) { Plugin::Vectors::SwipeVector.new(3, 10, 5) }
       let(:command_executor) { CommandExecutor.new(vector) }
       let(:set_command) do
         allow(Config).to receive(:command)

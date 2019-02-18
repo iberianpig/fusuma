@@ -1,5 +1,5 @@
 require_relative 'command_executor'
-require_relative 'vector'
+require_relative 'plugin/vector'
 
 module Fusuma
   # manage events and generate command
@@ -13,7 +13,7 @@ module Fusuma
     def generate_vector
       return unless enough_events?
 
-      Vectors::Generator.new(event_buffer: self).generate.tap do |vector|
+      Plugin::Vectors::Generator.new(event_buffer: self).generate.tap do |vector|
         return nil if vector.nil?
 
         @events.clear
@@ -21,9 +21,9 @@ module Fusuma
       end
     end
 
-    # @param gesture_event [GestureEvent]
-    def push(gesture_event)
-      @events.push(gesture_event)
+    # @param event [Event]
+    def push(event)
+      @events.push(event)
       reset unless updating?
     end
     alias << push
@@ -32,7 +32,7 @@ module Fusuma
     # @retrun [Float]
     def sum_attrs(attr)
       @events.map do |gesture_event|
-        gesture_event.body[attr]
+        gesture_event.record[attr]
       end.compact.inject(:+)
     end
 
@@ -44,7 +44,7 @@ module Fusuma
 
     # return [Integer]
     def finger
-      @events.last.body.finger
+      @events.last.record.finger
     end
 
     # @example
@@ -52,22 +52,22 @@ module Fusuma
     #  => 'swipe'
     # @return [String]
     def gesture
-      @events.last.body.gesture
+      @events.last.record.gesture
     end
 
     private
 
     def reset
-      Vectors::Generator.prev_vector = nil
+      Plugin::Vectors::Generator.prev_vector = nil
       @events.clear
     end
 
     def updating?
-      @events.last.status == 'update'
+      return true unless @events.last.record.status =~ /begin|end/
     end
 
     def enough_events?
-      @events.length > 3
+      !@events.empty?
     end
   end
 end

@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 module Fusuma
-  describe Runner do
+  RSpec.describe Runner do
     describe '.run' do
       before do
         Singleton.__init__(MultiLogger)
         Singleton.__init__(Config)
         allow_any_instance_of(Runner).to receive(:run)
-        allow_any_instance_of(Inputs::LibinputCommandInput).to receive(:version)
+        allow_any_instance_of(Plugin::Inputs::LibinputCommandInput).to receive(:version)
           .and_return("test version\n")
       end
 
@@ -25,7 +25,7 @@ module Fusuma
           expect(MultiLogger).to receive(:info)
             .with("Fusuma: #{Fusuma::VERSION}")
           expect(MultiLogger).to receive(:info)
-            .with("libinput: #{Inputs::LibinputCommandInput.new.version}")
+            .with("libinput: #{Plugin::Inputs::LibinputCommandInput.new.version}")
           expect(MultiLogger).to receive(:info)
             .with("OS: #{`uname -rsv`}".strip)
           expect(MultiLogger).to receive(:info)

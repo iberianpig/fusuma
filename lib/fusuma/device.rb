@@ -69,7 +69,7 @@ module Fusuma
       # @return [Array]
       def fetch_available
         line_parser = LineParser.new
-        Inputs::LibinputCommandInput.new.list_devices do |line|
+        Plugin::Inputs::LibinputCommandInput.new.list_devices do |line|
           line_parser.push(line)
         end
         line_parser.generate_devices

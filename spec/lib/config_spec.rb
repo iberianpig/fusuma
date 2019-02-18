@@ -1,7 +1,7 @@
 require 'spec_helper'
 # spec for Config
 module Fusuma
-  describe Config do
+  RSpec.describe Config do
     let(:keymap) do
       {
         'swipe' => {
@@ -83,7 +83,7 @@ module Fusuma
         end
 
         context 'when swipe' do
-          before { @vector_class = Vectors::SwipeVector }
+          before { @vector_class = Plugin::Vectors::SwipeVector }
           context 'when 3 finger' do
             before { @finger = 3 }
             it 'should swipe left shourtcut' do
@@ -113,7 +113,7 @@ module Fusuma
 
         context 'when pinch' do
           before do
-            @vector_class = Vectors::PinchVector
+            @vector_class = Plugin::Vectors::PinchVector
             @finger = rand(5)
           end
           it 'should pinch in shourtcut' do
@@ -135,7 +135,7 @@ module Fusuma
           @finger = nil
         end
         it 'should swipe shourtcut' do
-          @vector_class = Vectors::SwipeVector
+          @vector_class = Plugin::Vectors::SwipeVector
           allow(vector).to receive(:direction).and_return 'left'
           expect(Config.shortcut(vector)).to eq 'alt+Left'
         end
@@ -149,7 +149,7 @@ module Fusuma
           Config.reload
         end
         it 'should return custom threshold' do
-          @vector_class = Vectors::SwipeVector
+          @vector_class = Plugin::Vectors::SwipeVector
           expect(Config.threshold(vector)).to eq 0.5
         end
       end
@@ -160,7 +160,7 @@ module Fusuma
             .and_return keymap_with_trigger_threshold
           Config.reload
           @finger = 3
-          @vector_class = Vectors::SwipeVector
+          @vector_class = Plugin::Vectors::SwipeVector
           allow(vector).to receive(:direction).and_return 'left'
         end
         it 'should return custom threshold' do
@@ -172,7 +172,7 @@ module Fusuma
         before do
           allow(YAML).to receive(:load_file).and_return keymap
           Config.reload
-          @vector_class = Vectors::SwipeVector
+          @vector_class = Plugin::Vectors::SwipeVector
         end
         it 'should return default threshold' do
           expect(Config.threshold(vector)).to eq 1
@@ -181,7 +181,7 @@ module Fusuma
 
       context 'with irregular event_type' do
         it 'should return default threshold' do
-          @vector_class = Vectors::SwipeVector
+          @vector_class = Plugin::Vectors::SwipeVector
           event_type = 'missing_property'
           allow(vector).to receive(:event_type).and_return event_type
           expect(Config.threshold(vector)).to eq 1
@@ -194,7 +194,7 @@ module Fusuma
         before do
           allow(YAML).to receive(:load_file).and_return keymap_with_interval
           Config.reload
-          @vector_class = Vectors::SwipeVector
+          @vector_class = Plugin::Vectors::SwipeVector
         end
         it 'should return custom interval' do
           expect(Config.interval(vector)).to eq 0.3
@@ -207,7 +207,7 @@ module Fusuma
             .and_return keymap_with_trigger_interval
           Config.reload
           @finger = 4
-          @vector_class = Vectors::SwipeVector
+          @vector_class = Plugin::Vectors::SwipeVector
           allow(vector).to receive(:direction).and_return 'right'
         end
         it 'should return custom interval' do
@@ -219,7 +219,7 @@ module Fusuma
         before do
           allow(YAML).to receive(:load_file).and_return keymap
           Config.reload
-          @vector_class = Vectors::SwipeVector
+          @vector_class = Plugin::Vectors::SwipeVector
         end
         it 'should return default interval' do
           expect(Config.threshold(vector)).to eq 1
@@ -228,7 +228,7 @@ module Fusuma
 
       context 'with irregular event_type' do
         it 'should return default interval' do
-          @vector_class = Vectors::SwipeVector
+          @vector_class = Plugin::Vectors::SwipeVector
           event_type = 'missing_property'
           allow(vector).to receive(:event_type).and_return event_type
           expect(Config.threshold(vector)).to eq 1
