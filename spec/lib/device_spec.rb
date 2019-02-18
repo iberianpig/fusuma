@@ -1,13 +1,13 @@
 require 'spec_helper'
 module Fusuma
-  describe Device do
+  RSpec.describe Device do
     describe '.ids' do
       subject { Device.ids }
       let(:libinput_device_command) { 'libinput list-devices' }
 
       before do
         Device.reset
-        allow_any_instance_of(Inputs::LibinputCommandInput)
+        allow_any_instance_of(Plugin::Inputs::LibinputCommandInput)
           .to receive(:list_devices_command)
           .and_return(libinput_device_command)
         allow(Open3).to receive(:popen3)
@@ -55,7 +55,7 @@ module Fusuma
 
       before do
         Device.reset
-        allow_any_instance_of(Inputs::LibinputCommandInput)
+        allow_any_instance_of(Plugin::Inputs::LibinputCommandInput)
           .to receive(:list_devices_command)
           .and_return(libinput_device_command)
         allow(Open3).to receive(:popen3)
