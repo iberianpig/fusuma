@@ -1,12 +1,16 @@
-require_relative './plugin_manager.rb'
+require_relative './manager.rb'
 
 module Fusuma
   module Plugin
     # input class
     module Inputs
       # Inherite this base
-      class BaseInput < Base
-        def initialize; end
+      class Input < Base
+        attr_reader :options
+
+        def initialize(options = {})
+          @options = options
+        end
 
         Event = Struct.new(:time, :tag, :record)
 
@@ -21,19 +25,14 @@ module Fusuma
         def tag
           self.class.name.split('Inputs::').last.underscore
         end
-
-        class << self
-          # @return [BaseInput]
-          def generate; end
-        end
       end
 
       # Generate input
       class Generator
-        DUMMY_OPTIONS = { input: { libinput_command: '--enable-tap' } }.freeze
+        # DUMMY_OPTIONS = { input: { libinput_command: '--enable-tap' } }.freeze
         # @param options [Hash]
-        def initialize(options: DUMMY_OPTIONS)
-          @options = options
+        def initialize(options:)
+          @options = options.fetch(:inputs, {})
         end
 
         # and generate input
@@ -41,13 +40,13 @@ module Fusuma
         def generate
           plugins.map do |klass|
             klass.generate(options: @options)
-          end.compact.first
+          end.compact
         end
 
         # input plugins
         # @retrun [Array]
         def plugins
-          BaseInput.plugins
+          Input.plugins
         end
       end
     end

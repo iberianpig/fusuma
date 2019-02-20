@@ -1,15 +1,15 @@
-require_relative './plugin_manager.rb'
+require_relative './manager.rb'
 
 module Fusuma
   module Plugin
     # parser class
     module Parsers
       # Inherite this base
-      class BaseParser < Base
+      class Parser < Base
         # parser generate event
         # Event = Struct.new(:time, :type, :status, :body)
 
-        def initialize(options: DummyOptions); end
+        def initialize(options); end
 
         # @param line [String]
         # @retrun [Event]
@@ -26,19 +26,14 @@ module Fusuma
         def tag
           self.class.name.split('::').last.underscore
         end
-
-        class << self
-          # @return [BaseParser]
-          def generate; end
-        end
       end
 
       # Generate parser
       class Generator
-        DUMMY_OPTIONS = { parser: { dummy: 'dummy' } }.freeze
+        # DUMMY_OPTIONS = { parser: { dummy: 'dummy' } }.freeze
         # @param options [Hash]
-        def initialize(options: DUMMY_OPTIONS)
-          @options = options
+        def initialize(options:)
+          @options = options.fetch(:parsers, {})
         end
 
         # and generate parser
@@ -52,7 +47,7 @@ module Fusuma
         # parser plugins
         # @retrun [Array]
         def plugins
-          BaseParser.plugins
+          Parser.plugins
         end
       end
     end

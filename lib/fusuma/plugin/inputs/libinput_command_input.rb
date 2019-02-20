@@ -2,8 +2,8 @@ module Fusuma
   module Plugin
     module Inputs
       # libinput commands wrapper
-      class LibinputCommandInput < BaseInput
-        def initialize(*options)
+      class LibinputCommandInput < Input
+        def initialize(options: {})
           @options = options
         end
 
@@ -104,14 +104,6 @@ module Fusuma
             end
           end
           nil
-        end
-
-        class << self
-          # param options [Hash]
-          def generate(options:)
-            libinput_command_options = options[:input][:libinput_command]
-            new(libinput_command_options)
-          end
         end
       end
     end

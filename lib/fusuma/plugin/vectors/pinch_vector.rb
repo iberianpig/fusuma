@@ -2,7 +2,7 @@ module Fusuma
   module Plugin
     module Vectors
       # vector data
-      class PinchVector < BaseVector
+      class PinchVector < Vector
         TYPE = 'pinch'.freeze
         GESTURE = 'pinch'.freeze
 

@@ -38,8 +38,8 @@ module Fusuma
       class << self
         # @example
         #  Manager.plugins
-        #  => {"Base"=>[Vectors::BaseVector],
-        #      "Vectors::BaseVector"=>[Vectors::RotateVector,
+        #  => {"Base"=>[Vectors::Vector],
+        #      "Vectors::Vector"=>[Vectors::RotateVector,
         #                                      Vectors::PinchVector,
         #                                      Vectors::SwipeVector]}
         attr_reader :plugins
