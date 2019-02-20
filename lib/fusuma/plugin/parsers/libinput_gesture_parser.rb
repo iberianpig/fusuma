@@ -2,10 +2,10 @@ module Fusuma
   module Plugin
     module Parsers
       # parse libinput and generate vector
-      class LibinputGestureParser < BaseParser
+      class LibinputGestureParser < Parser
         Gesture = Struct.new(:status, :gesture, :finger, :move_x, :move_y, :zoom, :rotate)
 
-        def initialize(*options)
+        def initialize(options)
           @options = options
         end
 
@@ -60,14 +60,6 @@ module Fusuma
 
           move_x, move_y, _, _, _, zoom, _, rotate = line.tr('/|(|)', ' ').split
           [move_x, move_y, zoom, rotate]
-        end
-
-        class << self
-          # param options [Hash]
-          def generate(options:)
-            libinput_gesture_options = options[:parser][:libinput_gesture]
-            new(libinput_gesture_options)
-          end
         end
       end
     end

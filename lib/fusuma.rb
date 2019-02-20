@@ -79,15 +79,20 @@ module Fusuma
     end
 
     def initialize
-      @input = Plugin::Inputs::Generator.new.generate
-      @filter = Plugin::Filters::Generator.new.generate
-      @parser = Plugin::Parsers::Generator.new.generate
+      @inputs = Plugin::Inputs::Generator.new(options: plugin_options).generate
+      @filter = Plugin::Filters::Generator.new(options: plugin_options).generate
+      @parser = Plugin::Parsers::Generator.new(options: plugin_options).generate
       @event_buffer = EventBuffer.new
       @vector_buffer = VectorBuffer.new
     end
 
+    def plugin_options
+      {}
+    end
+
     def run
-      @input.run do |event|
+      # TODO: run by multi thread @inputs
+      @inputs.first.run do |event|
         event = @filter.filter(event)
 
         next unless event

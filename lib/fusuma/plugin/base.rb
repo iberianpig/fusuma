@@ -11,7 +11,7 @@ module Fusuma
 
       # get inherited classes
       # @example
-      #  [Vectors::BaseVector]
+      #  [Vectors::Vector]
       # @return [Array]
       def self.plugins
         Manager.plugins[name]
@@ -21,6 +21,15 @@ module Fusuma
         subclass.namespace_name.underscore
       rescue StandardError
         subclass.name.match(/(Fusuma::.*)::/)[1].to_s.underscore
+      end
+
+      # @return [Input]
+      def self.generate(options:)
+        attr = name.gsub('Fusuma::', '')
+                   .underscore
+                   .split('/')
+                   .last
+        new options.fetch(attr.to_sym, {})
       end
     end
   end

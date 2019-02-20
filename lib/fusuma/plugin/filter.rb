@@ -1,27 +1,22 @@
-require_relative './plugin_manager.rb'
+require_relative './manager.rb'
 
 module Fusuma
   module Plugin
     # filter class
     module Filters
       # Inherite this base
-      class BaseFilter < Base
-        def initialize(source_tag, *options); end
+      class Filter < Base
+        def initialize(options); end
 
         def filter; end
-
-        class << self
-          # @return [BaseFilter]
-          def generate; end
-        end
       end
 
       # Generate filter
       class Generator
-        DUMMY_OPTIONS = { filter: { dummy: 'dummy_options' } }.freeze
+        # DUMMY_OPTIONS = { filter: { dummy: 'dummy_options' } }.freeze
         # @param options [Hash]
-        def initialize(options: DUMMY_OPTIONS)
-          @options = options
+        def initialize(options:)
+          @options = options.fetch(:filters, {})
         end
 
         # and generate filter
@@ -35,7 +30,7 @@ module Fusuma
         # filter plugins
         # @retrun [Array]
         def plugins
-          BaseFilter.plugins
+          Filter.plugins
         end
       end
     end

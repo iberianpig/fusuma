@@ -1,11 +1,11 @@
-require_relative './plugin_manager.rb'
+require_relative './manager.rb'
 
 module Fusuma
   module Plugin
     # vector class
     module Vectors
       # Inherite this base
-      class BaseVector < Base
+      class Vector < Base
         def initialize; end
 
         def direction; end
@@ -14,7 +14,7 @@ module Fusuma
 
         class << self
           # @param event_buffer [EventBuffer]
-          # @return [BaseVector]
+          # @return [Vector]
           def generate; end
 
           def touch_last_time
@@ -49,7 +49,7 @@ module Fusuma
         #   Vectors::SwipeVector]
         # @retrun [Array]
         def plugins
-          BaseVector.plugins
+          Vector.plugins
         end
       end
     end

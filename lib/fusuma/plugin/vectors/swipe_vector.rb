@@ -2,7 +2,7 @@ module Fusuma
   module Plugin
     module Vectors
       # vector data
-      class SwipeVector < BaseVector
+      class SwipeVector < Vector
         TYPE = 'swipe'.freeze
         GESTURE = 'swipe'.freeze
 
