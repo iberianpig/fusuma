@@ -38,6 +38,7 @@ module Fusuma
     def reload
       @cache  = nil
       @keymap = YAML.load_file(file_path)
+      MultiLogger.info "reload config : #{file_path}"
       self
     end
 

@@ -33,8 +33,8 @@ module Fusuma
 
       def read_options(option)
         print_version && exit(0) if option[:version]
-        print_device_list if option[:list]
         reload_custom_config(option[:config_path])
+        print_device_list if option[:list]
         debug_mode if option[:verbose]
         Device.given_device = option[:device]
         Process.daemon if option[:daemon]
@@ -50,11 +50,12 @@ module Fusuma
         MultiLogger.info '---------------------------------------------'
       end
 
-      def available_plugins
-        MultiLogger.info 'Available Plugins: '
-        Plugin::Manager.plugins.each do |base, plugins|
-          plugins.each { |plugin| MultiLogger.info "  #{plugin} < #{base}" }
-        end
+      def enabled_plugins
+        MultiLogger.info 'Enabled Plugins: '
+        Plugin::Manager.plugins
+                       .reject { |k, _v| k.to_s =~ /Base/ }
+                       .map { |_base, plugins| plugins.map { |plugin| "  #{plugin}" } }
+                       .flatten.sort.each { |name| MultiLogger.info name }
         MultiLogger.info '---------------------------------------------'
       end
 
@@ -66,14 +67,13 @@ module Fusuma
       def reload_custom_config(config_path = nil)
         return unless config_path
 
-        MultiLogger.info "use custom path: #{config_path}"
         Config.instance.custom_path = config_path
         Config.reload
       end
 
       def debug_mode
         print_version
-        available_plugins
+        enabled_plugins
         MultiLogger.instance.debug_mode = true
       end
     end
