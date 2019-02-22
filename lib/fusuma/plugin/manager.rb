@@ -1,38 +1,45 @@
 require_relative '../multi_logger.rb'
 require_relative './base.rb'
+require_relative '../config.rb'
 
 module Fusuma
   module Plugin
     # Manage Fusuma plugins
     class Manager
-      def initialize(path:)
-        @path = path
+      def initialize(plugin_class:, plugin_path:)
+        @plugin_class = plugin_class
+        @plugin_path = plugin_path
       end
 
       def require_plugins
-        require_from_local
-        require_from_gem
+        require_siblings_from_gem
       end
 
-      # TODO: load plugins from local for developer
-      def require_from_local
-        Dir[File.join('lib', @path, '*.rb')].each do |file|
-          next unless File.exist?(file)
+      # # TODO: load path is defined in config.yml
+      # def require_from_local
+      #   Dir[File.join('lib', @path, '*.rb')].each do |file|
+      #     next unless File.exist?(file)
+      #
+      #     base_path = 'lib/fusuma/plugin/'
+      #     relative_path = file.gsub(base_path, '')
+      #     require_relative(relative_path)
+      #   end
+      # end
 
-          base_path = 'lib/fusuma/plugin/'
-          relative_path = file.gsub(base_path, '')
-          require_relative(relative_path)
-        end
-      end
-
-      def require_from_gem
+      def require_siblings_from_gem
         require 'rubygems' unless defined? Gem
+        search_key = File.join(plugin_dir_name(plugin_class: @plugin_class), '*.rb')
+        Gem.find_files(search_key).each do |siblings_plugin|
+          next if self.class.load_paths.include?(siblings_plugin)
 
-        Gem.find_files(File.join(@path, '*.rb')).each do |plugin_path|
-          require plugin_path
+          require siblings_plugin
         end
       rescue LoadError => e
         MultiLogger.debug(e)
+      end
+
+      def plugin_dir_name(plugin_class:)
+        plugin_class.name.match(/(Fusuma::.*)::/)[1].to_s.underscore
       end
 
       class << self
@@ -43,15 +50,33 @@ module Fusuma
         #                                      Vectors::PinchVector,
         #                                      Vectors::SwipeVector]}
         attr_reader :plugins
+        attr_accessor :load_paths
 
         # @param plugin_class [Class]
-        def add(plugin_class:)
+        # return [Hash, false]
+        def add(plugin_class:, plugin_path:)
           @plugins ||= {}
+          return false if exist?(plugin_class: plugin_class)
+
           base = plugin_class.superclass.name
           @plugins[base] ||= []
-          return false if @plugins[base].any? { |registerd| registerd == plugin_class }
-
           @plugins[base] << plugin_class
+
+          @load_paths ||= []
+          @load_paths << plugin_path
+
+          Manager.new(plugin_class: plugin_class, plugin_path: plugin_path).require_plugins
+        end
+
+        # @param plugin_class [Class]
+        # @return Boolean
+        def exist?(plugin_class:)
+          base = plugin_class.superclass.name
+          return false if @plugins[base].nil?
+
+          @plugins[base].any? do |registerd|
+            registerd == plugin_class
+          end
         end
       end
     end

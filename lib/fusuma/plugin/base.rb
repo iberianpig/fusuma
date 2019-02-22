@@ -4,9 +4,8 @@ module Fusuma
     class Base
       # if inherited from subclass
       def self.inherited(subclass)
-        return unless Manager.add(plugin_class: subclass)
-
-        Manager.new(path: plugin_dir_name(subclass: subclass)).require_plugins
+        subclass_path = caller_locations(1..1).first.path
+        Manager.add(plugin_class: subclass, plugin_path: subclass_path)
       end
 
       # get inherited classes
@@ -15,12 +14,6 @@ module Fusuma
       # @return [Array]
       def self.plugins
         Manager.plugins[name]
-      end
-
-      def self.plugin_dir_name(subclass: self)
-        subclass.namespace_name.underscore
-      rescue StandardError
-        subclass.name.match(/(Fusuma::.*)::/)[1].to_s.underscore
       end
 
       # @return [Input]
