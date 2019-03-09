@@ -1,5 +1,4 @@
 require_relative '../multi_logger.rb'
-require_relative './base.rb'
 require_relative '../config.rb'
 
 module Fusuma
@@ -12,11 +11,12 @@ module Fusuma
       end
 
       def require_plugins
+        require_siblings_from_local
         require_siblings_from_gem
       end
 
       # # TODO: load path is defined in config.yml
-      # def require_from_local
+      # def require_from_config
       #   Dir[File.join('lib', @path, '*.rb')].each do |file|
       #     next unless File.exist?(file)
       #
@@ -26,8 +26,18 @@ module Fusuma
       #   end
       # end
 
+      def require_siblings_from_local
+        search_key = File.join('./lib', plugin_dir_name(plugin_class: @plugin_class), '*.rb')
+        Dir.glob(search_key).each do |siblings_plugin|
+          next if self.class.load_paths.include?(siblings_plugin)
+
+          require './' + siblings_plugin
+        end
+      rescue LoadError => e
+        MultiLogger.debug(e)
+      end
+
       def require_siblings_from_gem
-        require 'rubygems' unless defined? Gem
         search_key = File.join(plugin_dir_name(plugin_class: @plugin_class), '*.rb')
         Gem.find_files(search_key).each do |siblings_plugin|
           next if self.class.load_paths.include?(siblings_plugin)

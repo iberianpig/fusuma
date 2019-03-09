@@ -1,10 +1,14 @@
 require 'spec_helper'
 module Fusuma
   module Plugin
-    module Inputs
-      DUMMY_OPTIONS = { inputs: { dummy_input: 'dummy' } }.freeze
+    module Parsers
+      DUMMY_OPTIONS = { parsers: { dummy_parser: 'dummy' } }.freeze
 
-      class DummyInput < Input
+      class DummyParser < Parser
+        DEFAULT_SOURCE = 'dummy_input'.freeze
+      end
+
+      RSpec.describe Parser do
       end
 
       RSpec.describe Generator do
@@ -12,7 +16,7 @@ module Fusuma
         let(:generator) { described_class.new(options: options) }
 
         before do
-          allow(generator).to receive(:plugins) { [DummyInput] }
+          allow(generator).to receive(:plugins) { [DummyParser] }
         end
 
         describe '#generate' do
@@ -24,12 +28,12 @@ module Fusuma
             expect(subject.any?(&:options)).to be true
           end
 
-          it 'have a DummyInput' do
-            expect(subject.first).to be_a_kind_of DummyInput
+          it 'have a DummyParser' do
+            expect(subject.first).to be_a_kind_of DummyParser
           end
 
-          it 'have only a input options' do
-            expect(subject.first.options).to eq DUMMY_OPTIONS[:inputs][:dummy_input]
+          it 'have only a parser options' do
+            expect(subject.first.options).to eq DUMMY_OPTIONS[:parsers][:dummy_parser]
           end
         end
       end

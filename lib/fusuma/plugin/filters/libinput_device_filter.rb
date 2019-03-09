@@ -7,24 +7,19 @@ module Fusuma
       class LibinputDeviceFilter < Filter
         DEFAULT_SOURCE = 'libinput_command_input'.freeze
 
-        def initialize(options)
-          @source = options.fetch(:source, DEFAULT_SOURCE)
-          @device_names = options.fetch(:device, [])
+        def filter_record?(record)
+          device_ids.none? { |device_id| record =~ /^\s?#{device_id}/ }
         end
 
-        # @param line [Event]
-        # @return [Event, nil]
-        def filter(event)
-          return event unless event.tag == @source
-          return nil if device_ids.none? do |device_id|
-            event.record =~ /^\s?#{device_id}/
-          end
-
-          event
+        # TODO: read device names from config.yml
+        def device_names
+          @options.fetch(:device, [])
         end
+
+        private
 
         def device_ids
-          Device.ids
+          @device_ids ||= Device.ids
         end
 
         # TODO: read option[:filter][:libinput_device] from conig instead of
