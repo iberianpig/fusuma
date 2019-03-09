@@ -9,10 +9,10 @@ module Fusuma
           @options = options
         end
 
-        # @param line [String]
-        # @return Event
-        def parse(event)
-          case line = event.record.to_s
+        # @param record [String]
+        # @return [Gesture, nil]
+        def parse_record(record)
+          case line = record.to_s
           when /GESTURE_SWIPE|GESTURE_PINCH/
             gesture, status, finger, move_x, move_y, zoom, rotate = parse_libinput(line)
           when /POINTER_BUTTON.+(\d+\.\d+)s.*BTN_(LEFT|RIGHT|MIDDLE).*(pressed|released)/
@@ -31,13 +31,11 @@ module Fusuma
             return
           end
 
-          event.tap do |e|
-            e.record = Gesture.new(status, gesture, finger,
-                                   move_x.to_f,
-                                   move_y.to_f,
-                                   zoom.to_f,
-                                   rotate.to_f)
-          end
+          Gesture.new(status, gesture, finger,
+                      move_x.to_f,
+                      move_y.to_f,
+                      zoom.to_f,
+                      rotate.to_f)
         end
 
         private

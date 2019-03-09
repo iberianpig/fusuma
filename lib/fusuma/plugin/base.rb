@@ -1,3 +1,5 @@
+require_relative './manager.rb'
+
 module Fusuma
   module Plugin
     # Create a Plugin Class with extending this class

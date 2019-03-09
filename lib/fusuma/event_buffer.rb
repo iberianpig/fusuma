@@ -1,5 +1,5 @@
 require_relative 'command_executor'
-require_relative 'plugin/vector'
+require_relative 'plugin/vectors/vector'
 
 module Fusuma
   # manage events and generate command
@@ -29,7 +29,7 @@ module Fusuma
     alias << push
 
     # @param attr [Symbol]
-    # @retrun [Float]
+    # @return [Float]
     def sum_attrs(attr)
       @events.map do |gesture_event|
         gesture_event.record[attr]
@@ -37,7 +37,7 @@ module Fusuma
     end
 
     # @param attr [Symbol]
-    # @retrun [Float]
+    # @return [Float]
     def avg_attrs(attr)
       sum_attrs(attr) / @events.length
     end

@@ -1,4 +1,4 @@
-require_relative './manager.rb'
+require_relative '../base.rb'
 
 module Fusuma
   module Plugin
@@ -15,7 +15,7 @@ module Fusuma
         class << self
           # @param event_buffer [EventBuffer]
           # @return [Vector]
-          def generate; end
+          def generate(event_buffer:); end
 
           def touch_last_time
             @last_time = Time.now
@@ -47,7 +47,7 @@ module Fusuma
         # @example
         #  [Vectors::RotateVector, Vectors::PinchVector,
         #   Vectors::SwipeVector]
-        # @retrun [Array]
+        # @return [Array]
         def plugins
           Vector.plugins
         end

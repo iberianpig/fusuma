@@ -1,4 +1,4 @@
-require_relative './manager.rb'
+require_relative '../base.rb'
 
 module Fusuma
   module Plugin
@@ -9,22 +9,32 @@ module Fusuma
         # parser generate event
         # Event = Struct.new(:time, :type, :status, :body)
 
-        def initialize(options); end
+        attr_reader :options
 
-        # @param line [String]
-        # @retrun [Event]
+        def initialize(options = {})
+          @options = options
+        end
+
+        # @param event [String]
+        # @return [Event]
         def parse(event)
           event.tap do |e|
-            e.record = "DummyParsed#{e.record}"
+            new_record = parse_record(e.record)
+            if new_record
+              e.record = new_record
+              e.tag = tag
+            end
           end
         end
 
-        def event(record: 'DummyInput')
-          Event.new(Time.now, tag, record)
-        end
+        protected
 
         def tag
           self.class.name.split('::').last.underscore
+        end
+
+        def parse_record(record)
+          # "DummyParsed#{record}"
         end
       end
 
@@ -41,11 +51,11 @@ module Fusuma
         def generate
           plugins.map do |klass|
             klass.generate(options: @options)
-          end.compact.first
+          end.compact
         end
 
         # parser plugins
-        # @retrun [Array]
+        # @return [Array]
         def plugins
           Parser.plugins
         end

@@ -1,12 +1,12 @@
-require_relative 'fusuma/version'
-require_relative 'fusuma/event_buffer'
-require_relative 'fusuma/vector_buffer'
-require_relative 'fusuma/multi_logger'
-require_relative 'fusuma/config.rb'
-require_relative 'fusuma/device.rb'
-require_relative 'fusuma/plugin/input.rb'
-require_relative 'fusuma/plugin/filter.rb'
-require_relative 'fusuma/plugin/parser.rb'
+require_relative './fusuma/version'
+require_relative './fusuma/event_buffer'
+require_relative './fusuma/vector_buffer'
+require_relative './fusuma/multi_logger'
+require_relative './fusuma/config.rb'
+require_relative './fusuma/device.rb'
+require_relative './fusuma/plugin/inputs/input.rb'
+require_relative './fusuma/plugin/filters/filter.rb'
+require_relative './fusuma/plugin/parsers/parser.rb'
 
 require 'logger'
 require 'open3'
@@ -80,8 +80,8 @@ module Fusuma
 
     def initialize
       @inputs = Plugin::Inputs::Generator.new(options: plugin_options).generate
-      @filter = Plugin::Filters::Generator.new(options: plugin_options).generate
-      @parser = Plugin::Parsers::Generator.new(options: plugin_options).generate
+      @filters = Plugin::Filters::Generator.new(options: plugin_options).generate
+      @parsers = Plugin::Parsers::Generator.new(options: plugin_options).generate
       @event_buffer = EventBuffer.new
       @vector_buffer = VectorBuffer.new
     end
@@ -93,11 +93,11 @@ module Fusuma
     def run
       # TODO: run by multi thread @inputs
       @inputs.first.run do |event|
-        event = @filter.filter(event)
+        event = @filters.reduce(event) { |e, f| f.filter(e) if e }
 
         next unless event
 
-        event = @parser.parse(event)
+        event = @parsers.reduce(event) { |e, p| p.parse(event) if p }
 
         next unless event
 

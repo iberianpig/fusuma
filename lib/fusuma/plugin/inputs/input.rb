@@ -1,4 +1,4 @@
-require_relative './manager.rb'
+require_relative '../base.rb'
 
 module Fusuma
   module Plugin
@@ -44,7 +44,7 @@ module Fusuma
         end
 
         # input plugins
-        # @retrun [Array]
+        # @return [Array]
         def plugins
           Input.plugins
         end
