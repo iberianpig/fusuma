@@ -7,8 +7,8 @@ module Fusuma
       class LibinputDeviceFilter < Filter
         DEFAULT_SOURCE = 'libinput_command_input'.freeze
 
-        def filter_record?(record)
-          device_ids.none? { |device_id| record =~ /^\s?#{device_id}/ }
+        def keep?(record)
+          device_ids.any? { |device_id| record.to_s =~ /^\s?#{device_id}/ }
         end
 
         # TODO: read device names from config.yml

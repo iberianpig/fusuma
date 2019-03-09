@@ -1,4 +1,5 @@
 require_relative '../base.rb'
+require_relative '../formats/event_format.rb'
 
 module Fusuma
   module Plugin
@@ -12,14 +13,12 @@ module Fusuma
           @options = options
         end
 
-        Event = Struct.new(:time, :tag, :record)
-
         def run
           yield(event)
         end
 
         def event(record: 'DummyInput')
-          Event.new(Time.now, tag, record)
+          Formats::Event.new(tag: tag, record: record)
         end
 
         def tag
@@ -35,7 +34,7 @@ module Fusuma
           @options = options.fetch(:inputs, {})
         end
 
-        # and generate input
+        # Generate input
         # @return [input]
         def generate
           plugins.map do |klass|

@@ -71,7 +71,7 @@ module Fusuma
 
           def calc_diameter(event_buffer)
             avg_zoom = event_buffer.avg_attrs(:zoom)
-            first_zoom = event_buffer.events.first.record.zoom
+            first_zoom = event_buffer.events.first.record.direction.zoom
             avg_zoom / first_zoom
           end
         end

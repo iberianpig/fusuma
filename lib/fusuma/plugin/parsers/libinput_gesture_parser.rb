@@ -1,10 +1,10 @@
+require_relative '../formats/records/record.rb'
+
 module Fusuma
   module Plugin
     module Parsers
       # parse libinput and generate vector
       class LibinputGestureParser < Parser
-        Gesture = Struct.new(:status, :gesture, :finger, :move_x, :move_y, :zoom, :rotate)
-
         def initialize(options)
           @options = options
         end
@@ -14,7 +14,7 @@ module Fusuma
         def parse_record(record)
           case line = record.to_s
           when /GESTURE_SWIPE|GESTURE_PINCH/
-            gesture, status, finger, move_x, move_y, zoom, rotate = parse_libinput(line)
+            gesture, status, finger, direction = parse_libinput(line)
           when /POINTER_BUTTON.+(\d+\.\d+)s.*BTN_(LEFT|RIGHT|MIDDLE).*(pressed|released)/
             matched = Regexp.last_match
             gesture = 'tap'
@@ -31,11 +31,10 @@ module Fusuma
             return
           end
 
-          Gesture.new(status, gesture, finger,
-                      move_x.to_f,
-                      move_y.to_f,
-                      zoom.to_f,
-                      rotate.to_f)
+          Formats::Records::Gesture.new(status: status,
+                                        gesture: gesture,
+                                        finger: finger,
+                                        direction: direction)
         end
 
         private
@@ -43,9 +42,8 @@ module Fusuma
         def parse_libinput(line)
           _device, event_name, _time, other = line.strip.split(nil, 4)
           finger, other = other.split(nil, 2)
-          move_x, move_y, zoom, rotate = parse_finger_direction(other)
-          [*detect_gesture(event_name), finger,
-           move_x, move_y, zoom, rotate]
+          direction = parse_direction(other)
+          [*detect_gesture(event_name), finger, direction]
         end
 
         def detect_gesture(event_name)
@@ -53,11 +51,12 @@ module Fusuma
           [Regexp.last_match(1).downcase, Regexp.last_match(2).downcase]
         end
 
-        def parse_finger_direction(line)
-          return [] if line.nil?
+        def parse_direction(line)
+          return if line.nil?
 
           move_x, move_y, _, _, _, zoom, _, rotate = line.tr('/|(|)', ' ').split
-          [move_x, move_y, zoom, rotate]
+          Formats::Records::Gesture::Direction.new(move_x.to_f, move_y.to_f,
+                                                   zoom.to_f, rotate.to_f)
         end
       end
     end

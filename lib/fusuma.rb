@@ -97,7 +97,7 @@ module Fusuma
 
         next unless event
 
-        event = @parsers.reduce(event) { |e, p| p.parse(event) if p }
+        event = @parsers.reduce(event) { |_e, p| p.parse(event) if p }
 
         next unless event
 

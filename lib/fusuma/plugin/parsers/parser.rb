@@ -46,7 +46,7 @@ module Fusuma
           @options = options.fetch(:parsers, {})
         end
 
-        # and generate parser
+        # Generate parser
         # @return [parser]
         def generate
           plugins.map do |klass|

@@ -12,7 +12,7 @@ module Fusuma
         let(:options) { DUMMY_OPTIONS }
         let(:filter) { DummyFilter.new(options: options) }
 
-        describe "#source" do
+        describe '#source' do
           subject { filter.source }
 
           it { is_expected.to be DummyFilter::DEFAULT_SOURCE }

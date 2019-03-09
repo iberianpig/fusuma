@@ -23,6 +23,12 @@ module Fusuma
 
     # @param event [Event]
     def push(event)
+      # TODO: buffering events into buffer plugins
+      # - gesture event buffer
+      # - window event buffer
+      # - other event buffer
+      return unless event.record.type == :gesture
+
       @events.push(event)
       reset unless updating?
     end
@@ -32,7 +38,7 @@ module Fusuma
     # @return [Float]
     def sum_attrs(attr)
       @events.map do |gesture_event|
-        gesture_event.record[attr]
+        gesture_event.record.direction[attr]
       end.compact.inject(:+)
     end
 

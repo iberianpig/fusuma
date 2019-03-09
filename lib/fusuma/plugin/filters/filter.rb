@@ -11,28 +11,35 @@ module Fusuma
           @options = options
         end
 
+        # Filter input event
         # @param event [Event]
         # @return [Event, nil]
         def filter(event)
           event.tap do |e|
-            return nil if e.tag == source && filter_record?(event.record)
+            if e.tag == source
+              return nil unless keep?(e.record)
+            end
           end
         end
 
+        # @abstract override `#filter_record?` to implement
+        # @param record [String]
+        # @return [True, False]
+        def keep?(record)
+          true if record
+        end
+
+        # Set source for tag from config.yml.
+        # DEFAULT_SOURCE is defined in each Filter plugins.
         def source
           @source ||= options.fetch(:source,
                                     self.class.const_get('DEFAULT_SOURCE'))
-        end
-
-        def filter_record?(record)
-          device_ids.none? { |device_id| record =~ /^\s?#{device_id}/  }
         end
       end
 
       # Generate filter
       class Generator
-        # DUMMY_OPTIONS = { filter: { dummy: 'dummy_options' } }.freeze
-        # @param options [Hash]
+        # @param options [Hash] like a { filter: { dummy: 'dummy_options'  }  }
         def initialize(options:)
           @options = options.fetch(:filters, {})
         end
