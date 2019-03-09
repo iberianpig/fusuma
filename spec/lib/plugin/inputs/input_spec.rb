@@ -1,10 +1,20 @@
 require 'spec_helper'
+
 module Fusuma
   module Plugin
     module Inputs
       DUMMY_OPTIONS = { inputs: { dummy_input: 'dummy' } }.freeze
 
       class DummyInput < Input
+      end
+
+      RSpec.describe DummyInput do
+        let(:dummy_input) { described_class.new }
+
+        describe 'run' do
+          subject { dummy_input.run { |e| return e } }
+          it { is_expected.to be_a Formats::Event }
+        end
       end
 
       RSpec.describe Generator do
