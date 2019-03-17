@@ -5,12 +5,10 @@ module Fusuma
     module Parsers
       # parse libinput and generate vector
       class LibinputGestureParser < Parser
-        def initialize(options)
-          @options = options
-        end
+        DEFAULT_SOURCE = 'libinput_command_input'.freeze
 
         # @param record [String]
-        # @return [Gesture, nil]
+        # @return [Records::Gesture, nil]
         def parse_record(record)
           case line = record.to_s
           when /GESTURE_SWIPE|GESTURE_PINCH/
