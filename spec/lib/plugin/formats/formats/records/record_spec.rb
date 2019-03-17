@@ -18,7 +18,7 @@ module Fusuma
             context 'override #type' do
               let(:record) { DummyRecord.new }
               it { expect { record.type }.not_to raise_error(NotImplementedError) }
-              it { expect(ecord.type).to eq :dummy }
+              it { expect(record.type).to eq :dummy }
             end
           end
         end
