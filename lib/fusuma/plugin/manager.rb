@@ -27,7 +27,8 @@ module Fusuma
       # end
 
       def require_siblings_from_local
-        search_key = File.join('./lib', plugin_dir_name(plugin_class: @plugin_class), '*.rb')
+        siblings_dir = plugin_dir_name(plugin_class: @plugin_class)
+        search_key = File.join('./lib', siblings_dir, '*.rb')
         Dir.glob(search_key).each do |siblings_plugin|
           next if self.class.load_paths.include?(siblings_plugin)
 
