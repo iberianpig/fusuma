@@ -15,26 +15,38 @@ module Fusuma
           @options = options
         end
 
-        # @param event [String]
+        # Parse Event and convert Record and Tag
+        # if `#parse_record` return nil, this method will return original event
+        # @param event [Event]
         # @return [Event]
         def parse(event)
           event.tap do |e|
+            next if e.tag != source
+
             new_record = parse_record(e.record)
-            if new_record
-              e.record = new_record
-              e.tag = tag
-            end
+            next unless new_record
+
+            e.record = new_record
+            e.tag = tag
           end
         end
 
-        protected
+        # Set source for tag from config.yml.
+        # DEFAULT_SOURCE is defined in each Parser plugins.
+        def source
+          @source ||= options.fetch(:source,
+                                    self.class.const_get('DEFAULT_SOURCE'))
+        end
 
         def tag
           self.class.name.split('::').last.underscore
         end
 
-        def parse_record(record)
-          # "DummyParsed#{record}"
+        # parse Record object
+        # @param record [Record]
+        # @return [Record, nil]
+        def parse_record(_record)
+          nil
         end
       end
 
