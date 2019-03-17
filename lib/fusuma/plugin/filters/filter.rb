@@ -16,13 +16,14 @@ module Fusuma
         # @return [Event, nil]
         def filter(event)
           event.tap do |e|
-            if e.tag == source
-              return nil unless keep?(e.record)
-            end
+            next if e.tag != source
+            next if keep?(e.record)
+
+            break nil
           end
         end
 
-        # @abstract override `#filter_record?` to implement
+        # @abstract override `#keep?` to implement
         # @param record [String]
         # @return [True, False]
         def keep?(record)

@@ -17,6 +17,27 @@ module Fusuma
 
           it { is_expected.to be DummyFilter::DEFAULT_SOURCE }
         end
+
+        describe '#filter' do
+          subject { filter.filter(event) }
+          let(:event) { Formats::Event.new(tag: 'dummy_input', record: 'dummy') }
+
+          context 'when filter#keep? return false' do
+            before do
+              allow(filter).to receive(:keep?).and_return(false)
+            end
+
+            it { is_expected.to be nil }
+          end
+
+          context 'when filter#keep? return true' do
+            before do
+              allow(filter).to receive(:keep?).and_return(true)
+            end
+
+            it { is_expected.to be event }
+          end
+        end
       end
 
       RSpec.describe Generator do
