@@ -93,11 +93,11 @@ module Fusuma
     def run
       # TODO: run by multi thread @inputs
       @inputs.first.run do |event|
-        event = @filters.reduce(event) { |e, f| f.filter(e) if e }
+        event = filter(event)
 
         next unless event
 
-        event = @parsers.reduce(event) { |_e, p| p.parse(event) if p }
+        event = parse(event)
 
         next unless event
 
@@ -110,6 +110,14 @@ module Fusuma
         command_executor = @vector_buffer.generate_command_executor
         command_executor.execute if command_executor.executable?
       end
+    end
+
+    def filter(event)
+      @filters.reduce(event) { |e, f| f.filter(e) if e }
+    end
+
+    def parse(event)
+      @parsers.reduce(event) { |e, p| p.parse(e) if e  }
     end
   end
 end
