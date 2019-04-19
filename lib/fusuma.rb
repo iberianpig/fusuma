@@ -1,12 +1,12 @@
 require_relative './fusuma/version'
 require_relative './fusuma/event_buffer'
-require_relative './fusuma/vector_buffer'
 require_relative './fusuma/multi_logger'
 require_relative './fusuma/config.rb'
 require_relative './fusuma/device.rb'
 require_relative './fusuma/plugin/inputs/input.rb'
 require_relative './fusuma/plugin/filters/filter.rb'
 require_relative './fusuma/plugin/parsers/parser.rb'
+require_relative './fusuma/plugin/executors/executor.rb'
 
 require 'logger'
 require 'open3'
@@ -83,7 +83,7 @@ module Fusuma
       @filters = Plugin::Filters::Generator.new(options: plugin_options).generate
       @parsers = Plugin::Parsers::Generator.new(options: plugin_options).generate
       @event_buffer = EventBuffer.new
-      @vector_buffer = VectorBuffer.new
+      @executors = Plugin::Executors::Generator.new(options: plugin_options).generate
     end
 
     def plugin_options
@@ -106,9 +106,7 @@ module Fusuma
 
         next unless vector
 
-        @vector_buffer << vector
-        command_executor = @vector_buffer.generate_command_executor
-        command_executor.execute if command_executor.executable?
+        execute(vector)
       end
     end
 
@@ -118,6 +116,13 @@ module Fusuma
 
     def parse(event)
       @parsers.reduce(event) { |e, p| p.parse(e) if e  }
+    end
+
+    def execute(vector)
+      executor = @executors.find do |e|
+        e.executable?(vector)
+      end
+      executor.execute(vector)
     end
   end
 end

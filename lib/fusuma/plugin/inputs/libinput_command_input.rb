@@ -45,7 +45,7 @@ module Fusuma
           MultiLogger.debug(debug_events: cmd)
           Open3.popen3(cmd) do |_i, o, _e, _w|
             o.each do |line|
-              yield(line)
+              yield(line.chomp)
             end
           end
         end
