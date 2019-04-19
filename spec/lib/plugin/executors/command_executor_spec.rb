@@ -24,7 +24,10 @@ module Fusuma
           end
 
           context 'event source is NOT matched with tag' do
-            let(:command_event) { Formats::Event.new(tag: 'INVALID_TAG', record: 'command') }
+            let(:command_event) do
+              Formats::Event.new(tag: 'INVALID_TAG',
+                                 record: 'command')
+            end
             it { is_expected.to be false }
           end
         end

@@ -1,4 +1,3 @@
-require_relative 'command_executor'
 require_relative 'plugin/vectors/vector'
 
 module Fusuma
@@ -59,6 +58,19 @@ module Fusuma
     # @return [String]
     def gesture
       @events.last.record.gesture
+    end
+
+    def empty?
+      @events.empty?
+    end
+
+    def select
+      return enum_for(:select) unless block_given?
+
+      events = @events.select do |event|
+        yield event
+      end
+      self.class.new events
     end
 
     private
