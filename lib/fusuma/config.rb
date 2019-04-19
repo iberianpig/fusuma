@@ -6,10 +6,6 @@ module Fusuma
     include Singleton
 
     class << self
-      def command(vector)
-        instance.command(vector)
-      end
-
       def shortcut(vector)
         instance.shortcut(vector)
       end
@@ -20,6 +16,10 @@ module Fusuma
 
       def interval(vector)
         instance.interval(vector)
+      end
+
+      def search(keys, klass = Object)
+        instance.search(keys, klass)
       end
 
       def reload
@@ -42,28 +42,36 @@ module Fusuma
       self
     end
 
-    def command(vector)
-      keys = [*gesture_index(vector), 'command']
-      search_config_cached(keys)
-    end
-
     def shortcut(vector)
       keys = [*gesture_index(vector), 'shortcut']
-      search_config_cached(keys)
+      search(keys, String)
     end
 
     def threshold(vector)
       keys_specific = [*gesture_index(vector), 'threshold']
       keys_global = ['threshold', vector.class::TYPE]
-      search_config_cached(keys_specific) ||
-        search_config_cached(keys_global) || 1
+      search(keys_specific, Numeric) || search(keys_global, Numeric) || 1
     end
 
     def interval(vector)
       keys_specific = [*gesture_index(vector), 'interval']
       keys_global = ['interval', vector.class::TYPE]
-      search_config_cached(keys_specific) ||
-        search_config_cached(keys_global) || 1
+      search(keys_specific, Numeric) || search(keys_global, Numeric) || 1
+    end
+
+    # @param keys [Array]
+    # @param klass [Class] class expected
+    def search(keys, klass = Object)
+      cache([*keys, klass]) do
+        result = keys.reduce(keymap) do |location, key|
+          if location.is_a?(Hash) && location.key?(key)
+            location[key]
+          else
+            location
+          end
+        end
+        result if result.is_a?(klass)
+      end
     end
 
     private
@@ -98,27 +106,14 @@ module Fusuma
       [gesture_type, finger, direction]
     end
 
-    def search_config_cached(keys)
-      cache(keys) { search_config(keymap, keys) }
-    end
-
-    def search_config(keymap_node, keys)
-      if keys == []
-        return nil if keymap_node.is_a? Hash
-
-        return keymap_node
-      end
-      child_node = keymap_node[keys[0]]
-      next_index = keys[1..-1]
-      return search_config(child_node, next_index) if child_node
-
-      search_config(keymap_node, next_index)
-    end
-
     def cache(key)
       @cache ||= {}
       key = key.join(',') if key.is_a? Array
-      @cache[key] ||= block_given? ? yield : nil
+      if @cache.key?(key)
+        @cache[key]
+      else
+        @cache[key] = block_given? ? yield : nil
+      end
     end
   end
 end
