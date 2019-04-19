@@ -255,6 +255,29 @@ module Fusuma
       end
     end
 
+    describe '.search' do
+      subject { Config.search(keys) }
+      before do
+        allow(YAML).to receive(:load_file).and_return keymap
+        Config.reload
+      end
+
+      context 'keys correct order' do
+        let(:keys) { %w[pinch in shortcut] }
+        it { is_expected.to eq 'ctrl+plus' }
+      end
+
+      context 'keys include finger' do
+        let(:keys) { %w[pinch 2 in shortcut] }
+        it { is_expected.to eq 'ctrl+plus' }
+      end
+
+      context 'keys incorrect order' do
+        let(:keys) { %w[in pinch 2 shortcut] }
+        it { is_expected.not_to eq 'ctrl+plus' }
+      end
+    end
+
     describe 'private_method: :cache' do
       it 'should cache shortcut' do
         key   = %w[event_type finger direction shortcut].join(',')
