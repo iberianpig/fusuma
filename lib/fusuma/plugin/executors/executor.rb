@@ -12,14 +12,17 @@ module Fusuma
           @options = options
         end
 
-        def executable?(event)
-          event.tag == source
+        # check executable
+        # @param _vector [Vector]
+        # @return [TrueClass, FalseClass]
+        def executable?(_vector)
+          raise NotImplementedError, "override #{self.class.name}##{__method__}"
         end
 
         # execute somthing
-        # @param _event [Event]
+        # @param _vector [Vector]
         # @return [nil]
-        def execute(_event)
+        def execute(_vector)
           raise NotImplementedError, "override #{self.class.name}##{__method__}"
         end
 
@@ -49,6 +52,7 @@ module Fusuma
         # executor plugins
         # @return [Array]
         def plugins
+          # TODO: select executors that is on config.yml
           Executor.plugins
         end
       end

@@ -1,35 +1,30 @@
 module Fusuma
   module Plugin
     module Executors
+      # Exector plugin
       class CommandExecutor < Executor
-
-        def execute(event)
-          command = search_command(event)
+        def execute(vector)
+          command = search_command(vector)
           `#{command}`
         end
 
-        def executable?(event)
-          search_command(event) && super
+        def executable?(vector)
+          search_command(vector)
         end
 
-        # @param event [Event]
+        # @param vector [Vector]
         # @return [String]
-        def search_command(event)
-          search_index = index(event)
-          command = Config.command(search_index)
-          command
+        def search_command(vector)
+          Config.search(index(vector), String)
         end
 
         # @example
         #  index
         #  =>[:swipe, :3, left, :command]
-        # @param event [Event]
+        # @param vector [Vector]
         # @return [String]
-        def index(event)
-          gesture_type = event.class::TYPE
-          finger       = event.finger
-          direction    = event.direction
-          [gesture_type, finger, direction]
+        def index(vector)
+          [*vector.index, 'command']
         end
       end
     end
