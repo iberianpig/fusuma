@@ -18,7 +18,9 @@ module Fusuma
         end
 
         def event(record: 'DummyInput')
-          Formats::Event.new(tag: tag, record: record)
+          Formats::Event.new(tag: tag, record: record).tap do |e|
+            MultiLogger.debug(innput_event: e)
+          end
         end
 
         def tag

@@ -25,6 +25,10 @@ module Fusuma
                             'record should be String or RecordFormat'
                     end
         end
+
+        def inspect
+          "time: #{time}, tag: #{tag}, record: #{record}"
+        end
       end
     end
   end
