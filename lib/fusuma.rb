@@ -122,7 +122,7 @@ module Fusuma
       executor = @executors.find do |e|
         e.executable?(vector)
       end
-      executor.execute(vector)
+      executor.execute(vector) if executor
     end
   end
 end

@@ -11,23 +11,30 @@ module Fusuma
 
         def initialize(finger, angle = 0)
           @finger = finger.to_i
-          @angle = angle.to_f
+          @direction = Direction.new(angle: angle.to_f).to_s
+          @quantity = Quantity.new(angle: angle.to_f).to_f
         end
-
-        attr_reader :finger, :angle
-
-        def direction
-          return 'clockwise' if angle > 0
-
-          'counterclockwise'
-        end
+        attr_reader :finger, :direction, :quantity
 
         def enough?
           enough_angle? && enough_interval?
         end
 
+        # @return [Array<Hash>]
+        def index
+          Config::Index.new(
+            [
+              Config::Index::Key.new(TYPE),
+              Config::Index::Key.new(finger, skippable: true),
+              Config::Index::Key.new(direction)
+            ]
+          )
+        end
+
+        private
+
         def enough_angle?
-          angle.abs > threshold
+          quantity > threshold
         end
 
         def enough_interval?
@@ -37,34 +44,82 @@ module Fusuma
           false
         end
 
-        private
-
         def first_time?
           !self.class.last_time
         end
 
         def threshold
-          @threshold ||= BASE_THERESHOLD * Config.threshold(self)
+          @threshold ||= begin
+                           keys_specific = Config::Index.new [*index.keys, 'threshold']
+                           keys_global   = Config::Index.new ['threshold', TYPE]
+                           config_value  = Config.search(keys_specific) ||
+                                           Config.search(keys_global) || 1
+                           BASE_THERESHOLD * config_value
+                         end
         end
 
         def interval_time
-          @interval_time ||= BASE_INTERVAL * Config.interval(self)
+          @interval_time ||= begin
+                               keys_specific = Config::Index.new [*index.keys, 'interval']
+                               keys_global   = Config::Index.new ['interval', TYPE]
+                               config_value  = Config.search(keys_specific) ||
+                                               Config.search(keys_global) || 1
+                               BASE_INTERVAL * config_value
+                             end
         end
 
         class << self
           attr_reader :last_time
 
           def generate(event_buffer:)
-            return if event_buffer.gesture != GESTURE
+            rotate_events = event_buffer.select { |event| event.record.gesture == GESTURE }
+            return if rotate_events.empty?
+
             return if Generator.prev_vector && Generator.prev_vector != self
 
-            angle = event_buffer.avg_attrs(:rotate)
-            Vectors::RotateVector.new(event_buffer.finger, angle).tap do |v|
-              return nil unless CommandExecutor.new(v).executable?
+            angle = rotate_events.avg_attrs(:rotate)
+            new(rotate_events.finger, angle).tap do |v|
               return nil unless v.enough?
 
               Generator.prev_vector = self
             end
+          end
+        end
+
+        # direction of vector
+        class Direction
+          CLOCKWISE = 'clockwise'.freeze
+          COUNTERCLOCKWISE = 'counterclockwise'.freeze
+
+          def initialize(angle:)
+            @angle = angle
+          end
+
+          def to_s
+            calc
+          end
+
+          def calc
+            if @angle > 0
+              CLOCKWISE
+            else
+              COUNTERCLOCKWISE
+            end
+          end
+
+          def self.all
+            [CLOCKWISE, COUNTERCLOCKWISE]
+          end
+        end
+
+        # quantity of vector
+        class Quantity
+          def initialize(angle:)
+            @angle = angle.abs
+          end
+
+          def to_f
+            @angle.to_f
           end
         end
       end

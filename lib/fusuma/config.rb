@@ -6,20 +6,8 @@ module Fusuma
     include Singleton
 
     class << self
-      def shortcut(vector)
-        instance.shortcut(vector)
-      end
-
-      def threshold(vector)
-        instance.threshold(vector)
-      end
-
-      def interval(vector)
-        instance.interval(vector)
-      end
-
-      def search(keys, klass = Object)
-        instance.search(keys, klass)
+      def search(keys)
+        instance.search(keys)
       end
 
       def reload
@@ -37,40 +25,70 @@ module Fusuma
 
     def reload
       @cache  = nil
-      @keymap = YAML.load_file(file_path)
+      @keymap = YAML.load_file(file_path).deep_symbolize_keys
       MultiLogger.info "reload config : #{file_path}"
       self
     end
 
-    def shortcut(vector)
-      keys = [*gesture_index(vector), 'shortcut']
-      search(keys, String)
-    end
-
-    def threshold(vector)
-      keys_specific = [*gesture_index(vector), 'threshold']
-      keys_global = ['threshold', vector.class::TYPE]
-      search(keys_specific, Numeric) || search(keys_global, Numeric) || 1
-    end
-
-    def interval(vector)
-      keys_specific = [*gesture_index(vector), 'interval']
-      keys_global = ['interval', vector.class::TYPE]
-      search(keys_specific, Numeric) || search(keys_global, Numeric) || 1
-    end
-
-    # @param keys [Array]
-    # @param klass [Class] class expected
-    def search(keys, klass = Object)
-      cache([*keys, klass]) do
-        result = keys.reduce(keymap) do |location, key|
-          if location.is_a?(Hash) && location.key?(key)
-            location[key]
+    # @param index [Index]
+    def search(index)
+      cache(index.cache_key) do
+        index.keys.reduce(keymap) do |location, key|
+          if location.is_a?(Hash)
+            begin
+              if key.skippable
+                location.fetch(key.symbol, location)
+              else
+                location.fetch(key.symbol, nil)
+              end
+            end
           else
             location
           end
         end
-        result if result.is_a?(klass)
+      end
+    end
+
+    # Index for searching value from config.yml
+    class Index
+      def initialize(keys)
+        @keys = case keys
+                when Array
+                  keys.map do |key|
+                    if key.is_a? Key
+                      key
+                    else
+                      Key.new(key)
+                    end
+                  end
+                else
+                  [Key.new(keys)]
+                end
+      end
+      attr_reader :keys
+
+      def cache_key
+        case @keys
+        when Array
+          @keys.map(&:symbol).join(',')
+        when Key
+          @keys.symbol
+        else
+          raise 'invalid keys'
+        end
+      end
+
+      # Keys in Index
+      class Key
+        def initialize(symbol_word, skippable: false)
+          @symbol = begin
+                      symbol_word.to_sym
+                    rescue StandardError
+                      symbol_word
+                    end
+          @skippable = skippable
+        end
+        attr_reader :symbol, :skippable
       end
     end
 
@@ -115,5 +133,26 @@ module Fusuma
         @cache[key] = block_given? ? yield : nil
       end
     end
+  end
+end
+
+# activesupport-4.1.1/lib/active_support/core_ext/hash/keys.rb
+class Hash
+  def deep_symbolize_keys
+    deep_transform_keys do |key|
+      begin
+        key.to_sym
+      rescue StandardError
+        key
+      end
+    end
+  end
+
+  def deep_transform_keys(&block)
+    result = {}
+    each do |key, value|
+      result[yield(key)] = value.is_a?(Hash) ? value.deep_transform_keys(&block) : value
+    end
+    result
   end
 end

@@ -6,11 +6,21 @@ module Fusuma
     module Vectors
       # Inherite this base
       class Vector < Base
-        def initialize; end
+        def initialize
+          raise NotImplementedError, "override #{self.class.name}##{__method__}"
+        end
 
-        def direction; end
+        def direction
+          raise NotImplementedError, "override #{self.class.name}##{__method__}"
+        end
 
-        def enough?; end
+        def enough?
+          raise NotImplementedError, "override #{self.class.name}##{__method__}"
+        end
+
+        def index
+          raise NotImplementedError, "override #{self.class.name}##{__method__}"
+        end
 
         class << self
           # @param event_buffer [EventBuffer]
@@ -49,7 +59,11 @@ module Fusuma
         #   Vectors::SwipeVector]
         # @return [Array]
         def plugins
-          Vector.plugins
+          # NOTE: select vectors only defined in config.yml
+          Vector.plugins.select do |klass|
+            index = Config::Index.new(klass::TYPE)
+            Config.search(index)
+          end
         end
       end
     end
