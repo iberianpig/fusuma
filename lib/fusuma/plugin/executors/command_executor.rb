@@ -15,7 +15,7 @@ module Fusuma
         # @param vector [Vector]
         # @return [String]
         def search_command(vector)
-          Config.search(index(vector), String)
+          Config.search(index(vector))
         end
 
         # @example
@@ -24,7 +24,7 @@ module Fusuma
         # @param vector [Vector]
         # @return [String]
         def index(vector)
-          [*vector.index, 'command']
+          Config::Index.new [*vector.index.keys, 'command']
         end
       end
     end

@@ -19,6 +19,8 @@ module Fusuma
             next if e.tag != source
             next if keep?(e.record)
 
+            MultiLogger.debug(filtered: e)
+
             break nil
           end
         end
