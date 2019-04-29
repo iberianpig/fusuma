@@ -3,9 +3,8 @@ module Fusuma
     module Vectors
       # vector data
       class SwipeVector < Vector
-        TYPE = 'swipe'.freeze
         GESTURE = 'swipe'.freeze
-        FINGERS = (1..4).freeze
+        FINGERS = [3, 4].freeze
 
         BASE_THERESHOLD = 10
         BASE_INTERVAL   = 0.5
@@ -20,17 +19,6 @@ module Fusuma
         def enough?
           MultiLogger.debug(self)
           enough_distance? && enough_interval?
-        end
-
-        # @return [Array<Hash>]
-        def index
-          Config::Index.new(
-            [
-              Config::Index::Key.new(TYPE),
-              Config::Index::Key.new(finger, skippable: true),
-              Config::Index::Key.new(direction)
-            ]
-          )
         end
 
         private
@@ -53,7 +41,7 @@ module Fusuma
         def threshold
           @threshold ||= begin
                            keys_specific = Config::Index.new [*index.keys, 'threshold']
-                           keys_global = Config::Index.new ['threshold', TYPE]
+                           keys_global = Config::Index.new ['threshold', self.class.type]
                            config_value = Config.search(keys_specific) ||
                                           Config.search(keys_global) || 1
                            BASE_THERESHOLD * config_value
@@ -63,7 +51,7 @@ module Fusuma
         def interval_time
           @interval_time ||= begin
                                keys_specific = Config::Index.new [*index.keys, 'interval']
-                               keys_global = Config::Index.new ['interval', TYPE]
+                               keys_global = Config::Index.new ['interval', self.class.type]
                                config_value = Config.search(keys_specific) ||
                                               Config.search(keys_global) || 1
                                BASE_INTERVAL * config_value
@@ -117,10 +105,6 @@ module Fusuma
             else
               UP
             end
-          end
-
-          def self.all
-            [RIGHT, LEFT, DOWN, UP]
           end
         end
 

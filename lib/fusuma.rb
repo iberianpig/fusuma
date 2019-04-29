@@ -93,18 +93,11 @@ module Fusuma
     def run
       # TODO: run by multi thread @inputs
       @inputs.first.run do |event|
-        event = filter(event)
+        filtered = filter(event)
 
-        next unless event
+        gesture = parse(filtered)
 
-        event = parse(event)
-
-        next unless event
-
-        @event_buffer << event
-        vector = @event_buffer.generate_vector
-
-        next unless vector
+        vector = buffer(gesture)
 
         execute(vector)
       end
@@ -118,7 +111,16 @@ module Fusuma
       @parsers.reduce(event) { |e, p| p.parse(e) if e  }
     end
 
+    def buffer(event)
+      return unless event
+
+      @event_buffer << event
+      @event_buffer.generate_vector
+    end
+
     def execute(vector)
+      return unless vector
+
       executor = @executors.find do |e|
         e.executable?(vector)
       end
