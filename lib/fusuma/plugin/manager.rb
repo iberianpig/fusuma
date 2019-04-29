@@ -35,7 +35,7 @@ module Fusuma
           require './' + siblings_plugin
         end
       rescue LoadError => e
-        MultiLogger.debug(e)
+        MultiLogger.error(e)
       end
 
       def require_siblings_from_gem
@@ -46,7 +46,7 @@ module Fusuma
           require siblings_plugin
         end
       rescue LoadError => e
-        MultiLogger.debug(e)
+        MultiLogger.error(e)
       end
 
       def plugin_dir_name(plugin_class:)

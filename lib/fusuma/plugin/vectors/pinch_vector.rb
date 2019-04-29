@@ -3,7 +3,6 @@ module Fusuma
     module Vectors
       # vector data
       class PinchVector < Vector
-        TYPE = 'pinch'.freeze
         GESTURE = 'pinch'.freeze
 
         BASE_THERESHOLD = 0.1
@@ -19,17 +18,6 @@ module Fusuma
 
         def enough?
           enough_diameter? && enough_interval?
-        end
-
-        # @return [Array<Hash>]
-        def index
-          Config::Index.new(
-            [
-              Config::Index::Key.new(TYPE),
-              Config::Index::Key.new(finger, skippable: true),
-              Config::Index::Key.new(direction)
-            ]
-          )
         end
 
         private
@@ -52,7 +40,7 @@ module Fusuma
         def threshold
           @threshold ||= begin
                            keys_specific = Config::Index.new [*index.keys, 'threshold']
-                           keys_global   = Config::Index.new ['threshold', TYPE]
+                           keys_global   = Config::Index.new ['threshold', self.class.type]
                            config_value  = Config.search(keys_specific) ||
                                            Config.search(keys_global) || 1
                            BASE_THERESHOLD * config_value
@@ -62,9 +50,9 @@ module Fusuma
         def interval_time
           @interval_time ||= begin
                                keys_specific = Config::Index.new [*index.keys, 'interval']
-                               keys_global   = Config::Index.new ['interval', TYPE]
-                               config_value  = Config.search(keys_specific) ||
-                                               Config.search(keys_global) || 1
+                               keys_global = Config::Index.new ['interval', self.class.type]
+                               config_value = Config.search(keys_specific) ||
+                                              Config.search(keys_global) || 1
                                BASE_INTERVAL * config_value
                              end
         end
@@ -114,10 +102,6 @@ module Fusuma
             else
               OUT
             end
-          end
-
-          def self.all
-            [IN, OUT]
           end
         end
 

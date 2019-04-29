@@ -10,6 +10,10 @@ module Fusuma
           raise NotImplementedError, "override #{self.class.name}##{__method__}"
         end
 
+        def finger
+          raise NotImplementedError, "override #{self.class.name}##{__method__}"
+        end
+
         def direction
           raise NotImplementedError, "override #{self.class.name}##{__method__}"
         end
@@ -18,14 +22,32 @@ module Fusuma
           raise NotImplementedError, "override #{self.class.name}##{__method__}"
         end
 
+        # @return [Config::Index]
         def index
-          raise NotImplementedError, "override #{self.class.name}##{__method__}"
+          self.class.index(finger, direction)
         end
 
         class << self
           # @param event_buffer [EventBuffer]
           # @return [Vector]
-          def generate(event_buffer:); end
+          def generate(_event_buffer:)
+            raise NotImplementedError, "override #{self.class.name}.#{__method__}"
+          end
+
+          def type
+            name.underscore.split('/').last.gsub('_vector', '')
+          end
+
+          # @return [Config::Index]
+          def index(finger, direction)
+            Config::Index.new(
+              [
+                Config::Index::Key.new(type),
+                Config::Index::Key.new(finger, skippable: true),
+                Config::Index::Key.new(direction)
+              ]
+            )
+          end
 
           def touch_last_time
             @last_time = Time.now
@@ -61,7 +83,7 @@ module Fusuma
         def plugins
           # NOTE: select vectors only defined in config.yml
           Vector.plugins.select do |klass|
-            index = Config::Index.new(klass::TYPE)
+            index = Config::Index.new(klass.type)
             Config.search(index)
           end
         end
