@@ -5,41 +5,50 @@ module Fusuma
     module Executors
       COMMAND_OPTIONS = { executors: { command_executor: 'command' } }.freeze
 
+      class DummyVector < Fusuma::Plugin::Vectors::Vector
+        def initialize(finger, direction)
+          @finger = finger
+          @direction = direction
+        end
+        attr_reader :finger, :direction
+      end
+
       RSpec.describe CommandExecutor do
         let(:command_executor) { described_class.new(options) }
-        let(:options) { {} }
+        let(:vector) { DummyVector.new('dummy_finger', 'dummy_direction') }
+        let(:options) { { dummy: 'dummy_options' } }
+
+        before do
+          allow(YAML).to receive(:load_file) {
+                           {
+                             dummy: {
+                               dummy_finger: {
+                                 dummy_direction: {
+                                   command: 'echo dummy'
+                                 }
+                               }
+                             }
+                           }
+                         }
+        end
 
         describe '#execute' do
-          subject { command_executor.execute(command_event) }
-          let(:command_event) { Formats::Event.new(tag: 'command', record: 'command') }
-          it { expect { subject }.to output("command\n").to_stdout }
+          subject { command_executor.execute(vector) }
+          it { is_expected.to be_truthy }
         end
 
         describe '#executable?' do
-          subject { command_executor.executable?(command_event) }
+          subject { command_executor.executable?(vector) }
 
-          context 'event source is matched with tag' do
-            let(:command_event) { Formats::Event.new(tag: 'command', record: 'command') }
-            it { is_expected.to be true }
+          context 'vector is matched with config file' do
+            it { is_expected.to be_truthy }
           end
 
-          context 'event source is NOT matched with tag' do
-            let(:command_event) do
-              Formats::Event.new(tag: 'INVALID_TAG',
-                                 record: 'command')
+          context 'vector is matched with config file' do
+            let(:vector) do
+              DummyVector.new('invalid_finger', 'invalid_direction')
             end
-            it { is_expected.to be false }
-          end
-        end
-
-        describe '#source' do
-          subject { command_executor.source }
-
-          it { is_expected.to be CommandExecutor::DEFAULT_SOURCE }
-
-          context 'with source option' do
-            let(:options) { { source: 'awesome_source' } }
-            it { is_expected.to eq 'awesome_source' }
+            it { is_expected.to be_falsey }
           end
         end
       end

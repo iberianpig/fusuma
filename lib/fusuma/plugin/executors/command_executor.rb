@@ -4,8 +4,12 @@ module Fusuma
       # Exector plugin
       class CommandExecutor < Executor
         def execute(vector)
-          command = search_command(vector)
-          `#{command}`
+          search_command(vector).tap do |command|
+            break unless command
+
+            _o, _e, s = Open3.capture3(command)
+            return s.success?
+          end
         end
 
         def executable?(vector)
