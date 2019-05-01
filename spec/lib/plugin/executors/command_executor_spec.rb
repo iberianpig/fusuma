@@ -1,21 +1,14 @@
 require 'spec_helper'
+require_relative './dummy_vector.rb'
 
 module Fusuma
   module Plugin
     module Executors
       COMMAND_OPTIONS = { executors: { command_executor: 'command' } }.freeze
 
-      class DummyVector < Fusuma::Plugin::Vectors::Vector
-        def initialize(finger, direction)
-          @finger = finger
-          @direction = direction
-        end
-        attr_reader :finger, :direction
-      end
-
       RSpec.describe CommandExecutor do
         let(:command_executor) { described_class.new(options) }
-        let(:vector) { DummyVector.new('dummy_finger', 'dummy_direction') }
+        let(:vector) { Vectors::DummyVector.new('dummy_finger', 'dummy_direction') }
         let(:options) { { dummy: 'dummy_options' } }
 
         before do
@@ -30,6 +23,7 @@ module Fusuma
                              }
                            }
                          }
+          Config.reload
         end
 
         describe '#execute' do
@@ -46,7 +40,7 @@ module Fusuma
 
           context 'vector is matched with config file' do
             let(:vector) do
-              DummyVector.new('invalid_finger', 'invalid_direction')
+              Vectors::DummyVector.new('invalid_finger', 'invalid_direction')
             end
             it { is_expected.to be_falsey }
           end

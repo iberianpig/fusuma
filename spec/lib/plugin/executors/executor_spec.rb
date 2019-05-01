@@ -1,50 +1,48 @@
 require 'spec_helper'
+require_relative './dummy_vector.rb'
 
 module Fusuma
   module Plugin
     module Executors
       DUMMY_OPTIONS = { executors: { dummy_executor: 'dummy' } }.freeze
 
+      RSpec.describe Executor do
+        let(:executor) { described_class.new }
+
+        describe '#execute' do
+          subject { executor.execute('dummy') }
+          it { expect { subject }.to raise_error(NotImplementedError) }
+        end
+
+        describe '#executable?' do
+          subject { executor.executable?('dummy') }
+          it { expect { subject }.to raise_error(NotImplementedError) }
+        end
+      end
+
       class DummyExecutor < Executor
-        DEFAULT_SOURCE = 'dummy'.freeze
-        def execute(event)
-          puts event.record
+        def execute(vector)
+          puts vector.direction
+        end
+
+        def executable?(vector)
+          vector.to_s
         end
       end
 
       RSpec.describe DummyExecutor do
         let(:dummy_executor) { described_class.new(options) }
+        let(:vector) { Vectors::DummyVector.new('dummy_finger', 'dummy_direction') }
         let(:options) { {} }
 
         describe '#execute' do
-          subject { dummy_executor.execute(dummy_event) }
-          let(:dummy_event) { Formats::Event.new(tag: 'dummy', record: 'dummy') }
-          it { expect { subject }.to output("dummy\n").to_stdout }
+          subject { dummy_executor.execute(vector) }
+          it { expect { subject }.to output("dummy_direction\n").to_stdout }
         end
 
         describe '#executable?' do
-          subject { dummy_executor.executable?(dummy_event) }
-
-          context 'event source is matched with tag' do
-            let(:dummy_event) { Formats::Event.new(tag: 'dummy', record: 'dummy') }
-            it { is_expected.to be true }
-          end
-
-          context 'event source is NOT matched with tag' do
-            let(:dummy_event) { Formats::Event.new(tag: 'INVALID_TAG', record: 'dummy') }
-            it { is_expected.to be false }
-          end
-        end
-
-        describe '#source' do
-          subject { dummy_executor.source }
-
-          it { is_expected.to be DummyExecutor::DEFAULT_SOURCE }
-
-          context 'with source option' do
-            let(:options) { { source: 'awesome_source' } }
-            it { is_expected.to eq 'awesome_source' }
-          end
+          subject { dummy_executor.executable?(vector) }
+          it { is_expected.to be_truthy }
         end
       end
 
