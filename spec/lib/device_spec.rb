@@ -1,4 +1,7 @@
 require 'spec_helper'
+require './lib/fusuma/device.rb'
+require './lib/fusuma/plugin/inputs/libinput_command_input.rb'
+
 module Fusuma
   RSpec.describe Device do
     describe '.ids' do

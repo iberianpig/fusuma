@@ -13,18 +13,6 @@ module Fusuma
           case line = record.to_s
           when /GESTURE_SWIPE|GESTURE_PINCH/
             gesture, status, finger, direction = parse_libinput(line)
-          when /POINTER_BUTTON.+(\d+\.\d+)s.*BTN_(LEFT|RIGHT|MIDDLE).*(pressed|released)/
-            matched = Regexp.last_match
-            gesture = 'tap'
-            finger = case matched[2]
-                     when 'LEFT'
-                       1
-                     when 'RIGHT'
-                       2
-                     when 'MIDDLE'
-                       3
-                     end
-            status = matched[3]
           else
             return
           end

@@ -1,3 +1,6 @@
+require_relative './input.rb'
+require 'open3'
+
 module Fusuma
   module Plugin
     module Inputs

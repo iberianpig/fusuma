@@ -1,5 +1,3 @@
-require_relative './record.rb'
-
 module Fusuma
   module Plugin
     module Formats

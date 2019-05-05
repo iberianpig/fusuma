@@ -1,4 +1,5 @@
-require_relative '../../device.rb'
+require_relative './filter.rb'
+require './lib/fusuma/device.rb'
 
 module Fusuma
   module Plugin

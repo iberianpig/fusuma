@@ -1,4 +1,6 @@
 require 'spec_helper'
+require './lib/fusuma/plugin/inputs/libinput_command_input.rb'
+
 module Fusuma
   module Plugin
     module Inputs

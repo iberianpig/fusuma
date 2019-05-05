@@ -1,4 +1,7 @@
 require 'spec_helper'
+require './lib/fusuma/plugin/filters/filter.rb'
+require './lib/fusuma/plugin/formats/event_format.rb'
+
 module Fusuma
   module Plugin
     module Filters

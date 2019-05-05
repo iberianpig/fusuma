@@ -1,4 +1,5 @@
 require 'spec_helper'
+require './lib/fusuma/plugin/formats/records/gesture_record.rb'
 
 module Fusuma
   module Plugin
