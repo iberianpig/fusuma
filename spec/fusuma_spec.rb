@@ -1,4 +1,6 @@
 require 'spec_helper'
+require './lib/fusuma.rb'
+require './lib/fusuma/plugin/inputs/libinput_command_input.rb'
 
 module Fusuma
   RSpec.describe Runner do
@@ -19,6 +21,8 @@ module Fusuma
       end
 
       context 'when run with argument "--version"' do
+        # NOTE: skip print reload config message
+        before { allow(Config.instance).to receive(:reload).and_return nil }
         it 'should print version' do
           expect(MultiLogger).to receive(:info)
             .with('---------------------------------------------')

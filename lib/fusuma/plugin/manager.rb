@@ -1,56 +1,33 @@
 require_relative '../multi_logger.rb'
-require_relative '../config.rb'
 
 module Fusuma
   module Plugin
     # Manage Fusuma plugins
     class Manager
-      def initialize(plugin_class:, plugin_path:)
+      def initialize(plugin_class)
         @plugin_class = plugin_class
-        @plugin_path = plugin_path
       end
-
-      def require_plugins
-        require_siblings_from_local
-        require_siblings_from_gem
-      end
-
-      # # TODO: load path is defined in config.yml
-      # def require_from_config
-      #   Dir[File.join('lib', @path, '*.rb')].each do |file|
-      #     next unless File.exist?(file)
-      #
-      #     base_path = 'lib/fusuma/plugin/'
-      #     relative_path = file.gsub(base_path, '')
-      #     require_relative(relative_path)
-      #   end
-      # end
 
       def require_siblings_from_local
-        siblings_dir = plugin_dir_name(plugin_class: @plugin_class)
-        search_key = File.join('./lib', siblings_dir, '*.rb')
+        search_key = File.join('./lib', plugin_dir_name, '*.rb')
         Dir.glob(search_key).each do |siblings_plugin|
-          next if self.class.load_paths.include?(siblings_plugin)
-
           require './' + siblings_plugin
         end
-      rescue LoadError => e
-        MultiLogger.error(e)
       end
 
-      def require_siblings_from_gem
-        search_key = File.join(plugin_dir_name(plugin_class: @plugin_class), '*.rb')
+      def require_siblings_from_gems
+        search_key = File.join(plugin_dir_name, '*.rb')
         Gem.find_files(search_key).each do |siblings_plugin|
-          next if self.class.load_paths.include?(siblings_plugin)
-
-          require siblings_plugin
+          if siblings_plugin =~ %r{fusuma-plugin-(.+).*/lib/#{plugin_dir_name}/\1_.+.rb}
+            require siblings_plugin
+          end
         end
-      rescue LoadError => e
-        MultiLogger.error(e)
       end
 
-      def plugin_dir_name(plugin_class:)
-        plugin_class.name.match(/(Fusuma::.*)::/)[1].to_s.underscore
+      private
+
+      def plugin_dir_name
+        @plugin_class.name.match(/(Fusuma::.*)::/)[1].to_s.underscore
       end
 
       class << self
@@ -60,34 +37,49 @@ module Fusuma
         #      "Vectors::Vector"=>[Vectors::RotateVector,
         #                                      Vectors::PinchVector,
         #                                      Vectors::SwipeVector]}
-        attr_reader :plugins
-        attr_accessor :load_paths
 
         # @param plugin_class [Class]
         # return [Hash, false]
         def add(plugin_class:, plugin_path:)
-          @plugins ||= {}
-          return false if exist?(plugin_class: plugin_class)
+          return false if exist?(plugin_class: plugin_class, plugin_path: plugin_path)
 
           base = plugin_class.superclass.name
-          @plugins[base] ||= []
-          @plugins[base] << plugin_class
+          plugins[base] ||= []
+          plugins[base] << plugin_class
 
+          load_paths << plugin_path
+
+          manager = Manager.new(plugin_class)
+          manager.require_siblings_from_local
+          manager.require_siblings_from_gems
+        end
+
+        def require_plugins_from_config
+          local_plugin_paths = Config.search(Config::Index.new('local_plugin_paths'))
+          return unless local_plugin_paths
+
+          Array.new(local_plugin_paths).each do |plugin_path|
+            require plugin_path
+          end
+        end
+
+        def plugins
+          @plugins ||= {}
+        end
+
+        def load_paths
           @load_paths ||= []
-          @load_paths << plugin_path
-
-          Manager.new(plugin_class: plugin_class, plugin_path: plugin_path).require_plugins
         end
 
         # @param plugin_class [Class]
         # @return Boolean
-        def exist?(plugin_class:)
-          base = plugin_class.superclass.name
-          return false if @plugins[base].nil?
+        def exist?(plugin_class:, plugin_path:)
+          return false if load_paths.include?(plugin_path)
 
-          @plugins[base].any? do |registerd|
-            registerd == plugin_class
-          end
+          base = plugin_class.superclass.name
+          return false unless plugins[base]
+
+          plugins[base].include?(plugin_class)
         end
       end
     end

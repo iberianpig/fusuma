@@ -24,7 +24,13 @@ module Fusuma
 
         # @return [Config::Index]
         def index
-          self.class.index(finger, direction)
+          Config::Index.new(
+            [
+              Config::Index::Key.new(self.class.type),
+              Config::Index::Key.new(finger, skippable: true),
+              Config::Index::Key.new(direction)
+            ]
+          )
         end
 
         class << self
@@ -36,17 +42,6 @@ module Fusuma
 
           def type
             name.underscore.split('/').last.gsub('_vector', '')
-          end
-
-          # @return [Config::Index]
-          def index(finger, direction)
-            Config::Index.new(
-              [
-                Config::Index::Key.new(type),
-                Config::Index::Key.new(finger, skippable: true),
-                Config::Index::Key.new(direction)
-              ]
-            )
           end
 
           def touch_last_time

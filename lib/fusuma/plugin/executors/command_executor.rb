@@ -1,3 +1,5 @@
+require_relative './executor.rb'
+
 module Fusuma
   module Plugin
     module Executors

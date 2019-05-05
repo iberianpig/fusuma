@@ -1,4 +1,6 @@
 require 'spec_helper'
+require './lib/fusuma/config.rb'
+
 # spec for Config
 module Fusuma
   RSpec.describe Config do

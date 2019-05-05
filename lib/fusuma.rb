@@ -1,12 +1,9 @@
 require_relative './fusuma/version'
-require_relative './fusuma/event_buffer'
 require_relative './fusuma/multi_logger'
 require_relative './fusuma/config.rb'
 require_relative './fusuma/device.rb'
-require_relative './fusuma/plugin/inputs/input.rb'
-require_relative './fusuma/plugin/filters/filter.rb'
-require_relative './fusuma/plugin/parsers/parser.rb'
-require_relative './fusuma/plugin/executors/executor.rb'
+require_relative './fusuma/event_buffer'
+require_relative './fusuma/plugin/manager.rb'
 
 require 'logger'
 require 'open3'
@@ -32,14 +29,27 @@ module Fusuma
       end
 
       def read_options(option)
-        print_version && exit(0) if option[:version]
         reload_custom_config(option[:config_path])
+        require_plugins
+        print_version && exit(0) if option[:version]
         print_device_list if option[:list]
         debug_mode if option[:verbose]
         Device.given_device = option[:device]
         Process.daemon if option[:daemon]
       end
 
+      def require_plugins
+        require_relative './fusuma/plugin/base.rb'
+        require_relative './fusuma/plugin/formats/format.rb'
+        require_relative './fusuma/plugin/inputs/input.rb'
+        require_relative './fusuma/plugin/filters/filter.rb'
+        require_relative './fusuma/plugin/parsers/parser.rb'
+        require_relative './fusuma/plugin/vectors/vector.rb'
+        require_relative './fusuma/plugin/executors/executor.rb'
+        Plugin::Manager.require_plugins_from_config
+      end
+
+      # TODO: print after reading plugins
       def print_version
         MultiLogger.info '---------------------------------------------'
         MultiLogger.info "Fusuma: #{Fusuma::VERSION}"

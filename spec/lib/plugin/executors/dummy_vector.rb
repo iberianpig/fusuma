@@ -1,3 +1,5 @@
+require './lib/fusuma/plugin/vectors/vector.rb'
+
 module Fusuma
   module Plugin
     module Vectors

@@ -1,5 +1,3 @@
-require_relative 'plugin/vectors/vector'
-
 module Fusuma
   # manage events and generate command
   class EventBuffer

@@ -1,5 +1,6 @@
 require 'spec_helper'
 require_relative './dummy_vector.rb'
+require './lib/fusuma/plugin/executors/command_executor.rb'
 
 module Fusuma
   module Plugin
