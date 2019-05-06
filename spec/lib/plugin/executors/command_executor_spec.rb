@@ -1,6 +1,7 @@
 require 'spec_helper'
 require_relative './dummy_vector.rb'
 require './lib/fusuma/plugin/executors/command_executor.rb'
+require './lib/fusuma/config.rb'
 
 module Fusuma
   module Plugin
@@ -24,7 +25,7 @@ module Fusuma
                              }
                            }
                          }
-          Config.reload
+          Config.instance.reload
         end
 
         describe '#execute' do

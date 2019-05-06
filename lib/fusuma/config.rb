@@ -1,6 +1,9 @@
+require_relative './multi_logger.rb'
+require 'singleton'
+require 'yaml'
+
 # module as namespace
 module Fusuma
-  require 'singleton'
   # read keymap from yaml file
   class Config
     include Singleton
@@ -10,16 +13,23 @@ module Fusuma
         instance.search(keys)
       end
 
-      def reload
-        instance.reload
+      def custom_path=(new_path)
+        instance.custom_path = new_path
       end
     end
 
     attr_reader :keymap
-    attr_accessor :custom_path
+    attr_reader :custom_path
 
     def initialize
-      self.custom_path = nil
+      @custom_path = nil
+      @cache  = nil
+      @keymap = nil
+      reload
+    end
+
+    def custom_path=(new_path)
+      @custom_path = new_path
       reload
     end
 

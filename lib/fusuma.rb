@@ -5,10 +5,6 @@ require_relative './fusuma/device.rb'
 require_relative './fusuma/event_buffer'
 require_relative './fusuma/plugin/manager.rb'
 
-require 'logger'
-require 'open3'
-require 'yaml'
-
 # this is top level module
 module Fusuma
   # main class
@@ -29,7 +25,7 @@ module Fusuma
       end
 
       def read_options(option)
-        reload_custom_config(option[:config_path])
+        load_custom_config(option[:config_path])
         require_plugins
         print_version && exit(0) if option[:version]
         print_device_list if option[:list]
@@ -74,11 +70,10 @@ module Fusuma
         exit(0)
       end
 
-      def reload_custom_config(config_path = nil)
+      def load_custom_config(config_path = nil)
         return unless config_path
 
-        Config.instance.custom_path = config_path
-        Config.reload
+        Config.custom_path = config_path
       end
 
       def debug_mode

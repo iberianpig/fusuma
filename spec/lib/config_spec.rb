@@ -33,22 +33,13 @@ module Fusuma
 
     let(:vector) { @vector_class.new(@finger) }
 
-    describe '.reload' do
+    describe '.custom_path=' do
+      before { Singleton.__init__(Config) }
       it 'should reload keymap file' do
-        Config.reload
-        allow(YAML).to receive(:load_file).and_return keymap
-        keymap = Config.reload.keymap
-        allow(YAML).to receive(:load_file).and_return keymap_without_finger
-        reloaded_keymap = Config.reload.keymap
-        expect(keymap).not_to eq reloaded_keymap
-      end
-      it 'remove cached value' do
-        key = 'key'
-        val = 'val'
-        Config.instance.send(:cache, key) { val }
-        Config.reload
-        expect(Config.instance.send(:cache, key)).not_to eq val
-        expect(Config.instance.send(:cache, key)).to eq nil
+        keymap = Config.instance.keymap
+        Config.custom_path = './spec/lib/dummy_config.yml'
+        custom_keymap = Config.instance.keymap
+        expect(keymap).not_to eq custom_keymap
       end
     end
 
@@ -56,7 +47,7 @@ module Fusuma
       subject { Config.search(keys) }
       before do
         allow(YAML).to receive(:load_file).and_return keymap
-        Config.reload
+        Config.instance.reload
       end
 
       context 'keys correct order' do
@@ -86,9 +77,20 @@ module Fusuma
       it 'should cache command' do
         key   = %w[event_type finger direction command].join(',')
         value = 'shourtcut string'
-        Config.reload
+        Config.instance.reload
         Config.instance.send(:cache, key) { value }
         expect(Config.instance.send(:cache, key)).to eq value
+      end
+    end
+
+    describe '#reload' do
+      it 'remove cached value' do
+        key = 'key'
+        val = 'val'
+        Config.instance.send(:cache, key) { val }
+        Config.instance.reload
+        expect(Config.instance.send(:cache, key)).not_to eq val
+        expect(Config.instance.send(:cache, key)).to eq nil
       end
     end
   end

@@ -1,4 +1,5 @@
 require_relative './executor.rb'
+require 'open3'
 
 module Fusuma
   module Plugin
