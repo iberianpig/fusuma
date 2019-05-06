@@ -1,0 +1,31 @@
+swipe:
+  3:
+    left:
+      command: 'echo swipe 3 left'
+    right:
+      command: 'echo swipe 3 right'
+    up:
+      command: 'echo swipe 3 up'
+    down:
+      command: 'echo swipe 3 down'
+  4:
+    left:
+      command: 'echo swipe 4 left'
+    right:
+      command: 'echo swipe 4 right'
+    up:
+      command: 'echo swipe 4 up'
+    down:
+      command: 'echo swipe 4 down'
+
+pinch:
+  2:
+    in:
+      command: 'echo pinch 2 in'
+    out:
+      command: 'echo pinch 2 out'
+  4:
+    in:
+      command: 'echo pinch 4 in'
+    out:
+      command: 'echo pinch 4 in'
