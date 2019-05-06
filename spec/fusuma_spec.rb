@@ -38,7 +38,8 @@ module Fusuma
             .with("Desktop session: #{`echo $DESKTOP_SESSION`}".strip)
           expect(MultiLogger).to receive(:info)
             .with('---------------------------------------------')
-          Runner.run(version: true)
+
+          expect { Runner.run(version: true) }.to raise_error(SystemExit)
         end
       end
 

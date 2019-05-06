@@ -25,11 +25,15 @@ module Fusuma
       end
 
       def read_options(option)
+        MultiLogger.instance.debug_mode = option[:verbose]
+
         load_custom_config(option[:config_path])
         require_plugins
-        print_version && exit(0) if option[:version]
+
+        print_version(then_exit: option[:version])
+        print_enabled_plugins
+
         print_device_list if option[:list]
-        debug_mode if option[:verbose]
         Device.given_device = option[:device]
         Process.daemon if option[:daemon]
       end
@@ -46,7 +50,7 @@ module Fusuma
       end
 
       # TODO: print after reading plugins
-      def print_version
+      def print_version(then_exit: false)
         MultiLogger.info '---------------------------------------------'
         MultiLogger.info "Fusuma: #{Fusuma::VERSION}"
         MultiLogger.info "libinput: #{Plugin::Inputs::LibinputCommandInput.new.version}"
@@ -54,15 +58,17 @@ module Fusuma
         MultiLogger.info "Distribution: #{`cat /etc/issue`}".strip
         MultiLogger.info "Desktop session: #{`echo $DESKTOP_SESSION`}".strip
         MultiLogger.info '---------------------------------------------'
+        Kernel.exit(0) if then_exit
       end
 
-      def enabled_plugins
-        MultiLogger.info 'Enabled Plugins: '
+      def print_enabled_plugins
+        MultiLogger.debug '---------------------------------------------'
+        MultiLogger.debug 'Enabled Plugins: '
         Plugin::Manager.plugins
                        .reject { |k, _v| k.to_s =~ /Base/ }
                        .map { |_base, plugins| plugins.map { |plugin| "  #{plugin}" } }
-                       .flatten.sort.each { |name| MultiLogger.info name }
-        MultiLogger.info '---------------------------------------------'
+                       .flatten.sort.each { |name| MultiLogger.debug name }
+        MultiLogger.debug '---------------------------------------------'
       end
 
       def print_device_list
@@ -77,9 +83,8 @@ module Fusuma
       end
 
       def debug_mode
-        print_version
-        enabled_plugins
         MultiLogger.instance.debug_mode = true
+        print_version
       end
     end
 
