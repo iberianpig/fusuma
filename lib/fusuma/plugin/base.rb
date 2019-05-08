@@ -24,7 +24,8 @@ module Fusuma
                    .underscore
                    .split('/')
                    .last
-        new options.fetch(attr.to_sym, {})
+        plugin_specific_options = options.fetch(attr.to_sym, {})
+        new(options: plugin_specific_options)
       end
     end
   end

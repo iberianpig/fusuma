@@ -97,7 +97,7 @@ module Fusuma
     end
 
     def plugin_options
-      {}
+      Config.search(Config::Index.new(:plugin))
     end
 
     def run
