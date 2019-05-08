@@ -7,7 +7,7 @@ module Fusuma
       # libinput commands wrapper
       class LibinputCommandInput < Input
         def initialize(options: {})
-          @options = options
+          @options = build_options(options)
         end
 
         def run
@@ -90,6 +90,21 @@ module Fusuma
           return unless Device.available.size == 1
 
           "--device /dev/input/#{Device.available.first.id}"
+        end
+
+        # TODO: add specs
+        def build_options(options)
+          options.map do |k, v|
+            case k
+            when :'enable-tap'
+              '--enable-tap'
+            when :device
+              "--device=#{v}"
+            when :'enable-dwt'
+              # Enable disable-while-typing
+              v ? '--enable-dwt' : '--disable-dwt'
+            end
+          end.compact
         end
 
         # which in ruby: Checking if program exists in $PATH from ruby
