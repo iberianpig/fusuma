@@ -9,7 +9,11 @@ module Fusuma
     attr_reader :finger, :direction, :event_type
 
     def execute
-      `#{command_or_shortcut}`
+      pid = fork {
+        Process.daemon(true)
+        exec("#{command_or_shortcut}")
+      }
+      Process.detach(pid)
       MultiLogger.info("Execute: #{command_or_shortcut}")
     end
 
