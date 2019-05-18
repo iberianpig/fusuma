@@ -30,7 +30,10 @@ module Fusuma
 
       # Generate input
       class Generator
-        # DUMMY_OPTIONS = { input: { libinput_command: '--enable-tap' } }.freeze
+        # @example Generate input plugins
+        #  options = {:inputs=>{:libinput_command_input=>{"enable-tap"=>true}}}
+        #  Generator.new(options: options).generate
+        #  => [#<Fusuma::Plugin::Inputs::LibinputCommandInput:0x0056011e552a60 @options=[]>]
         # @param options [Hash]
         def initialize(options:)
           @options = options.fetch(:inputs, {})
