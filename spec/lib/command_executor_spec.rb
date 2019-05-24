@@ -27,6 +27,14 @@ module Fusuma
           .and_return(nil)
       end
 
+      before do
+        allow(command_executor).to receive(:fork) do |&block|
+          allow(Process).to receive(:daemon).with(true)
+          allow(Process).to receive(:detach).with(anything)
+          block.call
+        end
+      end
+
       context 'with command' do
         before do
           unset_shortcut
@@ -36,9 +44,7 @@ module Fusuma
             set_command
           end
           it 'should execute command' do
-            expect_any_instance_of(described_class)
-              .to receive(:`)
-              .with('test_command')
+            expect(command_executor).to receive(:exec).with('test_command')
             subject
           end
         end
@@ -47,9 +53,7 @@ module Fusuma
             unset_command
           end
           it 'should NOT execute command' do
-            expect_any_instance_of(described_class)
-              .not_to receive(:`)
-              .with('test_command')
+            expect(command_executor).not_to receive(:exec).with('test_command')
             subject
           end
         end
@@ -60,25 +64,17 @@ module Fusuma
           unset_command
         end
         context 'with valid condition' do
-          before do
-            set_shortcut
-          end
+          before { set_shortcut }
+          after { subject }
           it 'should return' do
-            expect_any_instance_of(described_class)
-              .to receive(:`)
-              .with('xdotool key test+key')
-            subject
+            expect(command_executor).to receive(:exec).with('xdotool key test+key')
           end
         end
         context 'with invalid condition' do
-          before do
-            unset_shortcut
-          end
+          before { unset_shortcut }
+          after { subject }
           it 'should NOT execute shortcut' do
-            expect_any_instance_of(described_class)
-              .not_to receive(:`)
-              .with('xdotool key test+key')
-            subject
+            expect(command_executor).not_to receive(:exec).with('xdotool key test+key')
           end
         end
       end
@@ -88,11 +84,10 @@ module Fusuma
           unset_command
           unset_shortcut
         end
-        it 'should NOT execute command' do
-          expect_any_instance_of(described_class)
-            .not_to receive(:`)
-            .with(%q('echo "Command is not assigned"'))
-          subject
+        after { subject }
+        it 'should execute dummy command' do
+          expect(command_executor).to receive(:exec)
+            .with(%q(echo "Command is not assigned"))
         end
       end
     end
