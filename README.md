@@ -31,7 +31,7 @@ $ sudo apt-get install libinput-tools
 $ sudo gem install fusuma
 ```
 
-### 4. Install xdotool(optional) 
+### 4. Install xdotool(optional)
 
 For sending shortcuts:
 ```bash
@@ -61,7 +61,7 @@ $ sudo gem update fusuma
 
 ## Customize Gesture Mapping
 
-You can customize the settings for gestures to put and edit `~/.config/fusuma/config.yml`.  
+You can customize the settings for gestures to put and edit `~/.config/fusuma/config.yml`.
 **NOTE: You will need to create the `~/.config/fusuma` directory if it doesn't exist yet.**
 
 ```bash
@@ -69,29 +69,29 @@ $ mkdir -p ~/.config/fusuma        # create config directory
 $ nano ~/.config/fusuma/config.yml # edit config file.
 ```
 
-### Example (Gesture Mapping for elementary OS)
+### Example 1: Gesture Mapping for elementary OS
 
 ```yaml
 swipe:
-  3: 
-    left: 
+  3:
+    left:
       command: 'xdotool key alt+Left'
-    right: 
+    right:
       command: 'xdotool key alt+Right'
-    up: 
+    up:
       command: 'xdotool key ctrl+t'
       threshold: 1.5
-    down: 
+    down:
       command: 'xdotool key ctrl+w'
       threshold: 1.5
   4:
-    left: 
+    left:
       command: 'xdotool key super+Left'
-    right: 
+    right:
       command: 'xdotool key super+Right'
-    up: 
+    up:
       command: 'xdotool key super+a'
-    down: 
+    down:
       command: 'xdotool key super+s'
 pinch:
   2:
@@ -109,6 +109,42 @@ threshold:
 interval:
   swipe: 1
   pinch: 1
+```
+
+### Example 2: Gesture Mapping for Ubuntu OS to mimic Mac a little
+
+```yaml
+swipe:
+  3:
+    left:
+      command: 'xdotool key alt+Shift+Tab'
+    right:
+      command: 'xdotool key alt+Tab'
+    up:
+      command: 'xdotool key super'
+    down:
+      command: 'xdotool key super'
+  4:
+    up:
+      command: 'xdptool key super+m'
+    down:
+      command: 'xdotool key super+m'
+pinch:
+  in:
+    command: 'xdotool key super+a'
+    threshold: 0.1
+  out:
+     command: 'xdotool key super'
+     threshold: 0.1
+
+threshold:
+  swipe: 1
+  pinch: 1
+
+interval:
+  swipe: 1
+  pinch: 1
+
 ```
 
 if `command: ` properties are blank, the swipe/pinch doesn't execute command.
@@ -129,11 +165,11 @@ You need to replace to `command: ` property.
 
 ```diff
 swipe:
-  3: 
-    left: 
+  3:
+    left:
 -      shortcut: 'alt+Left'
 +      command: 'xdotool key alt+Left'
-    right: 
+    right:
 -      shortcut: 'alt+Right'
 +      command: 'xdotool key alt+Right'
 ```
