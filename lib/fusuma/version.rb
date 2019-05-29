@@ -1,3 +1,3 @@
 module Fusuma
-  VERSION = '0.10.2'.freeze
+  VERSION = '0.11.1'.freeze
 end

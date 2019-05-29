@@ -10,8 +10,11 @@ module Fusuma
           search_command(vector).tap do |command|
             break unless command
 
-            _o, _e, s = Open3.capture3(command)
-            return s.success?
+            pid = fork do
+              Process.daemon(true)
+              exec(command.to_s)
+            end
+            Process.detach(pid)
           end
         end
 
