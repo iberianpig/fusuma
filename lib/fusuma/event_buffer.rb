@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Fusuma
   # manage events and generate command
   class EventBuffer

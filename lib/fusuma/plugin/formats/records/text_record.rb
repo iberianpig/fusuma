@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Fusuma
   module Plugin
     module Formats

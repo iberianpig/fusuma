@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative './executor.rb'
 require 'open3'
 
@@ -14,6 +16,7 @@ module Fusuma
               Process.daemon(true)
               exec(command.to_s)
             end
+
             Process.detach(pid)
           end
         end

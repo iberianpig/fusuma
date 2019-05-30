@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative './filter.rb'
 require './lib/fusuma/device.rb'
 
@@ -6,7 +8,7 @@ module Fusuma
     module Filters
       # Filter device log
       class LibinputDeviceFilter < Filter
-        DEFAULT_SOURCE = 'libinput_command_input'.freeze
+        DEFAULT_SOURCE = 'libinput_command_input'
 
         def keep?(record)
           device_ids.any? { |device_id| record.to_s =~ /^\s?#{device_id}/ }

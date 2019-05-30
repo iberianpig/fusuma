@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require './lib/fusuma/plugin/inputs/libinput_command_input.rb'
 

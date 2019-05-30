@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Fusuma
   module Plugin
     module Vectors
       # vector data
       class SwipeVector < Vector
-        GESTURE = 'swipe'.freeze
+        GESTURE = 'swipe'
         FINGERS = [3, 4].freeze
 
         BASE_THERESHOLD = 10
@@ -79,10 +81,10 @@ module Fusuma
 
         # direction of vector
         class Direction
-          RIGHT = 'right'.freeze
-          LEFT  = 'left'.freeze
-          DOWN  = 'down'.freeze
-          UP = 'up'.freeze
+          RIGHT = 'right'
+          LEFT  = 'left'
+          DOWN  = 'down'
+          UP = 'up'
 
           def initialize(move_x:, move_y:)
             @move_x = move_x

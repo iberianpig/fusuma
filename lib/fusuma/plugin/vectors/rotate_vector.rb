@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Fusuma
   module Plugin
     module Vectors
       # vector data
       class RotateVector < Vector
-        GESTURE = 'pinch'.freeze
+        GESTURE = 'pinch'
 
         BASE_THERESHOLD = 0.5
         BASE_INTERVAL   = 0.1
@@ -76,8 +78,8 @@ module Fusuma
 
         # direction of vector
         class Direction
-          CLOCKWISE = 'clockwise'.freeze
-          COUNTERCLOCKWISE = 'counterclockwise'.freeze
+          CLOCKWISE = 'clockwise'
+          COUNTERCLOCKWISE = 'counterclockwise'
 
           def initialize(angle:)
             @angle = angle

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative './multi_logger.rb'
 require 'singleton'
 require 'yaml'

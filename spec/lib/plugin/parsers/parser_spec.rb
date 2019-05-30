@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require './lib/fusuma/plugin/parsers/parser.rb'
 require './lib/fusuma/plugin/formats/event_format.rb'
@@ -8,7 +10,7 @@ module Fusuma
       DUMMY_OPTIONS = { parsers: { dummy_parser: 'dummy' } }.freeze
 
       class DummyParser < Parser
-        DEFAULT_SOURCE = 'dummy_input'.freeze
+        DEFAULT_SOURCE = 'dummy_input'
       end
 
       RSpec.describe Parser do
