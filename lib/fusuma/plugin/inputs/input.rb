@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../base.rb'
 require_relative '../formats/event_format.rb'
 

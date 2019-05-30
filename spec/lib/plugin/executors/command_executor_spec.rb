@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require_relative './dummy_vector.rb'
 require './lib/fusuma/plugin/executors/command_executor.rb'
@@ -30,7 +32,16 @@ module Fusuma
 
         describe '#execute' do
           subject { command_executor.execute(vector) }
-          it { is_expected.to be_truthy }
+
+          it 'fork' do
+            allow(Process).to receive(:daemon).with(true)
+            allow(Process).to receive(:detach).with(anything)
+            expect(command_executor).to receive(:fork).and_yield do |block_context|
+              expect(block_context).to receive(:exec).with(anything)
+            end
+
+            subject
+          end
         end
 
         describe '#executable?' do

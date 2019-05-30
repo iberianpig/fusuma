@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative './format.rb'
 require_relative './records/record.rb'
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../formats/records/record.rb'
 
 module Fusuma
@@ -5,7 +7,7 @@ module Fusuma
     module Parsers
       # parse libinput and generate vector
       class LibinputGestureParser < Parser
-        DEFAULT_SOURCE = 'libinput_command_input'.freeze
+        DEFAULT_SOURCE = 'libinput_command_input'
 
         # @param record [String]
         # @return [Records::Gesture, nil]

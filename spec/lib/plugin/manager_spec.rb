@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require './lib/fusuma/plugin/base.rb'
 require './lib/fusuma/plugin/manager.rb'

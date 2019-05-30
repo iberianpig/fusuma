@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require './lib/fusuma/plugin/vectors/vector.rb'
 
 module Fusuma

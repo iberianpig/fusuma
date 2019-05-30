@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Fusuma
   # detect input device
   class Device
@@ -43,8 +45,8 @@ module Fusuma
           MultiLogger.debug(available_devices: d)
           raise 'Touchpad is not found' if d.empty?
         end
-      rescue RuntimeError => ex
-        MultiLogger.error(ex.message)
+      rescue RuntimeError => e
+        MultiLogger.error(e.message)
         exit 1
       end
 

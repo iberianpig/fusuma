@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative './fusuma/version'
 require_relative './fusuma/multi_logger'
 require_relative './fusuma/config.rb'
@@ -134,7 +136,7 @@ module Fusuma
       executor = @executors.find do |e|
         e.executable?(vector)
       end
-      executor.execute(vector) if executor
+      executor&.execute(vector)
     end
   end
 end

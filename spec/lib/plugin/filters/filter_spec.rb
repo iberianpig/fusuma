@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require './lib/fusuma/plugin/filters/filter.rb'
 require './lib/fusuma/plugin/formats/event_format.rb'
@@ -8,7 +10,7 @@ module Fusuma
       DUMMY_OPTIONS = { filters: { dummy_filter: 'dummy' } }.freeze
 
       class DummyFilter < Filter
-        DEFAULT_SOURCE = 'dummy_input'.freeze
+        DEFAULT_SOURCE = 'dummy_input'
       end
 
       RSpec.describe Filter do

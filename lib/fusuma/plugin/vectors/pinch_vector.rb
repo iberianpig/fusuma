@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Fusuma
   module Plugin
     module Vectors
       # vector data
       class PinchVector < Vector
-        GESTURE = 'pinch'.freeze
+        GESTURE = 'pinch'
 
         BASE_THERESHOLD = 0.1
         BASE_INTERVAL   = 0.1
@@ -85,8 +87,8 @@ module Fusuma
 
         # direction of vector
         class Direction
-          IN = 'in'.freeze
-          OUT = 'out'.freeze
+          IN = 'in'
+          OUT = 'out'
 
           def initialize(diameter:)
             @diameter = diameter

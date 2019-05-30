@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # module as namespace
 module Fusuma
   require 'logger'
