@@ -45,7 +45,7 @@ module Fusuma
         end
 
         # parse Record object
-        # @param record [Record]
+        # @param _record [Record]
         # @return [Record, nil]
         def parse_record(_record)
           nil

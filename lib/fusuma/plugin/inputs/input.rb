@@ -41,8 +41,8 @@ module Fusuma
           @options = options.fetch(:inputs, {})
         end
 
-        # Generate input
-        # @return [input]
+        # Generate input plugins
+        # @return [Array<Input>]
         def generate
           plugins.map do |klass|
             klass.generate(options: @options)

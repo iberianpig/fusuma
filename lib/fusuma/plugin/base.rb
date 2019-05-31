@@ -20,7 +20,7 @@ module Fusuma
         Manager.plugins[name]
       end
 
-      # @return [Input]
+      # @return [Plugin::Base]
       def self.generate(options:)
         attr = name.gsub('Fusuma::', '')
                    .underscore
