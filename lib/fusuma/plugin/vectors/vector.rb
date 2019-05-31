@@ -36,7 +36,7 @@ module Fusuma
         end
 
         class << self
-          # @param event_buffer [EventBuffer]
+          # @param _event_buffer [EventBuffer]
           # @return [Vector]
           def generate(_event_buffer:)
             raise NotImplementedError, "override #{self.class.name}.#{__method__}"
