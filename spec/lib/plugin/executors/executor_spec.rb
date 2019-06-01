@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+
+require './lib/fusuma/plugin/executors/executor.rb'
 require_relative './dummy_vector.rb'
 
 module Fusuma
@@ -65,11 +67,11 @@ module Fusuma
             expect(subject.any?(&:options)).to be true
           end
 
-          it 'have a DummyExecutor' do
+          it 'has a DummyExecutor' do
             expect(subject.first).to be_a_kind_of DummyExecutor
           end
 
-          it 'have only a executor options' do
+          it 'has only a executor options for DummyExecutor' do
             expect(subject.first.options).to eq DUMMY_OPTIONS[:executors][:dummy_executor]
           end
         end
