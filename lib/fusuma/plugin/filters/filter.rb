@@ -9,7 +9,7 @@ module Fusuma
       # Inherite this base
       class Filter < Base
         attr_reader :options
-        def initialize(options = {})
+        def initialize(options: {})
           @options = options
         end
 
