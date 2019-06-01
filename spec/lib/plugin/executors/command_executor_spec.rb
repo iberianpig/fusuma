@@ -8,12 +8,12 @@ require './lib/fusuma/config.rb'
 module Fusuma
   module Plugin
     module Executors
-      COMMAND_OPTIONS = { executors: { command_executor: 'command' } }.freeze
+      COMMAND_OPTIONS = { executors: { command_executor: { dummy: 'dummy_options' } } }.freeze
 
       RSpec.describe CommandExecutor do
-        let(:command_executor) { described_class.new(options) }
+        let(:command_executor) { described_class.new(options: options) }
         let(:vector) { Vectors::DummyVector.new('dummy_finger', 'dummy_direction') }
-        let(:options) { { dummy: 'dummy_options' } }
+        let(:options) { COMMAND_OPTIONS[:executors][:command_executor] }
 
         before do
           allow(YAML).to receive(:load_file) {
