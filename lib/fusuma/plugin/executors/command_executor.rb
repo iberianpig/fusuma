@@ -12,6 +12,7 @@ module Fusuma
           search_command(vector).tap do |command|
             break unless command
 
+            MultiLogger.info(command: command)
             pid = fork do
               Process.daemon(true)
               exec(command.to_s)

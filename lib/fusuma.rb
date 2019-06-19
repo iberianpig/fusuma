@@ -91,19 +91,15 @@ module Fusuma
     end
 
     def initialize
-      @inputs = Plugin::Inputs::Generator.new(options: plugin_options).generate
-      @filters = Plugin::Filters::Generator.new(options: plugin_options).generate
-      @parsers = Plugin::Parsers::Generator.new(options: plugin_options).generate
+      @inputs = Plugin::Inputs::Input.plugins.map(&:new)
+      @filters = Plugin::Filters::Filter.plugins.map(&:new)
+      @parsers = Plugin::Parsers::Parser.plugins.map(&:new)
       @event_buffer = EventBuffer.new
-      @executors = Plugin::Executors::Generator.new(options: plugin_options).generate
-    end
-
-    def plugin_options
-      Config.search(Config::Index.new(:plugin)) || {}
+      @executors = Plugin::Executors::Executor.plugins.map(&:new)
     end
 
     def run
-      # TODO: run by multi thread @inputs
+      # TODO: run with multi thread
       @inputs.first.run do |event|
         filtered = filter(event)
 

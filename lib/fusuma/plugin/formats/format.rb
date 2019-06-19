@@ -17,28 +17,6 @@ module Fusuma
           self.class.name.underscore.split('/').last.gsub('_format', '')
         end
       end
-
-      # Generate format
-      class Generator
-        # @param options [Hash]
-        def initialize(options:)
-          @options = options.fetch(:formats, {})
-        end
-
-        # Generate format
-        # @return [Array<Format>]
-        def generate
-          plugins.map do |klass|
-            klass.generate(options: @options)
-          end.compact
-        end
-
-        # format plugins
-        # @return [Array]
-        def plugins
-          Format.plugins
-        end
-      end
     end
   end
 end

@@ -1,33 +1,23 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require_relative './dummy_vector.rb'
 require './lib/fusuma/plugin/executors/command_executor.rb'
-require './lib/fusuma/config.rb'
+require_relative './dummy_vector.rb'
 
 module Fusuma
   module Plugin
     module Executors
-      COMMAND_OPTIONS = { executors: { command_executor: { dummy: 'dummy_options' } } }.freeze
-
       RSpec.describe CommandExecutor do
-        let(:command_executor) { described_class.new(options: options) }
+        let(:command_executor) { described_class.new }
         let(:vector) { Vectors::DummyVector.new('dummy_finger', 'dummy_direction') }
-        let(:options) { COMMAND_OPTIONS[:executors][:command_executor] }
 
         before do
-          allow(YAML).to receive(:load_file) {
-                           {
-                             dummy: {
-                               dummy_finger: {
-                                 dummy_direction: {
-                                   command: 'echo dummy'
-                                 }
-                               }
-                             }
-                           }
-                         }
-          Config.instance.reload
+          ConfigHelper.load_config_yml = <<~CONFIG
+            dummy:
+              dummy_finger:
+                dummy_direction:
+                  command: 'echo dummy'
+          CONFIG
         end
 
         describe '#execute' do

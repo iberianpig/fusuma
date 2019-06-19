@@ -8,10 +8,6 @@ module Fusuma
     module Inputs
       # libinput commands wrapper
       class LibinputCommandInput < Input
-        def initialize(options: {})
-          @options = build_options(options)
-        end
-
         def run
           debug_events do |line|
             yield event(record: line)
@@ -45,7 +41,7 @@ module Fusuma
         # @yield [line] gives a line in libinput debug-events output to the block
         def debug_events
           prefix = 'stdbuf -oL --'
-          options = [*@options, device_option]
+          options = [*libinput_options, device_option]
           cmd = "#{prefix} #{debug_events_command} #{options.join(' ')}".strip
           MultiLogger.debug(debug_events: cmd)
           Open3.popen3(cmd) do |_i, o, _e, _w|
@@ -95,8 +91,8 @@ module Fusuma
         end
 
         # TODO: add specs
-        def build_options(options)
-          options.map do |k, v|
+        def libinput_options
+          config_params.map do |k, v|
             case k
             when :'enable-tap'
               '--enable-tap'
