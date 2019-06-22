@@ -9,7 +9,6 @@ module Fusuma
     module Inputs
       # Inherite this base
       class Input < Base
-
         def run
           raise NotImplementedError, "override #{self.class.name}##{__method__}"
         end
