@@ -5,7 +5,7 @@ module Fusuma
     module Formats
       module Records
         # Gesture Record Format
-        class Gesture < Record
+        class GestureRecord < Record
           # define gesture format
           attr_reader :status, :gesture, :finger, :direction
 

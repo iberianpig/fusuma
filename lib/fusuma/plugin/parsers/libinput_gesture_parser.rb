@@ -10,7 +10,7 @@ module Fusuma
         DEFAULT_SOURCE = 'libinput_command_input'
 
         # @param record [String]
-        # @return [Records::Gesture, nil]
+        # @return [Records::GestureRecord, nil]
         def parse_record(record)
           case line = record.to_s
           when /GESTURE_SWIPE|GESTURE_PINCH/
@@ -19,10 +19,10 @@ module Fusuma
             return
           end
 
-          Formats::Records::Gesture.new(status: status,
-                                        gesture: gesture,
-                                        finger: finger,
-                                        direction: direction)
+          Formats::Records::GestureRecord.new(status: status,
+                                              gesture: gesture,
+                                              finger: finger,
+                                              direction: direction)
         end
 
         private
@@ -43,8 +43,8 @@ module Fusuma
           return if line.nil?
 
           move_x, move_y, _, _, _, zoom, _, rotate = line.tr('/|(|)', ' ').split
-          Formats::Records::Gesture::Direction.new(move_x.to_f, move_y.to_f,
-                                                   zoom.to_f, rotate.to_f)
+          Formats::Records::GestureRecord::Direction.new(move_x.to_f, move_y.to_f,
+                                                         zoom.to_f, rotate.to_f)
         end
       end
     end
