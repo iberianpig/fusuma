@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative './manager.rb'
+require_relative '../config.rb'
 
 module Fusuma
   module Plugin
@@ -21,13 +22,12 @@ module Fusuma
       end
 
       # @return [Plugin::Base]
-      def self.generate(options:)
-        attr = name.gsub('Fusuma::', '')
-                   .underscore
-                   .split('/')
-                   .last
-        plugin_specific_options = options.fetch(attr.to_sym, {})
-        new(options: plugin_specific_options)
+      def config_params
+        Config.search(config_index) || {}
+      end
+
+      def config_index
+        Config::Index.new(self.class.name.gsub('Fusuma::', '').underscore.split('/'))
       end
     end
   end

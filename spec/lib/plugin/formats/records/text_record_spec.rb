@@ -7,7 +7,7 @@ module Fusuma
   module Plugin
     module Formats
       module Records
-        RSpec.describe Text do
+        RSpec.describe TextRecord do
           let(:record) { described_class.new('this is dummy') }
 
           describe '#type' do

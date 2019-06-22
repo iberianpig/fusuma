@@ -25,7 +25,7 @@ module Fusuma
           @device_ids ||= Device.ids
         end
 
-        # TODO: read option[:filter][:libinput_device] from conig instead of
+        # TODO: read option[:filter][:libinput_device] from config instead of
         # `Device.given_device=`
       end
     end

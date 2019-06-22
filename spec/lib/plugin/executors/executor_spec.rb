@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'tempfile'
 
+require './lib/fusuma/config.rb'
 require './lib/fusuma/plugin/executors/executor.rb'
 require_relative './dummy_vector.rb'
 
 module Fusuma
   module Plugin
     module Executors
-      DUMMY_OPTIONS = { executors: { dummy_executor: 'dummy' } }.freeze
-
       RSpec.describe Executor do
         let(:executor) { described_class.new }
 
@@ -35,9 +35,17 @@ module Fusuma
       end
 
       RSpec.describe DummyExecutor do
-        let(:dummy_executor) { described_class.new(options) }
+        let(:dummy_executor) { described_class.new }
         let(:vector) { Vectors::DummyVector.new('dummy_finger', 'dummy_direction') }
-        let(:options) { {} }
+
+        before do
+          ConfigHelper.load_config_yml = <<~CONFIG
+            plugin:
+             executors:
+               dummy_executor:
+                 dummy: dummy
+          CONFIG
+        end
 
         describe '#execute' do
           subject { dummy_executor.execute(vector) }
@@ -48,32 +56,10 @@ module Fusuma
           subject { dummy_executor.executable?(vector) }
           it { is_expected.to be_truthy }
         end
-      end
 
-      RSpec.describe Generator do
-        let(:options) { DUMMY_OPTIONS }
-        let(:generator) { described_class.new(options: options) }
-
-        before do
-          allow(generator).to receive(:plugins) { [DummyExecutor] }
-        end
-
-        describe '#generate' do
-          subject { generator.generate }
-
-          it { is_expected.to be_a_kind_of(Array) }
-
-          it 'generate plugins have options' do
-            expect(subject.any?(&:options)).to be true
-          end
-
-          it 'has a DummyExecutor' do
-            expect(subject.first).to be_a_kind_of DummyExecutor
-          end
-
-          it 'has only a executor options for DummyExecutor' do
-            expect(subject.first.options).to eq DUMMY_OPTIONS[:executors][:dummy_executor]
-          end
+        describe '#config_params' do
+          subject { dummy_executor.config_params }
+          it { is_expected.to eq(dummy: 'dummy') }
         end
       end
     end

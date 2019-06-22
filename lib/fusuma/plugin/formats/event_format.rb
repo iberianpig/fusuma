@@ -21,7 +21,7 @@ module Fusuma
                     when Records::Record
                       record
                     when String
-                      Records::Text.new(record)
+                      Records::TextRecord.new(record)
                     else
                       raise ArgumentError,
                             'record should be String or RecordFormat'

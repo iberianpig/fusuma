@@ -51,29 +51,6 @@ module Fusuma
           nil
         end
       end
-
-      # Generate parser
-      class Generator
-        # DUMMY_OPTIONS = { parser: { dummy: 'dummy' } }.freeze
-        # @param options [Hash]
-        def initialize(options:)
-          @options = options.fetch(:parsers, {})
-        end
-
-        # Generate parser
-        # @return [parser]
-        def generate
-          plugins.map do |klass|
-            klass.generate(options: @options)
-          end.compact
-        end
-
-        # parser plugins
-        # @return [Array]
-        def plugins
-          Parser.plugins
-        end
-      end
     end
   end
 end

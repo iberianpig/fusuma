@@ -9,5 +9,4 @@ require 'fusuma'
 
 # (If you use this, don't forget to add pry to your Gemfile!)
 require 'pry'
-require 'pry-byebug'
 Pry.start

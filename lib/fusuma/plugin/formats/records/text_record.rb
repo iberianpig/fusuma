@@ -5,7 +5,7 @@ module Fusuma
     module Formats
       module Records
         # Default Record Format
-        class Text < Record
+        class TextRecord < Record
           # @param text [String]
           def initialize(text)
             @text = text
