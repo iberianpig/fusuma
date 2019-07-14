@@ -17,19 +17,29 @@ module Fusuma
       RSpec.describe DummyFilter do
         let(:filter) { DummyFilter.new }
 
-        before do
-          ConfigHelper.load_config_yml = <<~CONFIG
-            plugin:
-             filters:
-               dummy_filter:
-                 dummy: dummy
-          CONFIG
-        end
-
         describe '#source' do
           subject { filter.source }
 
-          it { is_expected.to be DummyFilter::DEFAULT_SOURCE }
+          it { is_expected.to eq DummyFilter::DEFAULT_SOURCE }
+
+          context 'with config' do
+            around do |example|
+              CUSTOME_SOURCE = 'custom_input'
+
+              ConfigHelper.load_config_yml = <<~CONFIG
+                plugin:
+                 filters:
+                   dummy_filter:
+                     source: #{CUSTOME_SOURCE}
+              CONFIG
+
+              example.run
+
+              Config.custom_path = nil
+            end
+
+            it { is_expected.to eq CUSTOME_SOURCE }
+          end
         end
 
         describe '#filter' do
@@ -54,6 +64,19 @@ module Fusuma
         end
 
         describe '#config_params' do
+          around do |example|
+            ConfigHelper.load_config_yml = <<~CONFIG
+              plugin:
+               filters:
+                 dummy_filter:
+                   dummy: dummy
+            CONFIG
+
+            example.run
+
+            Config.custom_path = nil
+          end
+
           subject { filter.config_params }
           it { is_expected.to eq(dummy: 'dummy') }
         end

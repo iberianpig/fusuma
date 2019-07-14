@@ -7,7 +7,7 @@ module Fusuma
   module Plugin
     # Create a Plugin Class with extending this class
     class Base
-      # if inherited from subclass
+      # when inherited from subclass
       def self.inherited(subclass)
         subclass_path = caller_locations(1..1).first.path
         Manager.add(plugin_class: subclass, plugin_path: subclass_path)

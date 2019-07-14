@@ -7,15 +7,25 @@ require './lib/fusuma/plugin/formats/event_format.rb'
 module Fusuma
   module Plugin
     module Parsers
-      DUMMY_OPTIONS = { parsers: { dummy_parser: 'dummy' } }.freeze
-
       class DummyParser < Parser
         DEFAULT_SOURCE = 'dummy_input'
       end
 
       RSpec.describe Parser do
-        let(:options) { DUMMY_OPTIONS }
-        let(:parser) { DummyParser.new(options: options) }
+        let(:parser) { DummyParser.new }
+
+        around do |example|
+          ConfigHelper.load_config_yml = <<~CONFIG
+            plugin:
+             parsers:
+               dummy_parser:
+                 dummy: dummy
+          CONFIG
+
+          example.run
+
+          Config.custom_path = nil
+        end
 
         describe '#source' do
           subject { parser.source }

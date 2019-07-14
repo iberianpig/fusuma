@@ -11,13 +11,17 @@ module Fusuma
         let(:command_executor) { described_class.new }
         let(:vector) { Vectors::DummyVector.new('dummy_finger', 'dummy_direction') }
 
-        before do
+        around do |example|
           ConfigHelper.load_config_yml = <<~CONFIG
             dummy:
               dummy_finger:
                 dummy_direction:
                   command: 'echo dummy'
           CONFIG
+
+          example.run
+
+          Config.custom_path = nil
         end
 
         describe '#execute' do

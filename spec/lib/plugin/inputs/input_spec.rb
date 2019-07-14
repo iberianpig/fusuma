@@ -22,8 +22,6 @@ module Fusuma
         end
       end
 
-      DUMMY_OPTIONS = { plugin: { inputs: { dummy_input: 'dummy' } } }.freeze
-
       class DummyInput < Input
         def run
           yield event
@@ -33,13 +31,17 @@ module Fusuma
       RSpec.describe DummyInput do
         let(:dummy_input) { described_class.new }
 
-        before do
+        around do |example|
           ConfigHelper.load_config_yml = <<~CONFIG
             plugin:
              inputs:
                dummy_input:
                  dummy: dummy
           CONFIG
+
+          example.run
+
+          Config.custom_path = nil
         end
 
         describe '#run' do
