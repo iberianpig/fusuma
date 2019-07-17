@@ -25,13 +25,20 @@ You need `libinput` release 1.0 or later.
 $ sudo apt-get install libinput-tools
 ```
 
-### 3. Install Fusuma
+### 3. Install Ruby
+Fusuma runs in Ruby, so you must install it first.
+
+```bash
+$ sudo apt-get install ruby
+```
+
+### 4. Install Fusuma
 
 ```bash
 $ sudo gem install fusuma
 ```
 
-### 4. Install xdotool(optional)
+### 5. Install xdotool (optional)
 
 For sending shortcuts:
 ```bash
