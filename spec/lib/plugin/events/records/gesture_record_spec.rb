@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require './lib/fusuma/plugin/formats/records/gesture_record.rb'
+require './lib/fusuma/plugin/events/records/gesture_record.rb'
 
 module Fusuma
   module Plugin
-    module Formats
+    module Events
       module Records
         RSpec.describe GestureRecord do
           let(:record) do

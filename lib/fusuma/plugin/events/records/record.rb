@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require_relative '../format.rb'
+require_relative '../../base.rb'
 
 module Fusuma
   module Plugin
-    module Formats
+    module Events
       module Records
-        # Record Format
+        # Record
         # @abstract Subclass and override {#type} to implement
-        class Record < Format
+        class Record < Base
           # @return [Symbol]
           def type
             raise NotImplementedError, 'override #type'

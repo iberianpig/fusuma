@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require './lib/fusuma/plugin/formats/records/record.rb'
+require './lib/fusuma/plugin/events/records/record.rb'
 
 module Fusuma
   module Plugin
-    module Formats
+    module Events
       module Records
         RSpec.describe Record do
           class DummyRecord < Records::Record

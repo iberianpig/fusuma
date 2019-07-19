@@ -4,19 +4,10 @@ require_relative '../base.rb'
 
 module Fusuma
   module Plugin
-    # parser class
     module Parsers
-      # Inherite this base
+      # Parser change record and tag in event
+      # Inherite this base class
       class Parser < Base
-        # parser generate event
-        # Event = Struct.new(:time, :type, :status, :body)
-
-        attr_reader :options
-
-        def initialize(options: {})
-          @options = options
-        end
-
         # Parse Event and convert Record and Tag
         # if `#parse_record` return nil, this method will return original event
         # @param event [Event]
@@ -36,8 +27,8 @@ module Fusuma
         # Set source for tag from config.yml.
         # DEFAULT_SOURCE is defined in each Parser plugins.
         def source
-          @source ||= options.fetch(:source,
-                                    self.class.const_get('DEFAULT_SOURCE'))
+          @source ||= config_params.fetch(:source,
+                                          self.class.const_get('DEFAULT_SOURCE'))
         end
 
         def tag

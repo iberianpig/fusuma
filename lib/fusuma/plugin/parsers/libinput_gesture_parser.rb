@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../formats/records/record.rb'
+require_relative '../events/records/record.rb'
 
 module Fusuma
   module Plugin
@@ -19,10 +19,10 @@ module Fusuma
             return
           end
 
-          Formats::Records::GestureRecord.new(status: status,
-                                              gesture: gesture,
-                                              finger: finger,
-                                              direction: direction)
+          Events::Records::GestureRecord.new(status: status,
+                                             gesture: gesture,
+                                             finger: finger,
+                                             direction: direction)
         end
 
         private
@@ -43,8 +43,8 @@ module Fusuma
           return if line.nil?
 
           move_x, move_y, _, _, _, zoom, _, rotate = line.tr('/|(|)', ' ').split
-          Formats::Records::GestureRecord::Direction.new(move_x.to_f, move_y.to_f,
-                                                         zoom.to_f, rotate.to_f)
+          Events::Records::GestureRecord::Direction.new(move_x.to_f, move_y.to_f,
+                                                        zoom.to_f, rotate.to_f)
         end
       end
     end

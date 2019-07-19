@@ -2,21 +2,26 @@
 
 module Fusuma
   module Plugin
-    module Vectors
+    module Detectors
       # vector data
-      class SwipeVector < Vector
+      class SwipeDetector < Detector
         GESTURE = 'swipe'
         FINGERS = [3, 4].freeze
 
         BASE_THERESHOLD = 10
         BASE_INTERVAL   = 0.5
 
-        def initialize(finger, move_x = 0, move_y = 0)
-          @finger = finger.to_i
-          @direction = Direction.new(move_x: move_x.to_f, move_y: move_y.to_f).to_s
-          @quantity = Quantity.new(move_x: move_x.to_f, move_y: move_y.to_f).to_f
+        def detect(buffers:)
+          buffers.do_something
+          event
         end
-        attr_reader :finger, :direction, :quantity
+
+        # def initialize(finger, move_x = 0, move_y = 0)
+        #   @finger = finger.to_i
+        #   @direction = Direction.new(move_x: move_x.to_f, move_y: move_y.to_f).to_s
+        #   @quantity = Quantity.new(move_x: move_x.to_f, move_y: move_y.to_f).to_f
+        # end
+        # attr_reader :finger, :direction, :quantity
 
         def enough?
           MultiLogger.debug(self)

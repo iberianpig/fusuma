@@ -56,6 +56,17 @@ module Fusuma
           manager.require_siblings_from_gems
         end
 
+        def require_plugins_from_relative
+          require_relative './fusuma/plugin/base.rb'
+          require_relative './fusuma/plugin/events/event.rb'
+          require_relative './fusuma/plugin/inputs/input.rb'
+          require_relative './fusuma/plugin/filters/filter.rb'
+          require_relative './fusuma/plugin/parsers/parser.rb'
+          require_relative './fusuma/plugin/buffers/buffer.rb'
+          require_relative './fusuma/plugin/detectors/detector.rb'
+          require_relative './fusuma/plugin/executors/executor.rb'
+        end
+
         def require_plugins_from_config
           local_plugin_paths = Config.search(Config::Index.new('local_plugin_paths'))
           return unless local_plugin_paths

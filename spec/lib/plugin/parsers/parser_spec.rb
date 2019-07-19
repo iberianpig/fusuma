@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 require './lib/fusuma/plugin/parsers/parser.rb'
-require './lib/fusuma/plugin/formats/event_format.rb'
+require './lib/fusuma/plugin/events/event.rb'
 
 module Fusuma
   module Plugin
@@ -35,7 +35,7 @@ module Fusuma
 
         describe '#parse' do
           subject { parser.parse(event) }
-          let(:event) { Formats::Event.new(tag: 'dummy_input', record: 'dummy') }
+          let(:event) { Events::Event.new(tag: 'dummy_input', record: 'dummy') }
 
           it { is_expected.to be event }
         end

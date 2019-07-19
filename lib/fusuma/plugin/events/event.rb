@@ -1,19 +1,20 @@
 # frozen_string_literal: true
 
-require_relative './format.rb'
+require_relative '../base.rb'
 require_relative './records/record.rb'
+require_relative './records/text_record.rb'
 
 module Fusuma
   module Plugin
-    module Formats
+    module Events
       # Event format
-      class Event < Format
+      class Event < Base
         attr_reader :time
         attr_accessor :tag, :record
 
         # @param time [Time]
         # @param tag [Tag]
-        # @param record [String, RecordFormat]
+        # @param record [String, Record]
         def initialize(time: Time.now, tag:, record:)
           @time = time
           @tag = tag
@@ -24,7 +25,7 @@ module Fusuma
                       Records::TextRecord.new(record)
                     else
                       raise ArgumentError,
-                            'record should be String or RecordFormat'
+                            '@record should be String or Record'
                     end
         end
 

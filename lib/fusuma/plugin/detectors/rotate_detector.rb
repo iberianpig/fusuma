@@ -2,29 +2,28 @@
 
 module Fusuma
   module Plugin
-    module Vectors
+    module Detectors
       # vector data
-      class PinchVector < Vector
+      class RotateDetector < Detector
         GESTURE = 'pinch'
 
-        BASE_THERESHOLD = 0.1
+        BASE_THERESHOLD = 0.5
         BASE_INTERVAL   = 0.1
 
-        def initialize(finger, diameter = 0)
-          @finger = finger.to_i
-          @direction = Direction.new(diameter: diameter.to_f).to_s
-          @quantity = Quantity.new(diameter: diameter.to_f).to_f
-        end
-
-        attr_reader :finger, :direction, :quantity
+        # def initialize(finger, angle = 0)
+        #   @finger = finger.to_i
+        #   @direction = Direction.new(angle: angle.to_f).to_s
+        #   @quantity = Quantity.new(angle: angle.to_f).to_f
+        # end
+        # attr_reader :finger, :direction, :quantity
 
         def enough?
-          enough_diameter? && enough_interval?
+          enough_angle? && enough_interval?
         end
 
         private
 
-        def enough_diameter?
+        def enough_angle?
           quantity > threshold
         end
 
@@ -63,35 +62,27 @@ module Fusuma
           attr_reader :last_time
 
           def generate(event_buffer:)
-            pinch_events = event_buffer.select { |event| event.record.gesture == GESTURE }
-            return if pinch_events.empty?
+            rotate_events = event_buffer.select { |event| event.record.gesture == GESTURE }
+            return if rotate_events.empty?
 
             return if Generator.prev_vector && Generator.prev_vector != self
 
-            Vectors::PinchVector.new(pinch_events.finger,
-                                     calc_diameter(pinch_events)).tap do |v|
+            angle = rotate_events.avg_attrs(:rotate)
+            new(rotate_events.finger, angle).tap do |v|
               return nil unless v.enough?
 
               Generator.prev_vector = self
             end
           end
-
-          private
-
-          def calc_diameter(event_buffer)
-            avg_zoom = event_buffer.avg_attrs(:zoom)
-            first_zoom = event_buffer.events.first.record.direction.zoom
-            avg_zoom / first_zoom
-          end
         end
 
         # direction of vector
         class Direction
-          IN = 'in'
-          OUT = 'out'
+          CLOCKWISE = 'clockwise'
+          COUNTERCLOCKWISE = 'counterclockwise'
 
-          def initialize(diameter:)
-            @diameter = diameter
+          def initialize(angle:)
+            @angle = angle
           end
 
           def to_s
@@ -99,22 +90,22 @@ module Fusuma
           end
 
           def calc
-            if @diameter > 1
-              IN
+            if @angle > 0
+              CLOCKWISE
             else
-              OUT
+              COUNTERCLOCKWISE
             end
           end
         end
 
         # quantity of vector
         class Quantity
-          def initialize(diameter:)
-            @diameter = diameter
+          def initialize(angle:)
+            @angle = angle.abs
           end
 
           def to_f
-            @diameter.to_f
+            @angle.to_f
           end
         end
       end

@@ -5,7 +5,7 @@ require 'tempfile'
 
 require './lib/fusuma/config.rb'
 require './lib/fusuma/plugin/filters/filter.rb'
-require './lib/fusuma/plugin/formats/event_format.rb'
+require './lib/fusuma/plugin/events/event.rb'
 
 module Fusuma
   module Plugin
@@ -44,7 +44,7 @@ module Fusuma
 
         describe '#filter' do
           subject { filter.filter(event) }
-          let(:event) { Formats::Event.new(tag: 'dummy_input', record: 'dummy') }
+          let(:event) { Events::Event.new(tag: 'dummy_input', record: 'dummy') }
 
           context 'when filter#keep? return false' do
             before do

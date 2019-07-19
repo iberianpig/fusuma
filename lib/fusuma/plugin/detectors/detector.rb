@@ -5,39 +5,24 @@ require_relative '../base.rb'
 module Fusuma
   module Plugin
     # vector class
-    module Vectors
+    module Detectors
       # Inherite this base
-      class Vector < Base
-        def initialize
-          raise NotImplementedError, "override #{self.class.name}##{__method__}"
+      class Detector < Base
+        # @return Event
+        def detect(buffers)
+          buffers.each do |buffer|
+            if type == buffer.type
+            end
+          end
         end
 
-        def finger
-          raise NotImplementedError, "override #{self.class.name}##{__method__}"
-        end
-
-        def direction
-          raise NotImplementedError, "override #{self.class.name}##{__method__}"
-        end
-
-        def enough?
-          raise NotImplementedError, "override #{self.class.name}##{__method__}"
-        end
-
-        # @return [Config::Index]
-        def index
-          Config::Index.new(
-            [
-              Config::Index::Key.new(self.class.type),
-              Config::Index::Key.new(finger, skippable: true),
-              Config::Index::Key.new(direction)
-            ]
-          )
+        def type
+          'libinput'
         end
 
         class << self
           # @param _event_buffer [EventBuffer]
-          # @return [Vector]
+          # @return [Detector]
           def generate(_event_buffer:)
             raise NotImplementedError, "override #{self.class.name}.#{__method__}"
           end
@@ -74,12 +59,12 @@ module Fusuma
 
         # vector plugins
         # @example
-        #  [Vectors::RotateVector, Vectors::PinchVector,
-        #   Vectors::SwipeVector]
+        #  [Detectors::RotateDetector, Detectors::PinchDetector,
+        #   Detectors::SwipeDetector]
         # @return [Array]
         def plugins
           # NOTE: select vectors only defined in config.yml
-          Vector.plugins.select do |klass|
+          Detector.plugins.select do |klass|
             index = Config::Index.new(klass.type)
             Config.search(index)
           end

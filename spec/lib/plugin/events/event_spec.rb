@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require './lib/fusuma/plugin/formats/event_format.rb'
+require './lib/fusuma/plugin/events/event.rb'
 
 module Fusuma
   module Plugin
-    module Formats
-      RSpec.describe Format do
+    module Events
+      RSpec.describe Event do
         let(:event) { Event.new(args) }
         let(:args) { { tag: 'text', record: 'dummy_text' } }
 

@@ -16,7 +16,7 @@ module Fusuma
 
         describe '#event' do
           subject { input.event }
-          it { is_expected.to be_a Formats::Event }
+          it { is_expected.to be_a Events::Event }
 
           it { expect(input.tag).to eq 'input' }
         end
@@ -46,7 +46,7 @@ module Fusuma
 
         describe '#run' do
           subject { dummy_input.run { |e| return e } }
-          it { is_expected.to be_a Formats::Event }
+          it { is_expected.to be_a Events::Event }
         end
 
         describe '#config_params' do

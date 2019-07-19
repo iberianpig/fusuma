@@ -4,7 +4,6 @@ require_relative './fusuma/version'
 require_relative './fusuma/multi_logger'
 require_relative './fusuma/config.rb'
 require_relative './fusuma/device.rb'
-require_relative './fusuma/event_buffer'
 require_relative './fusuma/plugin/manager.rb'
 
 # this is top level module
@@ -30,7 +29,9 @@ module Fusuma
         MultiLogger.instance.debug_mode = option[:verbose]
 
         load_custom_config(option[:config_path])
-        require_plugins
+
+        Plugin::Manager.require_plugins_from_relative
+        Plugin::Manager.require_plugins_from_config
 
         print_version(then_exit: option[:version])
         print_enabled_plugins
@@ -38,17 +39,6 @@ module Fusuma
         print_device_list if option[:list]
         Device.given_device = option[:device]
         Process.daemon if option[:daemon]
-      end
-
-      def require_plugins
-        require_relative './fusuma/plugin/base.rb'
-        require_relative './fusuma/plugin/formats/format.rb'
-        require_relative './fusuma/plugin/inputs/input.rb'
-        require_relative './fusuma/plugin/filters/filter.rb'
-        require_relative './fusuma/plugin/parsers/parser.rb'
-        require_relative './fusuma/plugin/vectors/vector.rb'
-        require_relative './fusuma/plugin/executors/executor.rb'
-        Plugin::Manager.require_plugins_from_config
       end
 
       # TODO: print after reading plugins
@@ -94,7 +84,8 @@ module Fusuma
       @inputs = Plugin::Inputs::Input.plugins.map(&:new)
       @filters = Plugin::Filters::Filter.plugins.map(&:new)
       @parsers = Plugin::Parsers::Parser.plugins.map(&:new)
-      @event_buffer = EventBuffer.new
+      @detectors = Plugin::Detectors::Detector.plugins.map(&:new)
+      @buffers = Plugin::Buffers::Buffer.plugins.map(&:new)
       @executors = Plugin::Executors::Executor.plugins.map(&:new)
     end
 
@@ -102,12 +93,10 @@ module Fusuma
       # TODO: run with multi thread
       @inputs.first.run do |event|
         filtered = filter(event)
-
-        gesture = parse(filtered)
-
-        vector = buffer(gesture)
-
-        execute(vector)
+        parsed = parse(filtered)
+        buffered = buffer(parsed)
+        detected = detect(buffered)
+        execute(detected)
       end
     end
 
@@ -122,17 +111,22 @@ module Fusuma
     def buffer(event)
       return unless event
 
-      @event_buffer << event
-      @event_buffer.generate_vector
+      @buffers.reduce(event) { |e, b| b.buffer(e) if e }
     end
 
-    def execute(vector)
-      return unless vector
+    # @param buffer [Array<Buffer>]
+    # @return Event
+    def detect(buffers)
+      @detectors.reduce(buffers) { |b, d| d.detect(b) }
+    end
+
+    def execute(event)
+      return unless event
 
       executor = @executors.find do |e|
-        e.executable?(vector)
+        e.executable?(event)
       end
-      executor&.execute(vector)
+      executor&.execute(event)
     end
   end
 end

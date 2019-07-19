@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
+require_relative './text_record.rb'
+
 module Fusuma
   module Plugin
-    module Formats
+    module Events
       module Records
-        # Gesture Record Format
+        # Gesture Record
         class GestureRecord < Record
           # define gesture format
           attr_reader :status, :gesture, :finger, :direction

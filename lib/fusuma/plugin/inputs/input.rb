@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../base.rb'
-require_relative '../formats/event_format.rb'
+require_relative '../events/event.rb'
 
 module Fusuma
   module Plugin
@@ -14,7 +14,7 @@ module Fusuma
         end
 
         def event(record: 'dummy input')
-          Formats::Event.new(tag: tag, record: record).tap do |e|
+          Events::Event.new(tag: tag, record: record).tap do |e|
             MultiLogger.debug(input_event: e)
           end
         end

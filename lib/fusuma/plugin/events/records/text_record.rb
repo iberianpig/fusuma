@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
+require_relative './record.rb'
+
 module Fusuma
   module Plugin
-    module Formats
+    module Events
       module Records
-        # Default Record Format
+        # Default Record
         class TextRecord < Record
           # @param text [String]
           def initialize(text)

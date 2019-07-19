@@ -2,28 +2,27 @@
 
 require 'spec_helper'
 
+require './lib/fusuma/plugin/detectors/detector.rb'
 require './lib/fusuma/config.rb'
-require './lib/fusuma/plugin/executors/executor.rb'
-require_relative './dummy_vector.rb'
 
 module Fusuma
   module Plugin
-    module Executors
-      RSpec.describe Executor do
-        let(:executor) { described_class.new }
+    module Detectors
+      RSpec.describe Detector do
+        let(:detector) { described_class.new }
 
         describe '#execute' do
-          subject { executor.execute('dummy') }
+          subject { detector.execute('dummy') }
           it { expect { subject }.to raise_error(NotImplementedError) }
         end
 
         describe '#executable?' do
-          subject { executor.executable?('dummy') }
+          subject { detector.executable?('dummy') }
           it { expect { subject }.to raise_error(NotImplementedError) }
         end
       end
 
-      class DummyExecutor < Executor
+      class DummyDetector < Detector
         def execute(vector)
           puts vector.direction
         end
@@ -33,15 +32,15 @@ module Fusuma
         end
       end
 
-      RSpec.describe DummyExecutor do
-        let(:dummy_executor) { described_class.new }
+      RSpec.describe DummyDetector do
+        let(:dummy_detector) { described_class.new }
         let(:vector) { Vectors::DummyVector.new('dummy_finger', 'dummy_direction') }
 
         around do |example|
           ConfigHelper.load_config_yml = <<~CONFIG
             plugin:
-             executors:
-               dummy_executor:
+             detectors:
+               dummy_detector:
                  dummy: dummy
           CONFIG
 
@@ -51,17 +50,17 @@ module Fusuma
         end
 
         describe '#execute' do
-          subject { dummy_executor.execute(vector) }
+          subject { dummy_detector.execute(vector) }
           it { expect { subject }.to output("dummy_direction\n").to_stdout }
         end
 
         describe '#executable?' do
-          subject { dummy_executor.executable?(vector) }
+          subject { dummy_detector.executable?(vector) }
           it { is_expected.to be_truthy }
         end
 
         describe '#config_params' do
-          subject { dummy_executor.config_params }
+          subject { dummy_detector.config_params }
           it { is_expected.to eq(dummy: 'dummy') }
         end
       end
