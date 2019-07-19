@@ -24,11 +24,6 @@ module Fusuma
             it { expect(event.record).to be_a Records::Record }
           end
         end
-
-        describe '#type' do
-          subject { event.type }
-          it { is_expected.to eq 'event' }
-        end
       end
     end
   end
