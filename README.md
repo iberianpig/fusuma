@@ -133,7 +133,7 @@ swipe:
       command: 'xdotool key super'
   4:
     up:
-      command: 'xdptool key super+m'
+      command: 'xdotool key super+m'
     down:
       command: 'xdotool key super+m'
 pinch:
