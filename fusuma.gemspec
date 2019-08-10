@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
   spec.metadata['yard.run'] = 'yri' # use "yard" to build full HTML docs.
 
+  spec.required_ruby_version = '>= 2.3' # https://packages.ubuntu.com/search?keywords=ruby&searchon=names&exact=1&suite=all&section=main
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'github_changelog_generator', '~> 1.14'
   spec.add_development_dependency 'pry-byebug', '~> 3.4'

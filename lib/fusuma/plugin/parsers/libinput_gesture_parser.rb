@@ -30,6 +30,7 @@ module Fusuma
         def parse_libinput(line)
           _device, event_name, _time, other = line.strip.split(nil, 4)
           finger, other = other.split(nil, 2)
+
           direction = parse_direction(other)
           [*detect_gesture(event_name), finger, direction]
         end

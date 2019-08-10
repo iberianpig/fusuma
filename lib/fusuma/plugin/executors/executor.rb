@@ -9,16 +9,16 @@ module Fusuma
       # Inherite this base
       class Executor < Base
         # check executable
-        # @param _vector [Vector]
+        # @param _event [Event]
         # @return [TrueClass, FalseClass]
-        def executable?(_vector)
+        def executable?(_event)
           raise NotImplementedError, "override #{self.class.name}##{__method__}"
         end
 
         # execute somthing
-        # @param _vector [Vector]
+        # @param _event [Event]
         # @return [nil]
-        def execute(_vector)
+        def execute(_event)
           raise NotImplementedError, "override #{self.class.name}##{__method__}"
         end
       end

@@ -84,8 +84,8 @@ module Fusuma
       @inputs = Plugin::Inputs::Input.plugins.map(&:new)
       @filters = Plugin::Filters::Filter.plugins.map(&:new)
       @parsers = Plugin::Parsers::Parser.plugins.map(&:new)
-      @detectors = Plugin::Detectors::Detector.plugins.map(&:new)
       @buffers = Plugin::Buffers::Buffer.plugins.map(&:new)
+      @detectors = Plugin::Detectors::Detector.plugins.map(&:new)
       @executors = Plugin::Executors::Executor.plugins.map(&:new)
     end
 
@@ -109,15 +109,20 @@ module Fusuma
     end
 
     def buffer(event)
-      return unless event
-
-      @buffers.reduce(event) { |e, b| b.buffer(e) if e }
+      @buffers.each { |b| b.buffer(event) }
     end
 
-    # @param buffer [Array<Buffer>]
-    # @return Event
+    # @param buffers [Array<Buffer>]
+    # @return [Event] if event is detected
+    # @return [NilClass] if event is NOT detected
     def detect(buffers)
-      @detectors.reduce(buffers) { |b, d| d.detect(b) }
+      @detectors.sort_by(&:last_time).reverse.find do |d|
+        d.detect(buffers)&.tap do |event|
+          # clear buffer
+          buffers.each(&:clear)
+          return event
+        end
+      end
     end
 
     def execute(event)

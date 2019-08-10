@@ -2,39 +2,20 @@
 
 require 'spec_helper'
 
+require './lib/fusuma/plugin/events/event.rb'
 require './lib/fusuma/plugin/detectors/detector.rb'
 require './lib/fusuma/config.rb'
+require_relative '../buffers/dummy_buffer.rb'
+require_relative './dummy_detector.rb'
 
 module Fusuma
   module Plugin
     module Detectors
-      RSpec.describe Detector do
-        let(:detector) { described_class.new }
-
-        describe '#execute' do
-          subject { detector.execute('dummy') }
-          it { expect { subject }.to raise_error(NotImplementedError) }
-        end
-
-        describe '#executable?' do
-          subject { detector.executable?('dummy') }
-          it { expect { subject }.to raise_error(NotImplementedError) }
-        end
-      end
-
-      class DummyDetector < Detector
-        def execute(vector)
-          puts vector.direction
-        end
-
-        def executable?(vector)
-          vector.to_s
-        end
-      end
-
       RSpec.describe DummyDetector do
-        let(:dummy_detector) { described_class.new }
-        let(:vector) { Vectors::DummyVector.new('dummy_finger', 'dummy_direction') }
+        before do
+          @detector = DummyDetector.new
+          @buffer = Buffers::DummyBuffer.new
+        end
 
         around do |example|
           ConfigHelper.load_config_yml = <<~CONFIG
@@ -49,19 +30,12 @@ module Fusuma
           Config.custom_path = nil
         end
 
-        describe '#execute' do
-          subject { dummy_detector.execute(vector) }
-          it { expect { subject }.to output("dummy_direction\n").to_stdout }
-        end
-
-        describe '#executable?' do
-          subject { dummy_detector.executable?(vector) }
-          it { is_expected.to be_truthy }
+        describe '#detect' do
+          it { expect(@detector.detect([@buffer])).to be_a(Events::Event) }
         end
 
         describe '#config_params' do
-          subject { dummy_detector.config_params }
-          it { is_expected.to eq(dummy: 'dummy') }
+          it { expect(@detector.config_params).to eq(dummy: 'dummy') }
         end
       end
     end

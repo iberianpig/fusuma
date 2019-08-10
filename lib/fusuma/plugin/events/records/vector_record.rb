@@ -8,15 +8,16 @@ module Fusuma
         # have index
         class VectorRecord < Record
           # define gesture format
-          attr_reader :gesture, :finger, :direction
+          attr_reader :gesture, :finger, :direction, :quantity
 
           # @param gesture [String]
           # @param finger [String]
           # @param quantity [String]
-          def initialize(gesture:, finger:, direction:)
+          def initialize(gesture:, finger:, direction:, quantity:)
             @gesture = gesture
-            @finger  = finger
+            @finger  = finger.to_i
             @direction = direction
+            @quantity = quantity
           end
 
           def type

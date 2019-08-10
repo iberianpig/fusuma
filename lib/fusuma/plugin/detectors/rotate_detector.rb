@@ -1,79 +1,87 @@
 # frozen_string_literal: true
 
+require_relative './detector.rb'
+
 module Fusuma
   module Plugin
     module Detectors
-      # vector data
       class RotateDetector < Detector
-        GESTURE = 'pinch'
+        BUFFER_TYPE = 'gesture'
+        GESTURE_RECORD_TYPE = 'pinch'
 
+        FINGERS = [2, 3, 4].freeze
         BASE_THERESHOLD = 0.5
         BASE_INTERVAL   = 0.1
 
-        # def initialize(finger, angle = 0)
-        #   @finger = finger.to_i
-        #   @direction = Direction.new(angle: angle.to_f).to_s
-        #   @quantity = Quantity.new(angle: angle.to_f).to_f
-        # end
-        # attr_reader :finger, :direction, :quantity
+        # @param buffers [Array<Buffer>]
+        # @return [Event] if event is detected
+        # @return [NilClass] if event is NOT detected
+        def detect(buffers)
+          buffer = buffers.find { |b| b.type == BUFFER_TYPE }
+                          .select_by_events { |e| e.record.gesture == GESTURE_RECORD_TYPE }
 
-        def enough?
-          enough_angle? && enough_interval?
+          return if buffer.empty?
+
+          angle = buffer.avg_attrs(:rotate)
+
+          finger = buffer.finger
+          direction = Direction.new(angle: angle).to_s
+          quantity = Quantity.new(angle: angle).to_f
+
+          vector_record = Events::Records::VectorRecord.new(gesture: type,
+                                                            finger: finger,
+                                                            direction: direction,
+                                                            quantity: quantity)
+
+          return unless enough?(vector_record: vector_record)
+
+          create_event(record: vector_record)
         end
 
         private
 
-        def enough_angle?
-          quantity > threshold
+        def enough?(vector_record:)
+          enough_angle?(vector_record: vector_record) &&
+            enough_interval?(vector_record: vector_record)
         end
 
-        def enough_interval?
+        def enough_angle?(vector_record:)
+          MultiLogger.info(type: type,
+                           quantity: vector_record.quantity,
+                           quantity_threshold: threshold(index: vector_record.index))
+
+          vector_record.quantity > threshold(index: vector_record.index)
+        end
+
+        def enough_interval?(vector_record:)
           return true if first_time?
-          return true if (Time.now - self.class.last_time) > interval_time
+          return true if (Time.now - @last_time) > interval_time(index: vector_record.index)
 
           false
         end
 
         def first_time?
-          !self.class.last_time
+          !@last_time
         end
 
-        def threshold
+        def threshold(index:)
           @threshold ||= begin
                            keys_specific = Config::Index.new [*index.keys, 'threshold']
-                           keys_global   = Config::Index.new ['threshold', self.class.type]
+                           keys_global   = Config::Index.new ['threshold', type]
                            config_value  = Config.search(keys_specific) ||
                                            Config.search(keys_global) || 1
                            BASE_THERESHOLD * config_value
                          end
         end
 
-        def interval_time
+        def interval_time(index:)
           @interval_time ||= begin
                                keys_specific = Config::Index.new [*index.keys, 'interval']
-                               keys_global = Config::Index.new ['interval', self.class.type]
+                               keys_global = Config::Index.new ['interval', type]
                                config_value = Config.search(keys_specific) ||
                                               Config.search(keys_global) || 1
                                BASE_INTERVAL * config_value
                              end
-        end
-
-        class << self
-          attr_reader :last_time
-
-          def generate(event_buffer:)
-            rotate_events = event_buffer.select { |event| event.record.gesture == GESTURE }
-            return if rotate_events.empty?
-
-            return if Generator.prev_vector && Generator.prev_vector != self
-
-            angle = rotate_events.avg_attrs(:rotate)
-            new(rotate_events.finger, angle).tap do |v|
-              return nil unless v.enough?
-
-              Generator.prev_vector = self
-            end
-          end
         end
 
         # direction of vector

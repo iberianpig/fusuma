@@ -35,10 +35,10 @@ module Fusuma
       class << self
         # @example
         #  Manager.plugins
-        #  => {"Base"=>[Vectors::Vector],
-        #      "Vectors::Vector"=>[Vectors::RotateVector,
-        #                                      Vectors::PinchVector,
-        #                                      Vectors::SwipeVector]}
+        #  => {"Base"=>[Detectors::Detector],
+        #      "Detectors::Detector"=>[Detectors::RotateDetector,
+        #                              Detectors::PinchDetector,
+        #                              Detectors::SwipeDetector]}
 
         # @param plugin_class [Class]
         # return [Hash, false]
@@ -57,14 +57,14 @@ module Fusuma
         end
 
         def require_plugins_from_relative
-          require_relative './fusuma/plugin/base.rb'
-          require_relative './fusuma/plugin/events/event.rb'
-          require_relative './fusuma/plugin/inputs/input.rb'
-          require_relative './fusuma/plugin/filters/filter.rb'
-          require_relative './fusuma/plugin/parsers/parser.rb'
-          require_relative './fusuma/plugin/buffers/buffer.rb'
-          require_relative './fusuma/plugin/detectors/detector.rb'
-          require_relative './fusuma/plugin/executors/executor.rb'
+          require_relative './base.rb'
+          require_relative './events/event.rb'
+          require_relative './inputs/input.rb'
+          require_relative './filters/filter.rb'
+          require_relative './parsers/parser.rb'
+          require_relative './buffers/buffer.rb'
+          require_relative './detectors/detector.rb'
+          require_relative './executors/executor.rb'
         end
 
         def require_plugins_from_config
@@ -85,7 +85,7 @@ module Fusuma
         end
 
         # @param plugin_class [Class]
-        # @return Boolean
+        # @return [Boolean]
         def exist?(plugin_class:, plugin_path:)
           return false if load_paths.include?(plugin_path)
 

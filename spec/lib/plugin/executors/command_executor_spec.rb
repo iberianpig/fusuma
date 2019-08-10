@@ -2,19 +2,25 @@
 
 require 'spec_helper'
 require './lib/fusuma/plugin/executors/command_executor.rb'
-require_relative './dummy_vector.rb'
+require './lib/fusuma/plugin/events/event.rb'
 
 module Fusuma
   module Plugin
     module Executors
       RSpec.describe CommandExecutor do
-        let(:command_executor) { described_class.new }
-        let(:vector) { Vectors::DummyVector.new('dummy_finger', 'dummy_direction') }
+        before do
+          record = Events::Records::VectorRecord.new(gesture: 'dummy',
+                                                     finger: 1,
+                                                     direction: 'dummy_direction',
+                                                     quantity: 0)
+          @event = Events::Event.new(tag: 'dummy_detector', record: record)
+          @executor = CommandExecutor.new
+        end
 
         around do |example|
           ConfigHelper.load_config_yml = <<~CONFIG
             dummy:
-              dummy_finger:
+              1:
                 dummy_direction:
                   command: 'echo dummy'
           CONFIG
@@ -25,31 +31,27 @@ module Fusuma
         end
 
         describe '#execute' do
-          subject { command_executor.execute(vector) }
-
           it 'fork' do
             allow(Process).to receive(:daemon).with(true)
             allow(Process).to receive(:detach).with(anything)
-            expect(command_executor).to receive(:fork).and_yield do |block_context|
+            expect(@executor).to receive(:fork).and_yield do |block_context|
               expect(block_context).to receive(:exec).with(anything)
             end
 
-            subject
+            @executor.execute(@event)
           end
         end
 
         describe '#executable?' do
-          subject { command_executor.executable?(vector) }
-
-          context 'vector is matched with config file' do
-            it { is_expected.to be_truthy }
+          context 'detector is matched with config file' do
+            it { expect(@executor.executable?(@event)).to be_truthy }
           end
 
-          context 'vector is matched with config file' do
-            let(:vector) do
-              Vectors::DummyVector.new('invalid_finger', 'invalid_direction')
+          context 'detector is NOT matched with config file' do
+            before do
+              @event.tag = 'invalid'
             end
-            it { is_expected.to be_falsey }
+            it { expect(@executor.executable?(@event)).to be_falsey }
           end
         end
       end

@@ -1,52 +1,38 @@
 # frozen_string_literal: true
 
+require_relative './buffer.rb'
+
 module Fusuma
   module Plugin
     module Buffers
       # manage events and generate command
-      class EventBuffer < Buffer
-        def initialize(*args)
-          @events = Array.new(*args)
-        end
-        attr_reader :events
-
-        # @return [Vector, nil]
-        def generate_vector
-          return unless enough_events?
-
-          Plugin::Vectors::Generator.new(event_buffer: self).generate.tap do |vector|
-            return nil if vector.nil?
-
-            @events.clear
-            vector.class.touch_last_time
-          end
-        end
+      class GestureBuffer < Buffer
+        DEFAULT_SOURCE = 'libinput_gesture_parser'
 
         # @param event [Event]
-        def push(event)
+        def buffer(event)
           # TODO: buffering events into buffer plugins
           # - gesture event buffer
           # - window event buffer
           # - other event buffer
-          return unless event.record.type == :gesture
+          return if event&.tag != source
+          return if event.record.type != :gesture
 
           @events.push(event)
-          reset unless updating?
+          clear unless updating?
         end
-        alias << push
 
         # @param attr [Symbol]
         # @return [Float]
         def sum_attrs(attr)
-          @events.map do |gesture_event|
-            gesture_event.record.direction[attr]
-          end.compact.inject(:+)
+          @events.map { |gesture_event| gesture_event.record.direction[attr].to_f }
+                 .inject(:+)
         end
 
         # @param attr [Symbol]
         # @return [Float]
         def avg_attrs(attr)
-          sum_attrs(attr) / @events.length
+          sum_attrs(attr).to_f / @events.length
         end
 
         # return [Integer]
@@ -66,28 +52,17 @@ module Fusuma
           @events.empty?
         end
 
-        def select
+        def select_by_events
           return enum_for(:select) unless block_given?
 
-          events = @events.select do |event|
-            yield event
-          end
+          events = @events.select { |event| yield event }
           self.class.new events
         end
 
         private
 
-        def reset
-          Plugin::Vectors::Generator.prev_vector = nil
-          @events.clear
-        end
-
         def updating?
           return true unless @events.last.record.status =~ /begin|end/
-        end
-
-        def enough_events?
-          !@events.empty?
         end
       end
     end

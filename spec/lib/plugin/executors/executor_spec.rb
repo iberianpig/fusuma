@@ -4,38 +4,48 @@ require 'spec_helper'
 
 require './lib/fusuma/config.rb'
 require './lib/fusuma/plugin/executors/executor.rb'
-require_relative './dummy_vector.rb'
+require './lib/fusuma/plugin/events/event.rb'
 
 module Fusuma
   module Plugin
     module Executors
       RSpec.describe Executor do
-        let(:executor) { described_class.new }
+        before { @executor = Executor.new }
 
         describe '#execute' do
-          subject { executor.execute('dummy') }
-          it { expect { subject }.to raise_error(NotImplementedError) }
+          it do
+            expect { @executor.execute('dummy') }.to raise_error(NotImplementedError)
+          end
         end
 
         describe '#executable?' do
-          subject { executor.executable?('dummy') }
-          it { expect { subject }.to raise_error(NotImplementedError) }
+          it do
+            expect { @executor.executable?('dummy') }.to raise_error(NotImplementedError)
+          end
         end
       end
 
       class DummyExecutor < Executor
-        def execute(vector)
-          puts vector.direction
+        def execute(event)
+          puts event.record.direction if executable?(event)
         end
 
-        def executable?(vector)
-          vector.to_s
+        def executable?(event)
+          return unless event.tag == 'dummy'
+
+          event.record.direction
         end
       end
 
       RSpec.describe DummyExecutor do
-        let(:dummy_executor) { described_class.new }
-        let(:vector) { Vectors::DummyVector.new('dummy_finger', 'dummy_direction') }
+        before do
+          record = Events::Records::VectorRecord.new(gesture: 'dummy',
+                                                     finger: 1,
+                                                     direction: 'dummy_direction',
+                                                     quantity: 0)
+          @event = Events::Event.new(tag: 'dummy', record: record)
+          @executor = DummyExecutor.new
+        end
 
         around do |example|
           ConfigHelper.load_config_yml = <<~CONFIG
@@ -51,18 +61,22 @@ module Fusuma
         end
 
         describe '#execute' do
-          subject { dummy_executor.execute(vector) }
-          it { expect { subject }.to output("dummy_direction\n").to_stdout }
+          it { expect { @executor.execute(@event) }.to output("dummy_direction\n").to_stdout }
+
+          context 'without executable' do
+            before do
+              allow(@executor).to receive(:executable?).and_return false
+            end
+            it { expect { @executor.execute(@event) }.not_to output("dummy_direction\n").to_stdout }
+          end
         end
 
         describe '#executable?' do
-          subject { dummy_executor.executable?(vector) }
-          it { is_expected.to be_truthy }
+          it { expect(@executor.executable?(@event)).to be_truthy }
         end
 
         describe '#config_params' do
-          subject { dummy_executor.config_params }
-          it { is_expected.to eq(dummy: 'dummy') }
+          it { expect(@executor.config_params).to eq(dummy: 'dummy') }
         end
       end
     end

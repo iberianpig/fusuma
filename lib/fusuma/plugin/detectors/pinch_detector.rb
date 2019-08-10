@@ -1,88 +1,89 @@
 # frozen_string_literal: true
 
+require_relative './detector.rb'
+
 module Fusuma
   module Plugin
     module Detectors
-      # vector data
       class PinchDetector < Detector
-        GESTURE = 'pinch'
+        BUFFER_TYPE = 'gesture'
+        GESTURE_RECORD_TYPE = 'pinch'
 
+        FINGERS = [2, 3, 4].freeze
         BASE_THERESHOLD = 0.1
         BASE_INTERVAL   = 0.1
 
-        # def initialize(finger, diameter = 0)
-        #   @finger = finger.to_i
-        #   @direction = Direction.new(diameter: diameter.to_f).to_s
-        #   @quantity = Quantity.new(diameter: diameter.to_f).to_f
-        # end
-        #
-        # attr_reader :finger, :direction, :quantity
+        # @param buffers [Array<Buffer>]
+        # @return [Event] if event is detected
+        # @return [NilClass] if event is NOT detected
+        def detect(buffers)
+          buffer = buffers.find { |b| b.type == BUFFER_TYPE }
 
-        def enough?
-          enough_diameter? && enough_interval?
+          buffer = buffer.select_by_events { |event| event.record.gesture == GESTURE_RECORD_TYPE }
+
+          return if buffer.empty?
+
+          finger = buffer.finger
+
+          avg_zoom = buffer.avg_attrs(:zoom)
+          first_zoom = buffer.events.first.record.direction.zoom
+          diameter = avg_zoom / first_zoom
+
+          direction = Direction.new(diameter: diameter).to_s
+          quantity = Quantity.new(diameter: diameter).to_f
+
+          vector_record = Events::Records::VectorRecord.new(gesture: type,
+                                                            finger: finger,
+                                                            direction: direction,
+                                                            quantity: quantity)
+
+          return unless enough?(vector_record: vector_record)
+
+          create_event(record: vector_record)
         end
 
         private
 
-        def enough_diameter?
-          quantity > threshold
+        def enough?(vector_record:)
+          enough_diameter?(vector_record: vector_record) &&
+            enough_interval?(vector_record: vector_record)
         end
 
-        def enough_interval?
+        def enough_diameter?(vector_record:)
+          MultiLogger.info(type: type, quantity: vector_record.quantity,
+                           quantity_threshold: threshold(index: vector_record.index))
+          vector_record.quantity >= threshold(index: vector_record.index)
+        end
+
+        def enough_interval?(vector_record:)
           return true if first_time?
-          return true if (Time.now - self.class.last_time) > interval_time
+          return true if (Time.now - @last_time) > interval_time(index: vector_record.index)
 
           false
         end
 
         def first_time?
-          !self.class.last_time
+          !@last_time
         end
 
-        def threshold
+        def threshold(index:)
           @threshold ||= begin
                            keys_specific = Config::Index.new [*index.keys, 'threshold']
-                           keys_global   = Config::Index.new ['threshold', self.class.type]
+                           keys_global   = Config::Index.new ['threshold', type]
                            config_value  = Config.search(keys_specific) ||
                                            Config.search(keys_global) || 1
                            BASE_THERESHOLD * config_value
                          end
         end
 
-        def interval_time
+        def interval_time(index:)
           @interval_time ||= begin
                                keys_specific = Config::Index.new [*index.keys, 'interval']
-                               keys_global = Config::Index.new ['interval', self.class.type]
+                               keys_global = Config::Index.new ['interval', type]
                                config_value = Config.search(keys_specific) ||
                                               Config.search(keys_global) || 1
                                BASE_INTERVAL * config_value
                              end
-        end
-
-        class << self
-          attr_reader :last_time
-
-          def generate(event_buffer:)
-            pinch_events = event_buffer.select { |event| event.record.gesture == GESTURE }
-            return if pinch_events.empty?
-
-            return if Generator.prev_vector && Generator.prev_vector != self
-
-            Detectors::PinchDetector.new(pinch_events.finger,
-                                         calc_diameter(pinch_events)).tap do |v|
-              return nil unless v.enough?
-
-              Generator.prev_vector = self
-            end
-          end
-
-          private
-
-          def calc_diameter(event_buffer)
-            avg_zoom = event_buffer.avg_attrs(:zoom)
-            first_zoom = event_buffer.events.first.record.direction.zoom
-            avg_zoom / first_zoom
-          end
         end
 
         # direction of vector
@@ -114,7 +115,11 @@ module Fusuma
           end
 
           def to_f
-            @diameter.to_f
+            calc.to_f
+          end
+
+          def calc
+            (1.0 - @diameter).abs
           end
         end
       end

@@ -7,8 +7,8 @@ module Fusuma
     module Executors
       # Exector plugin
       class CommandExecutor < Executor
-        def execute(vector)
-          search_command(vector).tap do |command|
+        def execute(event)
+          search_command(event).tap do |command|
             break unless command
 
             MultiLogger.info(command: command)
@@ -21,23 +21,17 @@ module Fusuma
           end
         end
 
-        def executable?(vector)
-          search_command(vector)
+        def executable?(event)
+          event.tag.match?(/_detector/) &&
+            event.record.type == :vector &&
+            search_command(event)
         end
 
-        # @param vector [Vector]
+        # @param event [Event]
         # @return [String]
-        def search_command(vector)
-          Config.search(index(vector))
-        end
-
-        # @example
-        #  index
-        #  =>[:swipe, :3, left, :command]
-        # @param vector [Vector]
-        # @return [String]
-        def index(vector)
-          Config::Index.new [*vector.index.keys, 'command']
+        def search_command(event)
+          command_index = Config::Index.new([*event.record.index.keys, :command])
+          Config.search(command_index)
         end
       end
     end

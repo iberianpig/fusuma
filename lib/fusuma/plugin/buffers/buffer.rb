@@ -1,17 +1,27 @@
 # frozen_string_literal: true
 
+require_relative '../base.rb'
+
 module Fusuma
   module Plugin
     module Buffers
       # buffer events and output
       class Buffer < Base
-        def initialize(detectors:)
-          @detectors = detectors
+        def initialize(*args)
           @events = Array.new(*args)
         end
 
+        attr_reader :events
+
+        # @return [String]
+        def type
+          self.class.name.underscore.split('/').last.gsub('_buffer', '')
+        end
+
         # @param event [Event]
-        def push(event)
+        def buffer(event)
+          return if event&.tag != source
+
           @events.push(event)
         end
 
@@ -20,9 +30,11 @@ module Fusuma
           @events.clear
         end
 
-        # @return [Event]
-        def detect
-          @detectors.reduce(@events) { |e, d| d.detect(e) }
+        # Set source for tag from config.yml.
+        # DEFAULT_SOURCE is defined in each plugins.
+        def source
+          @source ||= config_params.fetch(:source,
+                                          self.class.const_get('DEFAULT_SOURCE'))
         end
       end
     end
