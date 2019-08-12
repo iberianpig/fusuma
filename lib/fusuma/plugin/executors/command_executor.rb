@@ -22,7 +22,7 @@ module Fusuma
         end
 
         def executable?(event)
-          event.tag.match?(/_detector/) &&
+          event.tag.end_with?('_detector') &&
             event.record.type == :vector &&
             search_command(event)
         end
