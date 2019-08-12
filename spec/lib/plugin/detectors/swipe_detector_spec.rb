@@ -16,6 +16,17 @@ module Fusuma
           @buffer = Buffers::GestureBuffer.new
         end
 
+        around do |example|
+          ConfigHelper.load_config_yml = <<~CONFIG
+            threshold:
+              swipe: 1
+          CONFIG
+
+          example.run
+
+          Config.custom_path = nil
+        end
+
         describe '#detect' do
           context 'with no swipe event in buffer' do
             before do

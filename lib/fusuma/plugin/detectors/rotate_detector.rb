@@ -65,7 +65,8 @@ module Fusuma
         end
 
         def threshold(index:)
-          @threshold ||= begin
+          @threshold ||= {}
+          @threshold[index.cache_key] ||= begin
                            keys_specific = Config::Index.new [*index.keys, 'threshold']
                            keys_global   = Config::Index.new ['threshold', type]
                            config_value  = Config.search(keys_specific) ||
@@ -75,7 +76,8 @@ module Fusuma
         end
 
         def interval_time(index:)
-          @interval_time ||= begin
+          @interval_time ||= {}
+          @interval_time[index.cache_key] ||= begin
                                keys_specific = Config::Index.new [*index.keys, 'interval']
                                keys_global = Config::Index.new ['interval', type]
                                config_value = Config.search(keys_specific) ||
