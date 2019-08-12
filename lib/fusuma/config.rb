@@ -25,7 +25,7 @@ module Fusuma
 
     def initialize
       @custom_path = nil
-      @cache  = nil
+      @cache = nil
       @keymap = nil
       reload
     end
@@ -131,8 +131,8 @@ module Fusuma
 
     def gesture_index(vector)
       gesture_type = vector.class::TYPE
-      finger      = vector.finger
-      direction   = vector.direction
+      finger = vector.finger
+      direction = vector.direction
       [gesture_type, finger, direction]
     end
 

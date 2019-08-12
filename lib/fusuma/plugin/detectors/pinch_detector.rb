@@ -79,7 +79,7 @@ module Fusuma
 
         def interval_time(index:)
           @interval_time ||= {}
-          @interval_time[index.cache_key]  ||= begin
+          @interval_time[index.cache_key] ||= begin
                                keys_specific = Config::Index.new [*index.keys, 'interval']
                                keys_global = Config::Index.new ['interval', type]
                                config_value = Config.search(keys_specific) ||
