@@ -14,7 +14,7 @@ module Fusuma
                                 finger: 3,
                                 direction: direction)
           end
-          let(:direction) { GestureRecord::Direction.new(0, 0, 1, 0) }
+          let(:direction) { GestureRecord::Delta.new(0, 0, 1, 0) }
 
           describe '#type' do
             subject { record.type }

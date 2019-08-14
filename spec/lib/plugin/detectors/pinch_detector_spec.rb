@@ -38,8 +38,8 @@ module Fusuma
           context 'with not enough pinch events in buffer' do
             before do
               directions = [
-                Events::Records::GestureRecord::Direction.new(0, 0, 1, 0),
-                Events::Records::GestureRecord::Direction.new(0, 0, 1.1, 0)
+                Events::Records::GestureRecord::Delta.new(0, 0, 1, 0),
+                Events::Records::GestureRecord::Delta.new(0, 0, 1.1, 0)
               ]
               events = create_events(directions: directions)
 
@@ -51,8 +51,8 @@ module Fusuma
           context 'with enough pinch in event' do
             before do
               directions = [
-                Events::Records::GestureRecord::Direction.new(0, 0, 1.0, 0),
-                Events::Records::GestureRecord::Direction.new(0, 0, 1.2, 0)
+                Events::Records::GestureRecord::Delta.new(0, 0, 1.0, 0),
+                Events::Records::GestureRecord::Delta.new(0, 0, 1.2, 0)
               ]
               events = create_events(directions: directions)
 
@@ -67,8 +67,8 @@ module Fusuma
           context 'with enough pinch out event' do
             before do
               directions = [
-                Events::Records::GestureRecord::Direction.new(0, 0, 1.0, 0),
-                Events::Records::GestureRecord::Direction.new(0, 0, 0.7, 0)
+                Events::Records::GestureRecord::Delta.new(0, 0, 1.0, 0),
+                Events::Records::GestureRecord::Delta.new(0, 0, 0.7, 0)
               ]
               events = create_events(directions: directions)
 

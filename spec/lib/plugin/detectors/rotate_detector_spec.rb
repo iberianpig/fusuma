@@ -38,8 +38,8 @@ module Fusuma
           context 'with not enough rotate events in buffer' do
             before do
               directions = [
-                Events::Records::GestureRecord::Direction.new(0, 0, 0, 0.4),
-                Events::Records::GestureRecord::Direction.new(0, 0, 0, 0.5)
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0.4),
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0.5)
               ]
               events = create_events(directions: directions)
 
@@ -51,8 +51,8 @@ module Fusuma
           context 'with enough rotate in event' do
             before do
               directions = [
-                Events::Records::GestureRecord::Direction.new(0, 0, 0, 0.5),
-                Events::Records::GestureRecord::Direction.new(0, 0, 0, 0.6)
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0.5),
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0.6)
               ]
               events = create_events(directions: directions)
 
@@ -69,8 +69,8 @@ module Fusuma
           context 'with enough rotate out event' do
             before do
               directions = [
-                Events::Records::GestureRecord::Direction.new(0, 0, 0, -0.5),
-                Events::Records::GestureRecord::Direction.new(0, 0, 0, -0.6)
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, -0.5),
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, -0.6)
               ]
               events = create_events(directions: directions)
 

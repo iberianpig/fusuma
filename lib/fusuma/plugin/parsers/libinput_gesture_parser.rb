@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 require_relative '../events/records/record.rb'
+require_relative '../events/records/gesture_record.rb'
 
 module Fusuma
   module Plugin
     module Parsers
-      # parse libinput and generate vector
+      # parse libinput and generate gesture record
       class LibinputGestureParser < Parser
         DEFAULT_SOURCE = 'libinput_command_input'
 
@@ -44,8 +45,8 @@ module Fusuma
           return if line.nil?
 
           move_x, move_y, _, _, _, zoom, _, rotate = line.tr('/|(|)', ' ').split
-          Events::Records::GestureRecord::Direction.new(move_x.to_f, move_y.to_f,
-                                                        zoom.to_f, rotate.to_f)
+          Events::Records::GestureRecord::Delta.new(move_x.to_f, move_y.to_f,
+                                                    zoom.to_f, rotate.to_f)
         end
       end
     end

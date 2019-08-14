@@ -4,7 +4,7 @@ require 'spec_helper'
 
 require './lib/fusuma/plugin/detectors/swipe_detector.rb'
 require './lib/fusuma/plugin/buffers/gesture_buffer.rb'
-require './lib/fusuma/plugin/events/event.rb'
+require './lib/fusuma/plugin/events/records/gesture_record.rb'
 require './lib/fusuma/config.rb'
 
 module Fusuma
@@ -38,8 +38,8 @@ module Fusuma
           context 'with not enough swipe events in buffer' do
             before do
               directions = [
-                Events::Records::GestureRecord::Direction.new(0,  0, 0, 0),
-                Events::Records::GestureRecord::Direction.new(20, 0, 0, 0)
+                Events::Records::GestureRecord::Delta.new(0,  0, 0, 0),
+                Events::Records::GestureRecord::Delta.new(20, 0, 0, 0)
               ]
               events = create_events(directions: directions)
 
@@ -51,8 +51,8 @@ module Fusuma
           context 'with enough swipe event' do
             before do
               directions = [
-                Events::Records::GestureRecord::Direction.new(0,  0, 0, 0),
-                Events::Records::GestureRecord::Direction.new(21, 0, 0)
+                Events::Records::GestureRecord::Delta.new(0,  0, 0, 0),
+                Events::Records::GestureRecord::Delta.new(21, 0, 0)
               ]
               events = create_events(directions: directions)
 

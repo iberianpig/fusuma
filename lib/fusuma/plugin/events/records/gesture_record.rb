@@ -11,7 +11,7 @@ module Fusuma
           # define gesture format
           attr_reader :status, :gesture, :finger, :direction
 
-          Direction = Struct.new(:move_x, :move_y, :zoom, :rotate)
+          Delta = Struct.new(:move_x, :move_y, :zoom, :rotate)
 
           # @param status [String]
           def initialize(status:, gesture:, finger:, direction:)
