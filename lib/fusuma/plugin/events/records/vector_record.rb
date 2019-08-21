@@ -10,14 +10,17 @@ module Fusuma
           # define gesture format
           attr_reader :gesture, :finger, :direction, :quantity
 
-          # @param gesture [String]
-          # @param finger [String]
-          # @param quantity [String]
-          def initialize(gesture:, finger:, direction:, quantity:)
+          # @param [String] gesture
+          # @param [String] finger
+          # @param [String] direction
+          # @param [Float] quantity
+          # @param [Config::Index] index
+          def initialize(gesture:, finger:, direction:, quantity: nil, index: nil)
             @gesture = gesture
             @finger  = finger.to_i
             @direction = direction
             @quantity = quantity
+            @index = index
           end
 
           def type
