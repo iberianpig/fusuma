@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative './multi_logger.rb'
+require_relative './config/index.rb'
 require 'singleton'
 require 'yaml'
 
@@ -61,49 +62,6 @@ module Fusuma
       end
     end
 
-    # Index for searching value from config.yml
-    class Index
-      def initialize(keys)
-        @keys = case keys
-                when Array
-                  keys.map do |key|
-                    if key.is_a? Key
-                      key
-                    else
-                      Key.new(key)
-                    end
-                  end
-                else
-                  [Key.new(keys)]
-                end
-      end
-      attr_reader :keys
-
-      def cache_key
-        case @keys
-        when Array
-          @keys.map(&:symbol).join(',')
-        when Key
-          @keys.symbol
-        else
-          raise 'invalid keys'
-        end
-      end
-
-      # Keys in Index
-      class Key
-        def initialize(symbol_word, skippable: false)
-          @symbol = begin
-                      symbol_word.to_sym
-                    rescue StandardError
-                      symbol_word
-                    end
-          @skippable = skippable
-        end
-        attr_reader :symbol, :skippable
-      end
-    end
-
     private
 
     def file_path
@@ -127,13 +85,6 @@ module Fusuma
 
     def expand_default_path(filename)
       File.expand_path "../../#{filename}", __FILE__
-    end
-
-    def gesture_index(vector)
-      gesture_type = vector.class::TYPE
-      finger = vector.finger
-      direction = vector.direction
-      [gesture_type, finger, direction]
     end
 
     def cache(key)

@@ -27,22 +27,19 @@ module Fusuma
 
       class DummyExecutor < Executor
         def execute(event)
-          puts event.record.direction if executable?(event)
+          # stdout
+          puts event.record.index.keys.last.symbol if executable?(event)
         end
 
         def executable?(event)
-          return unless event.tag == 'dummy'
-
-          event.record.direction
+          event.tag == 'dummy'
         end
       end
 
       RSpec.describe DummyExecutor do
         before do
-          record = Events::Records::VectorRecord.new(gesture: 'dummy',
-                                                     finger: 1,
-                                                     direction: 'dummy_direction',
-                                                     quantity: 0)
+          index = Config::Index.new(:dummy_text)
+          record = Events::Records::IndexRecord.new(index: index)
           @event = Events::Event.new(tag: 'dummy', record: record)
           @executor = DummyExecutor.new
         end
@@ -61,13 +58,13 @@ module Fusuma
         end
 
         describe '#execute' do
-          it { expect { @executor.execute(@event) }.to output("dummy_direction\n").to_stdout }
+          it { expect { @executor.execute(@event) }.to output("dummy_text\n").to_stdout }
 
           context 'without executable' do
             before do
               allow(@executor).to receive(:executable?).and_return false
             end
-            it { expect { @executor.execute(@event) }.not_to output("dummy_direction\n").to_stdout }
+            it { expect { @executor.execute(@event) }.not_to output("dummy_text\n").to_stdout }
           end
         end
 

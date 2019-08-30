@@ -116,12 +116,16 @@ module Fusuma
     # @return [Event] if event is detected
     # @return [NilClass] if event is NOT detected
     def detect(buffers)
-      @detectors.sort_by(&:last_time).reverse.find do |d|
-        d.detect(buffers)&.tap do |event|
-          # clear buffer
-          buffers.each(&:clear)
-          return event
+      @detectors.each_with_object([]) do |detector, index_records|
+        event = detector.detect(buffers) # event
+
+        if event&.record&.mergable?
+          event.record.merge(records: index_records)
+          buffers.each(&:clear) # clear buffer
+          break(event)
         end
+
+        break nil if @detectors.last == detector
       end
     end
 

@@ -37,7 +37,7 @@ module Fusuma
 
         # return [Integer]
         def finger
-          @events.last.record.finger
+          @events.last.record.finger.to_i
         end
 
         # @example

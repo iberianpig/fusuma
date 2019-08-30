@@ -9,10 +9,8 @@ module Fusuma
     module Executors
       RSpec.describe CommandExecutor do
         before do
-          record = Events::Records::VectorRecord.new(gesture: 'dummy',
-                                                     finger: 1,
-                                                     direction: 'dummy_direction',
-                                                     quantity: 0)
+          index = Config::Index.new([:dummy, 1, :direction])
+          record = Events::Records::IndexRecord.new(index: index)
           @event = Events::Event.new(tag: 'dummy_detector', record: record)
           @executor = CommandExecutor.new
         end
@@ -21,7 +19,7 @@ module Fusuma
           ConfigHelper.load_config_yml = <<~CONFIG
             dummy:
               1:
-                dummy_direction:
+                direction:
                   command: 'echo dummy'
           CONFIG
 

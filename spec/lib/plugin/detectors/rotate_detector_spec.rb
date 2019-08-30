@@ -48,7 +48,7 @@ module Fusuma
             it { expect(@detector.detect([@buffer])).to eq nil }
           end
 
-          context 'with enough rotate in event' do
+          context 'with enough rotate IN event' do
             before do
               directions = [
                 Events::Records::GestureRecord::Delta.new(0, 0, 0, 0.5),
@@ -61,12 +61,15 @@ module Fusuma
             it {
               expect(@detector.detect([@buffer])).to be_a Events::Event
             }
-            it { expect(@detector.detect([@buffer]).record).to be_a Events::Records::VectorRecord }
+            it { expect(@detector.detect([@buffer]).record).to be_a Events::Records::IndexRecord }
             it { expect(@detector.detect([@buffer]).record.index).to be_a Config::Index }
-            it { expect(@detector.detect([@buffer]).record.direction).to eq 'clockwise' }
+            it 'should detect 3 fingers rotate-clockwise' do
+              expect(@detector.detect([@buffer]).record.index.keys.map(&:symbol))
+                .to eq([:rotate, 3, :clockwise])
+            end
           end
 
-          context 'with enough rotate out event' do
+          context 'with enough rotate OUT event' do
             before do
               directions = [
                 Events::Records::GestureRecord::Delta.new(0, 0, 0, -0.5),
@@ -76,9 +79,14 @@ module Fusuma
 
               events.each { |event| @buffer.buffer(event) }
             end
-            it { expect(@detector.detect([@buffer]).record.direction).to eq 'counterclockwise' }
+            it 'should detect 3 fingers rotate-counterclockwise' do
+              expect(@detector.detect([@buffer]).record.index.keys.map(&:symbol))
+                .to eq([:rotate, 3, :counterclockwise])
+            end
           end
         end
+
+        private
 
         def create_events(directions: [])
           record_type = RotateDetector::GESTURE_RECORD_TYPE

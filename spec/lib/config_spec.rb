@@ -33,8 +33,6 @@ module Fusuma
       }
     end
 
-    let(:vector) { @vector_class.new(@finger) }
-
     describe '.custom_path=' do
       before { Singleton.__init__(Config) }
       it 'should reload keymap file' do

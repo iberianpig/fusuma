@@ -48,7 +48,7 @@ module Fusuma
             it { expect(@detector.detect([@buffer])).to eq nil }
           end
 
-          context 'with enough swipe event' do
+          context 'with enough swipe RIGHT event' do
             before do
               directions = [
                 Events::Records::GestureRecord::Delta.new(0,  0, 0, 0),
@@ -59,10 +59,32 @@ module Fusuma
               events.each { |event| @buffer.buffer(event) }
             end
             it { expect(@detector.detect([@buffer])).to be_a Events::Event }
-            it { expect(@detector.detect([@buffer]).record).to be_a Events::Records::VectorRecord }
+            it { expect(@detector.detect([@buffer]).record).to be_a Events::Records::IndexRecord }
             it { expect(@detector.detect([@buffer]).record.index).to be_a Config::Index }
+            it 'should detect 3 fingers swipe-right' do
+              expect(@detector.detect([@buffer]).record.index.keys.map(&:symbol))
+                .to eq([:swipe, 3, :right])
+            end
+          end
+
+          context 'with enough swipe DOWN event' do
+            before do
+              directions = [
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0),
+                Events::Records::GestureRecord::Delta.new(0, 21, 0)
+              ]
+              events = create_events(directions: directions)
+
+              events.each { |event| @buffer.buffer(event) }
+            end
+            it 'should detect 3 fingers swipe-down' do
+              expect(@detector.detect([@buffer]).record.index.keys.map(&:symbol))
+                .to eq([:swipe, 3, :down])
+            end
           end
         end
+
+        private
 
         def create_events(directions: [])
           record_type = SwipeDetector::GESTURE_RECORD_TYPE

@@ -2,6 +2,7 @@
 
 require './lib/fusuma/plugin/detectors/detector.rb'
 require './lib/fusuma/plugin/buffers/buffer.rb'
+require './lib/fusuma/plugin/events/records/index_record.rb'
 
 module Fusuma
   module Plugin
@@ -13,7 +14,8 @@ module Fusuma
           buffers.each do |buffer|
             next unless buffer.type == 'dummy'
 
-            return create_event(record: 'dummy_vector')
+            record = Events::Records::IndexRecord.new(index: Config::Index.new(%w[dummy index]))
+            return create_event(record: record)
           end
         end
       end

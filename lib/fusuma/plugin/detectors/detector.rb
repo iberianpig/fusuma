@@ -5,7 +5,6 @@ require_relative '../events/event.rb'
 
 module Fusuma
   module Plugin
-    # vector class
     module Detectors
       # Inherite this base
       class Detector < Base
@@ -18,6 +17,8 @@ module Fusuma
           # create_event(record:)
         end
 
+        # @param record [Events::Records::Record]
+        # @return [Events::Event]
         def create_event(record:)
           @last_time = Time.now
           Events::Event.new(time: Time.now, tag: tag, record: record)

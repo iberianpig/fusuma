@@ -48,7 +48,7 @@ module Fusuma
             it { expect(@detector.detect([@buffer])).to eq nil }
           end
 
-          context 'with enough pinch in event' do
+          context 'with enough pinch IN event' do
             before do
               directions = [
                 Events::Records::GestureRecord::Delta.new(0, 0, 1.0, 0),
@@ -59,12 +59,16 @@ module Fusuma
               events.each { |event| @buffer.buffer(event) }
             end
             it { expect(@detector.detect([@buffer])).to be_a Events::Event }
-            it { expect(@detector.detect([@buffer]).record).to be_a Events::Records::VectorRecord }
+            it { expect(@detector.detect([@buffer]).record).to be_a Events::Records::IndexRecord }
             it { expect(@detector.detect([@buffer]).record.index).to be_a Config::Index }
-            it { expect(@detector.detect([@buffer]).record.direction).to eq 'in' }
+
+            it 'should detect 3 fingers pinch-in' do
+              expect(@detector.detect([@buffer]).record.index.keys.map(&:symbol))
+                .to eq([:pinch, 3, :in])
+            end
           end
 
-          context 'with enough pinch out event' do
+          context 'with enough pinch OUT event' do
             before do
               directions = [
                 Events::Records::GestureRecord::Delta.new(0, 0, 1.0, 0),
@@ -74,9 +78,14 @@ module Fusuma
 
               events.each { |event| @buffer.buffer(event) }
             end
-            it { expect(@detector.detect([@buffer]).record.direction).to eq 'out' }
+            it 'should detect 3 fingers pinch-out' do
+              expect(@detector.detect([@buffer]).record.index.keys.map(&:symbol))
+                .to eq([:pinch, 3, :out])
+            end
           end
         end
+
+        private
 
         def create_events(directions: [])
           record_type = PinchDetector::GESTURE_RECORD_TYPE
