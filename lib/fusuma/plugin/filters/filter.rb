@@ -32,8 +32,7 @@ module Fusuma
         # Set source for tag from config.yml.
         # DEFAULT_SOURCE is defined in each Filter plugins.
         def source
-          @source ||= config_params.fetch(:source,
-                                          self.class.const_get('DEFAULT_SOURCE'))
+          @source ||= config_params(:source) || self.class.const_get('DEFAULT_SOURCE')
         end
       end
     end

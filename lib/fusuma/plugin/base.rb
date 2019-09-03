@@ -21,9 +21,30 @@ module Fusuma
         Manager.plugins[name]
       end
 
+      # config parameter name and Type of the value of parameter
+      # @return [Hash]
+      def config_param_types
+        raise NotImplementedError, "override #{self.class.name}##{__method__}"
+      end
+
       # @return [Plugin::Base]
-      def config_params
-        Config.search(config_index) || {}
+      def config_params(key = nil)
+        params = Config.search(config_index) || {}
+
+        return params unless key
+
+        params.fetch(key, nil).tap do |val|
+          next if val.nil?
+
+          param_types = Array(config_param_types.fetch(key))
+
+          next if param_types.any? { |klass| val.is_a?(klass) }
+
+          MultiLogger.error('Please fix config.yml.')
+          MultiLogger.error(":#{config_index.keys.map(&:symbol)
+            .join(' => :')} => :#{key} should be #{param_types.join(' OR ')}.")
+          exit 1
+        end
       end
 
       def config_index

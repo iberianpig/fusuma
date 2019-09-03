@@ -7,6 +7,13 @@ module Fusuma
     module Buffers
       class DummyBuffer < Buffer
         DEFAULT_SOURCE = 'dummy'
+
+        def config_param_types
+          {
+            source: String,
+            dummy: String
+          }
+        end
       end
     end
   end

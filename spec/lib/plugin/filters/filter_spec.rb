@@ -12,6 +12,12 @@ module Fusuma
     module Filters
       class DummyFilter < Filter
         DEFAULT_SOURCE = 'dummy_input'
+
+        def config_param_types
+          {
+            source: String
+          }
+        end
       end
 
       RSpec.describe DummyFilter do

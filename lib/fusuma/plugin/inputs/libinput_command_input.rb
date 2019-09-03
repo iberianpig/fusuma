@@ -8,6 +8,14 @@ module Fusuma
     module Inputs
       # libinput commands wrapper
       class LibinputCommandInput < Input
+        def config_param_types
+          {
+            'enable-tap': [TrueClass, FalseClass],
+            'enable-dwt': [TrueClass, FalseClass],
+            'device': [String]
+          }
+        end
+
         def run
           debug_events do |line|
             yield event(record: line)
@@ -87,22 +95,20 @@ module Fusuma
         def device_option
           return unless Device.available.size == 1
 
-          "--device /dev/input/#{Device.available.first.id}"
+          "--device=/dev/input/#{Device.available.first.id}"
         end
 
         # TODO: add specs
         def libinput_options
-          config_params.map do |k, v|
-            case k
-            when :'enable-tap'
-              '--enable-tap'
-            when :device
-              "--device=#{v}"
-            when :'enable-dwt'
-              # Enable disable-while-typing
-              v ? '--enable-dwt' : '--disable-dwt'
-            end
-          end.compact
+          enable_tap = '--enable-tap' if config_params(:'enable-tap')
+          device = ("--device=#{config_params(:device)}" if config_params(:device))
+          enable_dwt = '--enable-dwt' if config_params(:'enable-dwt')
+
+          [
+            enable_tap,
+            device,
+            enable_dwt
+          ].compact
         end
 
         # which in ruby: Checking if program exists in $PATH from ruby

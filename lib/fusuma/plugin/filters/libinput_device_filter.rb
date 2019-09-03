@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative './filter.rb'
-require './lib/fusuma/device.rb'
+require_relative '../../device.rb'
 
 module Fusuma
   module Plugin
@@ -10,23 +10,22 @@ module Fusuma
       class LibinputDeviceFilter < Filter
         DEFAULT_SOURCE = 'libinput_command_input'
 
-        def keep?(record)
-          device_ids.any? { |device_id| record.to_s =~ /^\s?#{device_id}/ }
+        def config_param_types
+          {
+            source: String,
+            keep_device_ids: [Array, String]
+          }
         end
 
-        # TODO: read device names from config.yml
-        def device_names
-          @options.fetch(:device, [])
+        def keep?(record)
+          keep_device_ids.any? { |device_id| record.to_s =~ /^\s?#{device_id}/ }
         end
 
         private
 
-        def device_ids
-          @device_ids ||= Device.ids
+        def keep_device_ids
+          @keep_device_ids ||= Array(config_params(:keep_device_ids)) || Device.ids
         end
-
-        # TODO: read option[:filter][:libinput_device] from config instead of
-        # `Device.given_device=`
       end
     end
   end
