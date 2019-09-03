@@ -12,7 +12,7 @@ module Fusuma
         Singleton.__init__(Config)
         allow_any_instance_of(Runner).to receive(:run)
         allow_any_instance_of(Plugin::Inputs::LibinputCommandInput).to receive(:version)
-          .and_return("test version\n")
+          .and_return("1.8\n")
       end
 
       context 'when without option' do
@@ -56,7 +56,7 @@ module Fusuma
       context 'when run with argument "--device="test_device2"' do
         it 'should set device' do
           allow(Device).to receive(:names) { %w[test_device1 test_device2] }
-          expect(Device).to receive(:given_device=).with('test_device2')
+          expect(Device).to receive(:given_devices=).with('test_device2')
           Runner.run(device: 'test_device2')
         end
       end

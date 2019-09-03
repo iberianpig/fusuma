@@ -37,7 +37,7 @@ module Fusuma
         print_enabled_plugins
 
         print_device_list if option[:list]
-        Device.given_device = option[:device]
+        Device.given_devices = option[:device]
         Process.daemon if option[:daemon]
       end
 
