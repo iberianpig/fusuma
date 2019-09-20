@@ -24,7 +24,9 @@ module Fusuma
         private
 
         def keep_device_ids
-          @keep_device_ids ||= Array(config_params(:keep_device_ids)) || Device.ids
+          @keep_device_ids ||= Array(config_params(:keep_device_ids)).tap do |ids|
+            break Device.ids if ids.empty?
+          end
         end
       end
     end
