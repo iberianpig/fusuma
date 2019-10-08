@@ -13,7 +13,7 @@ module Fusuma
         def config_param_types
           {
             source: String,
-            keep_device_ids: [Array, String]
+            keep_device_names: [Array, String]
           }
         end
 
@@ -23,9 +23,17 @@ module Fusuma
 
         private
 
+        # @return [Array]
         def keep_device_ids
-          @keep_device_ids ||= Array(config_params(:keep_device_ids)).tap do |ids|
-            break Device.ids if ids.empty?
+          @keep_device_ids ||= Device.all.select do |device|
+            keep_device_names.any? { |name| device.name.match? name }
+          end.map(&:id)
+        end
+
+        # @return [Array]
+        def keep_device_names
+          Array(config_params(:keep_device_names)).tap do |names|
+            break Device.map(&:name) if names.empty?
           end
         end
       end

@@ -64,7 +64,7 @@ module Fusuma
       end
 
       def print_device_list
-        puts Device.names
+        puts Device.available.map(&:name)
         exit(0)
       end
 

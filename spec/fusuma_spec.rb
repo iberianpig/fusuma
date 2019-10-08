@@ -47,7 +47,10 @@ module Fusuma
 
       context 'when run with argument "-l"' do
         it 'should print device list' do
-          allow(Device).to receive(:names) { %w[test_device1 test_device2] }
+          allow(Device).to receive(:available) {
+                             [Device.new(name: 'test_device1'),
+                              Device.new(name: 'test_device2')]
+                           }
           expect { Runner.run(list: true) }.to raise_error(SystemExit)
             .and output("test_device1\ntest_device2\n").to_stdout
         end

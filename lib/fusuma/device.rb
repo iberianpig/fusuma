@@ -31,28 +31,25 @@ module Fusuma
       attr_reader :given_devices
 
       # @return [Array]
-      def ids
-        available.map(&:id)
-      end
-
-      # @return [Array]
-      def names
-        available.map(&:name)
+      def all
+        @all ||= fetch_devices
       end
 
       # @raise [SystemExit]
       # @return [Array]
       def available
-        @available ||= fetch_available.tap do |d|
+        @available ||= all.select(&:available).tap do |d|
           MultiLogger.debug(available_devices: d)
           raise 'Touchpad is not found' if d.empty?
         end
       rescue RuntimeError => e
+        # FIXME: should not exit without Runner class
         MultiLogger.error(e.message)
         exit 1
       end
 
       def reset
+        @all = nil
         @available = nil
       end
 
@@ -72,7 +69,7 @@ module Fusuma
       private
 
       # @return [Array]
-      def fetch_available
+      def fetch_devices
         line_parser = LineParser.new
         Plugin::Inputs::LibinputCommandInput.new.list_devices do |line|
           line_parser.push(line)
@@ -106,14 +103,17 @@ module Fusuma
 
         # @return [Array]
         def generate_devices
-          device = nil
+          device = Device.new
           lines.each_with_object([]) do |line, devices|
-            device ||= Device.new
-            device.assign_attributes extract_attribute(line: line)
-            if device.available
+            attributes = extract_attribute(line: line)
+
+            # detect new line including device name
+            if attributes[:name] && (device&.name != attributes[:name])
               devices << device
-              device = nil
+              device = Device.new
             end
+
+            devices.last.assign_attributes(attributes)
           end
         end
 
@@ -124,7 +124,7 @@ module Fusuma
             { id: id }
           elsif (name = name_from(line))
             { name: name }
-          elsif (available = available?(line))
+          elsif (available = available_from(line))
             { available: available }
           else
             {}
@@ -143,12 +143,14 @@ module Fusuma
           end
         end
 
-        def available?(line)
-          # NOTE: natural scroll is available?
-          return false unless line =~ /^Nat.scrolling: /
-          return false if line =~ %r{n/a}
+        def available_from(line)
+          # NOTE: is natural scroll available?
+          if line =~ /^Nat.scrolling: /
+            return false if line =~ %r{n/a}
 
-          true
+            return true # disabled / enabled
+          end
+          nil
         end
       end
     end
