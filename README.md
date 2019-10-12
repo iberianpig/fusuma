@@ -1,7 +1,7 @@
 # Fusuma [![Gem Version](https://badge.fury.io/rb/fusuma.svg)](https://badge.fury.io/rb/fusuma) [![Build Status](https://travis-ci.org/iberianpig/fusuma.svg?branch=master)](https://travis-ci.org/iberianpig/fusuma)
 
 Fusuma is multitouch gesture recognizer.
-This gem makes your linux PC able to recognize swipes or pinchs and assign commands to them.
+This gem makes your linux able to recognize swipes or pinchs and assign commands to them.
 
 ![fusuma_image](https://i.gyazo.com/757fef526310b9d68f68e80eb1e4540f.png)
 
@@ -16,7 +16,7 @@ This gem makes your linux PC able to recognize swipes or pinchs and assign comma
 $ sudo gpasswd -a $USER input
 ```
 
-Then, You **MUST** **LOGOUT/LOGIN or REBOOT** to assign this group.
+Then, You **MUST** **REBOOT** to assign this group.
 
 ### 2. Install libinput-tools
 You need `libinput` release 1.0 or later.

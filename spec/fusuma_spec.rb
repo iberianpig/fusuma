@@ -1,14 +1,18 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
+require './lib/fusuma.rb'
+require './lib/fusuma/plugin/inputs/libinput_command_input.rb'
 
 module Fusuma
-  describe Runner do
+  RSpec.describe Runner do
     describe '.run' do
       before do
         Singleton.__init__(MultiLogger)
         Singleton.__init__(Config)
         allow_any_instance_of(Runner).to receive(:run)
-        allow_any_instance_of(LibinputCommands).to receive(:version)
-          .and_return("test version\n")
+        allow_any_instance_of(Plugin::Inputs::LibinputCommandInput).to receive(:version)
+          .and_return("1.8\n")
       end
 
       context 'when without option' do
@@ -19,13 +23,15 @@ module Fusuma
       end
 
       context 'when run with argument "--version"' do
+        # NOTE: skip print reload config message
+        before { allow(Config.instance).to receive(:reload).and_return nil }
         it 'should print version' do
           expect(MultiLogger).to receive(:info)
             .with('---------------------------------------------')
           expect(MultiLogger).to receive(:info)
             .with("Fusuma: #{Fusuma::VERSION}")
           expect(MultiLogger).to receive(:info)
-            .with("libinput: #{LibinputCommands.new.version}")
+            .with("libinput: #{Plugin::Inputs::LibinputCommandInput.new.version}")
           expect(MultiLogger).to receive(:info)
             .with("OS: #{`uname -rsv`}".strip)
           expect(MultiLogger).to receive(:info)
@@ -34,13 +40,17 @@ module Fusuma
             .with("Desktop session: #{`echo $DESKTOP_SESSION`}".strip)
           expect(MultiLogger).to receive(:info)
             .with('---------------------------------------------')
-          Runner.run(version: true)
+
+          expect { Runner.run(version: true) }.to raise_error(SystemExit)
         end
       end
 
       context 'when run with argument "-l"' do
         it 'should print device list' do
-          allow(Device).to receive(:names) { %w[test_device1 test_device2] }
+          allow(Device).to receive(:available) {
+                             [Device.new(name: 'test_device1'),
+                              Device.new(name: 'test_device2')]
+                           }
           expect { Runner.run(list: true) }.to raise_error(SystemExit)
             .and output("test_device1\ntest_device2\n").to_stdout
         end
@@ -49,7 +59,7 @@ module Fusuma
       context 'when run with argument "--device="test_device2"' do
         it 'should set device' do
           allow(Device).to receive(:names) { %w[test_device1 test_device2] }
-          expect(Device).to receive(:given_device=).with('test_device2')
+          expect(Device).to receive(:given_devices=).with('test_device2')
           Runner.run(device: 'test_device2')
         end
       end

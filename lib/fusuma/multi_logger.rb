@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # module as namespace
 module Fusuma
   require 'logger'
@@ -21,6 +23,7 @@ module Fusuma
 
     def debug(msg)
       return unless debug_mode?
+
       super(msg)
     end
 

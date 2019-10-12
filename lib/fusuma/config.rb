@@ -1,87 +1,68 @@
+# frozen_string_literal: true
+
+require_relative './multi_logger.rb'
+require_relative './config/index.rb'
+require 'singleton'
+require 'yaml'
+
 # module as namespace
 module Fusuma
-  require 'singleton'
   # read keymap from yaml file
   class Config
     include Singleton
 
     class << self
-      def command(command_executor)
-        instance.command(command_executor)
+      def search(keys)
+        instance.search(keys)
       end
 
-      def shortcut(command_executor)
-        instance.shortcut(command_executor)
-      end
-
-      def threshold(command_executor)
-        instance.threshold(command_executor)
-      end
-
-      def interval(command_executor)
-        instance.interval(command_executor)
-      end
-
-      def reload
-        instance.reload
+      def custom_path=(new_path)
+        instance.custom_path = new_path
       end
     end
 
     attr_reader :keymap
-    attr_accessor :custom_path
+    attr_reader :custom_path
 
     def initialize
-      self.custom_path = nil
+      @custom_path = nil
+      @cache = nil
+      @keymap = nil
+      reload
+    end
+
+    def custom_path=(new_path)
+      @custom_path = new_path
       reload
     end
 
     def reload
       @cache  = nil
-      @keymap = YAML.load_file(file_path)
+      @keymap = YAML.load_file(file_path).deep_symbolize_keys
+      MultiLogger.info "reload config : #{file_path}"
       self
     end
 
-    def command(command_executor)
-      seek_index = [*event_index(command_executor), 'command']
-      search_config_cached(seek_index)
-    end
-
-    def shortcut(command_executor)
-      seek_index = [*event_index(command_executor), 'shortcut']
-      search_config_cached(seek_index)
-    end
-
-    def threshold(command_executor)
-      seek_index_specific = [*event_index(command_executor), 'threshold']
-      seek_index_global = ['threshold', command_executor.event_type]
-      search_config_cached(seek_index_specific) ||
-        search_config_cached(seek_index_global) || 1
-    end
-
-    def interval(command_executor)
-      seek_index_specific = [*event_index(command_executor), 'interval']
-      seek_index_global = ['interval', command_executor.event_type]
-      search_config_cached(seek_index_specific) ||
-        search_config_cached(seek_index_global) || 1
+    # @param index [Index]
+    def search(index)
+      cache(index.cache_key) do
+        index.keys.reduce(keymap) do |location, key|
+          if location.is_a?(Hash)
+            begin
+              if key.skippable
+                location.fetch(key.symbol, location)
+              else
+                location.fetch(key.symbol, nil)
+              end
+            end
+          else
+            location
+          end
+        end
+      end
     end
 
     private
-
-    def search_config_cached(seek_index)
-      cache(seek_index) { search_config(keymap, seek_index) }
-    end
-
-    def search_config(keymap_node, seek_index)
-      if seek_index == []
-        return nil if keymap_node.is_a? Hash
-        return keymap_node
-      end
-      key = seek_index[0]
-      child_node = keymap_node[key]
-      next_index = seek_index[1..-1]
-      return search_config(child_node, next_index) if child_node
-      search_config(keymap_node, next_index)
-    end
 
     def file_path
       filename = 'fusuma/config.yml'
@@ -106,17 +87,35 @@ module Fusuma
       File.expand_path "../../#{filename}", __FILE__
     end
 
-    def event_index(command_executor)
-      event_type = command_executor.event_type
-      finger      = command_executor.finger
-      direction   = command_executor.direction
-      [event_type, finger, direction]
-    end
-
     def cache(key)
       @cache ||= {}
       key = key.join(',') if key.is_a? Array
-      @cache[key] ||= block_given? ? yield : nil
+      if @cache.key?(key)
+        @cache[key]
+      else
+        @cache[key] = block_given? ? yield : nil
+      end
     end
+  end
+end
+
+# activesupport-4.1.1/lib/active_support/core_ext/hash/keys.rb
+class Hash
+  def deep_symbolize_keys
+    deep_transform_keys do |key|
+      begin
+        key.to_sym
+      rescue StandardError
+        key
+      end
+    end
+  end
+
+  def deep_transform_keys(&block)
+    result = {}
+    each do |key, value|
+      result[yield(key)] = value.is_a?(Hash) ? value.deep_transform_keys(&block) : value
+    end
+    result
   end
 end

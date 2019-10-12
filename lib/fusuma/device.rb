@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Fusuma
   # detect input device
   class Device
-    attr_accessor :id
-    attr_accessor :name
-    attr_accessor :available
+    attr_reader :available
+    attr_reader :name
+    attr_reader :id
 
     def initialize(id: nil, name: nil, available: nil)
       @id = id
@@ -11,66 +13,79 @@ module Fusuma
       @available = available
     end
 
-    # @param [Hash]
+    # @param attributes [Hash]
     def assign_attributes(attributes)
       attributes.each do |k, v|
         case k
         when :id
-          self.id = v
+          @id = v
         when :name
-          self.name = v
+          @name = v
         when :available
-          self.available = v
+          @available = v
         end
       end
     end
 
     class << self
-      # @return [Array]
-      def ids
-        available.map(&:id)
-      end
+      attr_reader :given_devices
 
       # @return [Array]
-      def names
-        available.map(&:name)
+      def all
+        @all ||= fetch_devices
       end
 
       # @raise [SystemExit]
       # @return [Array]
       def available
-        @available ||= fetch_available.tap do |d|
+        @available ||= all.select(&:available).tap do |d|
           MultiLogger.debug(available_devices: d)
           raise 'Touchpad is not found' if d.empty?
         end
-      rescue RuntimeError => ex
-        MultiLogger.error(ex.message)
+      rescue RuntimeError => e
+        # FIXME: should not exit without Runner class
+        MultiLogger.error(e.message)
         exit 1
       end
 
       def reset
+        @all = nil
         @available = nil
       end
 
-      # @param [String]
-      def given_device=(name)
-        return if name.nil?
-        @available = available.select { |d| d.name == name }
-        return unless names.empty?
-        MultiLogger.error("Device #{name} is not found.\n
-           Check available device with: $ fusuma --list-devices\n")
+      # Narrow down available device list
+      # @param names [String, Array]
+      def given_devices=(names)
+        # NOTE: convert to Array
+        device_names = Array(names)
+        return if device_names.empty?
+
+        @given_devices = narrow_available_devices(device_names: device_names)
+        return unless @given_devices.empty?
+
         exit 1
       end
 
       private
 
       # @return [Array]
-      def fetch_available
+      def fetch_devices
         line_parser = LineParser.new
-        LibinputCommands.new.list_devices do |line|
+        Plugin::Inputs::LibinputCommandInput.new.list_devices do |line|
           line_parser.push(line)
         end
         line_parser.generate_devices
+      end
+
+      def narrow_available_devices(device_names:)
+        device_names.select do |name|
+          if available.map(&:name).include? name
+            MultiLogger.info("Touchpad is found: #{name}")
+            true
+          else
+            MultiLogger.warn("Touchpad is not found: #{name}")
+          end
+        end
       end
 
       # parse line and generate devices
@@ -88,25 +103,28 @@ module Fusuma
 
         # @return [Array]
         def generate_devices
-          device = nil
+          device = Device.new
           lines.each_with_object([]) do |line, devices|
-            device ||= Device.new
-            device.assign_attributes extract_attribute(line: line)
-            if device.available
+            attributes = extract_attribute(line: line)
+
+            # detect new line including device name
+            if attributes[:name] && (device&.name != attributes[:name])
               devices << device
-              device = nil
+              device = Device.new
             end
+
+            devices.last.assign_attributes(attributes)
           end
         end
 
-        # @param  [String]
+        # @param line [String]
         # @return [Hash]
         def extract_attribute(line:)
           if (id = id_from(line))
             { id: id }
           elsif (name = name_from(line))
             { name: name }
-          elsif (available = available?(line))
+          elsif (available = available_from(line))
             { available: available }
           else
             {}
@@ -125,11 +143,14 @@ module Fusuma
           end
         end
 
-        def available?(line)
-          # NOTE: natural scroll is available?
-          return false unless line =~ /^Nat.scrolling: /
-          return false if line =~ %r{n/a}
-          true
+        def available_from(line)
+          # NOTE: is natural scroll available?
+          if line =~ /^Nat.scrolling: /
+            return false if line =~ %r{n/a}
+
+            return true # disabled / enabled
+          end
+          nil
         end
       end
     end

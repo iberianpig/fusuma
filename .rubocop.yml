@@ -7,7 +7,9 @@ Metrics/ModuleLength:
 Metrics/BlockLength:
   Exclude:
     - "**/*_spec.rb"
+    - "fusuma.gemspec"
 
 Metrics/LineLength:
+  Max: 100
   Exclude:
     - "fusuma.gemspec"

@@ -1,16 +1,10 @@
-require_relative 'fusuma/version'
-require_relative 'fusuma/event_stack'
-require_relative 'fusuma/gesture_event'
-require_relative 'fusuma/command_executor'
-require_relative 'fusuma/swipe.rb'
-require_relative 'fusuma/pinch.rb'
-require_relative 'fusuma/multi_logger'
-require_relative 'fusuma/config.rb'
-require_relative 'fusuma/device.rb'
-require_relative 'fusuma/libinput_commands.rb'
-require 'logger'
-require 'open3'
-require 'yaml'
+# frozen_string_literal: true
+
+require_relative './fusuma/version'
+require_relative './fusuma/multi_logger'
+require_relative './fusuma/config.rb'
+require_relative './fusuma/device.rb'
+require_relative './fusuma/plugin/manager.rb'
 
 # this is top level module
 module Fusuma
@@ -32,53 +26,116 @@ module Fusuma
       end
 
       def read_options(option)
-        print_version && exit(0) if option[:version]
+        MultiLogger.instance.debug_mode = option[:verbose]
+
+        load_custom_config(option[:config_path])
+
+        Plugin::Manager.require_plugins_from_relative
+        Plugin::Manager.require_plugins_from_config
+
+        print_version(then_exit: option[:version])
+        print_enabled_plugins
+
         print_device_list if option[:list]
-        reload_custom_config(option[:config_path])
-        debug_mode if option[:verbose]
-        Device.given_device = option[:device]
+        Device.given_devices = option[:device]
         Process.daemon if option[:daemon]
       end
 
-      def print_version
+      # TODO: print after reading plugins
+      def print_version(then_exit: false)
         MultiLogger.info '---------------------------------------------'
         MultiLogger.info "Fusuma: #{Fusuma::VERSION}"
-        MultiLogger.info "libinput: #{LibinputCommands.new.version}"
+        MultiLogger.info "libinput: #{Plugin::Inputs::LibinputCommandInput.new.version}"
         MultiLogger.info "OS: #{`uname -rsv`}".strip
         MultiLogger.info "Distribution: #{`cat /etc/issue`}".strip
         MultiLogger.info "Desktop session: #{`echo $DESKTOP_SESSION`}".strip
         MultiLogger.info '---------------------------------------------'
+        Kernel.exit(0) if then_exit
+      end
+
+      def print_enabled_plugins
+        MultiLogger.debug '---------------------------------------------'
+        MultiLogger.debug 'Enabled Plugins: '
+        Plugin::Manager.plugins
+                       .reject { |k, _v| k.to_s =~ /Base/ }
+                       .map { |_base, plugins| plugins.map { |plugin| "  #{plugin}" } }
+                       .flatten.sort.each { |name| MultiLogger.debug name }
+        MultiLogger.debug '---------------------------------------------'
       end
 
       def print_device_list
-        puts Device.names
+        puts Device.available.map(&:name)
         exit(0)
       end
 
-      def reload_custom_config(config_path = nil)
+      def load_custom_config(config_path = nil)
         return unless config_path
-        MultiLogger.info "use custom path: #{config_path}"
-        Config.instance.custom_path = config_path
-        Config.reload
+
+        Config.custom_path = config_path
       end
 
       def debug_mode
-        print_version
         MultiLogger.instance.debug_mode = true
+        print_version
       end
     end
 
     def initialize
-      @event_stack = EventStack.new
+      @inputs = Plugin::Inputs::Input.plugins.map(&:new)
+      @filters = Plugin::Filters::Filter.plugins.map(&:new)
+      @parsers = Plugin::Parsers::Parser.plugins.map(&:new)
+      @buffers = Plugin::Buffers::Buffer.plugins.map(&:new)
+      @detectors = Plugin::Detectors::Detector.plugins.map(&:new)
+      @executors = Plugin::Executors::Executor.plugins.map(&:new)
     end
 
     def run
-      LibinputCommands.new.debug_events do |line|
-        gesture_event = GestureEvent.initialize_by(line.to_s, Device.ids)
-        next unless gesture_event
-        @event_stack << gesture_event
-        @event_stack.generate_command_executor.tap { |c| c.execute if c }
+      # TODO: run with multi thread
+      @inputs.first.run do |event|
+        filtered = filter(event)
+        parsed = parse(filtered)
+        buffered = buffer(parsed)
+        detected = detect(buffered)
+        execute(detected)
       end
+    end
+
+    def filter(event)
+      @filters.reduce(event) { |e, f| f.filter(e) if e }
+    end
+
+    def parse(event)
+      @parsers.reduce(event) { |e, p| p.parse(e) if e  }
+    end
+
+    def buffer(event)
+      @buffers.each { |b| b.buffer(event) }
+    end
+
+    # @param buffers [Array<Buffer>]
+    # @return [Event] if event is detected
+    # @return [NilClass] if event is NOT detected
+    def detect(buffers)
+      @detectors.each_with_object([]) do |detector, index_records|
+        event = detector.detect(buffers) # event
+
+        if event&.record&.mergable?
+          event.record.merge(records: index_records)
+          buffers.each(&:clear) # clear buffer
+          break(event)
+        end
+
+        break nil if @detectors.last == detector
+      end
+    end
+
+    def execute(event)
+      return unless event
+
+      executor = @executors.find do |e|
+        e.executable?(event)
+      end
+      executor&.execute(event)
     end
   end
 end
