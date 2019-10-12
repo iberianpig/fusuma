@@ -27,21 +27,22 @@ module Fusuma
         raise NotImplementedError, "override #{self.class.name}##{__method__}"
       end
 
-      # @return [Plugin::Base]
-      def config_params(key = nil)
-        params = Config.search(config_index) || {}
+      # @return [Object]
+      def config_params(key = nil, base: config_index)
+        params = Config.search(base) || {}
 
         return params unless key
 
         params.fetch(key, nil).tap do |val|
           next if val.nil?
 
+          # NOTE: Type checking for config.yml
           param_types = Array(config_param_types.fetch(key))
 
           next if param_types.any? { |klass| val.is_a?(klass) }
 
           MultiLogger.error('Please fix config.yml.')
-          MultiLogger.error(":#{config_index.keys.map(&:symbol)
+          MultiLogger.error(":#{base.keys.map(&:symbol)
             .join(' => :')} => :#{key} should be #{param_types.join(' OR ')}.")
           exit 1
         end
