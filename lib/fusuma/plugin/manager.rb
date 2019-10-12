@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'pathname'
 require_relative '../multi_logger.rb'
 
 module Fusuma
@@ -11,9 +12,9 @@ module Fusuma
       end
 
       def require_siblings_from_local
-        search_key = File.join('./lib', plugin_dir_name, '*.rb')
-        Dir.glob(search_key).each do |siblings_plugin|
-          require './' + siblings_plugin
+        search_key = File.join('../../', plugin_dir_name, '*.rb')
+        Pathname.new(__dir__).glob(search_key).each do |siblings_plugin|
+          require siblings_plugin
         end
       end
 
