@@ -1,8 +1,21 @@
 # Change Log
 
-## [Unreleased](https://github.com/iberianpig/fusuma/tree/HEAD)
+## [v1.1](https://github.com/iberianpig/fusuma/tree/v1.1) (2019-10-12)
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.0...v1.1)
 
-[Full Changelog](https://github.com/iberianpig/fusuma/compare/v0.11.0...HEAD)
+## [v1.0](https://github.com/iberianpig/fusuma/tree/v1.0) (2019-10-12)
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v0.11.1...v1.0)
+
+**Merged pull requests:**
+
+- Update rake requirement from ~\> 12.3 to ~\> 13.0 [\#136](https://github.com/iberianpig/fusuma/pull/136) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- Fixed Spelling mistake [\#128](https://github.com/iberianpig/fusuma/pull/128) ([thomascrha](https://github.com/thomascrha))
+- \[Readme\] Added step to install Ruby [\#127](https://github.com/iberianpig/fusuma/pull/127) ([mmoraes-rafael](https://github.com/mmoraes-rafael))
+- Feature/plugins refactor generator [\#126](https://github.com/iberianpig/fusuma/pull/126) ([iberianpig](https://github.com/iberianpig))
+- Plugin Based Architecture [\#116](https://github.com/iberianpig/fusuma/pull/116) ([iberianpig](https://github.com/iberianpig))
+
+## [v0.11.1](https://github.com/iberianpig/fusuma/tree/v0.11.1) (2019-05-27)
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v0.11.0...v0.11.1)
 
 **Merged pull requests:**
 
