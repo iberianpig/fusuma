@@ -33,7 +33,7 @@ module Fusuma
         # @return [Array]
         def keep_device_names
           Array(config_params(:keep_device_names)).tap do |names|
-            break Device.map(&:name) if names.empty?
+            break Device.all.map(&:name) if names.empty?
           end
         end
       end
