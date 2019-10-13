@@ -13,7 +13,7 @@ module Fusuma
 
       def require_siblings_from_local
         search_key = File.join('../../', plugin_dir_name, '*.rb')
-        Pathname.new(__dir__).glob(search_key).each do |siblings_plugin|
+        Dir.glob(File.expand_path("#{__dir__}/#{search_key}")).each do |siblings_plugin|
           require siblings_plugin
         end
       end

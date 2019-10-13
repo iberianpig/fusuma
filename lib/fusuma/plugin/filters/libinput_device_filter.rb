@@ -26,7 +26,7 @@ module Fusuma
         # @return [Array]
         def keep_device_ids
           @keep_device_ids ||= Device.all.select do |device|
-            keep_device_names.any? { |name| device.name.match? name }
+            keep_device_names.any? { |name| device.name.match(name) }
           end.map(&:id)
         end
 
