@@ -28,8 +28,6 @@ module Fusuma
     end
 
     class << self
-      attr_reader :given_devices
-
       # @return [Array]
       def all
         @all ||= fetch_devices
