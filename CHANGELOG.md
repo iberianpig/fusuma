@@ -1,5 +1,19 @@
 # Change Log
 
+## [v1.2.1](https://github.com/iberianpig/fusuma/tree/v1.2.1) (2019-10-19)
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.2...v1.2.1)
+
+**Fixed bugs:**
+
+- Fusuma must be started after connecting bluetooth trackpad [\#125](https://github.com/iberianpig/fusuma/issues/125)
+
+**Merged pull requests:**
+
+- Reload Filter when new device is added [\#137](https://github.com/iberianpig/fusuma/pull/137) ([iberianpig](https://github.com/iberianpig))
+
+## [v1.2](https://github.com/iberianpig/fusuma/tree/v1.2) (2019-10-13)
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.1...v1.2)
+
 ## [v1.1](https://github.com/iberianpig/fusuma/tree/v1.1) (2019-10-12)
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.0...v1.1)
 
