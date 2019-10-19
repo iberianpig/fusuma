@@ -28,8 +28,6 @@ module Fusuma
     end
 
     class << self
-      attr_reader :given_devices
-
       # @return [Array]
       def all
         @all ||= fetch_devices
@@ -53,19 +51,6 @@ module Fusuma
         @available = nil
       end
 
-      # Narrow down available device list
-      # @param names [String, Array]
-      def given_devices=(names)
-        # NOTE: convert to Array
-        device_names = Array(names)
-        return if device_names.empty?
-
-        @given_devices = narrow_available_devices(device_names: device_names)
-        return unless @given_devices.empty?
-
-        exit 1
-      end
-
       private
 
       # @return [Array]
@@ -75,17 +60,6 @@ module Fusuma
           line_parser.push(line)
         end
         line_parser.generate_devices
-      end
-
-      def narrow_available_devices(device_names:)
-        device_names.select do |name|
-          if available.map(&:name).include? name
-            MultiLogger.info("Touchpad is found: #{name}")
-            true
-          else
-            MultiLogger.warn("Touchpad is not found: #{name}")
-          end
-        end
       end
 
       # parse line and generate devices

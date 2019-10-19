@@ -13,3 +13,4 @@ Metrics/LineLength:
   Max: 100
   Exclude:
     - "fusuma.gemspec"
+    - "**/*_spec.rb"

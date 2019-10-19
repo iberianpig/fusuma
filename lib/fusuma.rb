@@ -37,7 +37,8 @@ module Fusuma
         print_enabled_plugins
 
         print_device_list if option[:list]
-        Device.given_devices = option[:device]
+        # TODO: remove keep_device_from_option from command line options
+        Plugin::Filters::LibinputDeviceFilter::KeepDevice.from_option = option[:device]
         Process.daemon if option[:daemon]
       end
 

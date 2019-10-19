@@ -3,6 +3,7 @@
 require 'spec_helper'
 require './lib/fusuma.rb'
 require './lib/fusuma/plugin/inputs/libinput_command_input.rb'
+require './lib/fusuma/plugin/filters/libinput_device_filter.rb'
 
 module Fusuma
   RSpec.describe Runner do
@@ -56,10 +57,12 @@ module Fusuma
         end
       end
 
+      # TODO: remove from_option and command line options
       context 'when run with argument "--device="test_device2"' do
         it 'should set device' do
           allow(Device).to receive(:names) { %w[test_device1 test_device2] }
-          expect(Device).to receive(:given_devices=).with('test_device2')
+          expect(Plugin::Filters::LibinputDeviceFilter::KeepDevice)
+            .to receive(:from_option=).with('test_device2')
           Runner.run(device: 'test_device2')
         end
       end

@@ -6,7 +6,7 @@ module Fusuma
   module Plugin
     # filter class
     module Filters
-      # Inherite this base
+      # Filter record to keep
       class Filter < Base
         # Filter input event
         # @param event [Event]
@@ -24,7 +24,8 @@ module Fusuma
 
         # @abstract override `#keep?` to implement
         # @param record [String]
-        # @return [True, False]
+        # @return [True]  when keeping record
+        # @return [False] when discarding record
         def keep?(record)
           true if record
         end

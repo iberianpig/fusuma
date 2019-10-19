@@ -105,37 +105,34 @@ module Fusuma
         describe 'debug_events' do
           subject { libinput_command.debug_events }
 
-          before do
-            allow(libinput_command).to receive(:device_option)
-              .and_return('--device stub_device')
-          end
-
           after { subject }
 
           context 'with new cli version' do
             before do
-              allow(libinput_command).to receive(:new_cli_option_available?)
+              allow(libinput_command)
+                .to receive(:new_cli_option_available?)
                 .and_return(true)
             end
 
             it 'call `libinput debug-events`' do
               command = 'libinput debug-events'
               expect(Open3).to receive(:popen3)
-                .with("stdbuf -oL -- #{command} --device stub_device")
+                .with("stdbuf -oL -- #{command}")
                 .and_return 'stub message'
             end
           end
 
           context 'with old cli version' do
             before do
-              allow(libinput_command).to receive(:new_cli_option_available?)
+              allow(libinput_command)
+                .to receive(:new_cli_option_available?)
                 .and_return(false)
             end
 
             it 'call `libinput-debug-events`' do
               command = 'libinput-debug-events'
               expect(Open3).to receive(:popen3)
-                .with("stdbuf -oL -- #{command} --device stub_device")
+                .with("stdbuf -oL -- #{command}")
                 .and_return 'stub message'
             end
           end
