@@ -49,7 +49,7 @@ module Fusuma
         # @yield [line] gives a line in libinput debug-events output to the block
         def debug_events
           prefix = 'stdbuf -oL --'
-          options = [*libinput_options, device_option]
+          options = [*libinput_options]
           cmd = "#{prefix} #{debug_events_command} #{options.join(' ')}".strip
           MultiLogger.debug(debug_events: cmd)
           Open3.popen3(cmd) do |_i, o, _e, _w|
@@ -89,14 +89,6 @@ module Fusuma
         end
 
         private
-
-        # use device option only if libinput detect only 1 device
-        # @return [String]
-        def device_option
-          return unless Device.available.size == 1
-
-          "--device=/dev/input/#{Device.available.first.id}"
-        end
 
         # TODO: add specs
         def libinput_options
