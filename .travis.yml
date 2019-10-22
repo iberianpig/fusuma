@@ -1,9 +1,10 @@
 sudo: false
+
 language: ruby
+cache: bundler
 rvm:
   - 2.3.1
   - 2.4
   - 2.5
-before_install:
-  - travis_retry gem update --system || travis_retry gem update --system 2.7.8
-  - travis_retry gem install bundler --no-document || travis_retry gem install bundler --no-document -v 1.17.3
+  - 2.6
+before_install: gem install bundler --no-document -v 2.0.1
