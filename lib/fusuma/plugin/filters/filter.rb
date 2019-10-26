@@ -4,13 +4,13 @@ require_relative '../base.rb'
 
 module Fusuma
   module Plugin
-    # filter class
     module Filters
-      # Filter record to keep
+      # Filter to keep/discard events from input plugin
       class Filter < Base
         # Filter input event
         # @param event [Event]
-        # @return [Event, nil]
+        # @return [Event] when keeping event
+        # @return [NilClass] when discarding record
         def filter(event)
           event.tap do |e|
             next if e.tag != source
