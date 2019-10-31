@@ -137,6 +137,82 @@ module Fusuma
             end
           end
         end
+
+        describe '#libinput_options' do
+          it { expect(libinput_command.libinput_options).to be_a Array }
+
+          context 'when device: awesome_device is given as config_params' do
+            around do |example|
+              ConfigHelper.load_config_yml = <<~CONFIG
+                plugin:
+                  inputs:
+                    libinput_command_input:
+                      device: awesome device
+              CONFIG
+
+              example.run
+
+              Config.custom_path = nil
+            end
+            it "contains --device='awesome device'" do
+              expect(libinput_command.libinput_options).to be_include "--device='awesome device'"
+            end
+          end
+
+          context 'when enable-tap: true is given as config_params' do
+            around do |example|
+              ConfigHelper.load_config_yml = <<~CONFIG
+                plugin:
+                  inputs:
+                    libinput_command_input:
+                      enable-tap: true
+              CONFIG
+
+              example.run
+
+              Config.custom_path = nil
+            end
+            it 'contains --enable-tap' do
+              expect(libinput_command.libinput_options).to be_include '--enable-tap'
+            end
+          end
+
+          context 'when enable-dwt: true is given as config_params' do
+            around do |example|
+              ConfigHelper.load_config_yml = <<~CONFIG
+                plugin:
+                  inputs:
+                    libinput_command_input:
+                      enable-dwt: true
+              CONFIG
+
+              example.run
+
+              Config.custom_path = nil
+            end
+            it 'contains --enable-dwt' do
+              expect(libinput_command.libinput_options).to be_include '--enable-dwt'
+            end
+          end
+
+          context 'when show-keycodes: true is given as config_params' do
+            around do |example|
+              ConfigHelper.load_config_yml = <<~CONFIG
+                plugin:
+                  inputs:
+                    libinput_command_input:
+                      show-keycodes: true
+              CONFIG
+
+              example.run
+
+              Config.custom_path = nil
+            end
+            it 'contains --show-keycodes' do
+              expect(libinput_command.libinput_options).to be_include '--show-keycodes'
+            end
+          end
+        end
       end
     end
   end
