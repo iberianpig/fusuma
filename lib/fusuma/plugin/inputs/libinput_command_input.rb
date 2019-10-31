@@ -10,9 +10,10 @@ module Fusuma
       class LibinputCommandInput < Input
         def config_param_types
           {
-            'enable-tap': [TrueClass, FalseClass],
+            'device': [String],
             'enable-dwt': [TrueClass, FalseClass],
-            'device': [String]
+            'enable-tap': [TrueClass, FalseClass],
+            'show-keycodes': [TrueClass, FalseClass]
           }
         end
 
@@ -88,20 +89,20 @@ module Fusuma
           end
         end
 
-        private
-
-        # TODO: add specs
         def libinput_options
+          device = ("--device='#{config_params(:device)}'" if config_params(:device))
           enable_tap = '--enable-tap' if config_params(:'enable-tap')
-          device = ("--device=#{config_params(:device)}" if config_params(:device))
           enable_dwt = '--enable-dwt' if config_params(:'enable-dwt')
-
+          show_keycodes = '--show-keycodes' if config_params(:'show-keycodes')
           [
-            enable_tap,
             device,
-            enable_dwt
+            enable_dwt,
+            enable_tap,
+            show_keycodes
           ].compact
         end
+
+        private
 
         # which in ruby: Checking if program exists in $PATH from ruby
         # (https://stackoverflow.com/questions/2108727/which-in-ruby-checking-if-program-exists-in-path-from-ruby)
