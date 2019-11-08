@@ -102,7 +102,7 @@ module Fusuma
     end
 
     def filter(event)
-      @filters.reduce(event) { |e, f| f.filter(e) if e }
+      event if @filters.any? { |f| f.filter(event) }
     end
 
     def parse(event)
