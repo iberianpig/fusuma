@@ -16,7 +16,6 @@ module Fusuma
           # - window event buffer
           # - other event buffer
           return if event&.tag != source
-          return if event.record.type != :gesture
 
           @events.push(event)
           clear unless updating?

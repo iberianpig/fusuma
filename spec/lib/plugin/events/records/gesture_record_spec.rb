@@ -15,11 +15,6 @@ module Fusuma
                                 direction: direction)
           end
           let(:direction) { GestureRecord::Delta.new(0, 0, 1, 0) }
-
-          describe '#type' do
-            subject { record.type }
-            it { is_expected.to eq :gesture }
-          end
         end
       end
     end
