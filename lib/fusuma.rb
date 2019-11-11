@@ -97,7 +97,8 @@ module Fusuma
         parsed = parse(filtered)
         buffered = buffer(parsed)
         detected = detect(buffered)
-        execute(detected)
+        merged = merge(detected)
+        execute(merged)
       end
     end
 
@@ -114,20 +115,26 @@ module Fusuma
     end
 
     # @param buffers [Array<Buffer>]
-    # @return [Event] if event is detected
-    # @return [NilClass] if event is NOT detected
+    # @return [Array<Event>]
     def detect(buffers)
-      @detectors.each_with_object([]) do |detector, index_records|
-        event = detector.detect(buffers) # event
-
-        if event&.record&.mergable?
-          event.record.merge(records: index_records)
-          buffers.each(&:clear) # clear buffer
-          break(event)
+      @detectors.reduce([]) do |detected, detector|
+        if (event = detector.detect(buffers))
+          detected << event
+        else
+          detected
         end
-
-        break nil if @detectors.last == detector
       end
+    end
+
+    # @param events [Array<Event>]
+    # @return [Event] a Event merged all records from arguments
+    # @return [NilClass] when event is NOT given
+    def merge(events)
+      main_events, modifiers = events.partition { |event| event.record.mergable? }
+      return nil unless (main_event = main_events.first)
+
+      main_event.record.merge(records: modifiers.map(&:record))
+      main_event
     end
 
     def execute(event)
@@ -136,6 +143,7 @@ module Fusuma
       executor = @executors.find do |e|
         e.executable?(event)
       end
+
       executor&.execute(event)
     end
   end
