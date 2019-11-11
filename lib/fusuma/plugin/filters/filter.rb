@@ -12,14 +12,11 @@ module Fusuma
         # @return [Event] when keeping event
         # @return [NilClass] when discarding record
         def filter(event)
-          event.tap do |e|
-            next if e.tag != source
-            next if keep?(e.record)
+          return event if event.tag !~ /#{source}/
 
-            MultiLogger.debug(filtered: e)
+          return event if keep?(event.record)
 
-            break nil
-          end
+          nil
         end
 
         # @abstract override `#keep?` to implement

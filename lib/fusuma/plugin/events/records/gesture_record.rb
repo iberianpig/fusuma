@@ -20,10 +20,6 @@ module Fusuma
             @finger  = finger
             @direction = direction
           end
-
-          def type
-            :gesture
-          end
         end
       end
     end

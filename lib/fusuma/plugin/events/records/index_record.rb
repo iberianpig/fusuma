@@ -9,6 +9,7 @@ module Fusuma
         class IndexRecord < Record
           # define gesture format
           attr_reader :index
+          attr_reader :position
 
           # @param [Config::Index] index
           # @param [Symbol] position [:prefix, :body, :surfix]
@@ -26,12 +27,12 @@ module Fusuma
           def merge(records:)
             raise "position is NOT body: #{self}" unless mergable?
 
-            @index = records.each_with_object(@index) do |record, merged_index|
+            @index = records.reduce(@index) do |merged_index, record|
               case record.position
               when :prefix
-                Index.new([*record.index.keys, *merged_index.keys])
+                Config::Index.new([*record.index.keys, *merged_index.keys])
               when :surfix
-                Index.new([*merged_index.keys, *record.index.keys])
+                Config::Index.new([*merged_index.keys, *record.index.keys])
               else
                 raise "invalid index position: #{record}"
               end
@@ -42,10 +43,6 @@ module Fusuma
           def mergable?
             @position == :body
           end
-
-          protected
-
-          attr_reader :position
         end
       end
     end
