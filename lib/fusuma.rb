@@ -33,8 +33,9 @@ module Fusuma
         Plugin::Manager.require_plugins_from_relative
         Plugin::Manager.require_plugins_from_config
 
-        print_version(then_exit: option[:version])
+        print_version
         print_enabled_plugins
+        Kernel.exit(0) if option[:version]
 
         print_device_list if option[:list]
         # TODO: remove keep_device_from_option from command line options
@@ -42,8 +43,7 @@ module Fusuma
         Process.daemon if option[:daemon]
       end
 
-      # TODO: print after reading plugins
-      def print_version(then_exit: false)
+      def print_version
         MultiLogger.info '---------------------------------------------'
         MultiLogger.info "Fusuma: #{Fusuma::VERSION}"
         MultiLogger.info "libinput: #{Plugin::Inputs::LibinputCommandInput.new.version}"
@@ -51,17 +51,16 @@ module Fusuma
         MultiLogger.info "Distribution: #{`cat /etc/issue`}".strip
         MultiLogger.info "Desktop session: #{`echo $DESKTOP_SESSION`}".strip
         MultiLogger.info '---------------------------------------------'
-        Kernel.exit(0) if then_exit
       end
 
       def print_enabled_plugins
-        MultiLogger.debug '---------------------------------------------'
-        MultiLogger.debug 'Enabled Plugins: '
+        MultiLogger.info '---------------------------------------------'
+        MultiLogger.info 'Enabled Plugins: '
         Plugin::Manager.plugins
                        .reject { |k, _v| k.to_s =~ /Base/ }
                        .map { |_base, plugins| plugins.map { |plugin| "  #{plugin}" } }
-                       .flatten.sort.each { |name| MultiLogger.debug name }
-        MultiLogger.debug '---------------------------------------------'
+                       .flatten.sort.each { |name| MultiLogger.info(name) }
+        MultiLogger.info '---------------------------------------------'
       end
 
       def print_device_list
@@ -73,11 +72,6 @@ module Fusuma
         return unless config_path
 
         Config.custom_path = config_path
-      end
-
-      def debug_mode
-        MultiLogger.instance.debug_mode = true
-        print_version
       end
     end
 
@@ -107,7 +101,7 @@ module Fusuma
     end
 
     def parse(event)
-      @parsers.reduce(event) { |e, p| p.parse(e) if e  }
+      @parsers.reduce(event) { |e, p| p.parse(e) if e }
     end
 
     def buffer(event)

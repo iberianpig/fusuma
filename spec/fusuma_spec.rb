@@ -25,10 +25,11 @@ module Fusuma
 
       context 'when run with argument "--version"' do
         # NOTE: skip print reload config message
-        before { allow(Config.instance).to receive(:reload).and_return nil }
+        before do
+          allow(Config.instance).to receive(:reload).and_return nil
+          allow(MultiLogger).to receive(:info).with(anything)
+        end
         it 'should print version' do
-          expect(MultiLogger).to receive(:info)
-            .with('---------------------------------------------')
           expect(MultiLogger).to receive(:info)
             .with("Fusuma: #{Fusuma::VERSION}")
           expect(MultiLogger).to receive(:info)
@@ -39,10 +40,8 @@ module Fusuma
             .with("Distribution: #{`cat /etc/issue`}".strip)
           expect(MultiLogger).to receive(:info)
             .with("Desktop session: #{`echo $DESKTOP_SESSION`}".strip)
-          expect(MultiLogger).to receive(:info)
-            .with('---------------------------------------------')
 
-          expect { Runner.run(version: true) }.to raise_error(SystemExit)
+          Runner.run(version: true)
         end
       end
 
