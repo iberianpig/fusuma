@@ -166,7 +166,7 @@ If the swipe's interval is `0.5`, shorten swipe-interval by half to recognize a 
 On fusuma version 0.4 `command: ` property is available!
 You can assign any command each gestures.
 
-**`shortcut: ` property is deprecated**, **it will be removed on fusuma version 1.0**.
+**`shortcut: ` property is deprecated**, **it was removed on fusuma version 1.0**.
 You need to replace to `command: ` property.
 
 
@@ -200,6 +200,28 @@ swipe:
 2. Open `$ gnome-session-properties`
 3. Add Fusuma and enter the location where the above path was checked in the command input field
 4. Add the `-d` option at the end of the command input field
+
+## Fusuma Plugins
+
+Following features are provided as plugins.
+
+ * Experimental features
+ * Features for specific Linux distributions
+ * Adding new gestures or combinations
+ * Setting different gestures per applications
+
+### Installation of fusuma plugins
+
+Fusuma plugins are provided with the `fusuma-plugin-XXXXX` naming convention and hosted on [RubyGems](https://rubygems.org/search?utf8=%E2%9C%93&query=fusuma-plugins).
+
+`$ sudo gem install fusuma-plugin-XXXXX`
+
+### Available plugins
+
+| Name                                                                           | Author     | About                                  |
+|--------------------------------------------------------------------------------|------------|----------------------------------------|
+| [fusuma-plugin-wmctrl](https://github.com/iberianpig/fusuma-plugin-wmctrl)     | iberianpig | Window Manager plugin for Fusuma       |
+| [fusuma-plugin-keypress](https://github.com/iberianpig/fusuma-plugin-keypress) | iberianpig | Keypress combination plugin for Fusuma |
 
 ## Support
 
