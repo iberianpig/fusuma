@@ -1,5 +1,19 @@
 # Changelog
 
+## [v1.3.1](https://github.com/iberianpig/fusuma/tree/v1.3.1) (2020-01-03)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.3.0...v1.3.1)
+
+**Implemented enhancements:**
+
+- Assign command with combination of key press and gesture [\#105](https://github.com/iberianpig/fusuma/issues/105)
+
+**Closed issues:**
+
+- Some gestures do not work anymore after resume [\#148](https://github.com/iberianpig/fusuma/issues/148)
+- Quick swipes are not recognised by Fusuma [\#147](https://github.com/iberianpig/fusuma/issues/147)
+- pinch out gesture laggy [\#139](https://github.com/iberianpig/fusuma/issues/139)
+
 ## [v1.3.0](https://github.com/iberianpig/fusuma/tree/v1.3.0) (2019-11-11)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.2.1...v1.3.0)
