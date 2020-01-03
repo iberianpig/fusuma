@@ -49,7 +49,7 @@ module Fusuma
         MultiLogger.info "libinput: #{Plugin::Inputs::LibinputCommandInput.new.version}"
         MultiLogger.info "OS: #{`uname -rsv`}".strip
         MultiLogger.info "Distribution: #{`cat /etc/issue`}".strip
-        MultiLogger.info "Desktop session: #{`echo $DESKTOP_SESSION`}".strip
+        MultiLogger.info "Desktop session: #{`echo $DESKTOP_SESSION $XDG_SESSION_TYPE`}".strip
         MultiLogger.info '---------------------------------------------'
       end
 
