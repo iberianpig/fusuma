@@ -154,6 +154,14 @@ interval:
 
 ```
 
+### More Example
+The following wiki pages can be edited by everyone.
+
+https://github.com/iberianpig/fusuma/wiki/
+
+If you have a nice configuration, please share `~/.config/fusuma/config.yml` with everyone.
+
+### Threshold and Interval
 if `command: ` properties are blank, the swipe/pinch doesn't execute command.
 
 `threshold:` is sensitivity to swipe/pinch. Default value is 1.
@@ -185,6 +193,11 @@ swipe:
 
 * xdotool manual (https://github.com/jordansissel/xdotool/blob/master/xdotool.pod)
 * Available keys' hint (https://github.com/jordansissel/xdotool/issues/212#issuecomment-406156157)
+
+* `xte` command is alternative of xdotool
+  * Low delay with multiple keyboard layout
+  * install with `sudo apt xautomation`
+  * manual https://linux.die.net/man/1/xte
 
 ## Options
 
