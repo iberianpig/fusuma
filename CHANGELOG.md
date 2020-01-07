@@ -1,5 +1,17 @@
 # Changelog
 
+## [v1.3.2](https://github.com/iberianpig/fusuma/tree/v1.3.2) (2020-01-07)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.3.1...v1.3.2)
+
+**Closed issues:**
+
+- Two-finger zoom direction not reversing [\#143](https://github.com/iberianpig/fusuma/issues/143)
+
+**Merged pull requests:**
+
+- Feature/143/gesture direction not reversing [\#150](https://github.com/iberianpig/fusuma/pull/150) ([iberianpig](https://github.com/iberianpig))
+
 ## [v1.3.1](https://github.com/iberianpig/fusuma/tree/v1.3.1) (2020-01-03)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.3.0...v1.3.1)
@@ -95,6 +107,7 @@
 
 - Interval and threshold specific for a trigger [\#92](https://github.com/iberianpig/fusuma/pull/92) ([irq](https://github.com/irq))
 - Fix spelling: Elementary to elementary [\#90](https://github.com/iberianpig/fusuma/pull/90) ([ryonakano](https://github.com/ryonakano))
+- Update rake requirement to ~\> 12.3 [\#72](https://github.com/iberianpig/fusuma/pull/72) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 
 ## [v0.9.2](https://github.com/iberianpig/fusuma/tree/v0.9.2) (2018-07-19)
 
@@ -184,7 +197,6 @@
 **Merged pull requests:**
 
 - Assigning commands [\#73](https://github.com/iberianpig/fusuma/pull/73) ([iberianpig](https://github.com/iberianpig))
-- Update rake requirement to ~\> 12.3 [\#72](https://github.com/iberianpig/fusuma/pull/72) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 
 ## [v0.3.5](https://github.com/iberianpig/fusuma/tree/v0.3.5) (2018-01-01)
 
