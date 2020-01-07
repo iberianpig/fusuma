@@ -61,8 +61,6 @@ module Fusuma
         end
 
         def enough_diameter?(index:, quantity:)
-          MultiLogger.info(type: type, quantity: quantity,
-                           quantity_threshold: threshold(index: index))
           quantity >= threshold(index: index)
         end
 
