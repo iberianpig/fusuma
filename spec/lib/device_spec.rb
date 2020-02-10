@@ -46,6 +46,15 @@ module Fusuma
         it { expect(Device.available.map(&:name)).to eq ['Christopher’s Trackpad', 'bcm5974'] }
       end
 
+      context 'with ' do
+        let(:list_devices_output) do
+          File.open('spec/lib/libinput-list-devices_thejinx0r.txt')
+        end
+
+        it { expect(Device.available).to be_a Array }
+        it { expect(Device.available.map(&:name)).to include 'HTX USB HID Device HTX HID Device Touchpad' }
+      end
+
       context 'when no devices' do
         let(:list_devices_output) do
           File.open('spec/lib/libinput-list-devices_unavailable.txt')

@@ -77,17 +77,17 @@ module Fusuma
 
         # @return [Array]
         def generate_devices
-          device = Device.new
           lines.each_with_object([]) do |line, devices|
             attributes = extract_attribute(line: line)
 
-            # detect new line including device name
-            if attributes[:name] && (device&.name != attributes[:name])
-              devices << device
-              device = Device.new
+            next if attributes == {}
+
+            if attributes[:name]
+              # when detected new line including device name
+              devices << Device.new # next device
             end
 
-            devices.last.assign_attributes(attributes)
+            devices.last.assign_attributes(attributes) unless devices.empty?
           end
         end
 
