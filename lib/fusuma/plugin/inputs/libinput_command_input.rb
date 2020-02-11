@@ -38,7 +38,7 @@ module Fusuma
           @version ||= `#{version_command}`.strip
         end
 
-        # @yield [line] gives a line in libinput list-devices output to the block
+        # @yieldparam [String] gives a line in libinput list-devices output to the block
         def list_devices
           cmd = list_devices_command
           MultiLogger.debug(list_devices: cmd)
@@ -47,7 +47,7 @@ module Fusuma
           end
         end
 
-        # @yield [line] gives a line in libinput debug-events output to the block
+        # @yieldparam [String] gives a line in libinput debug-events output to the block
         def debug_events
           prefix = 'stdbuf -oL --'
           options = [*libinput_options]
