@@ -61,71 +61,71 @@ module Fusuma
         end
         line_parser.generate_devices
       end
+    end
 
-      # parse line and generate devices
-      class LineParser
-        attr_reader :lines
+    # parse line and generate devices
+    class LineParser
+      attr_reader :lines
 
-        def initialize
-          @lines = []
-        end
+      def initialize
+        @lines = []
+      end
 
-        # @param line [String]
-        def push(line)
-          lines.push(line)
-        end
+      # @param line [String]
+      def push(line)
+        lines.push(line)
+      end
 
-        # @return [Array]
-        def generate_devices
-          lines.each_with_object([]) do |line, devices|
-            attributes = extract_attribute(line: line)
+      # @return [Array]
+      def generate_devices
+        lines.each_with_object([]) do |line, devices|
+          attributes = extract_attribute(line: line)
 
-            next if attributes == {}
+          next if attributes == {}
 
-            if attributes[:name]
-              # when detected new line including device name
-              devices << Device.new # next device
-            end
-
-            devices.last.assign_attributes(attributes) unless devices.empty?
+          if attributes[:name]
+            # when detected new line including device name
+            devices << Device.new # next device
           end
-        end
 
-        # @param line [String]
-        # @return [Hash]
-        def extract_attribute(line:)
-          if (id = id_from(line))
-            { id: id }
-          elsif (name = name_from(line))
-            { name: name }
-          elsif (available = available_from(line))
-            { available: available }
-          else
-            {}
-          end
+          devices.last.assign_attributes(attributes) unless devices.empty?
         end
+      end
 
-        def id_from(line)
-          line.match('^Kernel:[[:space:]]*') do |m|
-            m.post_match.match(/event[0-9]+/).to_s
-          end
+      # @param line [String]
+      # @return [Hash]
+      def extract_attribute(line:)
+        if (id = id_from(line))
+          { id: id }
+        elsif (name = name_from(line))
+          { name: name }
+        elsif (available = available_from(line))
+          { available: available }
+        else
+          {}
         end
+      end
 
-        def name_from(line)
-          line.match('^Device:[[:space:]]*') do |m|
-            m.post_match.strip
-          end
+      def id_from(line)
+        line.match('^Kernel:[[:space:]]*') do |m|
+          m.post_match.match(/event[0-9]+/).to_s
         end
+      end
 
-        def available_from(line)
-          # NOTE: is natural scroll available?
-          if line =~ /^Nat.scrolling: /
-            return false if line =~ %r{n/a}
-
-            return true # disabled / enabled
-          end
-          nil
+      def name_from(line)
+        line.match('^Device:[[:space:]]*') do |m|
+          m.post_match.strip
         end
+      end
+
+      def available_from(line)
+        # NOTE: is natural scroll available?
+        if line =~ /^Nat.scrolling: /
+          return false if line =~ %r{n/a}
+
+          return true # disabled / enabled
+        end
+        nil
       end
     end
   end
