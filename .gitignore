@@ -11,5 +11,7 @@
 # rspec failure tracking
 .rspec_status
 
+.ruby-version
+
 # todo
 todo.md
