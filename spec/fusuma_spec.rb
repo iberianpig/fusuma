@@ -39,9 +39,8 @@ module Fusuma
           expect(MultiLogger).to receive(:info)
             .with("Distribution: #{`cat /etc/issue`}".strip)
           expect(MultiLogger).to receive(:info)
-            .with("Desktop session: #{`echo $DESKTOP_SESSION`}".strip)
-
-          Runner.run(version: true)
+            .with("Desktop session: #{`echo $DESKTOP_SESSION $XDG_SESSION_TYPE`}".strip)
+          expect { Runner.run(version: true) }.to raise_error(SystemExit)
         end
       end
 
