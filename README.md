@@ -1,4 +1,4 @@
-# Fusuma [![Gem Version](https://badge.fury.io/rb/fusuma.svg)](https://badge.fury.io/rb/fusuma) [![Build Status](https://travis-ci.org/iberianpig/fusuma.svg?branch=master)](https://travis-ci.org/iberianpig/fusuma)
+# Fusuma [![Gem Version](https://badge.fury.io/rb/fusuma.svg)](https://badge.fury.io/rb/fusuma) [![Build Status](https://travis-ci.com/iberianpig/fusuma.svg?branch=master)](https://travis-ci.com/iberianpig/fusuma)
 
 Fusuma is multitouch gesture recognizer.
 This gem makes your linux able to recognize swipes or pinchs and assign commands to them.
