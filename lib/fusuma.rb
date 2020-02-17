@@ -127,9 +127,6 @@ module Fusuma
       main_events, modifiers = events.partition { |event| event.record.mergable? }
       return nil unless (main_event = main_events.first)
 
-      # NOTE: clear buffers after detected main_event
-      @buffers.each(&:clear)
-
       main_event.record.merge(records: modifiers.map(&:record))
       main_event
     end

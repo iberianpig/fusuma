@@ -8,6 +8,14 @@ module Fusuma
       # manage events and generate command
       class GestureBuffer < Buffer
         DEFAULT_SOURCE = 'libinput_gesture_parser'
+        DEFAULT_SECONDS_TO_KEEP = 0.1
+
+        def config_param_types
+          {
+            'source': [String],
+            'seconds_to_keep': [Float, Integer]
+          }
+        end
 
         # @param event [Event]
         def buffer(event)
@@ -16,6 +24,8 @@ module Fusuma
           # - window event buffer
           # - other event buffer
           return if event&.tag != source
+
+          delete_old_events
 
           @events.push(event)
           clear unless updating?
@@ -59,6 +69,16 @@ module Fusuma
         end
 
         private
+
+        # Delete old events pushed before 0.1sec
+        def delete_old_events
+          @seconds_to_keep ||= (config_params(:seconds_to_keep) || DEFAULT_SECONDS_TO_KEEP)
+          @events.each do |e|
+            break if Time.now - e.time < @seconds_to_keep
+
+            @events.delete(e)
+          end
+        end
 
         def updating?
           return true unless @events.last.record.status =~ /begin|end/
