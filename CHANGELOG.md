@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/iberianpig/fusuma/tree/HEAD)
+## [v1.4.0](https://github.com/iberianpig/fusuma/tree/v1.4.0) (2020-02-18)
 
-[Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.3.3...HEAD)
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.3.3...v1.4.0)
 
 **Closed issues:**
 
@@ -53,6 +53,7 @@
 **Merged pull requests:**
 
 - Merge modifier event records [\#142](https://github.com/iberianpig/fusuma/pull/142) ([iberianpig](https://github.com/iberianpig))
+- Update rake requirement from ~\> 12.3 to ~\> 13.0 [\#136](https://github.com/iberianpig/fusuma/pull/136) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 
 ## [v1.2.1](https://github.com/iberianpig/fusuma/tree/v1.2.1) (2019-10-19)
 
@@ -80,7 +81,6 @@
 
 **Merged pull requests:**
 
-- Update rake requirement from ~\> 12.3 to ~\> 13.0 [\#136](https://github.com/iberianpig/fusuma/pull/136) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Fixed Spelling mistake [\#128](https://github.com/iberianpig/fusuma/pull/128) ([thomascrha](https://github.com/thomascrha))
 - \[Readme\] Added step to install Ruby [\#127](https://github.com/iberianpig/fusuma/pull/127) ([mmoraes-rafael](https://github.com/mmoraes-rafael))
 - Plugin Based Architecture [\#116](https://github.com/iberianpig/fusuma/pull/116) ([iberianpig](https://github.com/iberianpig))
