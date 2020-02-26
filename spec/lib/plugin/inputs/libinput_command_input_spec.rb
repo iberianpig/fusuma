@@ -212,6 +212,24 @@ module Fusuma
               expect(libinput_command.libinput_options).to be_include '--show-keycodes'
             end
           end
+
+          context 'when verbose: true is given as config_params' do
+            around do |example|
+              ConfigHelper.load_config_yml = <<~CONFIG
+                plugin:
+                  inputs:
+                    libinput_command_input:
+                      verbose: true
+              CONFIG
+
+              example.run
+
+              Config.custom_path = nil
+            end
+            it 'contains --verbose' do
+              expect(libinput_command.libinput_options).to be_include '--verbose'
+            end
+          end
         end
       end
     end

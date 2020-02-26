@@ -13,7 +13,8 @@ module Fusuma
             'device': [String],
             'enable-dwt': [TrueClass, FalseClass],
             'enable-tap': [TrueClass, FalseClass],
-            'show-keycodes': [TrueClass, FalseClass]
+            'show-keycodes': [TrueClass, FalseClass],
+            'verbose': [TrueClass, FalseClass]
           }
         end
 
@@ -94,11 +95,13 @@ module Fusuma
           enable_tap = '--enable-tap' if config_params(:'enable-tap')
           enable_dwt = '--enable-dwt' if config_params(:'enable-dwt')
           show_keycodes = '--show-keycodes' if config_params(:'show-keycodes')
+          verbose = '--verbose' if config_params(:verbose)
           [
             device,
             enable_dwt,
             enable_tap,
-            show_keycodes
+            show_keycodes,
+            verbose
           ].compact
         end
 
