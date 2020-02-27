@@ -64,13 +64,9 @@ module Fusuma
 
         def enough_interval?(index:)
           return true if first_time?
-          return true if (Time.now - @last_time) > interval_time(index: index)
+          return true if (Time.now - last_time) > interval_time(index: index)
 
           false
-        end
-
-        def first_time?
-          !@last_time
         end
 
         def threshold(index:)

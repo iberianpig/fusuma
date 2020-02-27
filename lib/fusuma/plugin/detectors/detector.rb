@@ -28,6 +28,10 @@ module Fusuma
           @last_time ||= Time.now
         end
 
+        def first_time?
+          @last_time.nil?
+        end
+
         def tag
           self.class.name.split('Detectors::').last.underscore
         end
