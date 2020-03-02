@@ -235,6 +235,7 @@ Fusuma plugins are provided with the `fusuma-plugin-XXXXX` naming convention and
 |--------------------------------------------------------------------------------|------------|----------------------------------------|
 | [fusuma-plugin-wmctrl](https://github.com/iberianpig/fusuma-plugin-wmctrl)     | iberianpig | Window Manager plugin for Fusuma       |
 | [fusuma-plugin-keypress](https://github.com/iberianpig/fusuma-plugin-keypress) | iberianpig | Keypress combination plugin for Fusuma |
+| [fusuma-plugin-sendkey](https://github.com/iberianpig/fusuma-plugin-sendkey)   | iberianpig | Sending Virtual keyboard events        |
 
 ## Support
 
