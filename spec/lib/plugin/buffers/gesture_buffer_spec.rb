@@ -12,8 +12,9 @@ module Fusuma
       RSpec.describe GestureBuffer do
         before do
           @buffer = GestureBuffer.new
-          @event_generator = lambda {
-            Events::Event.new(tag: 'libinput_gesture_parser',
+          @event_generator = lambda { |time = nil|
+            Events::Event.new(time: time,
+                              tag: 'libinput_gesture_parser',
                               record: Events::Records::GestureRecord.new(
                                 status: 'updating',
                                 gesture: 'SWIPE',
@@ -39,15 +40,20 @@ module Fusuma
             @buffer.buffer(event)
             expect(@buffer.events).to eq []
           end
+        end
 
+        describe '#clear_expired' do
           it 'should keep only events generated within 0.1 seconds' do
-            event1 = @event_generator.call
+            time = Time.now
+            event1 = @event_generator.call(time)
             @buffer.buffer(event1)
-            sleep 0.1 # following events should be kept
-            event2 = @event_generator.call
-            event3 = @event_generator.call
+            event2 = @event_generator.call(time + 0.1)
+            event3 = @event_generator.call(time + 0.1)
             @buffer.buffer(event2)
             @buffer.buffer(event3)
+
+            @buffer.clear_expired(current_time: time + 0.11)
+
             expect(@buffer.events).to eq [event2, event3]
           end
 
@@ -67,15 +73,18 @@ module Fusuma
 
             it 'should keep only events generated within 0.3 seconds' do
               expect(@buffer.config_params).to eq(seconds_to_keep: 0.3)
-              event1 = @event_generator.call
+              time = Time.now
+              event1 = @event_generator.call(time)
               @buffer.buffer(event1)
-              sleep 0.1
-              event2 = @event_generator.call
+              event2 = @event_generator.call(time + 0.1)
               @buffer.buffer(event2)
-              sleep 0.1
-              event3 = @event_generator.call
+              event3 = @event_generator.call(time + 0.2)
               @buffer.buffer(event3)
+              @buffer.clear_expired(current_time: time + 0.29)
               expect(@buffer.events).to eq [event1, event2, event3]
+
+              @buffer.clear_expired(current_time: time + 0.3)
+              expect(@buffer.events).to eq [event2, event3]
             end
           end
         end

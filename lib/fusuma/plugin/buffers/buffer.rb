@@ -25,6 +25,10 @@ module Fusuma
           @events.push(event)
         end
 
+        # clear old events
+        # @param current_time [Time]
+        def clear_expired(current_time: Time.now); end
+
         # clear buffer
         def clear
           @events.clear

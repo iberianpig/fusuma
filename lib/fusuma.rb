@@ -87,6 +87,7 @@ module Fusuma
     def run
       # TODO: run with multi thread
       @inputs.first.run do |event|
+        clear_expired
         filtered = filter(event)
         parsed = parse(filtered)
         buffered = buffer(parsed)
@@ -111,11 +112,9 @@ module Fusuma
     # @param buffers [Array<Buffer>]
     # @return [Array<Event>]
     def detect(buffers)
-      @detectors.reduce([]) do |detected, detector|
+      @detectors.each_with_object([]) do |detector, detected|
         if (event = detector.detect(buffers))
           detected << event
-        else
-          detected
         end
       end
     end
@@ -139,6 +138,10 @@ module Fusuma
       end
 
       executor&.execute(event)
+    end
+
+    def clear_expired
+      @buffers.each(&:clear_expired)
     end
   end
 end

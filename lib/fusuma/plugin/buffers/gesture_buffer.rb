@@ -25,10 +25,19 @@ module Fusuma
           # - other event buffer
           return if event&.tag != source
 
-          delete_old_events
-
           @events.push(event)
           clear unless updating?
+        end
+
+        def clear_expired(current_time: Time.now)
+          @seconds_to_keep ||= (config_params(:seconds_to_keep) || DEFAULT_SECONDS_TO_KEEP)
+          @events.each do |e|
+            break if current_time - e.time < @seconds_to_keep
+
+            MultiLogger.debug("#{self.class.name}##{__method__}")
+
+            @events.delete(e)
+          end
         end
 
         # @param attr [Symbol]
@@ -69,16 +78,6 @@ module Fusuma
         end
 
         private
-
-        # Delete old events pushed before 0.1sec
-        def delete_old_events
-          @seconds_to_keep ||= (config_params(:seconds_to_keep) || DEFAULT_SECONDS_TO_KEEP)
-          @events.each do |e|
-            break if Time.now - e.time < @seconds_to_keep
-
-            @events.delete(e)
-          end
-        end
 
         def updating?
           return true unless @events.last.record.status =~ /begin|end/
