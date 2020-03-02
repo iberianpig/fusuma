@@ -33,8 +33,11 @@ module Fusuma
         Plugin::Manager.require_plugins_from_relative
         Plugin::Manager.require_plugins_from_config
 
+        MultiLogger.info '---------------------------------------------'
         print_version
+        MultiLogger.info '---------------------------------------------'
         print_enabled_plugins
+        MultiLogger.info '---------------------------------------------'
         Kernel.exit(0) if option[:version]
 
         print_device_list if option[:list]
@@ -44,23 +47,19 @@ module Fusuma
       end
 
       def print_version
-        MultiLogger.info '---------------------------------------------'
         MultiLogger.info "Fusuma: #{Fusuma::VERSION}"
         MultiLogger.info "libinput: #{Plugin::Inputs::LibinputCommandInput.new.version}"
         MultiLogger.info "OS: #{`uname -rsv`}".strip
         MultiLogger.info "Distribution: #{`cat /etc/issue`}".strip
         MultiLogger.info "Desktop session: #{`echo $DESKTOP_SESSION $XDG_SESSION_TYPE`}".strip
-        MultiLogger.info '---------------------------------------------'
       end
 
       def print_enabled_plugins
-        MultiLogger.info '---------------------------------------------'
         MultiLogger.info 'Enabled Plugins: '
         Plugin::Manager.plugins
                        .reject { |k, _v| k.to_s =~ /Base/ }
                        .map { |_base, plugins| plugins.map { |plugin| "  #{plugin}" } }
                        .flatten.sort.each { |name| MultiLogger.info(name) }
-        MultiLogger.info '---------------------------------------------'
       end
 
       def print_device_list
