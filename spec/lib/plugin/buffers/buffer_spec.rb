@@ -39,13 +39,13 @@ module Fusuma
 
           context 'with config' do
             around do |example|
-              CUSTOME_SOURCE = 'custom_event'
+              @source = 'custom_event'
 
               ConfigHelper.load_config_yml = <<~CONFIG
                 plugin:
                  buffers:
                    dummy_buffer:
-                     source: #{CUSTOME_SOURCE}
+                     source: #{@source}
               CONFIG
 
               example.run
@@ -53,7 +53,7 @@ module Fusuma
               Config.custom_path = nil
             end
 
-            it { is_expected.to eq CUSTOME_SOURCE }
+            it { is_expected.to eq @source }
           end
         end
 
