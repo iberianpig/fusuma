@@ -68,7 +68,7 @@ $ sudo gem update fusuma
 
 ## Customize Gesture Mapping
 
-You can customize the settings for gestures to put and edit `~/.config/fusuma/config.yml`.
+You can customize the settings for gestures to put and edit `~/.config/fusuma/config.yml`.  
 **NOTE: You will need to create the `~/.config/fusuma` directory if it doesn't exist yet.**
 
 ```bash
@@ -191,13 +191,23 @@ swipe:
 
 ### About xdotool
 
+
 * xdotool manual (https://github.com/jordansissel/xdotool/blob/master/xdotool.pod)
 * Available keys' hint (https://github.com/jordansissel/xdotool/issues/212#issuecomment-406156157)
 
-* `xte` command is alternative of xdotool
-  * Low delay with multiple keyboard layout
-  * install with `sudo apt xautomation`
-  * manual https://linux.die.net/man/1/xte
+**NOTE: xdotool has some issues**
+
+* Gestures take a few seconds to react(https://github.com/iberianpig/fusuma/issues/113)
+
+#### Alternatives to xdotool
+
+  * [fusuma-plugin-sendkey](https://github.com/iberianpig/fusuma-plugin-sendkey) 
+    * Emulates keyboard events
+    * Wayland compatible
+
+  * `xte`
+    * [xte(1) - Linux man page](https://linux.die.net/man/1/xte)
+    * install with `sudo apt xautomation`
 
 ## Options
 
@@ -218,9 +228,8 @@ swipe:
 
 Following features are provided as plugins.
 
- * Experimental features
- * Features for specific Linux distributions
  * Adding new gestures or combinations
+ * Features for specific Linux distributions
  * Setting different gestures per applications
 
 ### Installation of fusuma plugins
@@ -231,11 +240,11 @@ Fusuma plugins are provided with the `fusuma-plugin-XXXXX` naming convention and
 
 ### Available plugins
 
-| Name                                                                           | Author     | About                                  |
-|--------------------------------------------------------------------------------|------------|----------------------------------------|
-| [fusuma-plugin-wmctrl](https://github.com/iberianpig/fusuma-plugin-wmctrl)     | iberianpig | Window Manager plugin for Fusuma       |
-| [fusuma-plugin-keypress](https://github.com/iberianpig/fusuma-plugin-keypress) | iberianpig | Keypress combination plugin for Fusuma |
-| [fusuma-plugin-sendkey](https://github.com/iberianpig/fusuma-plugin-sendkey)   | iberianpig | Sending Virtual keyboard events        |
+| Name                                                                           | About                                         |
+|--------------------------------------------------------------------------------|-----------------------------------------------|
+| [fusuma-plugin-sendkey](https://github.com/iberianpig/fusuma-plugin-sendkey)   | Emulates keyboard events                      |
+| [fusuma-plugin-wmctrl](https://github.com/iberianpig/fusuma-plugin-wmctrl)     | Manages Window and Workspace                  |
+| [fusuma-plugin-keypress](https://github.com/iberianpig/fusuma-plugin-keypress) | Detects gestures while pressing multiple keys |
 
 ## Support
 
