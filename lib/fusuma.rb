@@ -86,10 +86,10 @@ module Fusuma
       # TODO: run with multi thread
       @inputs.first.run do |event|
         clear_expired
-        filtered = filter(event)
-        parsed = parse(filtered)
-        buffered = buffer(parsed)
-        detected = detect(buffered)
+        filtered = filter(event) || next
+        parsed = parse(filtered) || next
+        buffered = buffer(parsed) || next
+        detected = detect(buffered) || next
         merged = merge(detected)
         execute(merged)
       end
@@ -104,7 +104,7 @@ module Fusuma
     end
 
     def buffer(event)
-      @buffers.each { |b| b.buffer(event) }
+      @buffers.any? { |b| b.buffer(event) } && @buffers
     end
 
     # @param buffers [Array<Buffer>]

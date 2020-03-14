@@ -18,6 +18,7 @@ module Fusuma
         end
 
         # @param event [Event]
+        # @return [Buffer, false]
         def buffer(event)
           # TODO: buffering events into buffer plugins
           # - gesture event buffer
@@ -25,8 +26,13 @@ module Fusuma
           # - other event buffer
           return if event&.tag != source
 
-          @events.push(event)
-          clear unless updating?
+          if bufferable?(event)
+            @events.push(event)
+            self
+          else
+            clear
+            false
+          end
         end
 
         def clear_expired(current_time: Time.now)
@@ -77,10 +83,13 @@ module Fusuma
           self.class.new events
         end
 
-        private
-
-        def updating?
-          return true unless @events.last.record.status =~ /begin|end/
+        def bufferable?(event)
+          case event.record.status
+          when 'begin', 'end'
+            false
+          else
+            true
+          end
         end
       end
     end

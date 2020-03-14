@@ -12,11 +12,11 @@ module Fusuma
       RSpec.describe GestureBuffer do
         before do
           @buffer = GestureBuffer.new
-          @event_generator = lambda { |time = nil|
+          @event_generator = lambda { |time = nil, status = 'updating'|
             Events::Event.new(time: time,
                               tag: 'libinput_gesture_parser',
                               record: Events::Records::GestureRecord.new(
-                                status: 'updating',
+                                status: status,
                                 gesture: 'SWIPE',
                                 finger: 3,
                                 direction: 'LEFT'
@@ -37,6 +37,15 @@ module Fusuma
 
           it 'should NOT buffer other event' do
             event = Events::Event.new(tag: 'SHOULD NOT BUFFER', record: 'dummy record')
+            @buffer.buffer(event)
+            expect(@buffer.events).to eq []
+          end
+
+          it 'should NOT buffer begin/end' do
+            event = @event_generator.call(nil, 'begin')
+            @buffer.buffer(event)
+            expect(@buffer.events).to eq []
+            event = @event_generator.call(nil, 'end')
             @buffer.buffer(event)
             expect(@buffer.events).to eq []
           end
@@ -126,6 +135,21 @@ module Fusuma
 
         describe '#gesture' do
           it 'should return string of gesture type'
+        end
+
+        describe '#bufferable?' do
+          context 'when beginning gesture' do
+            before { @event = @event_generator.call(nil, 'begin') }
+            it { expect(@buffer.bufferable?(@event)).to eq false }
+          end
+          context 'when updating gesture' do
+            before { @event = @event_generator.call(nil, 'updating') }
+            it { expect(@buffer.bufferable?(@event)).to eq true }
+          end
+          context 'when encoding gesture' do
+            before { @event = @event_generator.call(nil, 'end') }
+            it { expect(@buffer.bufferable?(@event)).to eq false }
+          end
         end
 
         describe '#empty?' do
