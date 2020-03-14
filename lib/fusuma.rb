@@ -31,7 +31,6 @@ module Fusuma
         load_custom_config(option[:config_path])
 
         Plugin::Manager.require_plugins_from_relative
-        Plugin::Manager.require_plugins_from_config
 
         MultiLogger.info '---------------------------------------------'
         print_version

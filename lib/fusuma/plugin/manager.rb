@@ -11,7 +11,7 @@ module Fusuma
         @plugin_class = plugin_class
       end
 
-      def require_siblings_from_local
+      def require_siblings_from_plugin_dir
         search_key = File.join('../../', plugin_dir_name, '*.rb')
         Dir.glob(File.expand_path("#{__dir__}/#{search_key}")).sort.each do |siblings_plugin|
           require siblings_plugin
@@ -53,7 +53,7 @@ module Fusuma
           load_paths << plugin_path
 
           manager = Manager.new(plugin_class)
-          manager.require_siblings_from_local
+          manager.require_siblings_from_plugin_dir
           manager.require_siblings_from_gems
         end
 
@@ -66,15 +66,6 @@ module Fusuma
           require_relative './buffers/buffer.rb'
           require_relative './detectors/detector.rb'
           require_relative './executors/executor.rb'
-        end
-
-        def require_plugins_from_config
-          local_plugin_paths = Config.search(Config::Index.new('local_plugin_paths'))
-          return unless local_plugin_paths
-
-          Array.new(local_plugin_paths).each do |plugin_path|
-            require plugin_path
-          end
         end
 
         def plugins

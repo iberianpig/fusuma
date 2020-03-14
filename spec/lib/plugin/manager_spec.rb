@@ -7,9 +7,9 @@ require './lib/fusuma/plugin/manager.rb'
 module Fusuma
   module Plugin
     RSpec.describe Manager do
-      describe '#require_siblings_from_local' do
-        Manager.new(Base).require_siblings_from_local
-        subject { Manager.new(Base).require_siblings_from_local }
+      describe '#require_siblings_from_plugin_dir' do
+        Manager.new(Base).require_siblings_from_plugin_dir
+        subject { Manager.new(Base).require_siblings_from_plugin_dir }
         it { expect { subject }.not_to raise_error(LoadError) }
       end
 
