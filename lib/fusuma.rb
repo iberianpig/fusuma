@@ -90,7 +90,7 @@ module Fusuma
         parsed = parse(filtered) || next
         buffered = buffer(parsed) || next
         detected = detect(buffered) || next
-        merged = merge(detected)
+        merged = merge(detected) || next
         execute(merged)
       end
     end
