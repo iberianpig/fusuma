@@ -245,6 +245,7 @@ Fusuma plugins are provided with the `fusuma-plugin-XXXXX` naming convention and
 | [fusuma-plugin-sendkey](https://github.com/iberianpig/fusuma-plugin-sendkey)   | Emulates keyboard events                      |
 | [fusuma-plugin-wmctrl](https://github.com/iberianpig/fusuma-plugin-wmctrl)     | Manages Window and Workspace                  |
 | [fusuma-plugin-keypress](https://github.com/iberianpig/fusuma-plugin-keypress) | Detects gestures while pressing multiple keys |
+| [fusuma-plugin-tap](https://github.com/iberianpig/fusuma-plugin-tap)           | Detects Tap and Hold gestures                 |
 
 ## Support
 
