@@ -76,6 +76,13 @@ $ mkdir -p ~/.config/fusuma        # create config directory
 $ nano ~/.config/fusuma/config.yml # edit config file.
 ```
 
+### About YAML Basic Syntax
+* Comments in YAML begins with the (#) character.
+* Comments must be separated from other tokens by whitespaces.
+* Indentation of whitespace is used to denote structure.
+* Tabs are not included as indentation for YAML files.
+
+
 ### Example 1: Gesture Mapping for elementary OS
 
 ```yaml
@@ -247,9 +254,21 @@ Fusuma plugins are provided with the `fusuma-plugin-XXXXX` naming convention and
 | [fusuma-plugin-keypress](https://github.com/iberianpig/fusuma-plugin-keypress) | Detects gestures while pressing multiple keys |
 | [fusuma-plugin-tap](https://github.com/iberianpig/fusuma-plugin-tap)           | Detects Tap and Hold gestures                 |
 
+## Tutorial Video
+
+[![Multitouch Touchpad Gestures in Linux with Fusuma](http://img.youtube.com/vi/bn11Iwvf29I/0.jpg)](http://www.youtube.com/watch?v=bn11Iwvf29I "Multitouch Touchpad Gestures in Linux with Fusuma")   
+[Multitouch Touchpad Gestures in Linux with Fusuma](http://www.youtube.com/watch?v=bn11Iwvf29I) by [Eric Adams](https://www.youtube.com/user/igster75)  
+
+
 ## Support
 
-[![Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/iberianpig)
+I'm a Freelance Engineer in Japan and working on these products after finishing my regular work or on my holidays.
+Currently, my open-source contribution times is not enough.
+If you like my work and want to contribute and become a sponsor, I will be able to focus on my projects.
+
+* [GitHub Sponsors](https://github.com/sponsors/iberianpig) (Zero fee!)
+* [Patreon](https://www.patreon.com/iberianpig)
+
 
 ## Contributing
 
