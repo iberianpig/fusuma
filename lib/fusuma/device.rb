@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require_relative './multi_logger'
+require_relative './libinput_command.rb'
+
 module Fusuma
   # detect input device
   class Device
@@ -56,7 +59,7 @@ module Fusuma
       # @return [Array]
       def fetch_devices
         line_parser = LineParser.new
-        Plugin::Inputs::LibinputCommandInput.new.list_devices do |line|
+        LibinputCommand.new.list_devices do |line|
           line_parser.push(line)
         end
         line_parser.generate_devices

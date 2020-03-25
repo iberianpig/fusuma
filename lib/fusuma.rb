@@ -4,6 +4,7 @@ require_relative './fusuma/version'
 require_relative './fusuma/multi_logger'
 require_relative './fusuma/config.rb'
 require_relative './fusuma/device.rb'
+require_relative './fusuma/libinput_command.rb'
 require_relative './fusuma/plugin/manager.rb'
 
 # this is top level module
@@ -47,7 +48,7 @@ module Fusuma
 
       def print_version
         MultiLogger.info "Fusuma: #{Fusuma::VERSION}"
-        MultiLogger.info "libinput: #{Plugin::Inputs::LibinputCommandInput.new.version}"
+        MultiLogger.info "libinput: #{LibinputCommand.new.version}"
         MultiLogger.info "OS: #{`uname -rsv`}".strip
         MultiLogger.info "Distribution: #{`cat /etc/issue`}".strip
         MultiLogger.info "Desktop session: #{`echo $DESKTOP_SESSION $XDG_SESSION_TYPE`}".strip
