@@ -1,5 +1,21 @@
 # Changelog
 
+## [Unreleased](https://github.com/iberianpig/fusuma/tree/HEAD)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.7.0...HEAD)
+
+**Implemented enhancements:**
+
+- Capturing Finger Taps on Touchpad [\#152](https://github.com/iberianpig/fusuma/issues/152)
+
+**Closed issues:**
+
+- When xdotool acts crazy. Workaround should be clearly informed. [\#146](https://github.com/iberianpig/fusuma/issues/146)
+
+## [v1.7.0](https://github.com/iberianpig/fusuma/tree/v1.7.0) (2020-03-25)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.6.0...v1.7.0)
+
 ## [v1.6.0](https://github.com/iberianpig/fusuma/tree/v1.6.0) (2020-03-14)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.5.0...v1.6.0)
