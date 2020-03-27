@@ -115,17 +115,15 @@ pinch:
 ```
 
 ### More Example of config.yml
-The following wiki pages can be edited by everyone.
+The following wiki pages can be edited by everyone. 
 
-https://github.com/iberianpig/fusuma/wiki/
-
-* [Ubuntu · iberianpig/fusuma Wiki](https://github.com/iberianpig/fusuma/wiki/Ubuntu)
-* [elementary OS · iberianpig/fusuma Wiki](https://github.com/iberianpig/fusuma/wiki/elementary-OS)
-* [i3 · iberianpig/fusuma Wiki](https://github.com/iberianpig/fusuma/wiki/i3)
-* [KDE to mimic MacOS · iberianpig/fusuma Wiki](https://github.com/iberianpig/fusuma/wiki/KDE-to-mimic-MacOS)
-* [POP OS with Cinnamon · iberianpig/fusuma Wiki](https://github.com/iberianpig/fusuma/wiki/POP-OS-with-Cinnamon)
-* [PopOS Default Gnome · iberianpig/fusuma Wiki](https://github.com/iberianpig/fusuma/wiki/PopOS-Default-Gnome)
-* [Ubuntu OS to mimic Mac a little · iberianpig/fusuma Wiki](https://github.com/iberianpig/fusuma/wiki/Ubuntu-OS-to-mimic-Mac-a-little)
+* [Ubuntu](https://github.com/iberianpig/fusuma/wiki/Ubuntu)
+* [elementary OS](https://github.com/iberianpig/fusuma/wiki/elementary-OS)
+* [i3](https://github.com/iberianpig/fusuma/wiki/i3)
+* [KDE to mimic MacOS](https://github.com/iberianpig/fusuma/wiki/KDE-to-mimic-MacOS)
+* [POP OS with Cinnamon](https://github.com/iberianpig/fusuma/wiki/POP-OS-with-Cinnamon)
+* [PopOS Default Gnome](https://github.com/iberianpig/fusuma/wiki/PopOS-Default-Gnome)
+* [Ubuntu OS to mimic Mac a little](https://github.com/iberianpig/fusuma/wiki/Ubuntu-OS-to-mimic-Mac-a-little)
 
 If you have a nice configuration, please share `~/.config/fusuma/config.yml` with everyone.
 
