@@ -83,88 +83,49 @@ $ nano ~/.config/fusuma/config.yml # edit config file.
 * Tabs are not included as indentation for YAML files.
 
 
-### Example 1: Gesture Mapping for elementary OS
+### Example: Gesture Mapping for Ubuntu
+
+https://github.com/iberianpig/fusuma/wiki/Ubuntu
 
 ```yaml
 swipe:
-  3:
-    left:
-      command: 'xdotool key alt+Left'
-    right:
+  3: 
+    left: 
       command: 'xdotool key alt+Right'
-    up:
-      command: 'xdotool key ctrl+t'
-      threshold: 1.5
-    down:
-      command: 'xdotool key ctrl+w'
-      threshold: 1.5
-  4:
-    left:
-      command: 'xdotool key super+Left'
-    right:
-      command: 'xdotool key super+Right'
-    up:
-      command: 'xdotool key super+a'
-    down:
-      command: 'xdotool key super+s'
-pinch:
-  2:
-    in:
-      command: 'xdotool key ctrl+plus'
-      threshold: 0.1
-    out:
-      command: 'xdotool key ctrl+minus'
-      threshold: 0.1
-
-threshold:
-  swipe: 1
-  pinch: 1
-
-interval:
-  swipe: 1
-  pinch: 1
-```
-
-### Example 2: Gesture Mapping for Ubuntu OS to mimic Mac a little
-
-```yaml
-swipe:
-  3:
-    left:
-      command: 'xdotool key alt+Shift+Tab'
-    right:
-      command: 'xdotool key alt+Tab'
-    up:
+    right: 
+      command: 'xdotool key alt+Left'
+    up: 
       command: 'xdotool key super'
-    down:
+    down: 
       command: 'xdotool key super'
   4:
-    up:
-      command: 'xdotool key super+m'
-    down:
-      command: 'xdotool key super+m'
+    left: 
+      command: 'xdotool key ctrl+alt+Down'
+    right: 
+      command: 'xdotool key ctrl+alt+Up'
+    up: 
+      command: 'xdotool key ctrl+alt+Down'
+    down: 
+      command: 'xdotool key ctrl+alt+Up'
 pinch:
   in:
-    command: 'xdotool key super+a'
-    threshold: 0.1
+    command: 'xdotool keydown ctrl click 4 keyup ctrl'
   out:
-     command: 'xdotool key super'
-     threshold: 0.1
-
-threshold:
-  swipe: 1
-  pinch: 1
-
-interval:
-  swipe: 1
-  pinch: 1
-
+    command: 'xdotool keydown ctrl click 5 keyup ctrl'
 ```
 
-### More Example
+### More Example of config.yml
 The following wiki pages can be edited by everyone.
 
 https://github.com/iberianpig/fusuma/wiki/
+
+* [Ubuntu · iberianpig/fusuma Wiki](https://github.com/iberianpig/fusuma/wiki/Ubuntu)
+* [elementary OS · iberianpig/fusuma Wiki](https://github.com/iberianpig/fusuma/wiki/elementary-OS)
+* [i3 · iberianpig/fusuma Wiki](https://github.com/iberianpig/fusuma/wiki/i3)
+* [KDE to mimic MacOS · iberianpig/fusuma Wiki](https://github.com/iberianpig/fusuma/wiki/KDE-to-mimic-MacOS)
+* [POP OS with Cinnamon · iberianpig/fusuma Wiki](https://github.com/iberianpig/fusuma/wiki/POP-OS-with-Cinnamon)
+* [PopOS Default Gnome · iberianpig/fusuma Wiki](https://github.com/iberianpig/fusuma/wiki/PopOS-Default-Gnome)
+* [Ubuntu OS to mimic Mac a little · iberianpig/fusuma Wiki](https://github.com/iberianpig/fusuma/wiki/Ubuntu-OS-to-mimic-Mac-a-little)
 
 If you have a nice configuration, please share `~/.config/fusuma/config.yml` with everyone.
 
