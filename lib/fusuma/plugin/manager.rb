@@ -57,7 +57,7 @@ module Fusuma
           manager.require_siblings_from_gems
         end
 
-        def require_plugins_from_relative
+        def require_base_plugins
           require_relative './base.rb'
           require_relative './events/event.rb'
           require_relative './inputs/input.rb'
