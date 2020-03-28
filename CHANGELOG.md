@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/iberianpig/fusuma/tree/HEAD)
+## [v1.8.0](https://github.com/iberianpig/fusuma/tree/v1.8.0) (2020-03-28)
 
-[Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.7.0...HEAD)
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.7.0...v1.8.0)
 
 **Implemented enhancements:**
 
@@ -11,6 +11,11 @@
 **Closed issues:**
 
 - When xdotool acts crazy. Workaround should be clearly informed. [\#146](https://github.com/iberianpig/fusuma/issues/146)
+
+**Merged pull requests:**
+
+- Fix cops [\#158](https://github.com/iberianpig/fusuma/pull/158) ([iberianpig](https://github.com/iberianpig))
+- Add ruby 2.7 to .travis.yml [\#157](https://github.com/iberianpig/fusuma/pull/157) ([iberianpig](https://github.com/iberianpig))
 
 ## [v1.7.0](https://github.com/iberianpig/fusuma/tree/v1.7.0) (2020-03-25)
 
@@ -147,6 +152,7 @@
 
 - Interval and threshold specific for a trigger [\#92](https://github.com/iberianpig/fusuma/pull/92) ([irq](https://github.com/irq))
 - Fix spelling: Elementary to elementary [\#90](https://github.com/iberianpig/fusuma/pull/90) ([ryonakano](https://github.com/ryonakano))
+- Assigning commands [\#73](https://github.com/iberianpig/fusuma/pull/73) ([iberianpig](https://github.com/iberianpig))
 
 ## [v0.9.2](https://github.com/iberianpig/fusuma/tree/v0.9.2) (2018-07-19)
 
@@ -235,7 +241,6 @@
 
 **Merged pull requests:**
 
-- Assigning commands [\#73](https://github.com/iberianpig/fusuma/pull/73) ([iberianpig](https://github.com/iberianpig))
 - Update rake requirement to ~\> 12.3 [\#72](https://github.com/iberianpig/fusuma/pull/72) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 
 ## [v0.3.5](https://github.com/iberianpig/fusuma/tree/v0.3.5) (2018-01-01)
@@ -279,10 +284,6 @@
 - parse\_finger\_directions: undefined method `tr' for nil:NilClass \(NoMethodError\) [\#29](https://github.com/iberianpig/fusuma/issues/29)
 - Error after upgrading to libinput 1.6.0 [\#26](https://github.com/iberianpig/fusuma/issues/26)
 
-**Merged pull requests:**
-
-- Added interval options to config. [\#36](https://github.com/iberianpig/fusuma/pull/36) ([joshuatshaffer](https://github.com/joshuatshaffer))
-
 ## [v0.2.7](https://github.com/iberianpig/fusuma/tree/v0.2.7) (2017-02-04)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v0.2.6...v0.2.7)
@@ -293,6 +294,7 @@
 
 **Merged pull requests:**
 
+- Added interval options to config. [\#36](https://github.com/iberianpig/fusuma/pull/36) ([joshuatshaffer](https://github.com/joshuatshaffer))
 - update parser [\#30](https://github.com/iberianpig/fusuma/pull/30) ([iberianpig](https://github.com/iberianpig))
 
 ## [v0.2.6](https://github.com/iberianpig/fusuma/tree/v0.2.6) (2017-01-22)
