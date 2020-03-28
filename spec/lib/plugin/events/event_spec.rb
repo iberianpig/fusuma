@@ -7,7 +7,7 @@ module Fusuma
   module Plugin
     module Events
       RSpec.describe Event do
-        let(:event) { Event.new(args) }
+        let(:event) { Event.new(**args) }
         let(:args) { { tag: 'text', record: 'dummy_text' } }
 
         class DummyRecord < Records::Record
