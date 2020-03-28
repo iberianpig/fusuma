@@ -20,7 +20,7 @@ module Fusuma
 
       def require_siblings_from_gems
         search_key = File.join(plugin_dir_name, '*.rb')
-        Gem.find_files(search_key).each do |siblings_plugin|
+        Gem.find_latest_files(search_key).each do |siblings_plugin|
           if siblings_plugin =~ %r{fusuma-plugin-(.+).*/lib/#{plugin_dir_name}/\1_.+.rb}
             require siblings_plugin
           end
