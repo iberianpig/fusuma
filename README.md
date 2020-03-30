@@ -181,8 +181,20 @@ swipe:
 *   `-d`, `--daemon`              : Daemonize process
 *   `-l`, `--list-devices`        : List available devices
 *   `-v`, `--verbose`             : Show details about the results of running fusuma
-*   `--device="Device name"`      : Open the given device only
+*   `--device="Device name"`      : Open the given device only (DEPRECATED)
 *   `--version`                   : Show fusuma version
+
+### Filter Device
+
+Set the following options to recognize multi-touch gestures only for the specified touchpad device.
+
+```yaml
+plugin:
+  filters:
+    libinput_device_filter:
+      keep_device_names:
+        - "DEVICE NAME"
+```
 
 ## Autostart (gnome-session-properties)
 1. Check the path where you installed fusuma with `$ which fusuma`
