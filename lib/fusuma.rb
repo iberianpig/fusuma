@@ -3,8 +3,7 @@
 require_relative './fusuma/version'
 require_relative './fusuma/multi_logger'
 require_relative './fusuma/config.rb'
-require_relative './fusuma/device.rb'
-require_relative './fusuma/libinput_command.rb'
+require_relative './fusuma/environment.rb'
 require_relative './fusuma/plugin/manager.rb'
 
 # this is top level module
@@ -33,38 +32,18 @@ module Fusuma
 
         Plugin::Manager.require_base_plugins
 
-        MultiLogger.info '---------------------------------------------'
-        print_version
-        MultiLogger.info '---------------------------------------------'
-        print_enabled_plugins
-        MultiLogger.info '---------------------------------------------'
+        Environment.dump_information
         Kernel.exit(0) if option[:version]
 
-        print_device_list if option[:list]
+        if option[:list]
+          Environment.print_device_list
+          Kernel.exit(0)
+        end
+
         # TODO: remove keep_device_from_option from command line options
         Plugin::Filters::LibinputDeviceFilter::KeepDevice.from_option = option[:device]
+
         Process.daemon if option[:daemon]
-      end
-
-      def print_version
-        MultiLogger.info "Fusuma: #{Fusuma::VERSION}"
-        MultiLogger.info "libinput: #{LibinputCommand.new.version}"
-        MultiLogger.info "OS: #{`uname -rsv`}".strip
-        MultiLogger.info "Distribution: #{`cat /etc/issue`}".strip
-        MultiLogger.info "Desktop session: #{`echo $DESKTOP_SESSION $XDG_SESSION_TYPE`}".strip
-      end
-
-      def print_enabled_plugins
-        MultiLogger.info 'Enabled Plugins: '
-        Plugin::Manager.plugins
-                       .reject { |k, _v| k.to_s =~ /Base/ }
-                       .map { |_base, plugins| plugins.map { |plugin| "  #{plugin}" } }
-                       .flatten.sort.each { |name| MultiLogger.info(name) }
-      end
-
-      def print_device_list
-        puts Device.available.map(&:name)
-        exit(0)
       end
 
       def load_custom_config(config_path = nil)
@@ -86,7 +65,7 @@ module Fusuma
     def run
       # TODO: run with multi thread
       @inputs.first.run do |event|
-        clear_expired
+        clear_expired_events
         filtered = filter(event) || next
         parsed = parse(filtered) || next
         buffered = buffer(parsed) || next
@@ -139,7 +118,7 @@ module Fusuma
       executor&.execute(event)
     end
 
-    def clear_expired
+    def clear_expired_events
       @buffers.each(&:clear_expired)
     end
   end

@@ -36,11 +36,25 @@ module Fusuma
                            end
         end
 
+        def config_param_sample
+          <<~SAMPLE
+            ```config.yml
+            plugin:
+              filters:
+                libinput_device_filter:
+                  keep_device_names:
+                    - "DEVICE NAME PATTERN"
+            ```
+          SAMPLE
+        end
+
         # Select Device to keep
         class KeepDevice
           def initialize(name_patterns:)
             @name_patterns = name_patterns | Array(self.class.from_option)
           end
+
+          attr_reader :name_patterns
 
           # remove cache for reloading new devices
           def reset
@@ -56,7 +70,14 @@ module Fusuma
                        Device.all.select do |device|
                          match_pattern?(device.name)
                        end
+                     end.tap do |devices|
+                       print_not_found_messages if devices.empty?
                      end
+          end
+
+          def print_not_found_messages
+            puts 'Device is not found. Check following section on your config.yml'
+            puts LibinputDeviceFilter.new.config_param_sample
           end
 
           # @return [TrueClass]
@@ -68,8 +89,20 @@ module Fusuma
           end
 
           class << self
+            attr_reader :from_option
+
             # TODO: remove from_option and command line options
-            attr_accessor :from_option
+            def from_option=(device)
+              if device
+                warn <<~COMMENT
+                  Don't use --device="Device name" option because it is deprecated.
+                  Use the options below instead.
+
+                  #{LibinputDeviceFilter.new.config_param_sample}
+                COMMENT
+              end
+              @from_option = device
+            end
           end
         end
       end

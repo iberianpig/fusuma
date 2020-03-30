@@ -23,7 +23,7 @@ opt.on('-l', '--list-devices',
 end
 
 opt.on('--device="Device name"',
-       'Open the given device only') do |v|
+       'Open the given device only (DEPRECATED)') do |v|
   option[:device] = v
 end
 
