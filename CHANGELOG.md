@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.9.0](https://github.com/iberianpig/fusuma/tree/v1.9.0) (2020-03-30)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.8.0...v1.9.0)
+
+**Closed issues:**
+
+- Touchpad is filtered in listed devices [\#156](https://github.com/iberianpig/fusuma/issues/156)
+
 ## [v1.8.0](https://github.com/iberianpig/fusuma/tree/v1.8.0) (2020-03-28)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.7.0...v1.8.0)
@@ -151,8 +159,8 @@
 **Merged pull requests:**
 
 - Interval and threshold specific for a trigger [\#92](https://github.com/iberianpig/fusuma/pull/92) ([irq](https://github.com/irq))
-- Fix spelling: Elementary to elementary [\#90](https://github.com/iberianpig/fusuma/pull/90) ([ryonakano](https://github.com/ryonakano))
 - Assigning commands [\#73](https://github.com/iberianpig/fusuma/pull/73) ([iberianpig](https://github.com/iberianpig))
+- Relax the device name regex [\#9](https://github.com/iberianpig/fusuma/pull/9) ([z0rc](https://github.com/z0rc))
 
 ## [v0.9.2](https://github.com/iberianpig/fusuma/tree/v0.9.2) (2018-07-19)
 
@@ -284,6 +292,11 @@
 - parse\_finger\_directions: undefined method `tr' for nil:NilClass \(NoMethodError\) [\#29](https://github.com/iberianpig/fusuma/issues/29)
 - Error after upgrading to libinput 1.6.0 [\#26](https://github.com/iberianpig/fusuma/issues/26)
 
+**Merged pull requests:**
+
+- Fix spelling: Elementary to elementary [\#90](https://github.com/iberianpig/fusuma/pull/90) ([ryonakano](https://github.com/ryonakano))
+- Added interval options to config. [\#36](https://github.com/iberianpig/fusuma/pull/36) ([joshuatshaffer](https://github.com/joshuatshaffer))
+
 ## [v0.2.7](https://github.com/iberianpig/fusuma/tree/v0.2.7) (2017-02-04)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v0.2.6...v0.2.7)
@@ -294,7 +307,6 @@
 
 **Merged pull requests:**
 
-- Added interval options to config. [\#36](https://github.com/iberianpig/fusuma/pull/36) ([joshuatshaffer](https://github.com/joshuatshaffer))
 - update parser [\#30](https://github.com/iberianpig/fusuma/pull/30) ([iberianpig](https://github.com/iberianpig))
 
 ## [v0.2.6](https://github.com/iberianpig/fusuma/tree/v0.2.6) (2017-01-22)
@@ -370,7 +382,6 @@
 **Merged pull requests:**
 
 - Match left and right actions [\#10](https://github.com/iberianpig/fusuma/pull/10) ([z0rc](https://github.com/z0rc))
-- Relax the device name regex [\#9](https://github.com/iberianpig/fusuma/pull/9) ([z0rc](https://github.com/z0rc))
 
 ## [v0.1.3](https://github.com/iberianpig/fusuma/tree/v0.1.3) (2016-11-01)
 
