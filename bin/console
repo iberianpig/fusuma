@@ -8,5 +8,20 @@ require 'fusuma'
 # with your gem easier. You can also use a different console, if you like.
 
 # (If you use this, don't forget to add pry to your Gemfile!)
+
+def reload!(print = true)
+  puts 'Reloading ...' if print
+  # Main project directory.
+  root_dir = File.expand_path('..', __dir__)
+  # Directories within the project that should be reloaded.
+  reload_dirs = %w{lib}
+  # Loop through and reload every file in all relevant project directories.
+  reload_dirs.each do |dir|
+    Dir.glob("#{root_dir}/#{dir}/**/*.rb").each { |f| load(f) }
+  end
+  # Return true when complete.
+  true
+end
+
 require 'pry'
 Pry.start
