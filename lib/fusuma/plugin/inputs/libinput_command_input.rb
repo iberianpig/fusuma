@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative '../../libinput_command.rb'
 require_relative './input.rb'
 
 module Fusuma
@@ -18,7 +19,13 @@ module Fusuma
         end
 
         def run
-          LibinputCommand.new(libinput_options: libinput_options).debug_events do |line|
+          LibinputCommand.new(
+            libinput_options: libinput_options,
+            commands: {
+              debug_events_command: debug_events_command,
+              list_devices_command: list_devices_command
+            }
+          ).debug_events do |line|
             yield event(record: line)
           end
         end
@@ -36,6 +43,14 @@ module Fusuma
             show_keycodes,
             verbose
           ].compact
+        end
+
+        def debug_events_command
+          config_params(:'libinput-debug-events')
+        end
+
+        def list_devices_command
+          config_params(:'libinput-list-devices')
         end
       end
     end
