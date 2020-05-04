@@ -5,7 +5,9 @@ require './lib/fusuma/libinput_command.rb'
 
 module Fusuma
   RSpec.describe LibinputCommand do
-    let(:libinput_command) { described_class.new }
+    let(:libinput_command) { described_class.new(libinput_options: libinput_options, commands: commands) }
+    let(:libinput_options) { [] }
+    let(:commands) { {} }
     describe '#version' do
       subject { libinput_command.version }
 
@@ -74,6 +76,14 @@ module Fusuma
       subject { libinput_command.list_devices }
       after { subject }
 
+      context 'with the alternative command' do
+        let(:commands) { { list_devices_command: 'dummy_list_devices' } }
+
+        it 'should call dummy events' do
+          expect(Open3).to receive(:popen3).with(/dummy_list_devices/)
+        end
+      end
+
       context 'with new cli version' do
         before do
           allow(libinput_command).to receive(:new_cli_option_available?)
@@ -103,7 +113,14 @@ module Fusuma
     describe 'debug_events' do
       subject { libinput_command.debug_events }
 
-      after { subject }
+      context 'with the alternative command' do
+        let(:commands) { { debug_events_command: 'dummy_debug_events' } }
+
+        it 'should call dummy events' do
+          expect(Open3).to receive(:popen3).with(/dummy_debug_events/)
+          subject
+        end
+      end
 
       context 'with new cli version' do
         before do
@@ -112,11 +129,11 @@ module Fusuma
             .and_return(true)
         end
 
-        it 'call `libinput debug-events`' do
+        it 'should call `libinput debug-events`' do
           command = 'libinput debug-events'
           expect(Open3).to receive(:popen3)
             .with("stdbuf -oL -- #{command}")
-            .and_return 'stub message'
+          subject
         end
       end
 
@@ -127,11 +144,23 @@ module Fusuma
             .and_return(false)
         end
 
-        it 'call `libinput-debug-events`' do
+        it 'should call `libinput-debug-events`' do
           command = 'libinput-debug-events'
           expect(Open3).to receive(:popen3)
             .with("stdbuf -oL -- #{command}")
-            .and_return 'stub message'
+          subject
+        end
+      end
+
+      context 'timeout' do
+        before do
+          allow(libinput_command).to receive(:wait_time).and_return 0.01
+          allow(libinput_command).to receive(:debug_events_with_options).and_return('sleep 0.1')
+        end
+
+        it 'should pass timeout message as block argument' do
+          line = libinput_command.debug_events { |l| break(l) }
+          expect(line).to eq LibinputCommand::TIMEOUT_MESSAGE
         end
       end
     end

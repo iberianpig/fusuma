@@ -1,17 +1,23 @@
 # frozen_string_literal: true
 
 require 'open3'
+require 'timeout'
 
 module Fusuma
   # Execute libinput command
   class LibinputCommand
-    def initialize(libinput_options: [])
+    def initialize(libinput_options: [], commands: {})
+      @debug_events_command = commands[:debug_events_command]
+      @list_devices_command = commands[:list_devices_command]
       @libinput_options = libinput_options
     end
 
     # `libinput-list-devices` and `libinput-debug-events` are deprecated,
     # use `libinput list-devices` and `libinput debug-events` from 1.8.
     NEW_CLI_OPTION_VERSION = 1.8
+
+    DEFAULT_WAIT_TIME = 0.3
+    TIMEOUT_MESSAGE = 'LIBINPUT TIMEOUT'
 
     # @return [Boolean]
     def new_cli_option_available?
@@ -35,12 +41,17 @@ module Fusuma
 
     # @yieldparam [String] gives a line in libinput debug-events output to the block
     def debug_events
-      prefix = 'stdbuf -oL --'
-      cmd = "#{prefix} #{debug_events_command} #{@libinput_options.join(' ')}".strip
-      MultiLogger.debug(debug_events: cmd)
-      Open3.popen3(cmd) do |_i, o, _e, _w|
-        o.each do |line|
-          yield(line.chomp)
+      MultiLogger.debug(debug_events: debug_events_with_options)
+      Open3.popen3(debug_events_with_options) do |_i, o, _e, _w|
+        loop do
+          line = begin
+                   Timeout.timeout(wait_time) do
+                     o.readline.chomp
+                   end
+                 rescue Timeout::Error
+                   TIMEOUT_MESSAGE
+                 end
+          yield(line)
         end
       end
     end
@@ -59,7 +70,9 @@ module Fusuma
     end
 
     def list_devices_command
-      if new_cli_option_available?
+      if @list_devices_command
+        @list_devices_command
+      elsif new_cli_option_available?
         'libinput list-devices'
       else
         'libinput-list-devices'
@@ -67,14 +80,25 @@ module Fusuma
     end
 
     def debug_events_command
-      if new_cli_option_available?
+      if @debug_events_command
+        @debug_events_command
+      elsif new_cli_option_available?
         'libinput debug-events'
       else
         'libinput-debug-events'
       end
     end
 
+    def debug_events_with_options
+      prefix = 'stdbuf -oL --'
+      "#{prefix} #{debug_events_command} #{@libinput_options.join(' ')}".strip
+    end
+
     private
+
+    def wait_time
+      DEFAULT_WAIT_TIME
+    end
 
     # which in ruby: Checking if program exists in $PATH from ruby
     # (https://stackoverflow.com/questions/2108727/which-in-ruby-checking-if-program-exists-in-path-from-ruby)
