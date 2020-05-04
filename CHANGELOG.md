@@ -1,5 +1,20 @@
 # Changelog
 
+## [v1.10.0](https://github.com/iberianpig/fusuma/tree/v1.10.0) (2020-05-04)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.9.0...v1.10.0)
+
+**Closed issues:**
+
+- Each action took about 2 secs to react [\#167](https://github.com/iberianpig/fusuma/issues/167)
+- ruby2.7 [\#164](https://github.com/iberianpig/fusuma/issues/164)
+- Zoom-in not really usable on Vivaldi [\#159](https://github.com/iberianpig/fusuma/issues/159)
+- Reversed directions with no alternatives [\#133](https://github.com/iberianpig/fusuma/issues/133)
+
+**Merged pull requests:**
+
+- Implement timeout event  [\#169](https://github.com/iberianpig/fusuma/pull/169) ([iberianpig](https://github.com/iberianpig))
+
 ## [v1.9.0](https://github.com/iberianpig/fusuma/tree/v1.9.0) (2020-03-30)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.8.0...v1.9.0)
@@ -159,8 +174,7 @@
 **Merged pull requests:**
 
 - Interval and threshold specific for a trigger [\#92](https://github.com/iberianpig/fusuma/pull/92) ([irq](https://github.com/irq))
-- Assigning commands [\#73](https://github.com/iberianpig/fusuma/pull/73) ([iberianpig](https://github.com/iberianpig))
-- Relax the device name regex [\#9](https://github.com/iberianpig/fusuma/pull/9) ([z0rc](https://github.com/z0rc))
+- Fix spelling: Elementary to elementary [\#90](https://github.com/iberianpig/fusuma/pull/90) ([ryonakano](https://github.com/ryonakano))
 
 ## [v0.9.2](https://github.com/iberianpig/fusuma/tree/v0.9.2) (2018-07-19)
 
@@ -249,6 +263,7 @@
 
 **Merged pull requests:**
 
+- Assigning commands [\#73](https://github.com/iberianpig/fusuma/pull/73) ([iberianpig](https://github.com/iberianpig))
 - Update rake requirement to ~\> 12.3 [\#72](https://github.com/iberianpig/fusuma/pull/72) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 
 ## [v0.3.5](https://github.com/iberianpig/fusuma/tree/v0.3.5) (2018-01-01)
@@ -294,7 +309,6 @@
 
 **Merged pull requests:**
 
-- Fix spelling: Elementary to elementary [\#90](https://github.com/iberianpig/fusuma/pull/90) ([ryonakano](https://github.com/ryonakano))
 - Added interval options to config. [\#36](https://github.com/iberianpig/fusuma/pull/36) ([joshuatshaffer](https://github.com/joshuatshaffer))
 
 ## [v0.2.7](https://github.com/iberianpig/fusuma/tree/v0.2.7) (2017-02-04)
@@ -382,6 +396,7 @@
 **Merged pull requests:**
 
 - Match left and right actions [\#10](https://github.com/iberianpig/fusuma/pull/10) ([z0rc](https://github.com/z0rc))
+- Relax the device name regex [\#9](https://github.com/iberianpig/fusuma/pull/9) ([z0rc](https://github.com/z0rc))
 
 ## [v0.1.3](https://github.com/iberianpig/fusuma/tree/v0.1.3) (2016-11-01)
 
