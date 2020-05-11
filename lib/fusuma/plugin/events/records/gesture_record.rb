@@ -14,10 +14,13 @@ module Fusuma
           Delta = Struct.new(:move_x, :move_y, :zoom, :rotate)
 
           # @param status [String]
+          # @param gesture [String]
+          # @param finger [String, Integer]
+          # @param direction [Delta, NilClass]
           def initialize(status:, gesture:, finger:, direction:)
             @status  = status
             @gesture = gesture
-            @finger  = finger
+            @finger  = finger.to_i
             @direction = direction
           end
         end
