@@ -4,6 +4,7 @@ require_relative './fusuma/version'
 require_relative './fusuma/multi_logger'
 require_relative './fusuma/config.rb'
 require_relative './fusuma/environment.rb'
+require_relative './fusuma/device.rb'
 require_relative './fusuma/plugin/manager.rb'
 
 # this is top level module
