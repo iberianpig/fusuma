@@ -103,9 +103,11 @@ end
 class Hash
   def deep_symbolize_keys
     deep_transform_keys do |key|
-      key.to_sym
-    rescue StandardError
-      key
+      begin
+        key.to_sym
+      rescue StandardError
+        key
+      end
     end
   end
 

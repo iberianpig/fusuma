@@ -26,3 +26,8 @@ Style/HashTransformKeys:
 # For rubocop < 1.0.0
 Style/HashTransformValues:
   Enabled: true
+
+Lint/RaiseException:
+   Enabled: true
+Lint/StructNewOverride:
+   Enabled: true
