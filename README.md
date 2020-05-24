@@ -239,6 +239,11 @@ swipe:
 - `xte`
   - [xte(1) - Linux man page](https://linux.die.net/man/1/xte)
   - install with `sudo apt xautomation`
+  
+- ydotool
+  - Wayland compatible
+  - Not heavily maintained.
+  - Requires only conf changes in fusuma.
 
 ## Options
 
