@@ -240,10 +240,10 @@ swipe:
   - [xte(1) - Linux man page](https://linux.die.net/man/1/xte)
   - install with `sudo apt xautomation`
   
-- ydotool
+- [ydotool](https://github.com/ReimuNotMoe/ydotool)
   - Wayland compatible
-  - Not heavily maintained.
-  - Requires only conf changes in fusuma.
+  - Needs more maintainers.
+  - Requires only replacing `xdotool` with `ydotool` in in fusuma conf.
 
 ## Options
 
