@@ -181,7 +181,6 @@ pinch:
   2: 
     in:
       command: "xdotool keydown ctrl click 4 keyup ctrl" # threshold: 0.5, interval: 0.5
-  2: 
     out:
       command: "xdotool keydown ctrl click 5 keyup ctrl" # threshold: 0.5, interval: 0.5
 
