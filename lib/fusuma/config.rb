@@ -28,7 +28,6 @@ module Fusuma
       @custom_path = nil
       @cache = nil
       @keymap = nil
-      reload
     end
 
     def custom_path=(new_path)

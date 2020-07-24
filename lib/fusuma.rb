@@ -48,8 +48,6 @@ module Fusuma
       end
 
       def load_custom_config(config_path = nil)
-        return unless config_path
-
         Config.custom_path = config_path
       end
     end
