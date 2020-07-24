@@ -93,5 +93,41 @@ module Fusuma
         expect(Config.instance.send(:cache, key)).to eq nil
       end
     end
+
+    describe '#validate' do
+      context 'with valid yaml' do
+        before do
+          string = <<~CONFIG
+            swipe:
+              3:
+                left:
+                  command: echo 'swipe left'
+
+          CONFIG
+          @file_path = Tempfile.open do |temp_file|
+            temp_file.tap { |f| f.write(string) }
+          end
+        end
+
+        it 'should return Hash' do
+          Config.instance.validate(@file_path)
+        end
+      end
+
+      context 'with invalid yaml' do
+        before do
+          string = <<~CONFIG
+            this is not yaml
+          CONFIG
+          @file_path = Tempfile.open do |temp_file|
+            temp_file.tap { |f| f.write(string) }
+          end
+        end
+
+        it 'raise InvalidFileError' do
+          expect { Config.instance.validate(@file_path) }.to raise_error(Config::InvalidFileError)
+        end
+      end
+    end
   end
 end

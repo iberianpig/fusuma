@@ -9,6 +9,9 @@ require 'yaml'
 module Fusuma
   # read keymap from yaml file
   class Config
+    class NotFoundError < StandardError; end
+    class InvalidFileError < StandardError; end
+
     include Singleton
 
     class << self
@@ -36,10 +39,24 @@ module Fusuma
     end
 
     def reload
-      @cache  = nil
-      @keymap = YAML.load_file(file_path).deep_symbolize_keys
-      MultiLogger.info "reload config : #{file_path}"
+      @cache = nil
+      path = find_filepath
+      MultiLogger.info "reload config: #{path}"
+      @keymap = validate(path)
       self
+    end
+
+    # @return [Hash]
+    # @raise [InvalidError]
+    def validate(path)
+      yaml = YAML.load_file(path)
+
+      raise InvalidFileError, 'Invaid YAML file' unless yaml.is_a? Hash
+
+      yaml.deep_symbolize_keys
+    rescue StandardError => e
+      MultiLogger.error e.message
+      raise InvalidFileError, e.message
     end
 
     # @param index [Index]
@@ -63,13 +80,16 @@ module Fusuma
 
     private
 
-    def file_path
+    def find_filepath
       filename = 'fusuma/config.yml'
-      if custom_path && File.exist?(expand_custom_path)
-        expand_custom_path
+      if custom_path
+        return expand_custom_path if File.exist?(expand_custom_path)
+
+        raise NotFoundError, "#{expand_custom_path} is NOT FOUND"
       elsif File.exist?(expand_config_path(filename))
         expand_config_path(filename)
       else
+        MultiLogger.warn "config file: #{expand_config_path(filename)} is NOT FOUND"
         expand_default_path(filename)
       end
     end
