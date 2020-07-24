@@ -2,6 +2,7 @@
 
 require_relative './multi_logger.rb'
 require_relative './config/index.rb'
+require_relative './config/yaml_duplication_checker.rb'
 require 'singleton'
 require 'yaml'
 
@@ -49,6 +50,13 @@ module Fusuma
     # @return [Hash]
     # @raise [InvalidError]
     def validate(path)
+      duplicates = []
+      YAMLDuplicationChecker.check(File.read(path), path) do |ignored, duplicate|
+        MultiLogger.error "#{path}: #{ignored.value} is duplicated"
+        duplicates << duplicate.value
+      end
+      raise InvalidFileError, "Detect duplicate keys #{duplicates}" unless duplicates.empty?
+
       yaml = YAML.load_file(path)
 
       raise InvalidFileError, 'Invaid YAML file' unless yaml.is_a? Hash
