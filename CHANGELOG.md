@@ -1,5 +1,43 @@
 # Changelog
 
+## [v1.11.0](https://github.com/iberianpig/fusuma/tree/v1.11.0) (2020-07-25)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.10.2...v1.11.0)
+
+**Implemented enhancements:**
+
+- Feature/yaml check [\#193](https://github.com/iberianpig/fusuma/pull/193) ([iberianpig](https://github.com/iberianpig))
+
+## [v1.10.2](https://github.com/iberianpig/fusuma/tree/v1.10.2) (2020-07-23)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.10.1...v1.10.2)
+
+**Closed issues:**
+
+- Gestures from libinput are not recognised [\#192](https://github.com/iberianpig/fusuma/issues/192)
+- Vertical 4 finger swipe and rotation not recognised [\#189](https://github.com/iberianpig/fusuma/issues/189)
+- Pinch in gesture not recognized in Popos 20.04 \(Ubuntu 20.04\) [\#184](https://github.com/iberianpig/fusuma/issues/184)
+- undefined method `deep\_symbolize\_keys' for false:FalseClass \(NoMethodError\) [\#182](https://github.com/iberianpig/fusuma/issues/182)
+- Fusuma crashes while switching between workspaces on KDE Plasma [\#181](https://github.com/iberianpig/fusuma/issues/181)
+- Window Prev/Next moves desktop environment when no active window [\#178](https://github.com/iberianpig/fusuma/issues/178)
+- Add ydotool to docs. [\#177](https://github.com/iberianpig/fusuma/issues/177)
+- Can't use alternative .config.yml [\#176](https://github.com/iberianpig/fusuma/issues/176)
+- Fusuma stops working sometimes [\#175](https://github.com/iberianpig/fusuma/issues/175)
+- Pinch \(2, in\) does not work. [\#174](https://github.com/iberianpig/fusuma/issues/174)
+
+**Merged pull requests:**
+
+- 177. Add ydootool to docs. [\#179](https://github.com/iberianpig/fusuma/pull/179) ([mattdemarillac](https://github.com/mattdemarillac))
+
+## [v1.10.1](https://github.com/iberianpig/fusuma/tree/v1.10.1) (2020-05-15)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.10.0...v1.10.1)
+
+**Closed issues:**
+
+- Some gestures are not always recognized [\#172](https://github.com/iberianpig/fusuma/issues/172)
+- Unable to reprogram Pinch  [\#171](https://github.com/iberianpig/fusuma/issues/171)
+
 ## [v1.10.0](https://github.com/iberianpig/fusuma/tree/v1.10.0) (2020-05-04)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.9.0...v1.10.0)
@@ -265,6 +303,7 @@
 
 - Assigning commands [\#73](https://github.com/iberianpig/fusuma/pull/73) ([iberianpig](https://github.com/iberianpig))
 - Update rake requirement to ~\> 12.3 [\#72](https://github.com/iberianpig/fusuma/pull/72) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- update parser [\#30](https://github.com/iberianpig/fusuma/pull/30) ([iberianpig](https://github.com/iberianpig))
 
 ## [v0.3.5](https://github.com/iberianpig/fusuma/tree/v0.3.5) (2018-01-01)
 
@@ -318,10 +357,6 @@
 **Implemented enhancements:**
 
 - How about add a "-c" options to specify config file manually? [\#24](https://github.com/iberianpig/fusuma/issues/24)
-
-**Merged pull requests:**
-
-- update parser [\#30](https://github.com/iberianpig/fusuma/pull/30) ([iberianpig](https://github.com/iberianpig))
 
 ## [v0.2.6](https://github.com/iberianpig/fusuma/tree/v0.2.6) (2017-01-22)
 
