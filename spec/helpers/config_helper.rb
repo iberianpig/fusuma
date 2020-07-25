@@ -12,5 +12,9 @@ module Fusuma
         temp_file.tap { |f| f.write(string) }
       end
     end
+
+    def clear_config_yml
+      Config.custom_path = nil
+    end
   end
 end

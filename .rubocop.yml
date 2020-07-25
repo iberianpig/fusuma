@@ -27,6 +27,10 @@ Style/HashTransformKeys:
 Style/HashTransformValues:
   Enabled: true
 
+# For compatible ruby 2.3
+Style/RedundantBegin:
+  Enabled: false
+
 Lint/RaiseException:
    Enabled: true
 Lint/StructNewOverride:

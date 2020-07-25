@@ -74,11 +74,24 @@ module Fusuma
       end
 
       context 'when run with argument "-c path/to/config.yml"' do
-        it 'should assign custom_path' do
+        before do
           allow_any_instance_of(Runner).to receive(:run)
-          config = Config.instance
-          expect { Runner.run(config_path: 'path/to/config.yml') }
-            .to change { config.custom_path }.from(nil).to('path/to/config.yml')
+          @config = Config.instance
+
+          string = <<~CONFIG
+            swipe:
+              3:
+                left:
+                  command: echo 'swipe left'
+
+          CONFIG
+          @file_path = Tempfile.open do |temp_file|
+            temp_file.tap { |f| f.write(string) }
+          end
+        end
+        it 'should assign custom_path' do
+          expect { Runner.run(config_path: @file_path) }
+            .to change { @config.custom_path }.from(nil).to(@file_path)
         end
       end
     end
