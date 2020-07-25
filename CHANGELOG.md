@@ -17,7 +17,6 @@
 - Gestures from libinput are not recognised [\#192](https://github.com/iberianpig/fusuma/issues/192)
 - Vertical 4 finger swipe and rotation not recognised [\#189](https://github.com/iberianpig/fusuma/issues/189)
 - Pinch in gesture not recognized in Popos 20.04 \(Ubuntu 20.04\) [\#184](https://github.com/iberianpig/fusuma/issues/184)
-- undefined method `deep\_symbolize\_keys' for false:FalseClass \(NoMethodError\) [\#182](https://github.com/iberianpig/fusuma/issues/182)
 - Fusuma crashes while switching between workspaces on KDE Plasma [\#181](https://github.com/iberianpig/fusuma/issues/181)
 - Window Prev/Next moves desktop environment when no active window [\#178](https://github.com/iberianpig/fusuma/issues/178)
 - Add ydotool to docs. [\#177](https://github.com/iberianpig/fusuma/issues/177)
@@ -303,7 +302,6 @@
 
 - Assigning commands [\#73](https://github.com/iberianpig/fusuma/pull/73) ([iberianpig](https://github.com/iberianpig))
 - Update rake requirement to ~\> 12.3 [\#72](https://github.com/iberianpig/fusuma/pull/72) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
-- update parser [\#30](https://github.com/iberianpig/fusuma/pull/30) ([iberianpig](https://github.com/iberianpig))
 
 ## [v0.3.5](https://github.com/iberianpig/fusuma/tree/v0.3.5) (2018-01-01)
 
@@ -357,6 +355,10 @@
 **Implemented enhancements:**
 
 - How about add a "-c" options to specify config file manually? [\#24](https://github.com/iberianpig/fusuma/issues/24)
+
+**Merged pull requests:**
+
+- update parser [\#30](https://github.com/iberianpig/fusuma/pull/30) ([iberianpig](https://github.com/iberianpig))
 
 ## [v0.2.6](https://github.com/iberianpig/fusuma/tree/v0.2.6) (2017-01-22)
 
