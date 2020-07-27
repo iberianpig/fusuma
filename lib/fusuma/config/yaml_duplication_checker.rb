@@ -6,8 +6,14 @@ module Fusuma
     # Find duplicated keys from YAML.
     module YAMLDuplicationChecker
       def self.check(yaml_string, filename, &on_duplicated)
-        # Specify filename to display helpful message when it raises an error.
-        tree = YAML.parse(yaml_string, filename: filename)
+        # Ruby 2.6+
+        tree = if Gem::Version.new(Psych::VERSION) >= Gem::Version.new('3.1.0')
+                 # Specify filename to display helpful message when it raises
+                 # an error.
+                 YAML.parse(yaml_string, filename: filename)
+               else
+                 YAML.parse(yaml_string, filename)
+               end
         return unless tree
 
         traverse(tree, &on_duplicated)
