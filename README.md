@@ -242,7 +242,7 @@ swipe:
 - [ydotool](https://github.com/ReimuNotMoe/ydotool)
   - Wayland compatible
   - Needs more maintainers.
-  - Requires only replacing `xdotool` with `ydotool` in in fusuma conf.
+  - Requires only replacing `xdotool` with `ydotool` in fusuma conf.
 
 ## Options
 
