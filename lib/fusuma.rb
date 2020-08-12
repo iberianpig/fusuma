@@ -62,8 +62,9 @@ module Fusuma
     end
 
     def run
-      # TODO: run with multi thread
-      @inputs.first.run do |event|
+      loop do
+        event = input
+        event || next
         clear_expired_events
         filtered = filter(event) || next
         parsed = parse(filtered) || next
@@ -72,6 +73,10 @@ module Fusuma
         merged = merge(detected) || next
         execute(merged)
       end
+    end
+
+    def input
+      Plugin::Inputs::Input.select(@inputs)
     end
 
     def filter(event)

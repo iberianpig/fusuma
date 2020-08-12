@@ -112,12 +112,16 @@ module Fusuma
 
     describe 'debug_events' do
       subject { libinput_command.debug_events }
+      before do
+        @dummy_io = StringIO.new('dummy')
+        allow(Open3).to receive(:popen3).with(anything).and_return([@dummy_io, nil, nil, nil])
+      end
 
       context 'with the alternative command' do
         let(:commands) { { debug_events_command: 'dummy_debug_events' } }
 
         it 'should call dummy events' do
-          expect(Open3).to receive(:popen3).with(/dummy_debug_events/)
+          expect(Open3).to receive(:popen3).with(/dummy_debug_events/).once
           subject
         end
       end
@@ -149,18 +153,6 @@ module Fusuma
           expect(Open3).to receive(:popen3)
             .with("stdbuf -oL -- #{command}")
           subject
-        end
-      end
-
-      context 'timeout' do
-        before do
-          allow(libinput_command).to receive(:wait_time).and_return 0.01
-          allow(libinput_command).to receive(:debug_events_with_options).and_return('sleep 0.1')
-        end
-
-        it 'should pass timeout message as block argument' do
-          line = libinput_command.debug_events { |l| break(l) }
-          expect(line).to eq LibinputCommand::TIMEOUT_MESSAGE
         end
       end
     end

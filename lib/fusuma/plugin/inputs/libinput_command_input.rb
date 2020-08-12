@@ -20,14 +20,12 @@ module Fusuma
           }
         end
 
-        def run
-          command.debug_events do |line|
-            yield event(record: line)
-          end
+        def io
+          @io ||= command.debug_events
         end
 
         def command
-          LibinputCommand.new(
+          @command ||= LibinputCommand.new(
             libinput_options: libinput_options,
             commands: {
               debug_events_command: debug_events_command,

@@ -39,21 +39,13 @@ module Fusuma
       end
     end
 
-    # @yieldparam [String] gives a line in libinput debug-events output to the block
+    # @return [String] return a latest line libinput debug-events
     def debug_events
-      MultiLogger.debug(debug_events: debug_events_with_options)
-      Open3.popen3(debug_events_with_options) do |_i, o, _e, _w|
-        loop do
-          line = begin
-                   Timeout.timeout(wait_time) do
-                     o.readline.chomp
-                   end
-                 rescue Timeout::Error
-                   TIMEOUT_MESSAGE
-                 end
-          yield(line)
-        end
-      end
+      @debug_events ||= begin
+                 i, o, _e, _w = Open3.popen3(debug_events_with_options)
+                 i.close
+                 o
+               end
     end
 
     # @return [String] command
