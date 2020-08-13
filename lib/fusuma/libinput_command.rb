@@ -59,7 +59,9 @@ module Fusuma
     # @return [String] command
     # @raise [SystemExit]
     def version_command
-      if which('libinput')
+      if @debug_events_command && @list_devices_command
+        "#{@list_devices_command} --version"
+      elsif which('libinput')
         'libinput --version'
       elsif which('libinput-list-devices')
         'libinput-list-devices --version'
