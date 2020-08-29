@@ -26,6 +26,7 @@ $ sudo gpasswd -a $USER input
 ```
 
 Then, You **MUST** **REBOOT** to assign this group.
+This process is needed to run fusuma without sudo.
 
 ### 2. Install libinput-tools
 
