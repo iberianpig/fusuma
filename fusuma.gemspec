@@ -24,15 +24,4 @@ Gem::Specification.new do |spec|
   spec.metadata['yard.run'] = 'yri' # use "yard" to build full HTML docs.
 
   spec.required_ruby_version = '>= 2.3' # https://packages.ubuntu.com/search?keywords=ruby&searchon=names&exact=1&suite=all&section=main
-  spec.add_development_dependency 'bundler'
-  spec.add_development_dependency 'coveralls'
-  spec.add_development_dependency 'github_changelog_generator', '~> 1.14'
-  spec.add_development_dependency 'pry-byebug', '~> 3.4'
-  spec.add_development_dependency 'pry-doc'
-  spec.add_development_dependency 'pry-inline'
-  spec.add_development_dependency 'rake', '~> 13.0'
-  spec.add_development_dependency 'reek'
-  spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rubocop'
-  spec.add_development_dependency 'yard'
 end
