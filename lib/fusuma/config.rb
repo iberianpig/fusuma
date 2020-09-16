@@ -2,6 +2,7 @@
 
 require_relative './multi_logger.rb'
 require_relative './config/index.rb'
+require_relative './config/searcher.rb'
 require_relative './config/yaml_duplication_checker.rb'
 require 'singleton'
 require 'yaml'
@@ -27,10 +28,11 @@ module Fusuma
 
     attr_reader :keymap
     attr_reader :custom_path
+    attr_reader :searcher
 
     def initialize
+      @searcher = Searcher.new
       @custom_path = nil
-      @cache = nil
       @keymap = nil
     end
 
@@ -40,7 +42,7 @@ module Fusuma
     end
 
     def reload
-      @cache = nil
+      @searcher = Searcher.new
       path = find_filepath
       MultiLogger.info "reload config: #{path}"
       @keymap = validate(path)
@@ -68,22 +70,9 @@ module Fusuma
     end
 
     # @param index [Index]
-    def search(index)
-      cache(index.cache_key) do
-        index.keys.reduce(keymap) do |location, key|
-          if location.is_a?(Hash)
-            begin
-              if key.skippable
-                location.fetch(key.symbol, location)
-              else
-                location.fetch(key.symbol, nil)
-              end
-            end
-          else
-            location
-          end
-        end
-      end
+    # @param location [Hash]
+    def search(index, location: keymap)
+      @searcher.search_with_cache(index, location: location)
     end
 
     private
@@ -112,16 +101,6 @@ module Fusuma
 
     def expand_default_path(filename)
       File.expand_path "../../#{filename}", __FILE__
-    end
-
-    def cache(key)
-      @cache ||= {}
-      key = key.join(',') if key.is_a? Array
-      if @cache.key?(key)
-        @cache[key]
-      else
-        @cache[key] = block_given? ? yield : nil
-      end
     end
   end
 end

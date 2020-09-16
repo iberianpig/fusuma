@@ -115,11 +115,15 @@ module Fusuma
     def execute(event)
       return unless event
 
-      executor = @executors.find do |e|
-        e.executable?(event)
+      l = lambda do
+        executor = @executors.find { |e| e.executable?(event) }
+        executor&.execute(event)
       end
 
-      executor&.execute(event)
+      l.call ||
+        Config::Searcher.skip { l.call } ||
+        Config::Searcher.fallback { l.call } ||
+        Config::Searcher.skip { Config::Searcher.fallback { l.call } }
     end
 
     def clear_expired_events

@@ -34,15 +34,22 @@ module Fusuma
 
       # Keys in Index
       class Key
-        def initialize(symbol_word, skippable: false)
+        def initialize(symbol_word, skippable: false, fallback: nil)
           @symbol = begin
                       symbol_word.to_sym
                     rescue StandardError
                       symbol_word
                     end
+
           @skippable = skippable
+
+          @fallback = begin
+                        fallback.to_sym
+                      rescue StandardError
+                        fallback
+                      end
         end
-        attr_reader :symbol, :skippable
+        attr_reader :symbol, :skippable, :fallback
       end
     end
   end
