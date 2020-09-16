@@ -73,14 +73,21 @@ module Fusuma
     end
 
     describe 'list_devices' do
-      subject { libinput_command.list_devices }
+      subject { libinput_command.list_devices {} }
       after { subject }
+
+      before do
+        dummy_io = StringIO.new('dummy')
+        io = StringIO.new('dummy output')
+        allow(POSIX::Spawn).to receive(:popen4).with(anything).and_return([nil, dummy_io, io, dummy_io])
+        allow(Process).to receive(:waitpid).and_return(nil)
+      end
 
       context 'with the alternative command' do
         let(:commands) { { list_devices_command: 'dummy_list_devices' } }
 
         it 'should call dummy events' do
-          expect(Open3).to receive(:popen3).with(/dummy_list_devices/)
+          expect(POSIX::Spawn).to receive(:popen4).with(/dummy_list_devices/)
         end
       end
 
@@ -92,7 +99,7 @@ module Fusuma
 
         it 'call `libinput list-devices`' do
           command = 'libinput list-devices'
-          expect(Open3).to receive(:popen3)
+          expect(POSIX::Spawn).to receive(:popen4)
             .with(command)
         end
       end
@@ -104,7 +111,7 @@ module Fusuma
 
         it 'call `libinput-list-devices`' do
           command = 'libinput-list-devices'
-          expect(Open3).to receive(:popen3)
+          expect(POSIX::Spawn).to receive(:popen4)
             .with(command)
         end
       end
@@ -113,15 +120,15 @@ module Fusuma
     describe 'debug_events' do
       subject { libinput_command.debug_events }
       before do
-        @dummy_io = StringIO.new('dummy')
-        allow(Open3).to receive(:popen3).with(anything).and_return([@dummy_io, nil, nil, nil])
+        dummy_io = StringIO.new('dummy')
+        allow(POSIX::Spawn).to receive(:popen4).with(anything).and_return([nil, dummy_io, dummy_io, dummy_io])
       end
 
       context 'with the alternative command' do
         let(:commands) { { debug_events_command: 'dummy_debug_events' } }
 
         it 'should call dummy events' do
-          expect(Open3).to receive(:popen3).with(/dummy_debug_events/).once
+          expect(POSIX::Spawn).to receive(:popen4).with(/dummy_debug_events/).once
           subject
         end
       end
@@ -135,7 +142,7 @@ module Fusuma
 
         it 'should call `libinput debug-events`' do
           command = 'libinput debug-events'
-          expect(Open3).to receive(:popen3)
+          expect(POSIX::Spawn).to receive(:popen4)
             .with("stdbuf -oL -- #{command}")
           subject
         end
@@ -150,7 +157,7 @@ module Fusuma
 
         it 'should call `libinput-debug-events`' do
           command = 'libinput-debug-events'
-          expect(Open3).to receive(:popen3)
+          expect(POSIX::Spawn).to receive(:popen4)
             .with("stdbuf -oL -- #{command}")
           subject
         end

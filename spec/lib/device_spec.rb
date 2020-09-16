@@ -19,12 +19,12 @@ module Fusuma
 
       before do
         Device.reset
-        allow_any_instance_of(LibinputCommand)
-          .to receive(:list_devices_command)
-          .and_return(libinput_device_command)
-        allow(Open3).to receive(:popen3)
+        @dummy_io = StringIO.new('dummy')
+        allow(Process).to receive(:waitpid).and_return(nil)
+
+        allow(POSIX::Spawn).to receive(:popen4)
           .with(libinput_device_command)
-          .and_yield(nil, list_devices_output, nil, nil)
+          .and_return([nil, @dummy_io, list_devices_output, @dummy_io])
       end
 
       context 'with XPS-9360 (have a correct device)' do
