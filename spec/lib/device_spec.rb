@@ -15,10 +15,14 @@ module Fusuma
     end
 
     describe '.available' do
-      let(:libinput_device_command) { 'libinput list-devices' }
+      let(:libinput_device_command) { 'dummy-libinput-list-devices' }
 
       before do
         Device.reset
+        allow_any_instance_of(LibinputCommand)
+          .to receive(:list_devices_command)
+          .and_return(libinput_device_command)
+
         @dummy_io = StringIO.new('dummy')
         allow(Process).to receive(:waitpid).and_return(nil)
 
