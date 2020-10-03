@@ -29,10 +29,12 @@ module Fusuma
           input.create_event(record: line)
         end
 
+        # @return [IO]
         def io
           raise NotImplementedError, "override #{self.class.name}##{__method__}"
         end
 
+        # @return [Event]
         def create_event(record: 'dummy input')
           Events::Event.new(tag: tag, record: record).tap do |e|
             MultiLogger.debug(input_event: e)
