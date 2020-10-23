@@ -25,8 +25,11 @@ This gem makes your linux able to recognize swipes or pinchs and assign commands
 $ sudo gpasswd -a $USER input
 ```
 
-Then, You **MUST** **REBOOT** to assign this group.
-This process is needed to run fusuma without sudo.
+Then, You apply the change with no logout or reboot.
+
+```bash
+$ newgrp input
+```
 
 ### 2. Install libinput-tools
 
