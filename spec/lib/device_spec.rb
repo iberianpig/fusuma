@@ -43,7 +43,7 @@ module Fusuma
         end
 
         it { expect(Device.available).to be_a Array }
-        it { expect(Device.available.map(&:name)).to eq ['Christopher’s Trackpad', 'bcm5974'] }
+        it { expect(Device.available.map(&:name)).to eq ['bcm5974', 'Christopher’s Trackpad'] }
       end
 
       context "context with the device's name not found at first line" do
