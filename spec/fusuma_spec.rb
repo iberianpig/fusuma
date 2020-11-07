@@ -25,10 +25,7 @@ module Fusuma
 
       context 'when run with argument "--version"' do
         # NOTE: skip print reload config message
-        before do
-          allow(Config.instance).to receive(:reload).and_return nil
-          allow(MultiLogger).to receive(:info).with(anything)
-        end
+        before { allow(MultiLogger).to receive(:info).with(anything) }
         it 'should print version' do
           expect(MultiLogger).to receive(:info)
             .with("Fusuma: #{Fusuma::VERSION}")

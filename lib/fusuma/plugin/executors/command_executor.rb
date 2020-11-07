@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'posix/spawn'
 require_relative './executor.rb'
 
 module Fusuma
@@ -12,11 +13,8 @@ module Fusuma
             break unless command
 
             MultiLogger.info(command: command)
-            pid = fork do
-              Process.daemon(true)
-              exec(command.to_s)
-            end
 
+            pid = POSIX::Spawn.spawn(command.to_s)
             Process.detach(pid)
           end
         end

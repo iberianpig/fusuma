@@ -20,14 +20,14 @@ module Fusuma
           }
         end
 
-        def run
-          command.debug_events do |line|
-            yield event(record: line)
-          end
+        # @return [IO]
+        def io
+          @io ||= command.debug_events
         end
 
+        # @return [LibinputCommand]
         def command
-          LibinputCommand.new(
+          @command ||= LibinputCommand.new(
             libinput_options: libinput_options,
             commands: {
               debug_events_command: debug_events_command,
@@ -36,6 +36,7 @@ module Fusuma
           )
         end
 
+        # @return [Array]
         def libinput_options
           device = ("--device='#{config_params(:device)}'" if config_params(:device))
           enable_tap = '--enable-tap' if config_params(:'enable-tap')

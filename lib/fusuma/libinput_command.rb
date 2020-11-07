@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require 'open3'
-require 'timeout'
+require 'posix/spawn'
 
 module Fusuma
   # Execute libinput command
@@ -34,26 +33,21 @@ module Fusuma
     def list_devices
       cmd = list_devices_command
       MultiLogger.debug(list_devices: cmd)
-      Open3.popen3(cmd) do |_i, o, _e, _w|
-        o.each { |line| yield(line) }
-      end
+      p, i, o, e = POSIX::Spawn.popen4(cmd)
+      i.close
+      o.each { |line| yield(line) }
+    ensure
+      [i, o, e].each { |io| io.close unless io.closed? }
+      Process.waitpid(p)
     end
 
-    # @yieldparam [String] gives a line in libinput debug-events output to the block
+    # @return [String] return a latest line libinput debug-events
     def debug_events
-      MultiLogger.debug(debug_events: debug_events_with_options)
-      Open3.popen3(debug_events_with_options) do |_i, o, _e, _w|
-        loop do
-          line = begin
-                   Timeout.timeout(wait_time) do
-                     o.readline.chomp
-                   end
-                 rescue Timeout::Error
-                   TIMEOUT_MESSAGE
-                 end
-          yield(line)
-        end
-      end
+      @debug_events ||= begin
+                          _p, i, o, _e = POSIX::Spawn.popen4(debug_events_with_options)
+                          i.close
+                          o
+                        end
     end
 
     # @return [String] command

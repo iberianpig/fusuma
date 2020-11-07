@@ -9,22 +9,33 @@ module Fusuma
       RSpec.describe Input do
         let(:input) { described_class.new }
 
-        describe '#run' do
-          subject { input.run { 'dummy' } }
+        describe '#io' do
+          subject { input.io { 'dummy' } }
           it { expect { subject }.to raise_error(NotImplementedError) }
         end
 
-        describe '#event' do
-          subject { input.event }
+        describe '#create_event' do
+          subject { input.create_event }
           it { is_expected.to be_a Events::Event }
 
           it { expect(input.tag).to eq 'input' }
         end
+
+        describe '.select' do
+          subject { Input.select([DummyInput.new]) }
+
+          it { is_expected.to be_a Events::Event }
+        end
       end
 
       class DummyInput < Input
-        def run
-          yield event
+        def io
+          @io ||= begin
+                    r, w = IO.pipe
+                    w.puts 'hoge'
+                    w.close
+                    r
+                  end
         end
       end
 
@@ -44,9 +55,9 @@ module Fusuma
           Config.custom_path = nil
         end
 
-        describe '#run' do
-          subject { dummy_input.run { |e| return e } }
-          it { is_expected.to be_a Events::Event }
+        describe '#io' do
+          subject { dummy_input.io }
+          it { is_expected.to be_a IO }
         end
 
         describe '#config_params' do

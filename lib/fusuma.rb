@@ -62,8 +62,9 @@ module Fusuma
     end
 
     def run
-      # TODO: run with multi thread
-      @inputs.first.run do |event|
+      loop do
+        event = input
+        event || next
         clear_expired_events
         filtered = filter(event) || next
         parsed = parse(filtered) || next
@@ -72,6 +73,10 @@ module Fusuma
         merged = merge(detected) || next
         execute(merged)
       end
+    end
+
+    def input
+      Plugin::Inputs::Input.select(@inputs)
     end
 
     def filter(event)
@@ -110,11 +115,15 @@ module Fusuma
     def execute(event)
       return unless event
 
-      executor = @executors.find do |e|
-        e.executable?(event)
+      l = lambda do
+        executor = @executors.find { |e| e.executable?(event) }
+        executor&.execute(event)
       end
 
-      executor&.execute(event)
+      l.call ||
+        Config::Searcher.skip { l.call } ||
+        Config::Searcher.fallback { l.call } ||
+        Config::Searcher.skip { Config::Searcher.fallback { l.call } }
     end
 
     def clear_expired_events

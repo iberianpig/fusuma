@@ -29,13 +29,9 @@ module Fusuma
         end
 
         describe '#execute' do
-          it 'fork' do
-            allow(Process).to receive(:daemon).with(true)
-            allow(Process).to receive(:detach).with(anything)
-            expect(@executor).to receive(:fork).and_yield do |block_context|
-              expect(block_context).to receive(:exec).with(anything)
-            end
-
+          it 'spawn' do
+            expect(POSIX::Spawn).to receive(:spawn).with('echo dummy')
+            expect(Process).to receive(:detach).with(anything)
             @executor.execute(@event)
           end
         end

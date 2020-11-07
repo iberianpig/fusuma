@@ -9,6 +9,17 @@ module Fusuma
       RSpec.describe LibinputCommandInput do
         let(:input) { described_class.new }
 
+        describe '#io' do
+          before do
+            @dummy_io = StringIO.new('dummy')
+            libinput_command = instance_double(LibinputCommand)
+            allow(LibinputCommand).to receive(:new).and_return(libinput_command)
+            allow(libinput_command).to receive(:debug_events).and_return @dummy_io
+          end
+
+          it { expect(input.io).to eq @dummy_io }
+        end
+
         describe '#libinput_options' do
           it { expect(input.libinput_options).to be_a Array }
 
