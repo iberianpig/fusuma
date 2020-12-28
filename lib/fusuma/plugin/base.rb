@@ -2,11 +2,13 @@
 
 require_relative './manager.rb'
 require_relative '../config.rb'
+require_relative '../custom_process'
 
 module Fusuma
   module Plugin
     # Create a Plugin Class with extending this class
     class Base
+      include CustomProcess
       # when inherited from subclass
       def self.inherited(subclass)
         subclass_path = caller_locations(1..1).first.path

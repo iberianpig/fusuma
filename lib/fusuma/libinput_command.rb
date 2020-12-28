@@ -41,12 +41,12 @@ module Fusuma
       Process.waitpid(p)
     end
 
-    # @return [String] return a latest line libinput debug-events
+    # @return [Integer, IO] return a latest line libinput debug-events
     def debug_events
-      @debug_events ||= begin
-                          _p, i, o, _e = POSIX::Spawn.popen4(debug_events_with_options)
+      @debug_events = begin
+                          p, i, o, _e = POSIX::Spawn.popen4(debug_events_with_options)
                           i.close
-                          o
+                          [p, o]
                         end
     end
 

@@ -8,6 +8,9 @@ module Fusuma
     module Inputs
       # libinput commands wrapper
       class LibinputCommandInput < Input
+
+        attr_reader :pid
+
         def config_param_types
           {
             'device': [String],
@@ -22,7 +25,11 @@ module Fusuma
 
         # @return [IO]
         def io
-          @io ||= command.debug_events
+          @io ||= begin
+                    @pid, io = command.debug_events
+                    io
+                  end
+
         end
 
         # @return [LibinputCommand]

@@ -14,7 +14,7 @@ module Fusuma
           }
         end
 
-        attr_reader :writer
+        attr_reader :pid
 
         def io
           @io ||= begin

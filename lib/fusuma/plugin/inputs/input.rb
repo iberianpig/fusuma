@@ -21,12 +21,24 @@ module Fusuma
 
           begin
             line = io.readline_nonblock("\n").chomp
+          rescue EOFError => e
+            warn "#{input.class.name}: #{e}"
+            warn "Send SIGKILL to fusuma processes"
+            inputs.reject { |i| i == input }.each do |i|
+              Process.kill(:SIGKILL, i.pid)
+            end
+            exit 1
           rescue StandardError => e
-            warn e
+            warn "#{input.class.name}: #{e}"
             exit 1
           end
 
           input.create_event(record: line)
+        end
+
+        # @return [Integer]
+        def pid
+          raise NotImplementedError, "override #{self.class.name}##{__method__}"
         end
 
         # @return [IO]
