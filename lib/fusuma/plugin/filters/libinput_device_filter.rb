@@ -25,8 +25,7 @@ module Fusuma
             keep_device.reset
             return false
           end
-
-          keep_device.all.map(&:id).any? { |device_id| record.to_s =~ /^\s?#{device_id}\s/ }
+          keep_device.all.map(&:id).any? { |device_id| record.to_s =~ /^[\s-]?#{device_id}\s/ }
         end
 
         def keep_device

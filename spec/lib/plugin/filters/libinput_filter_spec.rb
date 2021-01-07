@@ -76,6 +76,16 @@ module Fusuma
             it 'should keep record' do
               expect(@filter.keep?(@event.record)).to be true
             end
+
+            context 'when inlcluding -' do
+              before do
+                text = '-event18  GESTURE_SWIPE_UPDATE  +1.44s  4 11.23/ 1.00 (36.91/ 3.28 unaccelerated) '
+                @event = Events::Event.new(tag: 'libinput_command_input', record: text)
+              end
+              it 'should keep record' do
+                expect(@filter.keep?(@event.record)).to be true
+              end
+            end
           end
           context 'when new device is added' do
             before do
