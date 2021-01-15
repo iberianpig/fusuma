@@ -21,7 +21,7 @@ module Fusuma
         # @return [Events::Event]
         def create_event(record:)
           @last_time = Time.now
-          Events::Event.new(time: Time.now, tag: tag, record: record)
+          Events::Event.new(time: @last_time, tag: tag, record: record)
         end
 
         def last_time
