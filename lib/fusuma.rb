@@ -2,10 +2,10 @@
 
 require_relative './fusuma/version'
 require_relative './fusuma/multi_logger'
-require_relative './fusuma/config.rb'
-require_relative './fusuma/environment.rb'
-require_relative './fusuma/device.rb'
-require_relative './fusuma/plugin/manager.rb'
+require_relative './fusuma/config'
+require_relative './fusuma/environment'
+require_relative './fusuma/device'
+require_relative './fusuma/plugin/manager'
 
 # this is top level module
 module Fusuma

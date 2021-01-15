@@ -1,19 +1,17 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require './lib/fusuma/custom_process.rb'
+require './lib/fusuma/custom_process'
 
 module Fusuma
   RSpec.describe CustomProcess do
-
     class ForkTest
       include CustomProcess
 
       def call
-        fork { puts "hoge" }
+        fork { puts 'hoge' }
       end
     end
-
 
     describe '.fork' do
       before do

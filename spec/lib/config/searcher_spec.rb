@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require './lib/fusuma/config.rb'
-require './lib/fusuma/config/searcher.rb'
+require './lib/fusuma/config'
+require './lib/fusuma/config/searcher'
 
 # spec for Config
 module Fusuma

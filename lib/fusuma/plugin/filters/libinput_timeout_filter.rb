@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative './filter.rb'
-require_relative '../../libinput_command.rb'
+require_relative './filter'
+require_relative '../../libinput_command'
 
 module Fusuma
   module Plugin

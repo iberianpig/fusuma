@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './input.rb'
+require_relative './input'
 
 module Fusuma
   module Plugin
@@ -18,11 +18,11 @@ module Fusuma
 
         def io
           @io ||= begin
-                    reader, writer = create_io
-                    @pid = start(reader, writer)
+            reader, writer = create_io
+            @pid = start(reader, writer)
 
-                    reader
-                  end
+            reader
+          end
         end
 
         def start(reader, writer)

@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
 require_relative './multi_logger'
-require_relative './libinput_command.rb'
+require_relative './libinput_command'
 
 module Fusuma
   # detect input device
   class Device
-    attr_reader :available
-    attr_reader :name
-    attr_reader :id
+    attr_reader :available, :name, :id
 
     def initialize(id: nil, name: nil, available: nil)
       @id = id

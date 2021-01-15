@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'bundler/setup'
-require 'helpers/config_helper.rb'
+require 'helpers/config_helper'
 require 'coveralls'
 Coveralls.wear!
 

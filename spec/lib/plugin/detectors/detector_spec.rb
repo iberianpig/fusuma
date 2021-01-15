@@ -2,11 +2,11 @@
 
 require 'spec_helper'
 
-require './lib/fusuma/plugin/events/event.rb'
-require './lib/fusuma/plugin/detectors/detector.rb'
-require './lib/fusuma/config.rb'
-require_relative '../buffers/dummy_buffer.rb'
-require_relative './dummy_detector.rb'
+require './lib/fusuma/plugin/events/event'
+require './lib/fusuma/plugin/detectors/detector'
+require './lib/fusuma/config'
+require_relative '../buffers/dummy_buffer'
+require_relative './dummy_detector'
 
 module Fusuma
   module Plugin

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require './lib/fusuma/plugin/executors/command_executor.rb'
-require './lib/fusuma/plugin/events/event.rb'
+require './lib/fusuma/plugin/executors/command_executor'
+require './lib/fusuma/plugin/events/event'
 
 module Fusuma
   module Plugin

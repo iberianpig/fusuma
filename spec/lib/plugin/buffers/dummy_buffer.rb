@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require './lib/fusuma/plugin/buffers/buffer.rb'
+require './lib/fusuma/plugin/buffers/buffer'
 
 module Fusuma
   module Plugin

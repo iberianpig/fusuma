@@ -36,18 +36,18 @@ module Fusuma
       class Key
         def initialize(symbol_word, skippable: false, fallback: nil)
           @symbol = begin
-                      symbol_word.to_sym
-                    rescue StandardError
-                      symbol_word
-                    end
+            symbol_word.to_sym
+          rescue StandardError
+            symbol_word
+          end
 
           @skippable = skippable
 
           @fallback = begin
-                        fallback.to_sym
-                      rescue StandardError
-                        fallback
-                      end
+            fallback.to_sym
+          rescue StandardError
+            fallback
+          end
         end
         attr_reader :symbol, :skippable, :fallback
       end

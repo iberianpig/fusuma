@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
-require_relative '../../libinput_command.rb'
-require_relative './input.rb'
+require_relative '../../libinput_command'
+require_relative './input'
 
 module Fusuma
   module Plugin
     module Inputs
       # libinput commands wrapper
       class LibinputCommandInput < Input
-
         attr_reader :pid
 
         def config_param_types
@@ -26,10 +25,9 @@ module Fusuma
         # @return [IO]
         def io
           @io ||= begin
-                    @pid, io = command.debug_events
-                    io
-                  end
-
+            @pid, io = command.debug_events
+            io
+          end
         end
 
         # @return [LibinputCommand]

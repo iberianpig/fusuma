@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './text_record.rb'
+require_relative './text_record'
 
 module Fusuma
   module Plugin
@@ -18,6 +18,7 @@ module Fusuma
           # @param finger [String, Integer]
           # @param direction [Delta, NilClass]
           def initialize(status:, gesture:, finger:, direction:)
+            super()
             @status  = status
             @gesture = gesture
             @finger  = finger.to_i

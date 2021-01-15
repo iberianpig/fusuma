@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require './lib/fusuma/plugin/inputs/libinput_command_input.rb'
+require './lib/fusuma/plugin/inputs/libinput_command_input'
 
 module Fusuma
   module Plugin
@@ -12,7 +12,7 @@ module Fusuma
         describe '#io' do
           before do
             @dummy_io = StringIO.new('dummy')
-            dummy_pid = 999999999
+            dummy_pid = 999_999_999
             libinput_command = instance_double(LibinputCommand)
             allow(LibinputCommand).to receive(:new).and_return(libinput_command)
             allow(libinput_command).to receive(:debug_events).and_return([dummy_pid, @dummy_io])

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative './multi_logger.rb'
-require_relative './config/index.rb'
-require_relative './config/searcher.rb'
-require_relative './config/yaml_duplication_checker.rb'
+require_relative './multi_logger'
+require_relative './config/index'
+require_relative './config/searcher'
+require_relative './config/yaml_duplication_checker'
 require 'singleton'
 require 'yaml'
 
@@ -12,6 +12,7 @@ module Fusuma
   # read keymap from yaml file
   class Config
     class NotFoundError < StandardError; end
+
     class InvalidFileError < StandardError; end
 
     include Singleton
@@ -26,9 +27,7 @@ module Fusuma
       end
     end
 
-    attr_reader :keymap
-    attr_reader :custom_path
-    attr_reader :searcher
+    attr_reader :keymap, :custom_path, :searcher
 
     def initialize
       @searcher = Searcher.new
@@ -109,11 +108,9 @@ end
 class Hash
   def deep_symbolize_keys
     deep_transform_keys do |key|
-      begin
-        key.to_sym
-      rescue StandardError
-        key
-      end
+      key.to_sym
+    rescue StandardError
+      key
     end
   end
 

@@ -2,9 +2,9 @@
 
 require 'spec_helper'
 
-require './lib/fusuma/plugin/events/event.rb'
-require './lib/fusuma/plugin/events/records/gesture_record.rb'
-require './lib/fusuma/plugin/buffers/gesture_buffer.rb'
+require './lib/fusuma/plugin/events/event'
+require './lib/fusuma/plugin/events/records/gesture_record'
+require './lib/fusuma/plugin/buffers/gesture_buffer'
 
 module Fusuma
   module Plugin
@@ -161,6 +161,23 @@ module Fusuma
           context 'buffered some gestures' do
             before { @buffer.buffer(@event_generator.call) }
             it { expect(@buffer.empty?).to be false }
+          end
+        end
+
+        describe '#slect_by_events' do
+          context 'without block' do
+            it { expect(@buffer.select_by_events).to be_a Enumerator }
+          end
+
+          context 'with block' do
+            before do
+              @e1 = @event_generator.call(nil, 'hoge')
+              @e2 = @event_generator.call(nil, 'hoge')
+              @e3 = @event_generator.call(nil, 'fuga')
+              [@e1, @e2, @e3].each { |event| @buffer.buffer(event) }
+            end
+            it { expect(@buffer.select_by_events { |e| e.record.status == 'hoge' }).to be_a GestureBuffer }
+            it { expect(@buffer.select_by_events { |e| e.record.status == 'hoge' }.events).to eq [@e1, @e2] }
           end
         end
       end

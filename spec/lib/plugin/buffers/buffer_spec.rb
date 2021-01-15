@@ -2,8 +2,8 @@
 
 require 'spec_helper'
 
-require './lib/fusuma/plugin/events/event.rb'
-require_relative './dummy_buffer.rb'
+require './lib/fusuma/plugin/events/event'
+require_relative './dummy_buffer'
 
 module Fusuma
   module Plugin

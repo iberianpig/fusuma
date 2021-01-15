@@ -30,12 +30,12 @@ module Fusuma
     end
 
     # @yieldparam [String] gives a line in libinput list-devices output to the block
-    def list_devices
+    def list_devices(&block)
       cmd = list_devices_command
       MultiLogger.debug(list_devices: cmd)
       p, i, o, e = POSIX::Spawn.popen4(cmd)
       i.close
-      o.each { |line| yield(line) }
+      o.each(&block)
     ensure
       [i, o, e].each { |io| io.close unless io.closed? }
       Process.waitpid(p)
@@ -44,10 +44,10 @@ module Fusuma
     # @return [Integer, IO] return a latest line libinput debug-events
     def debug_events
       @debug_events = begin
-                          p, i, o, _e = POSIX::Spawn.popen4(debug_events_with_options)
-                          i.close
-                          [p, o]
-                        end
+        p, i, o, _e = POSIX::Spawn.popen4(debug_events_with_options)
+        i.close
+        [p, o]
+      end
     end
 
     # @return [String] command

@@ -2,6 +2,7 @@ inherit_from: .rubocop_todo.yml
 
 AllCops:
   TargetRubyVersion: '2.5'
+  NewCops: enable
 
 Metrics/ModuleLength:
   Exclude:
@@ -30,11 +31,13 @@ Style/HashTransformKeys:
 Style/HashTransformValues:
   Enabled: true
 
-# For compatible ruby 2.3
-Style/RedundantBegin:
-  Enabled: false
-
 Lint/RaiseException:
    Enabled: true
 Lint/StructNewOverride:
    Enabled: true
+
+# for declaring dummy classes in ./spec
+Lint/ConstantDefinitionInBlock:
+  Exclude:
+    - "**/*_spec.rb"
+

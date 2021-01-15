@@ -14,6 +14,7 @@ module Fusuma
           # @param [Config::Index] index
           # @param [Symbol] position [:prefix, :body, :surfix]
           def initialize(index:, position: :body)
+            super()
             @index = index
             @position = position
           end

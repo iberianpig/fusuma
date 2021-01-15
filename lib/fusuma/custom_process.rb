@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 module Fusuma
+  # Rename process
   module CustomProcess
     def fork
-      Process.fork { 
-        Process.setproctitle('fusuma: #%s' % self.class)
+      Process.fork do
+        Process.setproctitle("fusuma: #{self.class.name}")
         yield
-      }
+      end
     end
   end
 end
-

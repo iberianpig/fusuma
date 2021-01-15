@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require './lib/fusuma/plugin/events/event.rb'
+require './lib/fusuma/plugin/events/event'
 
 module Fusuma
   module Plugin

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative '../base.rb'
-require_relative './records/record.rb'
-require_relative './records/text_record.rb'
+require_relative '../base'
+require_relative './records/record'
+require_relative './records/text_record'
 
 module Fusuma
   module Plugin
@@ -15,7 +15,8 @@ module Fusuma
         # @param time [Time]
         # @param tag [Tag]
         # @param record [String, Record]
-        def initialize(time: Time.now, tag:, record:)
+        def initialize(tag:, record:, time: Time.now)
+          super()
           @time = time
           @tag = tag
           @record = case record

@@ -2,10 +2,10 @@
 
 require 'spec_helper'
 
-require './lib/fusuma/plugin/detectors/pinch_detector.rb'
-require './lib/fusuma/plugin/buffers/gesture_buffer.rb'
-require './lib/fusuma/plugin/events/event.rb'
-require './lib/fusuma/config.rb'
+require './lib/fusuma/plugin/detectors/pinch_detector'
+require './lib/fusuma/plugin/buffers/gesture_buffer'
+require './lib/fusuma/plugin/events/event'
+require './lib/fusuma/config'
 
 module Fusuma
   module Plugin

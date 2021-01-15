@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'posix/spawn'
-require_relative './executor.rb'
+require_relative './executor'
 
 module Fusuma
   module Plugin

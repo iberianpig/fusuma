@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative './filter.rb'
-require_relative '../../device.rb'
+require_relative './filter'
+require_relative '../../device'
 
 module Fusuma
   module Plugin
@@ -30,9 +30,9 @@ module Fusuma
 
         def keep_device
           @keep_device ||= begin
-                             from_config = Array(config_params(:keep_device_names))
-                             KeepDevice.new(name_patterns: from_config)
-                           end
+            from_config = Array(config_params(:keep_device_names))
+            KeepDevice.new(name_patterns: from_config)
+          end
         end
 
         def config_param_sample

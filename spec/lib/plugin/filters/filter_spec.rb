@@ -3,9 +3,9 @@
 require 'spec_helper'
 require 'tempfile'
 
-require './lib/fusuma/config.rb'
-require './lib/fusuma/plugin/filters/filter.rb'
-require './lib/fusuma/plugin/events/event.rb'
+require './lib/fusuma/config'
+require './lib/fusuma/plugin/filters/filter'
+require './lib/fusuma/plugin/events/event'
 
 module Fusuma
   module Plugin

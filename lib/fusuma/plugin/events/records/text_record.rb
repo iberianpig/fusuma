@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './record.rb'
+require_relative './record'
 
 module Fusuma
   module Plugin
@@ -10,6 +10,7 @@ module Fusuma
         class TextRecord < Record
           # @param text [String]
           def initialize(text)
+            super()
             @text = text
           end
 

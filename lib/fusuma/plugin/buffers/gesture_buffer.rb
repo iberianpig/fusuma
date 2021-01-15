@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './buffer.rb'
+require_relative './buffer'
 
 module Fusuma
   module Plugin
@@ -76,10 +76,10 @@ module Fusuma
           @events.empty?
         end
 
-        def select_by_events
-          return enum_for(:select) unless block_given?
+        def select_by_events(&block)
+          return enum_for(:select_by_events) unless block_given?
 
-          events = @events.select { |event| yield event }
+          events = @events.select(&block)
           self.class.new events
         end
 

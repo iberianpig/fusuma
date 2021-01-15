@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative '../events/records/record.rb'
-require_relative '../events/records/gesture_record.rb'
+require_relative '../events/records/record'
+require_relative '../events/records/gesture_record'
 
 module Fusuma
   module Plugin

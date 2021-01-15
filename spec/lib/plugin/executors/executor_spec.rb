@@ -2,9 +2,9 @@
 
 require 'spec_helper'
 
-require './lib/fusuma/config.rb'
-require './lib/fusuma/plugin/executors/executor.rb'
-require './lib/fusuma/plugin/events/event.rb'
+require './lib/fusuma/config'
+require './lib/fusuma/plugin/executors/executor'
+require './lib/fusuma/plugin/events/event'
 
 module Fusuma
   module Plugin

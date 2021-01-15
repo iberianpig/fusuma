@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../multi_logger.rb'
+require_relative '../multi_logger'
 
 module Fusuma
   module Plugin
@@ -57,14 +57,14 @@ module Fusuma
         end
 
         def require_base_plugins
-          require_relative './base.rb'
-          require_relative './events/event.rb'
-          require_relative './inputs/input.rb'
-          require_relative './filters/filter.rb'
-          require_relative './parsers/parser.rb'
-          require_relative './buffers/buffer.rb'
-          require_relative './detectors/detector.rb'
-          require_relative './executors/executor.rb'
+          require_relative './base'
+          require_relative './events/event'
+          require_relative './inputs/input'
+          require_relative './filters/filter'
+          require_relative './parsers/parser'
+          require_relative './buffers/buffer'
+          require_relative './detectors/detector'
+          require_relative './executors/executor'
         end
 
         def plugins

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require './lib/fusuma/plugin/inputs/input.rb'
+require './lib/fusuma/plugin/inputs/input'
 
 module Fusuma
   module Plugin
@@ -31,11 +31,11 @@ module Fusuma
       class DummyInput < Input
         def io
           @io ||= begin
-                    r, w = IO.pipe
-                    w.puts 'hoge'
-                    w.close
-                    r
-                  end
+            r, w = IO.pipe
+            w.puts 'hoge'
+            w.close
+            r
+          end
         end
       end
 

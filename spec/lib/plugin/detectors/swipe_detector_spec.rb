@@ -2,10 +2,10 @@
 
 require 'spec_helper'
 
-require './lib/fusuma/plugin/detectors/swipe_detector.rb'
-require './lib/fusuma/plugin/buffers/gesture_buffer.rb'
-require './lib/fusuma/plugin/events/records/gesture_record.rb'
-require './lib/fusuma/config.rb'
+require './lib/fusuma/plugin/detectors/swipe_detector'
+require './lib/fusuma/plugin/buffers/gesture_buffer'
+require './lib/fusuma/plugin/events/records/gesture_record'
+require './lib/fusuma/config'
 
 module Fusuma
   module Plugin

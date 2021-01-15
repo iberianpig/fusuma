@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require './lib/fusuma/plugin/events/records/gesture_record.rb'
+require './lib/fusuma/plugin/events/records/gesture_record'
 
 module Fusuma
   module Plugin

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative './version.rb'
-require_relative './libinput_command.rb'
-require_relative './multi_logger.rb'
+require_relative './version'
+require_relative './libinput_command'
+require_relative './multi_logger'
 
 module Fusuma
   # Output Environment information

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require './lib/fusuma/plugin/detectors/detector.rb'
-require './lib/fusuma/plugin/buffers/buffer.rb'
-require './lib/fusuma/plugin/events/records/index_record.rb'
+require './lib/fusuma/plugin/detectors/detector'
+require './lib/fusuma/plugin/buffers/buffer'
+require './lib/fusuma/plugin/events/records/index_record'
 
 module Fusuma
   module Plugin

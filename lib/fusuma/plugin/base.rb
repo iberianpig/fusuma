@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative './manager.rb'
-require_relative '../config.rb'
+require_relative './manager'
+require_relative '../config'
 require_relative '../custom_process'
 
 module Fusuma
@@ -11,6 +11,7 @@ module Fusuma
       include CustomProcess
       # when inherited from subclass
       def self.inherited(subclass)
+        super
         subclass_path = caller_locations(1..1).first.path
         Manager.add(plugin_class: subclass, plugin_path: subclass_path)
       end

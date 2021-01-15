@@ -12,13 +12,9 @@ module Fusuma
     attr_accessor :debug_mode
 
     def initialize
-      super(STDOUT)
-      @err_logger = Logger.new(STDERR)
+      super($stdout)
+      @err_logger = Logger.new($stderr)
       @debug_mode = false
-    end
-
-    def info(msg)
-      super(msg)
     end
 
     def debug(msg)

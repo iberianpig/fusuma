@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require './lib/fusuma/libinput_command.rb'
+require './lib/fusuma/libinput_command'
 
 module Fusuma
   RSpec.describe LibinputCommand do
@@ -73,7 +73,7 @@ module Fusuma
     end
 
     describe 'list_devices' do
-      subject { libinput_command.list_devices {} }
+      subject { libinput_command.list_devices }
       after { subject }
 
       before do

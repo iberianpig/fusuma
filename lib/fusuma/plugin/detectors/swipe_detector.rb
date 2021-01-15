@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './detector.rb'
+require_relative './detector'
 
 module Fusuma
   module Plugin
@@ -72,23 +72,23 @@ module Fusuma
         def threshold(index:)
           @threshold ||= {}
           @threshold[index.cache_key] ||= begin
-                           keys_specific = Config::Index.new [*index.keys, 'threshold']
-                           keys_global = Config::Index.new ['threshold', type]
-                           config_value = Config.search(keys_specific) ||
-                                          Config.search(keys_global) || 1
-                           BASE_THERESHOLD * config_value
-                         end
+            keys_specific = Config::Index.new [*index.keys, 'threshold']
+            keys_global = Config::Index.new ['threshold', type]
+            config_value = Config.search(keys_specific) ||
+                           Config.search(keys_global) || 1
+            BASE_THERESHOLD * config_value
+          end
         end
 
         def interval_time(index:)
           @interval_time ||= {}
           @interval_time[index.cache_key] ||= begin
-              keys_specific = Config::Index.new [*index.keys, 'interval']
-              keys_global = Config::Index.new ['interval', type]
-              config_value = Config.search(keys_specific) ||
-                             Config.search(keys_global) || 1
-              BASE_INTERVAL * config_value
-            end
+            keys_specific = Config::Index.new [*index.keys, 'interval']
+            keys_global = Config::Index.new ['interval', type]
+            config_value = Config.search(keys_specific) ||
+                           Config.search(keys_global) || 1
+            BASE_INTERVAL * config_value
+          end
         end
 
         # direction of gesture
@@ -109,8 +109,8 @@ module Fusuma
 
           def calc
             if @move_x.abs > @move_y.abs
-              @move_x > 0 ? RIGHT : LEFT
-            elsif @move_y > 0
+              @move_x.positive? ? RIGHT : LEFT
+            elsif @move_y.positive?
               DOWN
             else
               UP

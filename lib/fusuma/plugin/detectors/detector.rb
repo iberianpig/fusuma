@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative '../base.rb'
-require_relative '../events/event.rb'
+require_relative '../base'
+require_relative '../events/event'
 
 module Fusuma
   module Plugin

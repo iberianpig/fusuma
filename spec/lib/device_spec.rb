@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require './lib/fusuma/device.rb'
-require './lib/fusuma/plugin/inputs/libinput_command_input.rb'
+require './lib/fusuma/device'
+require './lib/fusuma/plugin/inputs/libinput_command_input'
 
 module Fusuma
   RSpec.describe Device do

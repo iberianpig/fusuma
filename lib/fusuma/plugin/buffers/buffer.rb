@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../base.rb'
+require_relative '../base'
 
 module Fusuma
   module Plugin
@@ -8,6 +8,7 @@ module Fusuma
       # buffer events and output
       class Buffer < Base
         def initialize(*args)
+          super()
           @events = Array.new(*args)
         end
 

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require './lib/fusuma.rb'
-require './lib/fusuma/plugin/inputs/libinput_command_input.rb'
-require './lib/fusuma/plugin/filters/libinput_device_filter.rb'
+require './lib/fusuma'
+require './lib/fusuma/plugin/inputs/libinput_command_input'
+require './lib/fusuma/plugin/filters/libinput_device_filter'
 
 module Fusuma
   RSpec.describe Runner do
@@ -44,11 +44,18 @@ module Fusuma
       context 'when run with argument "-l"' do
         it 'should print device list' do
           allow(Device).to receive(:available) {
-                             [Device.new(name: 'test_device1'),
-                              Device.new(name: 'test_device2')]
-                           }
+            [
+              Device.new(name: 'test_device1'),
+              Device.new(name: 'test_device2')
+            ]
+          }
+
+          expected = <<~OUTPUT
+            test_device1
+            test_device2
+          OUTPUT
           expect { Runner.run(list: true) }.to raise_error(SystemExit)
-            .and output("test_device1\ntest_device2\n").to_stdout
+            .and output(/#{expected}/).to_stdout
         end
       end
 
