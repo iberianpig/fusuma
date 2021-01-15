@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'pathname'
 require_relative '../multi_logger.rb'
 
 module Fusuma
