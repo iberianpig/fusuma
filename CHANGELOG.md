@@ -247,7 +247,7 @@
 
 **Closed issues:**
 
-- Print system information for debuging [\#70](https://github.com/iberianpig/fusuma/issues/70)
+- Print system information for debugging [\#70](https://github.com/iberianpig/fusuma/issues/70)
 - rescue from SIGINT Interruption with Ctrl-C [\#64](https://github.com/iberianpig/fusuma/issues/64)
 
 ## [v0.7.1](https://github.com/iberianpig/fusuma/tree/v0.7.1) (2018-06-01)
