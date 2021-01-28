@@ -17,7 +17,7 @@ This gem makes your linux able to recognize swipes or pinchs and assign commands
 
 ## Installation
 
-### 1. Grant permission to read the touchpad device
+### Grant permission to read the touchpad device
 
 **IMPORTANT**: You **MUST** be a member of the **INPUT** group to read touchpad by Fusuma.
 
@@ -31,7 +31,9 @@ Then, You apply the change with no logout or reboot.
 $ newgrp input
 ```
 
-### 2. Install libinput-tools
+### For Debian Based Distros (Ubuntu, Debian, Mint, Pop!OS)
+
+#### 1. Install libinput-tools
 
 You need `libinput` release 1.0 or later.
 
@@ -39,7 +41,7 @@ You need `libinput` release 1.0 or later.
 $ sudo apt-get install libinput-tools
 ```
 
-### 3. Install Ruby
+#### 2. Install Ruby
 
 Fusuma runs in Ruby, so you must install it first.
 
@@ -47,18 +49,54 @@ Fusuma runs in Ruby, so you must install it first.
 $ sudo apt-get install ruby
 ```
 
-### 4. Install Fusuma
+#### 3. Install Fusuma
 
 ```bash
 $ sudo gem install fusuma
 ```
 
-### 5. Install xdotool (optional)
+#### 4. Install xdotool (optional)
 
 For sending shortcuts:
 
 ```bash
 $ sudo apt-get install xdotool
+```
+
+### For Arch Based Distros (Manjaro, Arch)
+
+#### 1. Install libinput.
+
+You need `libinput` release 1.0 or later. This is most probably installed by default on Manjaro
+
+```z-h
+$ sudo pacman -S libinput
+```
+
+#### 2. Install Ruby
+
+Fusuma runs in Ruby, so you must install it first.
+
+```zsh
+$ sudo pacman -S ruby
+```
+
+#### 3. Install Fusuma
+
+**Note:** By default in Arch Linux, when running ```gem```, gems are installed per-user (into ```~/.gem/ruby/```), instead of system-wide (into ```/usr/lib/ruby/gems/```). This is considered the best way to manage gems on Arch, because otherwise they might interfere with gems installed by Pacman. (From Arch Wiki)
+
+To install gems system-wide, see any of the methods listed on [Arch Wiki](https://wiki.archlinux.org/index.php/ruby#Installing_gems_system-wide)
+
+```zsh
+$ sudo gem install fusuma
+```
+
+#### 4. Install xdotool (optional)
+
+For sending shortcuts:
+
+```zsh
+$ sudo pacman -S xdotool
 ```
 
 ### Touchpad not working in GNOME
