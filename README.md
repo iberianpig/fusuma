@@ -83,6 +83,10 @@ $ sudo pacman -S ruby
 
 #### 3. Install Fusuma
 
+Note: By default in Arch Linux, when running ```gem```, gems are installed per-user (into ```~/.gem/ruby/```), instead of system-wide (into ```/usr/lib/ruby/gems/```). This is considered the best way to manage gems on Arch, because otherwise they might interfere with gems installed by Pacman. (From Arch Wiki)
+
+To install gems system-wide, see any of the methods listed on [Arch Wiki](https://wiki.archlinux.org/index.php/ruby#Installing_gems_system-wide)
+
 ```zsh
 $ sudo gem install fusuma
 ```
