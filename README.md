@@ -31,7 +31,9 @@ Then, You apply the change with no logout or reboot.
 $ newgrp input
 ```
 
-### 2. Install libinput-tools
+### For Debian Based Distros (Ubuntu, Debian, Mint, Pop!OS)
+
+#### 1. Install libinput-tools
 
 You need `libinput` release 1.0 or later.
 
@@ -39,7 +41,7 @@ You need `libinput` release 1.0 or later.
 $ sudo apt-get install libinput-tools
 ```
 
-### 3. Install Ruby
+#### 2. Install Ruby
 
 Fusuma runs in Ruby, so you must install it first.
 
@@ -47,18 +49,50 @@ Fusuma runs in Ruby, so you must install it first.
 $ sudo apt-get install ruby
 ```
 
-### 4. Install Fusuma
+#### 3. Install Fusuma
 
 ```bash
 $ sudo gem install fusuma
 ```
 
-### 5. Install xdotool (optional)
+#### 4. Install xdotool (optional)
 
 For sending shortcuts:
 
 ```bash
 $ sudo apt-get install xdotool
+```
+
+### For Arch Based Distros (Manjaro, Arch)
+
+#### 1. Install libinput.
+
+You need `libinput` release 1.0 or later. This is most probably installed by default on Manjaro
+
+```z-h
+$ sudo pacman -S libinput
+```
+
+#### 2. Install Ruby
+
+Fusuma runs in Ruby, so you must install it first.
+
+```zsh
+$ sudo pacman -S ruby
+```
+
+#### 3. Install Fusuma
+
+```zsh
+$ sudo gem install fusuma
+```
+
+#### 4. Install xdotool (optional)
+
+For sending shortcuts:
+
+```zsh
+$ sudo pacman -S xdotool
 ```
 
 ### Touchpad not working in GNOME
