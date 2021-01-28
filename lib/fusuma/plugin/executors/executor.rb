@@ -15,7 +15,7 @@ module Fusuma
           raise NotImplementedError, "override #{self.class.name}##{__method__}"
         end
 
-        # execute somthing
+        # execute something
         # @param _event [Event]
         # @return [nil]
         def execute(_event)
