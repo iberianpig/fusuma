@@ -41,27 +41,27 @@ module Fusuma
             expect(@buffer.events).to eq []
           end
 
-          it 'should NOT buffer begin/end' do
-            event = @event_generator.call(nil, 'begin')
-            @buffer.buffer(event)
-            expect(@buffer.events).to eq []
-            event = @event_generator.call(nil, 'end')
-            @buffer.buffer(event)
-            expect(@buffer.events).to eq []
+          it 'should buffer begin/end' do
+            begin_event = @event_generator.call(nil, 'begin')
+            @buffer.buffer(begin_event)
+            expect(@buffer.events).to eq [begin_event]
+            end_event = @event_generator.call(nil, 'end')
+            @buffer.buffer(end_event)
+            expect(@buffer.events).to eq [begin_event, end_event]
           end
         end
 
         describe '#clear_expired' do
-          it 'should keep only events generated within 0.1 seconds' do
+          it 'should keep only events generated within 30 seconds' do
             time = Time.now
             event1 = @event_generator.call(time)
             @buffer.buffer(event1)
-            event2 = @event_generator.call(time + 0.1)
-            event3 = @event_generator.call(time + 0.1)
+            event2 = @event_generator.call(time + 100)
+            event3 = @event_generator.call(time + 100)
             @buffer.buffer(event2)
             @buffer.buffer(event3)
 
-            @buffer.clear_expired(current_time: time + 0.11)
+            @buffer.clear_expired(current_time: time + 100.1)
 
             expect(@buffer.events).to eq [event2, event3]
           end
@@ -135,21 +135,6 @@ module Fusuma
 
         describe '#gesture' do
           it 'should return string of gesture type'
-        end
-
-        describe '#bufferable?' do
-          context 'when beginning gesture' do
-            before { @event = @event_generator.call(nil, 'begin') }
-            it { expect(@buffer.bufferable?(@event)).to eq false }
-          end
-          context 'when updating gesture' do
-            before { @event = @event_generator.call(nil, 'updating') }
-            it { expect(@buffer.bufferable?(@event)).to eq true }
-          end
-          context 'when encoding gesture' do
-            before { @event = @event_generator.call(nil, 'end') }
-            it { expect(@buffer.bufferable?(@event)).to eq false }
-          end
         end
 
         describe '#empty?' do

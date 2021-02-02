@@ -8,7 +8,7 @@ module Fusuma
       # manage events and generate command
       class GestureBuffer < Buffer
         DEFAULT_SOURCE = 'libinput_gesture_parser'
-        DEFAULT_SECONDS_TO_KEEP = 0.1
+        DEFAULT_SECONDS_TO_KEEP = 100
 
         def config_param_types
           {
@@ -18,7 +18,7 @@ module Fusuma
         end
 
         # @param event [Event]
-        # @return [Buffer, false]
+        # @return [Buffer, FalseClass]
         def buffer(event)
           # TODO: buffering events into buffer plugins
           # - gesture event buffer
@@ -26,16 +26,13 @@ module Fusuma
           # - other event buffer
           return if event&.tag != source
 
-          if bufferable?(event)
-            @events.push(event)
-            self
-          else
-            clear
-            false
-          end
+          @events.push(event)
+          self
         end
 
         def clear_expired(current_time: Time.now)
+          clear if ended?
+
           @seconds_to_keep ||= (config_params(:seconds_to_keep) || DEFAULT_SECONDS_TO_KEEP)
           @events.each do |e|
             break if current_time - e.time < @seconds_to_keep
@@ -46,17 +43,28 @@ module Fusuma
           end
         end
 
+        def ended?
+          return false if empty?
+
+          @events.last.record.status == 'end'
+        end
+
         # @param attr [Symbol]
         # @return [Float]
         def sum_attrs(attr)
-          @events.map { |gesture_event| gesture_event.record.direction[attr].to_f }
-                 .inject(:+)
+          updating_events.map do |gesture_event|
+            gesture_event.record.direction[attr].to_f
+          end.inject(:+)
+        end
+
+        def updating_events
+          @events.select { |e| e.record.status == 'update' }
         end
 
         # @param attr [Symbol]
         # @return [Float]
         def avg_attrs(attr)
-          sum_attrs(attr).to_f / @events.length
+          sum_attrs(attr).to_f / updating_events.length
         end
 
         # return [Integer]
@@ -83,13 +91,14 @@ module Fusuma
           self.class.new events
         end
 
-        def bufferable?(event)
-          case event.record.status
-          when 'begin', 'end'
-            false
-          else
-            true
-          end
+        def select_from_last_begin
+          return self if empty?
+
+          index_from_last = @events.reverse.find_index { |e| e.record.status == 'begin' }
+          return GestureBuffer.new([]) if index_from_last.nil?
+
+          index_last_begin = events.length - index_from_last - 1
+          GestureBuffer.new(@events[index_last_begin..-1])
         end
       end
     end
