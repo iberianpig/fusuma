@@ -44,8 +44,10 @@ module Fusuma
         def parse_direction(line)
           return if line.nil?
 
-          move_x, move_y, _, _, _, zoom, _, rotate = line.tr('/|(|)', ' ').split
+          move_x, move_y, unaccelerated_x, unaccelerated_y, _, zoom, _, rotate =
+            line.tr('/|(|)', ' ').split
           Events::Records::GestureRecord::Delta.new(move_x.to_f, move_y.to_f,
+                                                    unaccelerated_x.to_f, unaccelerated_y.to_f,
                                                     zoom.to_f, rotate.to_f)
         end
       end

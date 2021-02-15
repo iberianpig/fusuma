@@ -4,6 +4,7 @@ require_relative './multi_logger'
 require_relative './config/index'
 require_relative './config/searcher'
 require_relative './config/yaml_duplication_checker'
+require_relative './hash_support'
 require 'singleton'
 require 'yaml'
 
@@ -48,8 +49,8 @@ module Fusuma
       self
     end
 
-    # @return [Hash]
-    # @raise [InvalidError]
+    # @return [Hash] If check passes
+    # @raise [InvalidFileError] If check does not pass
     def validate(path)
       duplicates = []
       YAMLDuplicationChecker.check(File.read(path), path) do |ignored, duplicate|
@@ -101,24 +102,5 @@ module Fusuma
     def expand_default_path(filename)
       File.expand_path "../../#{filename}", __FILE__
     end
-  end
-end
-
-# activesupport-4.1.1/lib/active_support/core_ext/hash/keys.rb
-class Hash
-  def deep_symbolize_keys
-    deep_transform_keys do |key|
-      key.to_sym
-    rescue StandardError
-      key
-    end
-  end
-
-  def deep_transform_keys(&block)
-    result = {}
-    each do |key, value|
-      result[yield(key)] = value.is_a?(Hash) ? value.deep_transform_keys(&block) : value
-    end
-    result
   end
 end

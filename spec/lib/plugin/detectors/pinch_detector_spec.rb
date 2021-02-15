@@ -38,21 +38,24 @@ module Fusuma
           context 'with not enough pinch events in buffer' do
             before do
               directions = [
-                Events::Records::GestureRecord::Delta.new(0, 0, 1, 0),
-                Events::Records::GestureRecord::Delta.new(0, 0, 1.1, 0)
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 1, 0),
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 1.1, 0)
               ]
               events = create_events(directions: directions)
 
               events.each { |event| @buffer.buffer(event) }
             end
-            it { expect(@detector.detect([@buffer])).to eq nil }
+            it 'should have repeat record' do
+              expect(@detector.detect([@buffer]).record.trigger).to eq :repeat
+            end
           end
 
           context 'with enough pinch IN event' do
             before do
               directions = [
-                Events::Records::GestureRecord::Delta.new(0, 0, 1.0, 0),
-                Events::Records::GestureRecord::Delta.new(0, 0, 1.2, 0)
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 1.0, 0),
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 1.0, 0),
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 2.0, 0)
               ]
               events = create_events(directions: directions)
 
@@ -71,8 +74,9 @@ module Fusuma
           context 'with enough pinch OUT event' do
             before do
               directions = [
-                Events::Records::GestureRecord::Delta.new(0, 0, 1.0, 0),
-                Events::Records::GestureRecord::Delta.new(0, 0, 0.7, 0)
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 1.0, 0),
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 1.0, 0),
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0.7, 0)
               ]
               events = create_events(directions: directions)
 
@@ -90,7 +94,13 @@ module Fusuma
         def create_events(directions: [])
           record_type = PinchDetector::GESTURE_RECORD_TYPE
           directions.map do |direction|
-            gesture_record = Events::Records::GestureRecord.new(status: 'update',
+            status = if directions[0].equal? direction
+                       'begin'
+                     else
+                       'update'
+                     end
+
+            gesture_record = Events::Records::GestureRecord.new(status: status,
                                                                 gesture: record_type,
                                                                 finger: 3,
                                                                 direction: direction)

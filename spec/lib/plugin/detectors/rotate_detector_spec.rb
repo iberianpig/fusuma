@@ -38,8 +38,8 @@ module Fusuma
           context 'with not enough rotate events in buffer' do
             before do
               directions = [
-                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0.4),
-                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0.5)
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, 0.4),
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, 0.5)
               ]
               events = create_events(directions: directions)
 
@@ -51,16 +51,14 @@ module Fusuma
           context 'with enough rotate IN event' do
             before do
               directions = [
-                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0.5),
-                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0.6)
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, 0.5),
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, 0.6)
               ]
               events = create_events(directions: directions)
 
               events.each { |event| @buffer.buffer(event) }
             end
-            it {
-              expect(@detector.detect([@buffer])).to be_a Events::Event
-            }
+            it { expect(@detector.detect([@buffer])).to be_a Events::Event }
             it { expect(@detector.detect([@buffer]).record).to be_a Events::Records::IndexRecord }
             it { expect(@detector.detect([@buffer]).record.index).to be_a Config::Index }
             it 'should detect 3 fingers rotate-clockwise' do
@@ -72,8 +70,8 @@ module Fusuma
           context 'with enough rotate OUT event' do
             before do
               directions = [
-                Events::Records::GestureRecord::Delta.new(0, 0, 0, -0.5),
-                Events::Records::GestureRecord::Delta.new(0, 0, 0, -0.6)
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, -0.5),
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, -0.6)
               ]
               events = create_events(directions: directions)
 
