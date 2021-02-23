@@ -19,8 +19,12 @@ module Fusuma
     include Singleton
 
     class << self
-      def search(keys)
-        instance.search(keys)
+      def search(index)
+        instance.search(index)
+      end
+
+      def find_executor_key(index)
+        instance.find_executor_key(index)
       end
 
       def custom_path=(new_path)
@@ -73,6 +77,15 @@ module Fusuma
     # @param location [Hash]
     def search(index, location: keymap)
       @searcher.search_with_cache(index, location: location)
+    end
+
+    # @param index [Config::Index]
+    # @return Symbol
+    def find_executor_key(index)
+      executor_keys = Plugin::Executors::Executor.plugins.map(&:config_keys).flatten
+      executor_keys.find do |executor_key|
+        search(Index.new([*index.keys, executor_key]))
+      end
     end
 
     private

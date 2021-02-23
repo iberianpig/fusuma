@@ -63,8 +63,7 @@ module Fusuma
 
     def run
       loop do
-        event = input
-        event || next
+        event = input || next
         clear_expired_events
         filtered = filter(event) || next
         parsed = parse(filtered) || next
@@ -75,18 +74,26 @@ module Fusuma
       end
     end
 
+    # @return [Plugin::Events::Event]
     def input
       Plugin::Inputs::Input.select(@inputs)
     end
 
+    # @param [Plugin::Events::Event]
+    # @return [Plugin::Events::Event]
     def filter(event)
       event if @filters.any? { |f| f.filter(event) }
     end
 
+    # @param [Plugin::Events::Event]
+    # @return [Plugin::Events::Event]
     def parse(event)
       @parsers.reduce(event) { |e, p| p.parse(e) if e }
     end
 
+    # @param [Plugin::Events::Event]
+    # @return [Array<Plugin::Buffers::Buffer>]
+    # @return [NilClass]
     def buffer(event)
       @buffers.any? { |b| b.buffer(event) } && @buffers
     end
@@ -101,29 +108,42 @@ module Fusuma
       end
     end
 
-    # @param events [Array<Event>]
-    # @return [Event] a Event merged all records from arguments
+    # @param events [Array<Plugin::Events::Event>]
+    # @return [Plugin::Events::Event] Event merged all records from arguments
     # @return [NilClass] when event is NOT given
     def merge(events)
       main_events, modifiers = events.partition { |event| event.record.mergable? }
-      return nil unless (main_event = main_events.first)
+      main_events.sort_by! { |e| e.record.trigger_priority }
 
-      main_event.record.merge(records: modifiers.map(&:record))
-      main_event
+      main_events.lazy.map do |main_event|
+        Config::Searcher.find_condition do
+          main_event.record.merge(records: modifiers.map(&:record))
+        end
+
+        main_event
+      end.first
     end
 
+    # @param event [Plugin::Events::Event]
     def execute(event)
       return unless event
 
-      l = lambda do
-        executor = @executors.find { |e| e.executable?(event) }
-        executor&.execute(event)
+      # Find executable condition and executor
+      condition, executor = Config::Searcher.find_condition do
+        executor_key = Config.find_executor_key(event.record.index)
+        next unless executor_key
+
+        @executors.find { |e| e.class.config_keys.include?(executor_key) && e.executable?(event) }
       end
 
-      l.call ||
-        Config::Searcher.skip { l.call } ||
-        Config::Searcher.fallback { l.call } ||
-        Config::Searcher.skip { Config::Searcher.fallback { l.call } }
+      return if executor.nil?
+
+      # Check interval and execute
+      Config::Searcher.with_condition(condition) do
+        executor.enough_interval?(event) &&
+          executor.update_interval(event) &&
+          executor.execute(event)
+      end
     end
 
     def clear_expired_events

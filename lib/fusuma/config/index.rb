@@ -19,6 +19,11 @@ module Fusuma
                   [Key.new(keys)]
                 end
       end
+
+      def to_s
+        @keys.map(&:to_s)
+      end
+
       attr_reader :keys
 
       def cache_key
@@ -49,6 +54,13 @@ module Fusuma
             fallback
           end
         end
+
+        def inspect
+          skip_marker = @skippable && Searcher.skip? ? '(skip)' : ''
+          fallback_marker = @fallback && Searcher.fallback? ? '(fallback)' : ''
+          "#{@symbol}#{skip_marker}#{fallback_marker}"
+        end
+
         attr_reader :symbol, :skippable, :fallback
       end
     end

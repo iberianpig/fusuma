@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Patch to hash
 class Hash
   # activesupport-4.1.1/lib/active_support/core_ext/hash/keys.rb

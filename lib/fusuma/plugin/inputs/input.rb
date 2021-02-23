@@ -12,7 +12,7 @@ module Fusuma
         # Wait multiple inputs until it becomes readable
         # and read lines with nonblock
         # @param inputs [Array<Input>]
-        # @return Event
+        # @return [Event]
         def self.select(inputs)
           ios = IO.select(inputs.map(&:io))
           io = ios&.first&.first

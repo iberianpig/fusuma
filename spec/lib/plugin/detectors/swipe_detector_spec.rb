@@ -67,7 +67,7 @@ module Fusuma
             it { expect(@detector.detect([@buffer]).record.index).to be_a Config::Index }
             it 'should detect 3 fingers swipe-right' do
               expect(@detector.detect([@buffer]).record.index.keys.map(&:symbol))
-                .to eq([:swipe, 3, :right, :oneshot])
+                .to eq([:swipe, 3, :right])
             end
           end
 
@@ -84,7 +84,7 @@ module Fusuma
             end
             it 'should detect 3 fingers swipe-down' do
               expect(@detector.detect([@buffer]).record.index.keys.map(&:symbol))
-                .to eq([:swipe, 3, :down, :oneshot])
+                .to eq([:swipe, 3, :down])
             end
           end
         end

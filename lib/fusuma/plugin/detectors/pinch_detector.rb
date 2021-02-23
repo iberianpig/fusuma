@@ -11,40 +11,78 @@ module Fusuma
 
         FINGERS = [2, 3, 4].freeze
         BASE_THERESHOLD = 0.1
-        BASE_INTERVAL   = 0.1
 
         # @param buffers [Array<Buffer>]
-        # @return [Event] if event is detected
+        # @return [Events::Event] if event is detected
         # @return [NilClass] if event is NOT detected
         def detect(buffers)
-          buffer = buffers.find { |b| b.type == BUFFER_TYPE }
-                          .select_by_events { |e| e.record.gesture == GESTURE_RECORD_TYPE }
+          gesture_buffer = buffers.find { |b| b.type == BUFFER_TYPE }
+                                  .select_from_last_begin
+                                  .select_by_events { |e| e.record.gesture == GESTURE_RECORD_TYPE }
 
-          return if buffer.empty?
+          events = gesture_buffer.updating_events
+          return if events.empty?
 
-          finger = buffer.finger
+          finger = gesture_buffer.finger
 
-          avg_zoom = buffer.avg_attrs(:zoom)
-          first_zoom = buffer.events.first.record.direction.zoom
+          avg_zoom = gesture_buffer.avg_attrs(:zoom)
+          first_zoom = events.first.record.direction.zoom
           diameter = avg_zoom / first_zoom
 
           direction = Direction.new(diameter: diameter).to_s
           quantity = Quantity.new(diameter: diameter).to_f
 
-          index = create_index(gesture: type,
-                               finger: finger,
-                               direction: direction)
+          status = if gesture_buffer.updating_events.length == 1
+                     'begin'
+                   else
+                     gesture_buffer.events.last.record.status
+                   end
 
-          return unless enough?(index: index, quantity: quantity)
+          oneshot_index = create_oneshot_index(gesture: type, finger: finger, direction: direction)
 
-          create_event(record: Events::Records::IndexRecord.new(index: index))
+          repeat_index = create_repeat_index(gesture: type, finger: finger, direction: direction,
+                                             status: status)
+
+          delta = gesture_buffer.events.last.record.direction.to_h
+
+          if status == 'update'
+            if enough_oneshot_threshold?(index: oneshot_index, quantity: quantity)
+              create_event(record: Events::Records::IndexRecord.new(
+                index: oneshot_index, trigger: :oneshot, args: delta
+              ))
+            else
+              create_event(record: Events::Records::IndexRecord.new(
+                index: repeat_index, trigger: :repeat, args: delta
+              ))
+            end
+          else
+            create_event(record: Events::Records::IndexRecord.new(
+              index: repeat_index, trigger: :repeat, args: delta
+            ))
+          end
+        end
+
+        # @param [String] gesture
+        # @param [Integer] finger
+        # @param [String] direction
+        # @param [String] status
+        # @return [Config::Index]
+        def create_repeat_index(gesture:, finger:, direction:, status:)
+          Config::Index.new(
+            [
+              Config::Index::Key.new(gesture),
+              Config::Index::Key.new(finger.to_i),
+              Config::Index::Key.new(direction),
+              Config::Index::Key.new(status)
+            ]
+          )
         end
 
         # @param [String] gesture
         # @param [Integer] finger
         # @param [String] direction
         # @return [Config::Index]
-        def create_index(gesture:, finger:, direction:)
+        def create_oneshot_index(gesture:, finger:, direction:)
           Config::Index.new(
             [
               Config::Index::Key.new(gesture),
@@ -56,19 +94,8 @@ module Fusuma
 
         private
 
-        def enough?(index:, quantity:)
-          enough_interval?(index: index) && enough_diameter?(index: index, quantity: quantity)
-        end
-
-        def enough_diameter?(index:, quantity:)
+        def enough_oneshot_threshold?(index:, quantity:)
           quantity >= threshold(index: index)
-        end
-
-        def enough_interval?(index:)
-          return true if first_time?
-          return true if (Time.now - last_time) > interval_time(index: index)
-
-          false
         end
 
         def threshold(index:)
@@ -79,17 +106,6 @@ module Fusuma
             config_value  = Config.search(keys_specific) ||
                             Config.search(keys_global) || 1
             BASE_THERESHOLD * config_value
-          end
-        end
-
-        def interval_time(index:)
-          @interval_time ||= {}
-          @interval_time[index.cache_key] ||= begin
-            keys_specific = Config::Index.new [*index.keys, 'interval']
-            keys_global = Config::Index.new ['interval', type]
-            config_value = Config.search(keys_specific) ||
-                           Config.search(keys_global) || 1
-            BASE_INTERVAL * config_value
           end
         end
 

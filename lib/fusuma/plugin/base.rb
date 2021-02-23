@@ -16,10 +16,8 @@ module Fusuma
         Manager.add(plugin_class: subclass, plugin_path: subclass_path)
       end
 
-      # get inherited classes
-      # @example
-      #  [Vectors::Vector]
-      # @return [Array]
+      # get subclasses
+      # @return [Array<Class>]
       def self.plugins
         Manager.plugins[name]
       end

@@ -33,11 +33,21 @@ module Fusuma
         end
 
         def tag
-          self.class.name.split('Detectors::').last.underscore
+          self.class.tag
         end
 
         def type
-          self.class.name.underscore.split('/').last.gsub('_detector', '')
+          self.class.type
+        end
+
+        class << self
+          def tag
+            name.split('Detectors::').last.underscore
+          end
+
+          def type(tag_name = tag)
+            tag_name.gsub('_detector', '')
+          end
         end
       end
     end

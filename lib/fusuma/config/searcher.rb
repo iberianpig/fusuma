@@ -31,6 +31,11 @@ module Fusuma
         value
       end
 
+      # @param index [Index]
+      # @param location [Hash]
+      # @return [NilClass]
+      # @return [Hash]
+      # @return [Object]
       def search_with_cache(index, location:)
         cache([index.cache_key, Searcher.skip?, Searcher.fallback?]) do
           search(index, location: location)
@@ -62,6 +67,34 @@ module Fusuma
       end
 
       class << self
+        # @return [Hash]
+        def conditions(&block)
+          {
+            nothing: -> { block.call },
+            skip: -> { Config::Searcher.skip { block.call } },
+            fallback: -> { Config::Searcher.fallback { block.call } },
+            skip_fallback: -> { Config::Searcher.skip { Config::Searcher.fallback { block.call } } }
+          }
+        end
+
+        # Execute block with specified conditions
+        # @param conidtion [Symbol]
+        # @return [Object]
+        def with_condition(condition, &block)
+          conditions(&block)[condition].call
+        end
+
+        # Execute block with all conditions
+        # @return [Array<Symbol, Object>]
+        def find_condition(&block)
+          conditions(&block).find do |c, l|
+            result = l.call
+            return [c, result] if result
+
+            nil
+          end
+        end
+
         def fallback?
           @fallback
         end
