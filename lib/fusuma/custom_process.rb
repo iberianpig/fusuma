@@ -5,7 +5,7 @@ module Fusuma
   module CustomProcess
     def fork
       Process.fork do
-        Process.setproctitle("fusuma: #{self.class.name}")
+        Process.setproctitle(self.class.name.underscore.to_s)
         yield
       end
     end
