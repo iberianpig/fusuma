@@ -35,7 +35,7 @@ module Fusuma
             raise "position is NOT body: #{self}" unless mergable?
 
             if records.empty?
-              if Config.find_executor_key(index)
+              if Config.find_execute_key(index)
                 @index = index
                 return self
               end

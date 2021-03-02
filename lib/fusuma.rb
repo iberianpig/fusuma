@@ -130,10 +130,10 @@ module Fusuma
 
       # Find executable condition and executor
       condition, executor = Config::Searcher.find_condition do
-        executor_key = Config.find_executor_key(event.record.index)
-        next unless executor_key
+        execute_key= Config.find_execute_key(event.record.index)
+        next unless execute_key
 
-        @executors.find { |e| e.class.config_keys.include?(executor_key) && e.executable?(event) }
+        @executors.find { |e| e.execute_keys.include?(execute_key) && e.executable?(event) }
       end
 
       return if executor.nil?

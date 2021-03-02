@@ -37,6 +37,20 @@ module Fusuma
         end
       end
 
+      # @return [Index]
+      def with_context
+        keys = @keys.map do |key|
+          next if Searcher.skip? && key.skippable
+
+          if Searcher.fallback? && key.fallback
+            key.fallback
+          else
+            key
+          end
+        end
+        self.class.new(keys.compact)
+      end
+
       # Keys in Index
       class Key
         def initialize(symbol_word, skippable: false, fallback: nil)

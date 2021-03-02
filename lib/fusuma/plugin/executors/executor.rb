@@ -11,10 +11,11 @@ module Fusuma
         BASE_ONESHOT_INTERVAL = 0.5
         BASE_REPEAT_INTERVAL = 0.1
 
-        # reserved words on config.yml
+        # Executor parameter on config.yml
         # @return [Array<Symbol>]
-        def self.config_keys
-          [name.split('Executors::').last.underscore.gsub('_executor', '').to_sym]
+        def execute_keys
+          # [name.split('Executors::').last.underscore.gsub('_executor', '').to_sym]
+          raise NotImplementedError, "override #{self.name}##{__method__}"
         end
 
         # check executable
@@ -28,6 +29,9 @@ module Fusuma
         # @param time [Time]
         # @return [TrueClass, FalseClass]
         def enough_interval?(event)
+          # NOTE: Cache on the path that actually matches. If not, wait time will be lost.
+          return true if event.record.index.with_context.keys.any? { |key| key.symbol == :end }
+
           return false if @wait_until && event.time < @wait_until
 
           true

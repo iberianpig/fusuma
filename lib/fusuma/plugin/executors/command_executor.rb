@@ -8,6 +8,12 @@ module Fusuma
     module Executors
       # Exector plugin
       class CommandExecutor < Executor
+        # Executor parameter on config.yml
+        # @return [Array<Symbol>]
+        def execute_keys
+          [:command]
+        end
+
         def execute(event)
           search_command(event).tap do |command|
             break unless command

@@ -23,8 +23,8 @@ module Fusuma
         instance.search(index)
       end
 
-      def find_executor_key(index)
-        instance.find_executor_key(index)
+      def find_execute_key(index)
+        instance.find_execute_key(index)
       end
 
       def custom_path=(new_path)
@@ -81,10 +81,13 @@ module Fusuma
 
     # @param index [Config::Index]
     # @return Symbol
-    def find_executor_key(index)
-      executor_keys = Plugin::Executors::Executor.plugins.map(&:config_keys).flatten
-      executor_keys.find do |executor_key|
-        search(Index.new([*index.keys, executor_key]))
+    def find_execute_key(index)
+      @execute_keys ||= Plugin::Executors::Executor.plugins.map do |executor|
+        executor.new.execute_keys
+      end.flatten
+
+      @execute_keys.find do |execute_key|
+        search(Index.new([*index.keys, execute_key]))
       end
     end
 
