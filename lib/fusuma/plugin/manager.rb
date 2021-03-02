@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../multi_logger'
+require_relative '../string_support'
 
 module Fusuma
   module Plugin
@@ -87,23 +88,5 @@ module Fusuma
         end
       end
     end
-  end
-end
-
-# support camerize and underscore
-class String
-  def camerize
-    split('_').map do |w|
-      w[0].upcase!
-      w
-    end.join
-  end
-
-  def underscore
-    gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
-      .gsub(/([a-z\d])([A-Z])/, '\1_\2')
-      .gsub('::', '/')
-      .tr('-', '_')
-      .downcase
   end
 end
