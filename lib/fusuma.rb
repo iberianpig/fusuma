@@ -16,6 +16,8 @@ module Fusuma
         set_trap
         read_options(option)
         instance = new
+        ## NOTE: Uncomment following line to measure performance
+        # instance.run_with_lineprof
         instance.run
       end
 
@@ -62,16 +64,30 @@ module Fusuma
     end
 
     def run
-      loop do
-        event = input || next
-        clear_expired_events
-        filtered = filter(event) || next
-        parsed = parse(filtered) || next
-        buffered = buffer(parsed) || next
-        detected = detect(buffered) || next
-        merged = merge(detected) || next
-        execute(merged)
+      loop { pipeline }
+    end
+
+    def pipeline
+      event = input || return
+      clear_expired_events
+      filtered = filter(event) || return
+      parsed = parse(filtered) || return
+      buffered = buffer(parsed) || return
+      detected = detect(buffered) || return
+      merged = merge(detected) || return
+      execute(merged)
+    end
+
+    # For performance monitoring
+    def run_with_lineprof(count: 1000)
+      require 'rblineprof'
+      require 'rblineprof-report'
+
+      profile = lineprof(%r{#{Pathname.new(__FILE__).parent}/.}) do
+        count.times { pipeline }
       end
+      LineProf.report(profile)
+      exit 0
     end
 
     # @return [Plugin::Events::Event]
