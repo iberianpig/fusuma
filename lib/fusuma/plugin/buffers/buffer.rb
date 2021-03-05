@@ -16,7 +16,7 @@ module Fusuma
 
         # @return [String]
         def type
-          self.class.name.underscore.split('/').last.gsub('_buffer', '')
+          @type ||= self.class.name.underscore.split('/').last.gsub('_buffer', '')
         end
 
         # @param event [Event]
