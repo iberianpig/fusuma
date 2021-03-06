@@ -45,13 +45,16 @@ module Fusuma
 
               events.each { |event| @buffer.buffer(event) }
             end
-            it { expect(@detector.detect([@buffer])).to eq nil }
+            it 'should have repeat record' do
+              expect(@detector.detect([@buffer]).record.trigger).to eq :repeat
+            end
           end
 
           context 'with enough rotate IN event' do
             before do
               directions = [
                 Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, 0.5),
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, 0.6),
                 Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, 0.6)
               ]
               events = create_events(directions: directions)
@@ -71,7 +74,8 @@ module Fusuma
             before do
               directions = [
                 Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, -0.5),
-                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, -0.6)
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, -0.6),
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, -0.6),
               ]
               events = create_events(directions: directions)
 
@@ -89,7 +93,13 @@ module Fusuma
         def create_events(directions: [])
           record_type = RotateDetector::GESTURE_RECORD_TYPE
           directions.map do |direction|
-            gesture_record = Events::Records::GestureRecord.new(status: 'update',
+            status = if directions[0].equal? direction
+                       'begin'
+                     else
+                       'update'
+                     end
+
+            gesture_record = Events::Records::GestureRecord.new(status: status,
                                                                 gesture: record_type,
                                                                 finger: 3,
                                                                 direction: direction)
