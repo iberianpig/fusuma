@@ -13,15 +13,14 @@ module Fusuma
         # @param event [Event]
         # @return [Event]
         def parse(event)
-          event.tap do |e|
-            next if e.tag != source
+          return event if event.tag != source
 
-            new_record = parse_record(e.record)
-            next unless new_record
+          new_record = parse_record(event.record)
+          return event if new_record.nil?
 
-            e.record = new_record
-            e.tag = tag
-          end
+          event.record = new_record
+          event.tag = tag
+          event
         end
 
         # Set source for tag from config.yml.
@@ -31,7 +30,7 @@ module Fusuma
         end
 
         def tag
-          self.class.name.split('::').last.underscore
+          @tag ||= self.class.name.split('::').last.underscore
         end
 
         # parse Record object
