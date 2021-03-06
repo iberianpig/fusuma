@@ -15,7 +15,7 @@ module Fusuma
         # @return [Array<Symbol>]
         def execute_keys
           # [name.split('Executors::').last.underscore.gsub('_executor', '').to_sym]
-          raise NotImplementedError, "override #{self.name}##{__method__}"
+          raise NotImplementedError, "override #{name}##{__method__}"
         end
 
         # check executable
@@ -29,7 +29,8 @@ module Fusuma
         # @param time [Time]
         # @return [TrueClass, FalseClass]
         def enough_interval?(event)
-          # NOTE: Cache on the path that actually matches. If not, wait time will be lost.
+          # NOTE: Cache at the index that is actually used, reflecting Fallback and Skip.
+          #       Otherwise, a wrong index will cause invalid intervals.
           return true if event.record.index.with_context.keys.any? { |key| key.symbol == :end }
 
           return false if @wait_until && event.time < @wait_until
