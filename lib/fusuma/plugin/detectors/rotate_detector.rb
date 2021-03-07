@@ -40,7 +40,7 @@ module Fusuma
           repeat_index = create_repeat_index(gesture: type, finger: finger, direction: direction,
                                              status: status)
 
-          delta = gesture_buffer.events.last.record.direction.to_h
+          delta = gesture_buffer.events.last.record.delta.to_h
 
           if status == 'update'
             if enough_oneshot_threshold?(index: oneshot_index, quantity: quantity)

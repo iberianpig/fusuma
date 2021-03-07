@@ -53,7 +53,7 @@ module Fusuma
         # @return [Float]
         def sum_attrs(attr)
           updating_events.map do |gesture_event|
-            gesture_event.record.direction[attr].to_f
+            gesture_event.record.delta[attr].to_f
           end.inject(:+)
         end
 

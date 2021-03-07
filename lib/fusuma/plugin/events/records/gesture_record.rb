@@ -9,7 +9,7 @@ module Fusuma
         # Gesture Record
         class GestureRecord < Record
           # define gesture format
-          attr_reader :status, :gesture, :finger, :direction
+          attr_reader :status, :gesture, :finger, :delta
 
           Delta = Struct.new(:move_x, :move_y,
                              :unaccelerated_x, :unaccelerated_y,
@@ -18,13 +18,13 @@ module Fusuma
           # @param status [String]
           # @param gesture [String]
           # @param finger [String, Integer]
-          # @param direction [Delta, NilClass]
-          def initialize(status:, gesture:, finger:, direction:)
+          # @param delta [Delta, NilClass]
+          def initialize(status:, gesture:, finger:, delta:)
             super()
             @status  = status
             @gesture = gesture
             @finger  = finger.to_i
-            @direction = direction
+            @delta = delta
           end
         end
       end

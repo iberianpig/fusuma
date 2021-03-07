@@ -26,7 +26,7 @@ module Fusuma
           finger = gesture_buffer.finger
 
           avg_zoom = gesture_buffer.avg_attrs(:zoom)
-          first_zoom = events.first.record.direction.zoom
+          first_zoom = events.first.record.delta.zoom
           diameter = avg_zoom / first_zoom
 
           direction = Direction.new(diameter: diameter).to_s
@@ -43,7 +43,7 @@ module Fusuma
           repeat_index = create_repeat_index(gesture: type, finger: finger, direction: direction,
                                              status: status)
 
-          delta = gesture_buffer.events.last.record.direction.to_h
+          delta = gesture_buffer.events.last.record.delta.to_h
 
           if status == 'update'
             if enough_oneshot_threshold?(index: oneshot_index, quantity: quantity)
