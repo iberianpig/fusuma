@@ -111,17 +111,26 @@ module Fusuma
     # @return [Array<Plugin::Buffers::Buffer>]
     # @return [NilClass]
     def buffer(event)
-      @buffers.any? { |b| b.buffer(event) } && @buffers
+      @buffers.select { |b| b.buffer(event) }
     end
 
     # @param buffers [Array<Buffer>]
     # @return [Array<Event>]
     def detect(buffers)
-      @detectors.each_with_object([]) do |detector, detected|
-        if (event = detector.detect(buffers))
+      matched_detectors = @detectors.select do |detector|
+        detector.watch? ||
+          buffers.any? { |b| detector.sources.include?(b.type) }
+      end
+
+      detected = matched_detectors.each_with_object([]) do |detector, detected|
+        if (event = detector.detect(@buffers))
           detected << event
         end
       end
+
+      return if detected.empty?
+
+      detected
     end
 
     # @param events [Array<Plugin::Events::Event>]
@@ -146,7 +155,7 @@ module Fusuma
 
       # Find executable condition and executor
       condition, executor = Config::Searcher.find_condition do
-        execute_key= Config.find_execute_key(event.record.index)
+        execute_key = Config.find_execute_key(event.record.index)
         next unless execute_key
 
         @executors.find { |e| e.execute_keys.include?(execute_key) && e.executable?(event) }

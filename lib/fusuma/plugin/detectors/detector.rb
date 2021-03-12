@@ -8,6 +8,18 @@ module Fusuma
     module Detectors
       # Inherite this base
       class Detector < Base
+
+        # @return [Array<String>]
+        def sources
+          @source ||= self.class.const_get('SOURCES')
+        end
+
+        # Always watch buffers and detect them or not
+        # @return [TrueClass,FalseClass]
+        def watch?
+          false
+        end
+
         # @param _buffers [Array<Buffer>]
         # @return [Event] if event is detected
         # @return [NilClass] if event is NOT detected

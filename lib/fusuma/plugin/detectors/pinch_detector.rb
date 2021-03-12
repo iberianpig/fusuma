@@ -6,6 +6,7 @@ module Fusuma
   module Plugin
     module Detectors
       class PinchDetector < Detector
+        SOURCES = ['gesture']
         BUFFER_TYPE = 'gesture'
         GESTURE_RECORD_TYPE = 'pinch'
 
