@@ -12,6 +12,7 @@ module Fusuma
       RSpec.describe GestureBuffer do
         before do
           @buffer = GestureBuffer.new
+          delta = Events::Records::GestureRecord::Delta.new(-1,0,0,0,0,0)
           @event_generator = lambda { |time = nil, status = 'updating'|
             Events::Event.new(time: time,
                               tag: 'libinput_gesture_parser',
@@ -19,7 +20,7 @@ module Fusuma
                                 status: status,
                                 gesture: 'SWIPE',
                                 finger: 3,
-                                direction: 'LEFT'
+                                delta: delta
                               ))
           }
         end

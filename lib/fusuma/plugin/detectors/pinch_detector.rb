@@ -11,7 +11,7 @@ module Fusuma
         GESTURE_RECORD_TYPE = 'pinch'
 
         FINGERS = [2, 3, 4].freeze
-        BASE_THERESHOLD = 0.1
+        BASE_THERESHOLD = 1.3
 
         # @param buffers [Array<Buffer>]
         # @return [Events::Event] if event is detected
@@ -21,46 +21,52 @@ module Fusuma
                                   .select_from_last_begin
                                   .select_by_events { |e| e.record.gesture == GESTURE_RECORD_TYPE }
 
-          events = gesture_buffer.updating_events
-          return if events.empty?
+          updating_events = gesture_buffer.updating_events
+          return if updating_events.empty?
 
           finger = gesture_buffer.finger
 
-          avg_zoom = gesture_buffer.avg_attrs(:zoom)
-          first_zoom = events.first.record.delta.zoom
-          diameter = avg_zoom / first_zoom
-
-          direction = Direction.new(diameter: diameter).to_s
-          quantity = Quantity.new(diameter: diameter).to_f
-
-          status = if gesture_buffer.updating_events.length == 1
+          status = if updating_events.length == 1
                      'begin'
                    else
                      gesture_buffer.events.last.record.status
                    end
 
-          oneshot_index = create_oneshot_index(gesture: type, finger: finger, direction: direction)
+          delta = if status == 'end'
+                    gesture_buffer.events[-2].record.delta
+                  else
+                    gesture_buffer.events.last.record.delta
+                  end
 
-          repeat_index = create_repeat_index(gesture: type, finger: finger, direction: direction,
+          direction = Direction.new(diameter: delta.zoom.to_f).to_s
+
+          repeat_index = create_repeat_index(gesture: type, finger: finger,
+                                             direction: direction,
                                              status: status)
 
-          delta = gesture_buffer.events.last.record.delta.to_h
-
           if status == 'update'
+            avg_zoom = gesture_buffer.avg_attrs(:zoom)
+            first_zoom = updating_events.first.record.delta.zoom
+            quantity = Quantity.new(target: avg_zoom, base: first_zoom).to_f
+            # puts ({quantity: quantity, avg_zoom: avg_zoom, first_zoom: first_zoom})
+            oneshot_index = create_oneshot_index(gesture: type, finger: finger,
+                                                 direction: direction)
             if enough_oneshot_threshold?(index: oneshot_index, quantity: quantity)
-              create_event(record: Events::Records::IndexRecord.new(
-                index: oneshot_index, trigger: :oneshot, args: delta
-              ))
-            else
-              create_event(record: Events::Records::IndexRecord.new(
-                index: repeat_index, trigger: :repeat, args: delta
-              ))
+              return [
+                create_event(
+                  record: Events::Records::IndexRecord.new(
+                    index: oneshot_index, trigger: :oneshot, args: delta.to_h
+                  )),
+                create_event(
+                  record: Events::Records::IndexRecord.new(
+                    index: repeat_index, trigger: :repeat, args: delta.to_h
+                  ))
+              ]
             end
-          else
-            create_event(record: Events::Records::IndexRecord.new(
-              index: repeat_index, trigger: :repeat, args: delta
-            ))
           end
+          create_event(record: Events::Records::IndexRecord.new(
+            index: repeat_index, trigger: :repeat, args: delta.to_h
+          ))
         end
 
         # @param [String] gesture
@@ -73,7 +79,7 @@ module Fusuma
             [
               Config::Index::Key.new(gesture),
               Config::Index::Key.new(finger.to_i),
-              Config::Index::Key.new(direction),
+              Config::Index::Key.new(direction, skippable: true),
               Config::Index::Key.new(status)
             ]
           )
@@ -134,8 +140,9 @@ module Fusuma
 
         # quantity of gesture
         class Quantity
-          def initialize(diameter:)
-            @diameter = diameter
+          def initialize(target:, base:)
+            @target = target
+            @base = base
           end
 
           def to_f
@@ -143,7 +150,11 @@ module Fusuma
           end
 
           def calc
-            (1.0 - @diameter).abs
+            if @target > @base
+              @target / @base
+            else
+              @base / @target
+            end
           end
         end
       end

@@ -41,21 +41,19 @@ module Fusuma
           repeat_index = create_repeat_index(gesture: type, finger: finger, direction: direction,
                                              status: status)
 
-          delta = gesture_buffer.events.last.record.delta.to_h
+          delta = gesture_buffer.events.last.record.delta
 
-          if status == 'update'
-            if enough_oneshot_threshold?(index: oneshot_index, quantity: quantity)
-              create_event(record: Events::Records::IndexRecord.new(
-                index: oneshot_index, trigger: :oneshot, args: delta
-              ))
-            else
-              create_event(record: Events::Records::IndexRecord.new(
-                index: repeat_index, trigger: :repeat, args: delta
-              ))
-            end
+          if status == 'update' && enough_oneshot_threshold?(index: oneshot_index,
+                                                             quantity: quantity)
+            [create_event(record: Events::Records::IndexRecord.new(
+              index: oneshot_index, trigger: :oneshot, args: delta.to_h
+            )),
+             create_event(record: Events::Records::IndexRecord.new(
+               index: repeat_index, trigger: :repeat, args: delta.to_h
+             ))]
           else
             create_event(record: Events::Records::IndexRecord.new(
-              index: repeat_index, trigger: :repeat, args: delta
+              index: repeat_index, trigger: :repeat, args: delta.to_h
             ))
           end
         end
@@ -85,7 +83,7 @@ module Fusuma
             [
               Config::Index::Key.new(gesture),
               Config::Index::Key.new(finger.to_i, skippable: true),
-              Config::Index::Key.new(direction),
+              Config::Index::Key.new(direction)
             ]
           )
         end

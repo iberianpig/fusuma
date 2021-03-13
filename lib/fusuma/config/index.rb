@@ -20,8 +20,8 @@ module Fusuma
                 end
       end
 
-      def to_s
-        @keys.map(&:to_s)
+      def inspect
+        @keys.map(&:inspect)
       end
 
       attr_reader :keys

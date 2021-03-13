@@ -122,31 +122,30 @@ module Fusuma
           buffers.any? { |b| detector.sources.include?(b.type) }
       end
 
-      detected = matched_detectors.each_with_object([]) do |detector, detected|
-        if (event = detector.detect(@buffers))
-          detected << event
-        end
+      events = matched_detectors.each_with_object([]) do |detector, detected|
+        Array(detector.detect(@buffers)).each { |e| detected << e }
       end
 
-      return if detected.empty?
+      return if events.empty?
 
-      detected
+      events
     end
 
     # @param events [Array<Plugin::Events::Event>]
     # @return [Plugin::Events::Event] Event merged all records from arguments
     # @return [NilClass] when event is NOT given
     def merge(events)
+      @condition = nil
       main_events, modifiers = events.partition { |event| event.record.mergable? }
       main_events.sort_by! { |e| e.record.trigger_priority }
 
-      main_events.lazy.map do |main_event|
-        Config::Searcher.find_condition do
+      main_events.find do |main_event|
+        @condition, success = Config::Searcher.find_condition do
           main_event.record.merge(records: modifiers.map(&:record))
         end
 
-        main_event
-      end.first
+        main_event if success
+      end
     end
 
     # @param event [Plugin::Events::Event]
@@ -154,17 +153,14 @@ module Fusuma
       return unless event
 
       # Find executable condition and executor
-      condition, executor = Config::Searcher.find_condition do
-        execute_key = Config.find_execute_key(event.record.index)
-        next unless execute_key
-
-        @executors.find { |e| e.execute_keys.include?(execute_key) && e.executable?(event) }
+      executor = Config::Searcher.with_condition(@condition) do
+        @executors.find { |e| e.executable?(event) }
       end
 
       return if executor.nil?
 
       # Check interval and execute
-      Config::Searcher.with_condition(condition) do
+      Config::Searcher.with_condition(@condition) do
         executor.enough_interval?(event) &&
           executor.update_interval(event) &&
           executor.execute(event)

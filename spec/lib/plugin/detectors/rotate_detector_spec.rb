@@ -37,11 +37,11 @@ module Fusuma
 
           context 'with not enough rotate events in buffer' do
             before do
-              directions = [
+              deltas = [
                 Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, 0.4),
                 Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, 0.5)
               ]
-              events = create_events(directions: directions)
+              events = create_events(deltas: deltas)
 
               events.each { |event| @buffer.buffer(event) }
             end
@@ -52,48 +52,61 @@ module Fusuma
 
           context 'with enough rotate IN event' do
             before do
-              directions = [
+              deltas = [
                 Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, 0.5),
                 Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, 0.6),
                 Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, 0.6)
               ]
-              events = create_events(directions: directions)
+              events = create_events(deltas: deltas)
 
               events.each { |event| @buffer.buffer(event) }
             end
-            it { expect(@detector.detect([@buffer])).to be_a Events::Event }
-            it { expect(@detector.detect([@buffer]).record).to be_a Events::Records::IndexRecord }
-            it { expect(@detector.detect([@buffer]).record.index).to be_a Config::Index }
-            it 'should detect 3 fingers rotate-clockwise' do
-              expect(@detector.detect([@buffer]).record.index.keys.map(&:symbol))
+            it { expect(@detector.detect([@buffer])).to all be_a Events::Event }
+            it {
+              expect(@detector.detect([@buffer]).map(&:record)).to all be_a Events::Records::IndexRecord
+            }
+            it {
+              expect(@detector.detect([@buffer]).map(&:record).map(&:index)).to all be_a Config::Index
+            }
+            it 'should detect 3 fingers rotate-clockwise (oneshot/repeat)' do
+              events = @detector.detect([@buffer])
+              expect(events[0].record.index.keys.map(&:symbol))
                 .to eq([:rotate, 3, :clockwise])
+              expect(events[1].record.index.keys.map(&:symbol))
+                .to eq([:rotate, 3, :clockwise, :update])
             end
           end
 
           context 'with enough rotate OUT event' do
             before do
-              directions = [
+              deltas = [
                 Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, -0.5),
                 Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, -0.6),
-                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, -0.6),
+                Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 0, -0.6)
               ]
-              events = create_events(directions: directions)
+              events = create_events(deltas: deltas)
 
               events.each { |event| @buffer.buffer(event) }
             end
             it 'should detect 3 fingers rotate-counterclockwise' do
-              expect(@detector.detect([@buffer]).record.index.keys.map(&:symbol))
-                .to eq([:rotate, 3, :counterclockwise])
+              events = @detector.detect([@buffer])
+              indexes = events.map { |e| e.record.index.keys.map(&:symbol) }
+              expect(indexes).to eq(
+                [
+                  [:rotate, 3, :counterclockwise],
+                  [:rotate, 3, :counterclockwise, :update]
+                ]
+              )
             end
           end
         end
 
         private
 
-        def create_events(directions: [])
+        def create_events(deltas: [])
           record_type = RotateDetector::GESTURE_RECORD_TYPE
-          directions.map do |direction|
-            status = if directions[0].equal? direction
+          deltas.map do |delta|
+            status = if deltas[0].equal? delta
                        'begin'
                      else
                        'update'
@@ -102,7 +115,7 @@ module Fusuma
             gesture_record = Events::Records::GestureRecord.new(status: status,
                                                                 gesture: record_type,
                                                                 finger: 3,
-                                                                direction: direction)
+                                                                delta: delta)
             Events::Event.new(tag: 'libinput_gesture_parser', record: gesture_record)
           end
         end
