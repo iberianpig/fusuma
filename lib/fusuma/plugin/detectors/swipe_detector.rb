@@ -11,7 +11,7 @@ module Fusuma
         GESTURE_RECORD_TYPE = 'swipe'
 
         FINGERS = [3, 4].freeze
-        BASE_THERESHOLD = 10
+        BASE_THERESHOLD = 25
 
         # @param buffers [Array<Buffers::Buffer>]
         # @return [Events::Event] if event is detected
@@ -21,41 +21,53 @@ module Fusuma
                                   .select_from_last_begin
                                   .select_by_events { |e| e.record.gesture == GESTURE_RECORD_TYPE }
 
-          return if gesture_buffer.updating_events.empty?
+          updating_events = gesture_buffer.updating_events
+          return if updating_events.empty?
 
-          move_x = gesture_buffer.avg_attrs(:move_x)
-          move_y = gesture_buffer.avg_attrs(:move_y)
+          updating_time = 100 * (updating_events.last.time - updating_events.first.time)
+          oneshot_move_x = gesture_buffer.sum_attrs(:move_x) / updating_time
+          oneshot_move_y = gesture_buffer.sum_attrs(:move_y) / updating_time
 
           finger = gesture_buffer.finger
-          direction = Direction.new(move_x: move_x.to_f, move_y: move_y.to_f).to_s
-          quantity = Quantity.new(move_x: move_x.to_f, move_y: move_y.to_f).to_f
-
-          status = if gesture_buffer.updating_events.length == 1
+          status = if updating_events.length == 1
                      'begin'
                    else
                      gesture_buffer.events.last.record.status
                    end
 
-          oneshot_index = create_oneshot_index(gesture: type, finger: finger, direction: direction)
+          delta = if status == 'end'
+                    gesture_buffer.events[-2].record.delta
+                  else
+                    gesture_buffer.events.last.record.delta
+                  end
 
-          repeat_index = create_repeat_index(gesture: type, finger: finger, direction: direction,
+          repeat_direction = Direction.new(move_x: delta.move_x, move_y: delta.move_y).to_s
+          repeat_quantity = Quantity.new(move_x: delta.move_x, move_y: delta.move_y).to_f
+
+          repeat_index = create_repeat_index(gesture: type, finger: finger, direction: repeat_direction,
                                              status: status)
 
-          delta = gesture_buffer.events.last.record.delta
+          if status == 'update'
+            return unless moved?(repeat_quantity)
 
-          if status == 'update' && enough_oneshot_threshold?(index: oneshot_index,
-                                                             quantity: quantity)
-            [create_event(record: Events::Records::IndexRecord.new(
-              index: oneshot_index, trigger: :oneshot, args: delta.to_h
-            )),
-             create_event(record: Events::Records::IndexRecord.new(
-               index: repeat_index, trigger: :repeat, args: delta.to_h
-             ))]
-          else
-            create_event(record: Events::Records::IndexRecord.new(
-              index: repeat_index, trigger: :repeat, args: delta.to_h
-            ))
+            oneshot_direction = Direction.new(move_x: oneshot_move_x, move_y: oneshot_move_y).to_s
+            oneshot_quantity = Quantity.new(move_x: oneshot_move_x, move_y: oneshot_move_y).to_f
+            oneshot_index = create_oneshot_index(gesture: type, finger: finger,
+                                                 direction: oneshot_direction)
+            if enough_oneshot_threshold?(index: oneshot_index, quantity: oneshot_quantity)
+              return [
+                create_event(record: Events::Records::IndexRecord.new(
+                  index: oneshot_index, trigger: :oneshot, args: delta.to_h
+                )),
+                create_event(record: Events::Records::IndexRecord.new(
+                  index: repeat_index, trigger: :repeat, args: delta.to_h
+                ))
+              ]
+            end
           end
+          create_event(record: Events::Records::IndexRecord.new(
+            index: repeat_index, trigger: :repeat, args: delta.to_h
+          ))
         end
 
         # @param [String] gesture
@@ -90,6 +102,10 @@ module Fusuma
 
         private
 
+        def moved?(repeat_quantity)
+          repeat_quantity > 0.3
+        end
+
         def enough_oneshot_threshold?(index:, quantity:)
           quantity > threshold(index: index)
         end
@@ -113,8 +129,8 @@ module Fusuma
           UP = 'up'
 
           def initialize(move_x:, move_y:)
-            @move_x = move_x
-            @move_y = move_y
+            @move_x = move_x.to_f
+            @move_y = move_y.to_f
           end
 
           def to_s
@@ -135,8 +151,8 @@ module Fusuma
         # quantity of gesture
         class Quantity
           def initialize(move_x:, move_y:)
-            @x = move_x.abs
-            @y = move_y.abs
+            @x = move_x.to_f.abs
+            @y = move_y.to_f.abs
           end
 
           def to_f

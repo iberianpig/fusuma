@@ -24,6 +24,11 @@ module Fusuma
           updating_events = gesture_buffer.updating_events
           return if updating_events.empty?
 
+          updating_time = 100 * (updating_events.last.time - updating_events.first.time)
+          oneshot_angle = gesture_buffer.sum_attrs(:rotate) / updating_time
+
+          return if updating_events.empty?
+
           finger = gesture_buffer.finger
 
           status = if updating_events.length == 1
@@ -38,24 +43,27 @@ module Fusuma
                     gesture_buffer.events.last.record.delta
                   end
 
-          repeat_direction = Direction.new(angle: delta.rotate.to_f).to_s
+          repeat_direction = Direction.new(angle: delta.rotate).to_s
+          repeat_quantity = Quantity.new(angle: delta.rotate).to_f
 
           repeat_index = create_repeat_index(gesture: type, finger: finger,
                                              direction: repeat_direction,
                                              status: status)
 
           if status == 'update'
-            angle = gesture_buffer.avg_attrs(:rotate)
-            quantity = Quantity.new(angle: angle).to_f
+            return unless moved?(repeat_quantity)
+
+            oneshot_direction = Direction.new(angle: oneshot_angle).to_s
+            oneshot_quantity = Quantity.new(angle: oneshot_angle).to_f
             oneshot_index = create_oneshot_index(gesture: type, finger: finger,
-                                                 direction: Direction.new(angle: angle).to_s)
-            if enough_oneshot_threshold?(index: oneshot_index, quantity: quantity)
+                                                 direction: oneshot_direction)
+            if enough_oneshot_threshold?(index: oneshot_index, quantity: oneshot_quantity)
               return [
                 create_event(record: Events::Records::IndexRecord.new(
                   index: oneshot_index, trigger: :oneshot, args: delta.to_h
                 )),
                 create_event(record: Events::Records::IndexRecord.new(
-                    index: repeat_index, trigger: :repeat, args: delta.to_h
+                  index: repeat_index, trigger: :repeat, args: delta.to_h
                 ))
               ]
             end
@@ -97,6 +105,10 @@ module Fusuma
 
         private
 
+        def moved?(repeat_quantity)
+          repeat_quantity > 0.2
+        end
+
         def enough_oneshot_threshold?(index:, quantity:)
           quantity > threshold(index: index)
         end
@@ -118,7 +130,7 @@ module Fusuma
           COUNTERCLOCKWISE = 'counterclockwise'
 
           def initialize(angle:)
-            @angle = angle
+            @angle = angle.to_f
           end
 
           def to_s

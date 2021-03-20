@@ -32,35 +32,44 @@ module Fusuma
                      gesture_buffer.events.last.record.status
                    end
 
-          delta = if status == 'end'
-                    gesture_buffer.events[-2].record.delta
-                  else
-                    gesture_buffer.events.last.record.delta
-                  end
+          prev_event, event = if status == 'end'
+                                [
+                                  gesture_buffer.events[-3],
+                                  gesture_buffer.events[-2]
+                                ]
+                              else
+                                [
+                                  gesture_buffer.events[-2],
+                                  gesture_buffer.events[-1]
+                                ]
+                              end
+          delta = event.record.delta
+          prev_delta = prev_event.record.delta
 
-          direction = Direction.new(diameter: delta.zoom.to_f).to_s
+          repeat_direction = Direction.new(target: delta.zoom, base: (prev_delta&.zoom || 1.0)).to_s
+          repeat_quantity = Quantity.new(target: delta.zoom, base: (prev_delta&.zoom || 1.0)).to_f
 
           repeat_index = create_repeat_index(gesture: type, finger: finger,
-                                             direction: direction,
+                                             direction: repeat_direction,
                                              status: status)
-
           if status == 'update'
+            return unless moved?(prev_event, event)
+
             avg_zoom = gesture_buffer.avg_attrs(:zoom)
             first_zoom = updating_events.first.record.delta.zoom
-            quantity = Quantity.new(target: avg_zoom, base: first_zoom).to_f
-            # puts ({quantity: quantity, avg_zoom: avg_zoom, first_zoom: first_zoom})
+
+            oneshot_quantity = Quantity.new(target: avg_zoom, base: first_zoom).to_f
+            oneshot_direction = Direction.new(target: avg_zoom, base: first_zoom).to_s
             oneshot_index = create_oneshot_index(gesture: type, finger: finger,
-                                                 direction: direction)
-            if enough_oneshot_threshold?(index: oneshot_index, quantity: quantity)
+                                                 direction: oneshot_direction)
+            if enough_oneshot_threshold?(index: oneshot_index, quantity: oneshot_quantity)
               return [
-                create_event(
-                  record: Events::Records::IndexRecord.new(
-                    index: oneshot_index, trigger: :oneshot, args: delta.to_h
-                  )),
-                create_event(
-                  record: Events::Records::IndexRecord.new(
-                    index: repeat_index, trigger: :repeat, args: delta.to_h
-                  ))
+                create_event(record: Events::Records::IndexRecord.new(
+                  index: oneshot_index, trigger: :oneshot, args: delta.to_h
+                )),
+                create_event(record: Events::Records::IndexRecord.new(
+                  index: repeat_index, trigger: :repeat, args: delta.to_h
+                ))
               ]
             end
           end
@@ -101,6 +110,12 @@ module Fusuma
 
         private
 
+        def moved?(prev_event, event)
+          zoom_delta = (event.record.delta.zoom - prev_event.record.delta.zoom).abs
+          updating_time = (event.time - prev_event.time) * 100
+          zoom_delta / updating_time > 0.01
+        end
+
         def enough_oneshot_threshold?(index:, quantity:)
           quantity >= threshold(index: index)
         end
@@ -121,8 +136,9 @@ module Fusuma
           IN = 'in'
           OUT = 'out'
 
-          def initialize(diameter:)
-            @diameter = diameter
+          def initialize(target:, base:)
+            @target = target.to_f
+            @base = base.to_f
           end
 
           def to_s
@@ -130,7 +146,7 @@ module Fusuma
           end
 
           def calc
-            if @diameter > 1
+            if @target > @base
               IN
             else
               OUT
@@ -141,8 +157,8 @@ module Fusuma
         # quantity of gesture
         class Quantity
           def initialize(target:, base:)
-            @target = target
-            @base = base
+            @target = target.to_f
+            @base = base.to_f
           end
 
           def to_f
