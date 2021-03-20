@@ -8,7 +8,7 @@ module Fusuma
     module Executors
       # Inherite this base
       class Executor < Base
-        BASE_ONESHOT_INTERVAL = 0.5
+        BASE_ONESHOT_INTERVAL = 0.3
         BASE_REPEAT_INTERVAL = 0.1
 
         # Executor parameter on config.yml
