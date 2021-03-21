@@ -88,6 +88,8 @@ $ sudo pacman -S ruby
 To install gems system-wide, see any of the methods listed on [Arch Wiki](https://wiki.archlinux.org/index.php/ruby#Installing_gems_system-wide)
 
 ```zsh
+$ sudo gem install revdev
+$ sudo gem install bundler
 $ sudo gem install fusuma
 ```
 
