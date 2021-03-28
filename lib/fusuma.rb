@@ -74,8 +74,8 @@ module Fusuma
       parsed = parse(filtered) || return
       buffered = buffer(parsed) || return
       detected = detect(buffered) || return
-      merged = merge(detected) || return
-      execute(merged)
+      condition, context, event = merge(detected) || return
+      execute(condition, context, event)
     end
 
     # For performance monitoring
@@ -135,35 +135,48 @@ module Fusuma
     # @return [Plugin::Events::Event] Event merged all records from arguments
     # @return [NilClass] when event is NOT given
     def merge(events)
-      @condition = nil
-      main_events, modifiers = events.partition { |event| event.record.mergable? }
+      index_events, context_events = events.partition { |event| event.record.type == :index }
+      main_events, modifiers = index_events.partition { |event| event.record.mergable? }
+      request_context = context_events.each_with_object({}) do |e, results|
+        results[e.record.name] = e.record.value
+      end
       main_events.sort_by! { |e| e.record.trigger_priority }
 
-      main_events.find do |main_event|
-        @condition, success = Config::Searcher.find_condition do
-          main_event.record.merge(records: modifiers.map(&:record))
+      condition = nil
+      matched_context = nil
+      event = main_events.find do |main_event|
+        matched_context = Config::Searcher.find_context(request_context) do
+          condition, index_record = Config::Searcher.find_condition do
+            main_event.record.merge(records: modifiers.map(&:record))
+          end
+          main_event if index_record
         end
-
-        main_event if success
       end
+      return if event.nil?
+
+      [condition, matched_context, event]
     end
 
     # @param event [Plugin::Events::Event]
-    def execute(event)
+    def execute(condition, context, event)
       return unless event
 
       # Find executable condition and executor
-      executor = Config::Searcher.with_condition(@condition) do
-        @executors.find { |e| e.executable?(event) }
+      executor = Config::Searcher.with_context(context) do
+        Config::Searcher.with_condition(condition) do
+          @executors.find { |e| e.executable?(event) }
+        end
       end
 
       return if executor.nil?
 
       # Check interval and execute
-      Config::Searcher.with_condition(@condition) do
-        executor.enough_interval?(event) &&
-          executor.update_interval(event) &&
-          executor.execute(event)
+      Config::Searcher.with_context(context) do
+        Config::Searcher.with_condition(condition) do
+          executor.enough_interval?(event) &&
+            executor.update_interval(event) &&
+            executor.execute(event)
+        end
       end
     end
 

@@ -46,12 +46,7 @@ module Fusuma
 
     describe '.search' do
       let(:index) { nil }
-      subject { Config::Searcher.new.search(index, location: Config.instance.keymap) }
-      before do
-        allow(YAML).to receive(:load_file).and_return keymap
-        Config.instance.reload
-      end
-
+      subject { Config::Searcher.new.search(index, location: keymap.deep_symbolize_keys) }
       context 'index correct order' do
         let(:index) { Config::Index.new %w[pinch in command] }
         it { is_expected.to eq 'ctrl+plus' }

@@ -42,11 +42,8 @@ module Fusuma
               return nil
             end
 
-            sorted = records.sort_by(&:merge_priority)
-            record = sorted.shift
+            record = records.shift
             new_index = case record.position
-                        when :prefix
-                          Config::Index.new([*record.index.keys, *index.keys])
                         when :surfix
                           Config::Index.new([*index.keys, *record.index.keys])
                         else
@@ -55,23 +52,12 @@ module Fusuma
 
             return unless exist_on_conf?(new_index)
 
-            merge(records: sorted, index: new_index)
+            merge(records: records, index: new_index)
           end
 
           # @param [Config::Searcher] searcher
           def exist_on_conf?(index = @index)
             Config.search(index)
-          end
-
-          def merge_priority
-            case @position
-            when :prefix
-              10
-            when :surfix
-              100
-            else
-              1000
-            end
           end
 
           # @return [Integer]

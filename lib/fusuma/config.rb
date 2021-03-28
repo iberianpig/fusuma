@@ -63,20 +63,17 @@ module Fusuma
       end
       raise InvalidFileError, "Detect duplicate keys #{duplicates}" unless duplicates.empty?
 
-      yaml = YAML.load_file(path)
-
-      raise InvalidFileError, 'Invaid YAML file' unless yaml.is_a? Hash
-
-      yaml.deep_symbolize_keys
+      yamls = YAML.load_stream(File.read(path)).compact
+      yamls.map(&:deep_symbolize_keys)
     rescue StandardError => e
       MultiLogger.error e.message
       raise InvalidFileError, e.message
     end
 
     # @param index [Index]
-    # @param location [Hash]
-    def search(index, location: keymap)
-      @searcher.search_with_cache(index, location: location)
+    # @param context [Hash]
+    def search(index)
+      @searcher.search_with_cache(index, location: keymap)
     end
 
     # @param index [Config::Index]
@@ -86,9 +83,10 @@ module Fusuma
         executor.new.execute_keys
       end.flatten
 
-      @execute_keys.find do |execute_key|
-        search(Index.new([*index.keys, execute_key]))
-      end
+      execute_params = search(index)
+      return if execute_params.nil?
+
+      @execute_keys.find { |k| execute_params.keys.include?(k) }
     end
 
     private
