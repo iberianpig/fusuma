@@ -6,7 +6,7 @@ module Fusuma
   module Plugin
     module Detectors
       class SwipeDetector < Detector
-        SOURCES = ['gesture']
+        SOURCES = ['gesture'].freeze
         BUFFER_TYPE = 'gesture'
         GESTURE_RECORD_TYPE = 'swipe'
 

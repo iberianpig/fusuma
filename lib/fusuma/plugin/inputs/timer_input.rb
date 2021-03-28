@@ -10,7 +10,7 @@ module Fusuma
         DEFAULT_INTERVAL = 0.3
         def config_param_types
           {
-            'interval': [Float]
+            interval: [Float]
           }
         end
 

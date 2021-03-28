@@ -12,11 +12,11 @@ module Fusuma
 
         def config_param_types
           {
-            'device': [String],
+            device: [String],
             'enable-dwt': [TrueClass, FalseClass],
             'enable-tap': [TrueClass, FalseClass],
             'show-keycodes': [TrueClass, FalseClass],
-            'verbose': [TrueClass, FalseClass],
+            verbose: [TrueClass, FalseClass],
             'libinput-debug-events': [String],
             'libinput-list-devices': [String]
           }

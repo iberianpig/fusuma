@@ -8,7 +8,6 @@ module Fusuma
     module Detectors
       # Inherite this base
       class Detector < Base
-
         # @return [Array<String>]
         def sources
           @source ||= self.class.const_get('SOURCES')

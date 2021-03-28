@@ -1,9 +1,9 @@
+# frozen_string_literal: true
+
 # support camerize and underscore
 class String
   def camelize
-    split('_').map do |w|
-      w.capitalize
-    end.join
+    split('_').map(&:capitalize).join
   end
 
   def underscore
