@@ -54,7 +54,7 @@ module Fusuma
           prev_delta = prev_event.record.delta
 
           repeat_direction = Direction.new(target: delta.zoom, base: (prev_delta&.zoom || 1.0)).to_s
-          repeat_quantity = Quantity.new(target: delta.zoom, base: (prev_delta&.zoom || 1.0)).to_f
+          # repeat_quantity = Quantity.new(target: delta.zoom, base: (prev_delta&.zoom || 1.0)).to_f
 
           repeat_index = create_repeat_index(gesture: type, finger: finger,
                                              direction: repeat_direction,
