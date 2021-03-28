@@ -51,8 +51,8 @@ module Fusuma
           repeat_direction = Direction.new(move_x: delta.move_x, move_y: delta.move_y).to_s
           repeat_quantity = Quantity.new(move_x: delta.move_x, move_y: delta.move_y).to_f
 
-          repeat_index = create_repeat_index(gesture: type, finger: finger, direction: repeat_direction,
-                                             status: status)
+          repeat_index = create_repeat_index(gesture: type, finger: finger,
+                                             direction: repeat_direction, status: status)
 
           if status == 'update'
             return unless moved?(repeat_quantity)
