@@ -21,6 +21,7 @@ module Fusuma
               1:
                 direction:
                   command: 'echo dummy'
+                  interval: 1
           CONFIG
 
           example.run
@@ -30,7 +31,9 @@ module Fusuma
 
         describe '#execute' do
           it 'spawn' do
-            expect(POSIX::Spawn).to receive(:spawn).with('echo dummy')
+            command = 'echo dummy'
+            env = {}
+            expect(POSIX::Spawn).to receive(:spawn).with(env, command)
             expect(Process).to receive(:detach).with(anything)
             @executor.execute(@event)
           end

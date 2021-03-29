@@ -12,8 +12,8 @@ module Fusuma
 
         def config_param_types
           {
-            'source': [String],
-            'seconds_to_keep': [Float, Integer]
+            source: [String],
+            seconds_to_keep: [Float, Integer]
           }
         end
 

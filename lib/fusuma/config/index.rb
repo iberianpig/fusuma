@@ -19,6 +19,11 @@ module Fusuma
                   [Key.new(keys)]
                 end
       end
+
+      def inspect
+        @keys.map(&:inspect)
+      end
+
       attr_reader :keys
 
       def cache_key
@@ -30,6 +35,20 @@ module Fusuma
         else
           raise 'invalid keys'
         end
+      end
+
+      # @return [Index]
+      def with_context
+        keys = @keys.map do |key|
+          next if Searcher.skip? && key.skippable
+
+          if Searcher.fallback? && key.fallback
+            key.fallback
+          else
+            key
+          end
+        end
+        self.class.new(keys.compact)
       end
 
       # Keys in Index
@@ -49,6 +68,13 @@ module Fusuma
             fallback
           end
         end
+
+        def inspect
+          skip_marker = @skippable && Searcher.skip? ? '(skip)' : ''
+          fallback_marker = @fallback && Searcher.fallback? ? '(fallback)' : ''
+          "#{@symbol}#{skip_marker}#{fallback_marker}"
+        end
+
         attr_reader :symbol, :skippable, :fallback
       end
     end

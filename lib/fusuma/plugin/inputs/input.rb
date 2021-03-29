@@ -12,7 +12,7 @@ module Fusuma
         # Wait multiple inputs until it becomes readable
         # and read lines with nonblock
         # @param inputs [Array<Input>]
-        # @return Event
+        # @return [Event]
         def self.select(inputs)
           ios = IO.select(inputs.map(&:io))
           io = ios&.first&.first
@@ -48,9 +48,9 @@ module Fusuma
 
         # @return [Event]
         def create_event(record: 'dummy input')
-          Events::Event.new(tag: tag, record: record).tap do |e|
-            MultiLogger.debug(input_event: e)
-          end
+          e = Events::Event.new(tag: tag, record: record)
+          MultiLogger.debug(input_event: e)
+          e
         end
 
         def tag

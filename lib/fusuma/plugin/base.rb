@@ -16,10 +16,8 @@ module Fusuma
         Manager.add(plugin_class: subclass, plugin_path: subclass_path)
       end
 
-      # get inherited classes
-      # @example
-      #  [Vectors::Vector]
-      # @return [Array]
+      # get subclasses
+      # @return [Array<Class>]
       def self.plugins
         Manager.plugins[name]
       end
@@ -36,19 +34,21 @@ module Fusuma
 
         return params unless key
 
-        params.fetch(key, nil).tap do |val|
-          next if val.nil?
+        @config_params ||= {}
+        @config_params["#{base.cache_key},#{key}"] ||=
+          params.fetch(key, nil).tap do |val|
+            next if val.nil?
 
-          # NOTE: Type checking for config.yml
-          param_types = Array(config_param_types.fetch(key))
+            # NOTE: Type checking for config.yml
+            param_types = Array(config_param_types.fetch(key))
 
-          next if param_types.any? { |klass| val.is_a?(klass) }
+            next if param_types.any? { |klass| val.is_a?(klass) }
 
-          MultiLogger.error('Please fix config.yml.')
-          MultiLogger.error(":#{base.keys.map(&:symbol)
+            MultiLogger.error('Please fix config.yml.')
+            MultiLogger.error(":#{base.keys.map(&:symbol)
             .join(' => :')} => :#{key} should be #{param_types.join(' OR ')}.")
-          exit 1
-        end
+            exit 1
+          end
       end
 
       def config_index

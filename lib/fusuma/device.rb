@@ -6,11 +6,12 @@ require_relative './libinput_command'
 module Fusuma
   # detect input device
   class Device
-    attr_reader :available, :name, :id
+    attr_reader :id, :name, :capabilities, :available
 
-    def initialize(id: nil, name: nil, available: nil)
+    def initialize(id: nil, name: nil, capabilities: nil, available: nil)
       @id = id
       @name = name
+      @capabilities = capabilities
       @available = available
     end
 
@@ -22,6 +23,8 @@ module Fusuma
           @id = v
         when :name
           @name = v
+        when :capabilities
+          @capabilities = v
         when :available
           @available = v
         end
@@ -29,9 +32,13 @@ module Fusuma
     end
 
     class << self
+      # Return devices
+      # sort devices by capabilities of gesture
       # @return [Array]
       def all
-        @all ||= fetch_devices
+        @all ||= fetch_devices.sort_by do |d|
+          d.capabilities.match(/gesture/).to_s
+        end
       end
 
       # @raise [SystemExit]
@@ -102,6 +109,8 @@ module Fusuma
           { id: id }
         elsif (name = name_from(line))
           { name: name }
+        elsif (capabilities = capabilities_from(line))
+          { capabilities: capabilities }
         elsif (available = available_from(line))
           { available: available }
         else
@@ -117,6 +126,12 @@ module Fusuma
 
       def name_from(line)
         line.match('^Device:[[:space:]]*') do |m|
+          m.post_match.strip
+        end
+      end
+
+      def capabilities_from(line)
+        line.match('^Capabilities:[[:space:]]*') do |m|
           m.post_match.strip
         end
       end

@@ -8,6 +8,17 @@ module Fusuma
     module Detectors
       # Inherite this base
       class Detector < Base
+        # @return [Array<String>]
+        def sources
+          @source ||= self.class.const_get('SOURCES')
+        end
+
+        # Always watch buffers and detect them or not
+        # @return [TrueClass,FalseClass]
+        def watch?
+          false
+        end
+
         # @param _buffers [Array<Buffer>]
         # @return [Event] if event is detected
         # @return [NilClass] if event is NOT detected
@@ -33,11 +44,21 @@ module Fusuma
         end
 
         def tag
-          self.class.name.split('Detectors::').last.underscore
+          self.class.tag
         end
 
         def type
-          self.class.name.underscore.split('/').last.gsub('_detector', '')
+          self.class.type
+        end
+
+        class << self
+          def tag
+            name.split('Detectors::').last.underscore
+          end
+
+          def type(tag_name = tag)
+            tag_name.gsub('_detector', '')
+          end
         end
       end
     end

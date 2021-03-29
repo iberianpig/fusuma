@@ -46,12 +46,7 @@ module Fusuma
 
     describe '.search' do
       let(:index) { nil }
-      subject { Config::Searcher.new.search(index, location: Config.instance.keymap) }
-      before do
-        allow(YAML).to receive(:load_file).and_return keymap
-        Config.instance.reload
-      end
-
+      subject { Config::Searcher.new.search(index, location: keymap.deep_symbolize_keys) }
       context 'index correct order' do
         let(:index) { Config::Index.new %w[pinch in command] }
         it { is_expected.to eq 'ctrl+plus' }
@@ -96,63 +91,6 @@ module Fusuma
         searcher = Config::Searcher.new
         searcher.send(:cache, key) { value }
         expect(searcher.send(:cache, key)).to eq value
-      end
-    end
-
-    describe '#validate' do
-      context 'with valid yaml' do
-        before do
-          string = <<~CONFIG
-            swipe:
-              3:
-                left:
-                  command: echo 'swipe left'
-
-          CONFIG
-          @file_path = Tempfile.open do |temp_file|
-            temp_file.tap { |f| f.write(string) }
-          end
-        end
-
-        it 'should return Hash' do
-          Config.instance.validate(@file_path)
-        end
-      end
-
-      context 'with invalid yaml' do
-        before do
-          string = <<~CONFIG
-            this is not yaml
-          CONFIG
-          @file_path = Tempfile.open do |temp_file|
-            temp_file.tap { |f| f.write(string) }
-          end
-        end
-
-        it 'raise InvalidFileError' do
-          expect { Config.instance.validate(@file_path) }.to raise_error(Config::InvalidFileError)
-        end
-
-        context 'with duplicated key' do
-          before do
-            string = <<~CONFIG
-              pinch:
-                2:
-                  in:
-                    command: "xdotool keydown ctrl click 4 keyup ctrl" # threshold: 0.5, interval: 0.5
-                2:
-                  out:
-                    command: "xdotool keydown ctrl click 5 keyup ctrl" # threshold: 0.5, interval: 0.5
-            CONFIG
-            @file_path = Tempfile.open do |temp_file|
-              temp_file.tap { |f| f.write(string) }
-            end
-          end
-
-          it 'raise InvalidFileError' do
-            expect { Config.instance.validate(@file_path) }.to raise_error(Config::InvalidFileError)
-          end
-        end
       end
     end
   end

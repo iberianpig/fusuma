@@ -16,6 +16,8 @@ module Fusuma
         set_trap
         read_options(option)
         instance = new
+        ## NOTE: Uncomment following line to measure performance
+        # instance.run_with_lineprof
         instance.run
       end
 
@@ -62,68 +64,120 @@ module Fusuma
     end
 
     def run
-      loop do
-        event = input
-        event || next
-        clear_expired_events
-        filtered = filter(event) || next
-        parsed = parse(filtered) || next
-        buffered = buffer(parsed) || next
-        detected = detect(buffered) || next
-        merged = merge(detected) || next
-        execute(merged)
-      end
+      loop { pipeline }
     end
 
+    def pipeline
+      event = input || return
+      clear_expired_events
+      filtered = filter(event) || return
+      parsed = parse(filtered) || return
+      buffered = buffer(parsed) || return
+      detected = detect(buffered) || return
+      condition, context, event = merge(detected) || return
+      execute(condition, context, event)
+    end
+
+    # For performance monitoring
+    def run_with_lineprof(count: 1000)
+      require 'rblineprof'
+      require 'rblineprof-report'
+
+      profile = lineprof(%r{#{Pathname.new(__FILE__).parent}/.}) do
+        count.times { pipeline }
+      end
+      LineProf.report(profile)
+      exit 0
+    end
+
+    # @return [Plugin::Events::Event]
     def input
       Plugin::Inputs::Input.select(@inputs)
     end
 
+    # @param [Plugin::Events::Event]
+    # @return [Plugin::Events::Event]
     def filter(event)
       event if @filters.any? { |f| f.filter(event) }
     end
 
+    # @param [Plugin::Events::Event]
+    # @return [Plugin::Events::Event]
     def parse(event)
       @parsers.reduce(event) { |e, p| p.parse(e) if e }
     end
 
+    # @param [Plugin::Events::Event]
+    # @return [Array<Plugin::Buffers::Buffer>]
+    # @return [NilClass]
     def buffer(event)
-      @buffers.any? { |b| b.buffer(event) } && @buffers
+      @buffers.select { |b| b.buffer(event) }
     end
 
     # @param buffers [Array<Buffer>]
     # @return [Array<Event>]
     def detect(buffers)
-      @detectors.each_with_object([]) do |detector, detected|
-        if (event = detector.detect(buffers))
-          detected << event
-        end
+      matched_detectors = @detectors.select do |detector|
+        detector.watch? ||
+          buffers.any? { |b| detector.sources.include?(b.type) }
       end
+
+      events = matched_detectors.each_with_object([]) do |detector, detected|
+        Array(detector.detect(@buffers)).each { |e| detected << e }
+      end
+
+      return if events.empty?
+
+      events
     end
 
-    # @param events [Array<Event>]
-    # @return [Event] a Event merged all records from arguments
+    # @param events [Array<Plugin::Events::Event>]
+    # @return [Plugin::Events::Event] Event merged all records from arguments
     # @return [NilClass] when event is NOT given
     def merge(events)
-      main_events, modifiers = events.partition { |event| event.record.mergable? }
-      return nil unless (main_event = main_events.first)
+      index_events, context_events = events.partition { |event| event.record.type == :index }
+      main_events, modifiers = index_events.partition { |event| event.record.mergable? }
+      request_context = context_events.each_with_object({}) do |e, results|
+        results[e.record.name] = e.record.value
+      end
+      main_events.sort_by! { |e| e.record.trigger_priority }
 
-      main_event.record.merge(records: modifiers.map(&:record))
-      main_event
+      condition = nil
+      matched_context = nil
+      event = main_events.find do |main_event|
+        matched_context = Config::Searcher.find_context(request_context) do
+          condition, index_record = Config::Searcher.find_condition do
+            main_event.record.merge(records: modifiers.map(&:record))
+          end
+          main_event if index_record
+        end
+      end
+      return if event.nil?
+
+      [condition, matched_context, event]
     end
 
-    def execute(event)
+    # @param event [Plugin::Events::Event]
+    def execute(condition, context, event)
       return unless event
 
-      l = lambda do
-        executor = @executors.find { |e| e.executable?(event) }
-        executor&.execute(event)
+      # Find executable condition and executor
+      executor = Config::Searcher.with_context(context) do
+        Config::Searcher.with_condition(condition) do
+          @executors.find { |e| e.executable?(event) }
+        end
       end
 
-      l.call ||
-        Config::Searcher.skip { l.call } ||
-        Config::Searcher.fallback { l.call } ||
-        Config::Searcher.skip { Config::Searcher.fallback { l.call } }
+      return if executor.nil?
+
+      # Check interval and execute
+      Config::Searcher.with_context(context) do
+        Config::Searcher.with_condition(condition) do
+          executor.enough_interval?(event) &&
+            executor.update_interval(event) &&
+            executor.execute(event)
+        end
+      end
     end
 
     def clear_expired_events

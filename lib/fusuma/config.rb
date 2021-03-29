@@ -4,6 +4,7 @@ require_relative './multi_logger'
 require_relative './config/index'
 require_relative './config/searcher'
 require_relative './config/yaml_duplication_checker'
+require_relative './hash_support'
 require 'singleton'
 require 'yaml'
 
@@ -18,8 +19,12 @@ module Fusuma
     include Singleton
 
     class << self
-      def search(keys)
-        instance.search(keys)
+      def search(index)
+        instance.search(index)
+      end
+
+      def find_execute_key(index)
+        instance.find_execute_key(index)
       end
 
       def custom_path=(new_path)
@@ -48,8 +53,8 @@ module Fusuma
       self
     end
 
-    # @return [Hash]
-    # @raise [InvalidError]
+    # @return [Hash] If check passes
+    # @raise [InvalidFileError] If check does not pass
     def validate(path)
       duplicates = []
       YAMLDuplicationChecker.check(File.read(path), path) do |ignored, duplicate|
@@ -58,20 +63,30 @@ module Fusuma
       end
       raise InvalidFileError, "Detect duplicate keys #{duplicates}" unless duplicates.empty?
 
-      yaml = YAML.load_file(path)
-
-      raise InvalidFileError, 'Invaid YAML file' unless yaml.is_a? Hash
-
-      yaml.deep_symbolize_keys
+      yamls = YAML.load_stream(File.read(path)).compact
+      yamls.map(&:deep_symbolize_keys)
     rescue StandardError => e
       MultiLogger.error e.message
       raise InvalidFileError, e.message
     end
 
     # @param index [Index]
-    # @param location [Hash]
-    def search(index, location: keymap)
-      @searcher.search_with_cache(index, location: location)
+    # @param context [Hash]
+    def search(index)
+      @searcher.search_with_cache(index, location: keymap)
+    end
+
+    # @param index [Config::Index]
+    # @return Symbol
+    def find_execute_key(index)
+      @execute_keys ||= Plugin::Executors::Executor.plugins.map do |executor|
+        executor.new.execute_keys
+      end.flatten
+
+      execute_params = search(index)
+      return if execute_params.nil?
+
+      @execute_keys.find { |k| execute_params.keys.include?(k) }
     end
 
     private
@@ -101,24 +116,5 @@ module Fusuma
     def expand_default_path(filename)
       File.expand_path "../../#{filename}", __FILE__
     end
-  end
-end
-
-# activesupport-4.1.1/lib/active_support/core_ext/hash/keys.rb
-class Hash
-  def deep_symbolize_keys
-    deep_transform_keys do |key|
-      key.to_sym
-    rescue StandardError
-      key
-    end
-  end
-
-  def deep_transform_keys(&block)
-    result = {}
-    each do |key, value|
-      result[yield(key)] = value.is_a?(Hash) ? value.deep_transform_keys(&block) : value
-    end
-    result
   end
 end
