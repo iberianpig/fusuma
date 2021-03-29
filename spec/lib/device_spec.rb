@@ -89,8 +89,8 @@ module Fusuma
           razer_devices = Device.all.group_by(&:name)['Razer Razer Blade']
           capabilities = razer_devices.map(&:capabilities)
           expect(capabilities).to eq ['keyboard', 'keyboard pointer', 'pointer']
-          keybaord_devices = razer_devices.select { |d| d.capabilities == 'keyboard' }
-          expect(keybaord_devices.size).to eq 1
+          keyboard_devices = razer_devices.select { |d| d.capabilities == 'keyboard' }
+          expect(keyboard_devices.size).to eq 1
         end
       end
     end
