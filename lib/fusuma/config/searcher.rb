@@ -32,6 +32,8 @@ module Fusuma
       end
 
       def search_with_context(index, location:, context:)
+        return nil if location.nil?
+
         return search(index, location: location[0]) if context == {}
 
         new_location = location.find do |conf|
