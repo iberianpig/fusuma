@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['iberianpig']
   spec.email         = ['yhkyky@gmail.com']
 
-  spec.summary       = 'Multitouch gestures with libinput driver on X11, Linux'
+  spec.summary       = 'Multitouch gestures with libinput driver, Linux'
   spec.description   = 'Fusuma is multitouch gesture recognizer. This gem makes your touchpad on Linux able to recognize swipes or pinchs and assign command to them. Read installation on Github(https://github.com/iberianpig/fusuma#installation).'
   spec.homepage      = 'https://github.com/iberianpig/fusuma'
   spec.license       = 'MIT'
