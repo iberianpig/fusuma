@@ -21,8 +21,19 @@ module Fusuma
       def require_siblings_from_gems
         search_key = File.join(plugin_dir_name, '*.rb')
         Gem.find_latest_files(search_key).each do |siblings_plugin|
-          if siblings_plugin =~ %r{fusuma-plugin-(.+).*/lib/#{plugin_dir_name}/\1_.+.rb}
+          next unless siblings_plugin =~ %r{fusuma-plugin-(.+).*/lib/#{plugin_dir_name}/\1_.+.rb}
+
+          match_data = siblings_plugin.match(%r{(.*)/(.*)/lib/(.*)})
+          gemspec_path = Dir.glob("#{match_data[1]}/#{match_data[2]}/*.gemspec").first
+          raise "Not Found: #{match_data[1]}/#{match_data[2]}/*.gemspec" unless gemspec_path
+
+          gemspec = Gem::Specification.load gemspec_path
+          fusuma_gemspec = Gem::Specification.load File.expand_path('../../../fusuma.gemspec',
+                                                                    __dir__)
+          if gemspec.dependencies.find { |d| d.name == 'fusuma' }&.match?(fusuma_gemspec)
             require siblings_plugin
+          else
+            MultiLogger.warn "#{gemspec.name} #{gemspec.version} is incompatible with running #{fusuma_gemspec.name} #{fusuma_gemspec.version}"
           end
         end
       end
