@@ -25,6 +25,7 @@ module Fusuma
             warn "#{input.class.name}: #{e}"
             warn 'Send SIGKILL to fusuma processes'
             inputs.reject { |i| i == input }.each do |i|
+              warn "stop process: #{i.class.name.underscore}"
               Process.kill(:SIGKILL, i.pid)
             end
             exit 1

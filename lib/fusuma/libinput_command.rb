@@ -60,7 +60,7 @@ module Fusuma
       elsif which('libinput-list-devices')
         'libinput-list-devices --version'
       else
-        MultiLogger.error 'install libinput-tools'
+        MultiLogger.error 'Please install libinput-tools'
         exit 1
       end
     end
