@@ -36,9 +36,9 @@ module Fusuma
       # sort devices by capabilities of gesture
       # @return [Array]
       def all
-        @all ||= fetch_devices.sort_by do |d|
-          d.capabilities.match(/gesture/).to_s
-        end
+        @all ||= fetch_devices.partition do |d|
+          d.capabilities.match?(/gesture/)
+        end.flatten
       end
 
       # @raise [SystemExit]
