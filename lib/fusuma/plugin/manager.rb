@@ -27,9 +27,9 @@ module Fusuma
           gemspec_path = Dir.glob("#{match_data[1]}/#{match_data[2]}/*.gemspec").first
           raise "Not Found: #{match_data[1]}/#{match_data[2]}/*.gemspec" unless gemspec_path
 
-          gemspec = Gem::Specification.load gemspec_path
-          fusuma_gemspec = Gem::Specification.load File.expand_path('../../../fusuma.gemspec',
-                                                                    __dir__)
+          gemspec = Gem::Specification.load(gemspec_path)
+          fusuma_gemspec_path = File.expand_path('../../../fusuma.gemspec', __dir__)
+          fusuma_gemspec = Gem::Specification.load(fusuma_gemspec_path)
           if gemspec.dependencies.find { |d| d.name == 'fusuma' }&.match?(fusuma_gemspec)
             require siblings_plugin
           else
