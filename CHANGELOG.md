@@ -1,5 +1,61 @@
 # Changelog
 
+## [v2.0.0](https://github.com/iberianpig/fusuma/tree/v2.0.0) (2021-04-12)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.0.0.pre2...v2.0.0)
+
+**Closed issues:**
+
+- Incorrect keys shortcuts recognition on Ubuntu 20.10 \(Fusuma version: 1.11.1\) [\#226](https://github.com/iberianpig/fusuma/issues/226)
+- Touchpad not found? [\#204](https://github.com/iberianpig/fusuma/issues/204)
+
+## [v2.0.0.pre2](https://github.com/iberianpig/fusuma/tree/v2.0.0.pre2) (2021-03-29)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.0.0.pre...v2.0.0.pre2)
+
+**Implemented enhancements:**
+
+- Support begin/update/end events [\#224](https://github.com/iberianpig/fusuma/pull/224) ([iberianpig](https://github.com/iberianpig))
+
+**Closed issues:**
+
+- Problem when changing the language [\#222](https://github.com/iberianpig/fusuma/issues/222)
+
+**Merged pull requests:**
+
+- Add Arch Installation steps [\#220](https://github.com/iberianpig/fusuma/pull/220) ([HritwikSinghal](https://github.com/HritwikSinghal))
+- fixed typos [\#219](https://github.com/iberianpig/fusuma/pull/219) ([freddii](https://github.com/freddii))
+
+## [v2.0.0.pre](https://github.com/iberianpig/fusuma/tree/v2.0.0.pre) (2020-11-07)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.11.1...v2.0.0.pre)
+
+**Closed issues:**
+
+- Add user to group "input" without reboot [\#209](https://github.com/iberianpig/fusuma/issues/209)
+- Gestures not working but sendkey works [\#207](https://github.com/iberianpig/fusuma/issues/207)
+- Magic Trackpad 2 via Bluetooth does not work  [\#206](https://github.com/iberianpig/fusuma/issues/206)
+- Unable to run fusuma even when Gem directory is in PATH [\#196](https://github.com/iberianpig/fusuma/issues/196)
+- Non-working rotate and keypress plugin when run 'fusuma' with no parameters [\#190](https://github.com/iberianpig/fusuma/issues/190)
+
+**Merged pull requests:**
+
+- Add user to group "input" without reboot [\#210](https://github.com/iberianpig/fusuma/pull/210) ([llouislu](https://github.com/llouislu))
+- Input Plugin IO Multiplexing [\#199](https://github.com/iberianpig/fusuma/pull/199) ([iberianpig](https://github.com/iberianpig))
+- fix\(README.md\): lexical correction [\#198](https://github.com/iberianpig/fusuma/pull/198) ([thezaff](https://github.com/thezaff))
+
+## [v1.11.1](https://github.com/iberianpig/fusuma/tree/v1.11.1) (2020-07-27)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.11.0...v1.11.1)
+
+**Closed issues:**
+
+- "ERROR -- : unknown keyword: filename" thrown after upgrading from 1.10.1 to 1.11.0 [\#194](https://github.com/iberianpig/fusuma/issues/194)
+
+**Merged pull requests:**
+
+- Switch Psych arguments [\#195](https://github.com/iberianpig/fusuma/pull/195) ([iberianpig](https://github.com/iberianpig))
+
 ## [v1.11.0](https://github.com/iberianpig/fusuma/tree/v1.11.0) (2020-07-25)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.10.2...v1.11.0)
@@ -182,10 +238,6 @@
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v0.11.0...v0.11.1)
 
-**Merged pull requests:**
-
-- Added Mac OS gestures mapping for Ubuntu [\#123](https://github.com/iberianpig/fusuma/pull/123) ([Rajanpandey](https://github.com/Rajanpandey))
-
 ## [v0.11.0](https://github.com/iberianpig/fusuma/tree/v0.11.0) (2019-05-24)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v0.10.2...v0.11.0)
@@ -197,7 +249,7 @@
 
 **Merged pull requests:**
 
-- Fork, daemonize, and detach when running executing commands. [\#121](https://github.com/iberianpig/fusuma/pull/121) ([epakai](https://github.com/epakai))
+- Added Mac OS gestures mapping for Ubuntu [\#123](https://github.com/iberianpig/fusuma/pull/123) ([Rajanpandey](https://github.com/Rajanpandey))
 - Update bundler requirement from ~\> 1.13 to ~\> 2.0 [\#111](https://github.com/iberianpig/fusuma/pull/111) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 
 ## [v0.10.2](https://github.com/iberianpig/fusuma/tree/v0.10.2) (2018-08-30)
@@ -300,6 +352,7 @@
 
 **Merged pull requests:**
 
+- Fork, daemonize, and detach when running executing commands. [\#121](https://github.com/iberianpig/fusuma/pull/121) ([epakai](https://github.com/epakai))
 - Assigning commands [\#73](https://github.com/iberianpig/fusuma/pull/73) ([iberianpig](https://github.com/iberianpig))
 - Update rake requirement to ~\> 12.3 [\#72](https://github.com/iberianpig/fusuma/pull/72) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 
