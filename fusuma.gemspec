@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/iberianpig/fusuma'
   spec.license       = 'MIT'
 
-  spec.files          = Dir.glob('{bin,lib,exe}/**/*') + %w[LICENSE README.md]
+  spec.files          = Dir.glob('{bin,lib,exe}/**/*') + %w[LICENSE README.md fusuma.gemspec]
   spec.test_files     = Dir.glob("{test,spec,features}/**/*")
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
