@@ -330,12 +330,13 @@ Fusuma plugins are provided with the `fusuma-plugin-XXXXX` naming convention and
 
 ### Available plugins
 
-| Name                                                                           | About                                         |
-| ------------------------------------------------------------------------------ | --------------------------------------------- |
-| [fusuma-plugin-sendkey](https://github.com/iberianpig/fusuma-plugin-sendkey)   | Emulates keyboard events                      |
-| [fusuma-plugin-wmctrl](https://github.com/iberianpig/fusuma-plugin-wmctrl)     | Manages Window and Workspace                  |
-| [fusuma-plugin-keypress](https://github.com/iberianpig/fusuma-plugin-keypress) | Detects gestures while pressing multiple keys |
-| [fusuma-plugin-tap](https://github.com/iberianpig/fusuma-plugin-tap)           | Detects Tap and Hold gestures                 |
+| Name                                                                               | Version                                                               | About                                         |
+| ---------------------------------------------------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------- |
+| [fusuma-plugin-sendkey](https://github.com/iberianpig/fusuma-plugin-sendkey)       | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-sendkey.svg)    | Emulates keyboard events                      |
+| [fusuma-plugin-wmctrl](https://github.com/iberianpig/fusuma-plugin-wmctrl)         | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-wmctrl.svg)     | Manages Window and Workspace                  |
+| [fusuma-plugin-keypress](https://github.com/iberianpig/fusuma-plugin-keypress)     | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-keypress.svg)   | Detects gestures while pressing multiple keys |
+| [fusuma-plugin-tap](https://github.com/iberianpig/fusuma-plugin-tap)               | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-tap.svg)        | Detects Tap and Hold gestures                 |
+| [fusuma-plugin-appmatcher](https://github.com/iberianpig/fusuma-plugin-appmatcher) | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-appmatcher.svg) | Configure app-specific gestures               |
 
 ## Tutorial Video
 
