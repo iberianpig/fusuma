@@ -1,5 +1,17 @@
 # Changelog
 
+## [v2.0.3](https://github.com/iberianpig/fusuma/tree/v2.0.3) (2021-04-20)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.0.2...v2.0.3)
+
+**Closed issues:**
+
+- Error installing fusuma [\#227](https://github.com/iberianpig/fusuma/issues/227)
+
+## [v2.0.2](https://github.com/iberianpig/fusuma/tree/v2.0.2) (2021-04-12)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.0.1...v2.0.2)
+
 ## [v2.0.1](https://github.com/iberianpig/fusuma/tree/v2.0.1) (2021-04-12)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.0.0...v2.0.1)
@@ -237,7 +249,6 @@
 - Fixed Spelling mistake [\#128](https://github.com/iberianpig/fusuma/pull/128) ([thomascrha](https://github.com/thomascrha))
 - \[Readme\] Added step to install Ruby [\#127](https://github.com/iberianpig/fusuma/pull/127) ([mmoraes-rafael](https://github.com/mmoraes-rafael))
 - Plugin Based Architecture [\#116](https://github.com/iberianpig/fusuma/pull/116) ([iberianpig](https://github.com/iberianpig))
-- Update bundler requirement from ~\> 1.13 to ~\> 2.0 [\#111](https://github.com/iberianpig/fusuma/pull/111) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 
 ## [v0.11.1](https://github.com/iberianpig/fusuma/tree/v0.11.1) (2019-05-27)
 
@@ -259,6 +270,7 @@
 **Merged pull requests:**
 
 - Fork, daemonize, and detach when running executing commands. [\#121](https://github.com/iberianpig/fusuma/pull/121) ([epakai](https://github.com/epakai))
+- Update bundler requirement from ~\> 1.13 to ~\> 2.0 [\#111](https://github.com/iberianpig/fusuma/pull/111) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 
 ## [v0.10.2](https://github.com/iberianpig/fusuma/tree/v0.10.2) (2018-08-30)
 
