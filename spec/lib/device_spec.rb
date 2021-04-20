@@ -24,11 +24,9 @@ module Fusuma
           .and_return(libinput_device_command)
 
         @dummy_io = StringIO.new('dummy')
-        allow(Process).to receive(:waitpid).and_return(nil)
-
-        allow(POSIX::Spawn).to receive(:popen4)
+        allow(Open3).to receive(:popen3)
           .with(libinput_device_command)
-          .and_return([nil, @dummy_io, list_devices_output, @dummy_io])
+          .and_return([@dummy_io, list_devices_output, @dummy_io, nil])
       end
 
       context 'with XPS-9360 (have a correct device)' do

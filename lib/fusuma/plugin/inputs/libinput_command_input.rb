@@ -25,8 +25,9 @@ module Fusuma
         # @return [IO]
         def io
           @io ||= begin
-            @pid, io = command.debug_events
-            io
+            reader, writer = create_io
+            @pid = command.debug_events(writer)
+            reader
           end
         end
 
@@ -63,6 +64,12 @@ module Fusuma
 
         def list_devices_command
           config_params(:'libinput-list-devices')
+        end
+
+        private
+
+        def create_io
+          IO.pipe
         end
       end
     end

@@ -24,5 +24,4 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '>= 2.5.1' # https://packages.ubuntu.com/search?keywords=ruby&searchon=names&exact=1&suite=all&section=main
   # support bionic (18.04LTS) 2.5.1
-  spec.add_dependency 'posix-spawn'
 end

@@ -33,7 +33,7 @@ module Fusuma
           it 'spawn' do
             command = 'echo dummy'
             env = {}
-            expect(POSIX::Spawn).to receive(:spawn).with(env, command)
+            expect(Process).to receive(:spawn).with(env, command)
             expect(Process).to receive(:detach).with(anything)
             @executor.execute(@event)
           end

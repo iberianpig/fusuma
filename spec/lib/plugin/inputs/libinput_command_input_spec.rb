@@ -15,7 +15,8 @@ module Fusuma
             dummy_pid = 999_999_999
             libinput_command = instance_double(LibinputCommand)
             allow(LibinputCommand).to receive(:new).and_return(libinput_command)
-            allow(libinput_command).to receive(:debug_events).and_return([dummy_pid, @dummy_io])
+            allow(libinput_command).to receive(:debug_events).with(@dummy_io).and_return(dummy_pid)
+            allow(input).to receive(:create_io).and_return [@dummy_io, @dummy_io]
           end
 
           it { expect(input.io).to eq @dummy_io }

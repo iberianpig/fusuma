@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'posix/spawn'
+require 'open3'
 
 module Fusuma
   # Execute libinput command
@@ -33,21 +33,16 @@ module Fusuma
     def list_devices(&block)
       cmd = list_devices_command
       MultiLogger.debug(list_devices: cmd)
-      p, i, o, e = POSIX::Spawn.popen4(cmd)
+      i, o, e, _w = Open3.popen3(cmd)
+      MultiLogger.error(e.read) if o.eof?
       i.close
+      e.close
       o.each(&block)
-    ensure
-      [i, o, e].each { |io| io.close unless io.closed? }
-      Process.waitpid(p)
     end
 
-    # @return [Integer, IO] return a latest line libinput debug-events
-    def debug_events
-      @debug_events = begin
-        p, i, o, _e = POSIX::Spawn.popen4(debug_events_with_options)
-        i.close
-        [p, o]
-      end
+    # @return [Integer] return a latest line libinput debug-events
+    def debug_events(writer)
+      @debug_events ||= Process.spawn(debug_events_with_options, out: writer, in: '/dev/null')
     end
 
     # @return [String] command

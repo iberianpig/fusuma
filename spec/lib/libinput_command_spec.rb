@@ -79,15 +79,14 @@ module Fusuma
       before do
         dummy_io = StringIO.new('dummy')
         io = StringIO.new('dummy output')
-        allow(POSIX::Spawn).to receive(:popen4).with(anything).and_return([nil, dummy_io, io, dummy_io])
-        allow(Process).to receive(:waitpid).and_return(nil)
+        allow(Open3).to receive(:popen3).with(anything).and_return([dummy_io, io, dummy_io, dummy_io, nil])
       end
 
       context 'with the alternative command' do
         let(:commands) { { list_devices_command: 'dummy_list_devices' } }
 
         it 'should call dummy events' do
-          expect(POSIX::Spawn).to receive(:popen4).with(/dummy_list_devices/)
+          expect(Open3).to receive(:popen3).with(/dummy_list_devices/)
         end
       end
 
@@ -99,7 +98,7 @@ module Fusuma
 
         it 'call `libinput list-devices`' do
           command = 'libinput list-devices'
-          expect(POSIX::Spawn).to receive(:popen4)
+          expect(Open3).to receive(:popen3)
             .with(command)
         end
       end
@@ -111,27 +110,33 @@ module Fusuma
 
         it 'call `libinput-list-devices`' do
           command = 'libinput-list-devices'
-          expect(POSIX::Spawn).to receive(:popen4)
+          expect(Open3).to receive(:popen3)
             .with(command)
         end
       end
     end
 
     describe 'debug_events' do
-      subject { libinput_command.debug_events }
       before do
-        dummy_io = StringIO.new('dummy')
-        allow(POSIX::Spawn).to receive(:popen4).with(anything).and_return([nil, dummy_io, dummy_io, dummy_io])
+        @dummy_io = StringIO.new('dummy')
+        allow(Process).to receive(:spawn).with(anything).and_return(0)
       end
+      subject { libinput_command.debug_events(@dummy_io) }
 
       context 'with the alternative command' do
-        let(:commands) { { debug_events_command: 'dummy_debug_events' } }
+        before do
+          allow(libinput_command).to receive(:debug_events_with_options).and_return 'dummy_debug_events'
+        end
 
         it 'should call dummy events' do
-          expect(POSIX::Spawn).to receive(:popen4).with(/dummy_debug_events/).once
+          expect(Process).to receive(:spawn).with('dummy_debug_events', { out: @dummy_io, in: '/dev/null' }).once
           subject
         end
       end
+    end
+
+    describe '#debug_events_with_options' do
+      subject { libinput_command.debug_events_with_options }
 
       context 'with new cli version' do
         before do
@@ -139,13 +144,7 @@ module Fusuma
             .to receive(:new_cli_option_available?)
             .and_return(true)
         end
-
-        it 'should call `libinput debug-events`' do
-          command = 'libinput debug-events'
-          expect(POSIX::Spawn).to receive(:popen4)
-            .with("stdbuf -oL -- #{command}")
-          subject
-        end
+        it { is_expected.to eq 'stdbuf -oL -- libinput debug-events' }
       end
 
       context 'with old cli version' do
@@ -154,13 +153,7 @@ module Fusuma
             .to receive(:new_cli_option_available?)
             .and_return(false)
         end
-
-        it 'should call `libinput-debug-events`' do
-          command = 'libinput-debug-events'
-          expect(POSIX::Spawn).to receive(:popen4)
-            .with("stdbuf -oL -- #{command}")
-          subject
-        end
+        it { is_expected.to eq 'stdbuf -oL -- libinput-debug-events' }
       end
     end
   end

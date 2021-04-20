@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'posix/spawn'
 require_relative './executor'
 
 module Fusuma
@@ -20,11 +19,12 @@ module Fusuma
 
             MultiLogger.info(command: command, args: event.record.args)
 
+            accel = args_accel(event)
             additional_env = event.record.args
                                   .deep_transform_keys(&:to_s)
-                                  .deep_transform_values { |v| (v * args_accel(event)).to_s }
+                                  .deep_transform_values { |v| (v * accel).to_s }
 
-            pid = POSIX::Spawn.spawn(additional_env, command.to_s)
+            pid = Process.spawn(additional_env, command.to_s)
             Process.detach(pid)
           end
         end
