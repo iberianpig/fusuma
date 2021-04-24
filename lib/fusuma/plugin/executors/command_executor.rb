@@ -14,19 +14,19 @@ module Fusuma
         end
 
         def execute(event)
-          search_command(event).tap do |command|
-            break unless command
+          command = search_command(event)
 
-            MultiLogger.info(command: command, args: event.record.args)
+          MultiLogger.info(command: command, args: event.record.args)
 
-            accel = args_accel(event)
-            additional_env = event.record.args
-                                  .deep_transform_keys(&:to_s)
-                                  .deep_transform_values { |v| (v * accel).to_s }
+          accel = args_accel(event)
+          additional_env = event.record.args
+                                .deep_transform_keys(&:to_s)
+                                .deep_transform_values { |v| (v * accel).to_s }
 
-            pid = Process.spawn(additional_env, command.to_s)
-            Process.detach(pid)
-          end
+          pid = Process.spawn(additional_env, command.to_s)
+          Process.detach(pid)
+        rescue SystemCallError => e
+          MultiLogger.error("#{event.record.index.keys}": e.message.to_s)
         end
 
         def executable?(event)
