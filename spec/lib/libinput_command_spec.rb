@@ -5,7 +5,9 @@ require './lib/fusuma/libinput_command'
 
 module Fusuma
   RSpec.describe LibinputCommand do
-    let(:libinput_command) { described_class.new(libinput_options: libinput_options, commands: commands) }
+    let(:libinput_command) do
+      described_class.new(libinput_options: libinput_options, commands: commands)
+    end
     let(:libinput_options) { [] }
     let(:commands) { {} }
     describe '#version' do
@@ -79,7 +81,8 @@ module Fusuma
       before do
         dummy_io = StringIO.new('dummy')
         io = StringIO.new('dummy output')
-        allow(Open3).to receive(:popen3).with(anything).and_return([dummy_io, io, dummy_io, dummy_io, nil])
+        allow(Open3).to receive(:popen3).with(anything).and_return([dummy_io, io, dummy_io,
+                                                                    dummy_io, nil])
       end
 
       context 'with the alternative command' do
@@ -119,7 +122,7 @@ module Fusuma
     describe 'debug_events' do
       before do
         @dummy_io = StringIO.new('dummy')
-        allow(Process).to receive(:spawn).with(anything).and_return(0)
+        allow(Process).to receive(:detach).with(anything).and_return(nil)
       end
       subject { libinput_command.debug_events(@dummy_io) }
 
@@ -129,7 +132,8 @@ module Fusuma
         end
 
         it 'should call dummy events' do
-          expect(Process).to receive(:spawn).with('dummy_debug_events', { out: @dummy_io, in: '/dev/null' }).once
+          expect(Process).to receive(:spawn).with('dummy_debug_events',
+                                                  { out: @dummy_io, in: '/dev/null' }).once
           subject
         end
       end

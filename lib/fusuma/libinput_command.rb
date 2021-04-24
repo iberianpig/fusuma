@@ -42,7 +42,12 @@ module Fusuma
 
     # @return [Integer] return a latest line libinput debug-events
     def debug_events(writer)
-      @debug_events ||= Process.spawn(debug_events_with_options, out: writer, in: '/dev/null')
+      @debug_events ||= begin
+        pid = Process.spawn(debug_events_with_options, out: writer,
+                                                       in: '/dev/null')
+        Process.detach(pid)
+        pid
+      end
     end
 
     # @return [String] command
