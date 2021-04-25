@@ -7,9 +7,10 @@ about: Create a report to help us improve
 <!--
 Before create a report, please check below, 
 * Read Documents. https://github.com/iberianpig/fusuma#installation
-* Checked that `libinput-debug-events` or `libinput debug-events` worked correctly.
-* Reproduced the problem in latest version. Update fusuma with `gem update fusuma`
+* Checked that `$ libinput-debug-events` or `$ libinput debug-events` worked correctly.
+* Reproduced the problem in latest version. Update fusuma with `$ gem update fusuma`
 * Checked that your issue isn't already filed: https://github.com/iberianpig/fusuma/issues
+* Make sure to paste the output of config.yml and fusuma --versions.
 -->
 
 **Describe the bug**
@@ -25,8 +26,11 @@ Steps to reproduce the behavior:
 A clear and concise description of what you expected to happen.
 
 **Versions**
-You can get this information from copy and paste the output of `fusuma --version` from the command line. Also, please include the OS and what version of the OS you're running.
+```yml
+PASTE OUTPUT OF `$ fusuma --version`
+```
 
-
-**Additional context**
-Any additional context, your `~/.config/fusuma/config.yml` or data that might be necessary to reproduce the issue.
+**Configuration**
+```yml
+PASTE OUTPUT OF `$ cat ~/.config/fusuma/config.yml`
+```
