@@ -6,4 +6,5 @@ rvm:
   - 2.5.1
   - 2.6
   - 2.7
+  - 3.0
 before_install: gem install bundler --no-document -v 2.0.1
