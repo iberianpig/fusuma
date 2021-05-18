@@ -15,7 +15,7 @@ module Fusuma
         # @return [Array<Symbol>]
         def execute_keys
           # [name.split('Executors::').last.underscore.gsub('_executor', '').to_sym]
-          raise NotImplementedError, "override #{name}##{__method__}"
+          raise NotImplementedError, "override #{self.class.name}##{__method__}"
         end
 
         # check executable

@@ -13,20 +13,24 @@ module Fusuma
       RSpec.describe Executor do
         before { @executor = Executor.new }
 
+        describe '#execute_key' do
+          it { expect { @executor.execute_keys }.to raise_error(NotImplementedError) }
+        end
+
         describe '#execute' do
-          it do
-            expect { @executor.execute('dummy') }.to raise_error(NotImplementedError)
-          end
+          it { expect { @executor.execute('dummy') }.to raise_error(NotImplementedError) }
         end
 
         describe '#executable?' do
-          it do
-            expect { @executor.executable?('dummy') }.to raise_error(NotImplementedError)
-          end
+          it { expect { @executor.executable?('dummy') }.to raise_error(NotImplementedError) }
         end
       end
 
       class DummyExecutor < Executor
+        def execute_keys
+          [:dummy]
+        end
+
         def execute(event)
           index = Config::Index.new([*event.record.index.keys, :dummy])
           content = Config.search(index)

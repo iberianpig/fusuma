@@ -67,8 +67,7 @@ module Fusuma
 
       # next locations' candidates sorted by priority
       #  1. look up location with key
-      #  2. fallback to other key
-      #  3. skip the key and go to child location
+      #  2. skip the key and go to child location
       def next_location_cadidates(location, key)
         [
           location[key.symbol],
