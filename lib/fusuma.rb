@@ -152,8 +152,9 @@ module Fusuma
           if matched_condition && modified_record
             main_event.record = modified_record
           else
-            matched_condition, _ = Config::Searcher.find_condition do
-              Config.search(main_event.record.index) && Config.find_execute_key(main_event.record.index)
+            matched_condition, = Config::Searcher.find_condition do
+              Config.search(main_event.record.index) &&
+                Config.find_execute_key(main_event.record.index)
             end
           end
         end
