@@ -25,14 +25,6 @@ module Fusuma
       }
     end
 
-    let(:keymap_without_finger) do
-      {
-        'swipe' => {
-          'left' => { 'command' => 'alt+Left' }
-        }
-      }
-    end
-
     describe '.custom_path=' do
       before { Singleton.__init__(Config) }
       it 'should reload keymap file' do

@@ -20,7 +20,7 @@ module Fusuma
         libinput_command = Plugin::Inputs::LibinputCommandInput.new.command
         MultiLogger.info "Fusuma: #{VERSION}"
         MultiLogger.info "libinput: #{libinput_command.version}"
-        MultiLogger.info "ruby #{ RUBY_VERSION }p#{ RUBY_PATCHLEVEL }"
+        MultiLogger.info "ruby #{RUBY_VERSION}p#{RUBY_PATCHLEVEL}"
         MultiLogger.info "OS: #{`uname -rsv`}".strip
         MultiLogger.info "Distribution: #{`cat /etc/issue`}".strip
         MultiLogger.info "Desktop session: #{`echo $DESKTOP_SESSION $XDG_SESSION_TYPE`}".strip

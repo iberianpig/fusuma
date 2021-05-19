@@ -84,7 +84,7 @@ module Fusuma
       end.flatten
 
       execute_params = search(index)
-      return if execute_params.nil?
+      return if execute_params.nil? || !execute_params.is_a?(Hash)
 
       @execute_keys.find { |k| execute_params.keys.include?(k) }
     end

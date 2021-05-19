@@ -27,7 +27,7 @@ module Fusuma
 
           example.run
 
-          Config.custom_path = nil
+          ConfigHelper.clear_config_yml
         end
 
         describe '#detect' do

@@ -142,19 +142,26 @@ module Fusuma
       end
       main_events.sort_by! { |e| e.record.trigger_priority }
 
-      condition = nil
+      matched_condition = nil
       matched_context = nil
       event = main_events.find do |main_event|
         matched_context = Config::Searcher.find_context(request_context) do
-          condition, index_record = Config::Searcher.find_condition do
+          matched_condition, modified_record = Config::Searcher.find_condition do
             main_event.record.merge(records: modifiers.map(&:record))
           end
-          main_event if index_record
+          if matched_condition && modified_record
+            main_event.record = modified_record
+          else
+            matched_condition, = Config::Searcher.find_condition do
+              Config.search(main_event.record.index) &&
+                Config.find_execute_key(main_event.record.index)
+            end
+          end
         end
       end
       return if event.nil?
 
-      [condition, matched_context, event]
+      [matched_condition, matched_context, event]
     end
 
     # @param event [Plugin::Events::Event]

@@ -8,7 +8,7 @@ module Fusuma
       # manage events and generate command
       class TimerBuffer < Buffer
         DEFAULT_SOURCE = 'timer_input'
-        DEFAULT_SECONDS_TO_KEEP = 60
+        DEFAULT_SECONDS_TO_KEEP = 3
 
         def config_param_types
           {
@@ -30,8 +30,6 @@ module Fusuma
           @seconds_to_keep ||= (config_params(:seconds_to_keep) || DEFAULT_SECONDS_TO_KEEP)
           @events.each do |e|
             break if current_time - e.time < @seconds_to_keep
-
-            MultiLogger.debug("#{self.class.name}##{__method__}")
 
             @events.delete(e)
           end
