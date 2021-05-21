@@ -3,7 +3,7 @@
 Fusuma is multitouch gesture recognizer.
 This gem makes your linux able to recognize swipes or pinchs and assign commands to them.
 
-![fusuma_image](https://i.gyazo.com/757fef526310b9d68f68e80eb1e4540f.png)
+![fusuma_image](https://repository-images.githubusercontent.com/69813387/60879a00-166c-11ea-9875-3bf0818c62ec)
 
 襖(Fusuma) means sliding door used to partition off rooms in a Japanese house.
 
@@ -83,7 +83,7 @@ $ sudo pacman -S ruby
 
 #### 3. Install Fusuma
 
-**Note:** By default in Arch Linux, when running ```gem```, gems are installed per-user (into ```~/.gem/ruby/```), instead of system-wide (into ```/usr/lib/ruby/gems/```). This is considered the best way to manage gems on Arch, because otherwise they might interfere with gems installed by Pacman. (From Arch Wiki)
+**Note:** By default in Arch Linux, when running `gem`, gems are installed per-user (into `~/.gem/ruby/`), instead of system-wide (into `/usr/lib/ruby/gems/`). This is considered the best way to manage gems on Arch, because otherwise they might interfere with gems installed by Pacman. (From Arch Wiki)
 
 To install gems system-wide, see any of the methods listed on [Arch Wiki](https://wiki.archlinux.org/index.php/ruby#Installing_gems_system-wide)
 
@@ -121,7 +121,7 @@ $ sudo gem update fusuma
 
 ## Customize Gesture Mapping
 
-You can customize the settings for gestures to put and edit `~/.config/fusuma/config.yml`.  
+You can customize the settings for gestures to put and edit `~/.config/fusuma/config.yml`.
 **NOTE: You will need to create the `~/.config/fusuma` directory if it doesn't exist yet.**
 
 ```bash
@@ -135,12 +135,15 @@ $ nano ~/.config/fusuma/config.yml # edit config file.
 * `swipe:`
   * support `3:`, `4:` fingers
   * support `left:`, `right:`, `up:`, `down:` directions
+  * support `begin:`, `update:`, `end:` events
 * `pinch:`
   * support `2:`, `3:`, `4:` fingers
   * support `in:`, `out:` directions
+  * support `begin:`, `update:`, `end:` events
 * `rotate:`
   * support `2:`, `3:`, `4:` fingers
   * support `clockwise:`,`counterclockwise:` directions
+  * support `begin:`, `update:`, `end:` events
 
 ### About YAML Basic Syntax
 
@@ -157,7 +160,7 @@ https://github.com/iberianpig/fusuma/wiki/Ubuntu
 swipe:
   3:
     left:
-      command: "xdotool key alt+Right" # History forward 
+      command: "xdotool key alt+Right" # History forward
     right:
       command: "xdotool key alt+Left" # History back
     up:
@@ -191,6 +194,8 @@ The following wiki pages can be edited by everyone.
 - [POP OS with Cinnamon](https://github.com/iberianpig/fusuma/wiki/POP-OS-with-Cinnamon)
 - [PopOS Default Gnome](https://github.com/iberianpig/fusuma/wiki/PopOS-Default-Gnome)
 - [Ubuntu OS to mimic Mac a little](https://github.com/iberianpig/fusuma/wiki/Ubuntu-OS-to-mimic-Mac-a-little)
+- [3 fingers Drag (OS X Style)](https://github.com/iberianpig/fusuma/wiki/3-fingers-Drag-(OS-X-Style))
+- [3 fingers Alt Tab Switcher(Windows Style)](https://github.com/iberianpig/fusuma/wiki/3-fingers-Alt-Tab-Switcher(Windows-Style))
 
 If you have a nice configuration, please share `~/.config/fusuma/config.yml` with everyone.
 
@@ -208,19 +213,19 @@ If the swipe's interval is `0.5`, shorten swipe-interval by half to recognize a 
 
 ```yaml
 swipe:
-  3: 
-    left: 
+  3:
+    left:
       command: 'xdotool key alt+Right' # threshold: 0.5, interval: 0.75
       threshold: 0.5
-    right: 
+    right:
       command: 'xdotool key alt+Left' # threshold: 0.5, interval: 0.75
       threshold: 0.5
-    up: 
+    up:
       command: 'xdotool key super' # threshold: 1, interval: 0.75
-    down: 
+    down:
       command: 'xdotool key super' # threshold: 1, interval: 0.75
 pinch:
-  2: 
+  2:
     in:
       command: "xdotool keydown ctrl click 4 keyup ctrl" # threshold: 0.5, interval: 0.5
     out:
@@ -234,7 +239,7 @@ interval:
   pinch: 0.5
 ```
 
-There are three priorities of `threshold:` and `interval:`.  
+There are three priorities of `threshold:` and `interval:`.
 The individual `threshold:` and `interval:` settings (under "direction") have a higher priority than the global one (under "root")
 
 1. child elements in the direction (left/right/down/up → threshold/interval)
@@ -280,7 +285,7 @@ swipe:
 - `xte`
   - [xte(1) - Linux man page](https://linux.die.net/man/1/xte)
   - install with `sudo apt xautomation`
-  
+
 - [ydotool](https://github.com/ReimuNotMoe/ydotool)
   - Wayland compatible
   - Needs more maintainers.
@@ -292,7 +297,6 @@ swipe:
 - `-d`, `--daemon` : Daemonize process
 - `-l`, `--list-devices` : List available devices
 - `-v`, `--verbose` : Show details about the results of running fusuma
-- `--device="Device name"` : Open the given device only (DEPRECATED)
 - `--version` : Show fusuma version
 
 ### Specify touchpads by device name
@@ -322,7 +326,7 @@ Following features are provided as plugins.
 - Features for specific Linux distributions
 - Setting different gestures per applications
 
-### Installation of fusuma plugins
+### Installation of Fusuma plugins
 
 Fusuma plugins are provided with the `fusuma-plugin-XXXXX` naming convention and hosted on [RubyGems](https://rubygems.org/search?utf8=%E2%9C%93&query=fusuma-plugins).
 
@@ -340,7 +344,7 @@ Fusuma plugins are provided with the `fusuma-plugin-XXXXX` naming convention and
 
 ## Tutorial Video
 
-[![Multitouch Touchpad Gestures in Linux with Fusuma](http://img.youtube.com/vi/bn11Iwvf29I/0.jpg)](http://www.youtube.com/watch?v=bn11Iwvf29I "Multitouch Touchpad Gestures in Linux with Fusuma")  
+[![Multitouch Touchpad Gestures in Linux with Fusuma](http://img.youtube.com/vi/bn11Iwvf29I/0.jpg)](http://www.youtube.com/watch?v=bn11Iwvf29I "Multitouch Touchpad Gestures in Linux with Fusuma")
 [Multitouch Touchpad Gestures in Linux with Fusuma](http://www.youtube.com/watch?v=bn11Iwvf29I) by [Eric Adams](https://www.youtube.com/user/igster75)
 
 ## Support
@@ -349,7 +353,7 @@ I'm a Freelance Engineer in Japan and working on these products after finishing 
 Currently, my open-source contribution times is not enough.
 If you like my work and want to contribute and become a sponsor, I will be able to focus on my projects.
 
-- [GitHub Sponsors](https://github.com/sponsors/iberianpig) (Zero fee!)
+- [GitHub Sponsors](https://github.com/sponsors/iberianpig)
 - [Patreon](https://www.patreon.com/iberianpig)
 
 ## Contributing
