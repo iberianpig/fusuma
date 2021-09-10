@@ -62,8 +62,15 @@ module Fusuma
           if status == 'update'
             return unless moved?(prev_event, event)
 
-            avg_zoom = gesture_buffer.avg_attrs(:zoom)
-            first_zoom = updating_events.first.record.delta.zoom
+            first_zoom, avg_zoom = if updating_events.size >= 10
+                                     [updating_events[-10].record.delta.zoom,
+                                      gesture_buffer.class.new(
+                                        updating_events[-10..-1]
+                                      ).avg_attrs(:zoom)]
+                                   else
+                                     [updating_events.first.record.delta.zoom,
+                                      gesture_buffer.avg_attrs(:zoom)]
+                                   end
 
             oneshot_quantity = Quantity.new(target: avg_zoom, base: first_zoom).to_f
             oneshot_direction = Direction.new(target: avg_zoom, base: first_zoom).to_s

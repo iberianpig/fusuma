@@ -24,8 +24,14 @@ module Fusuma
           updating_events = gesture_buffer.updating_events
           return if updating_events.empty?
 
-          updating_time = 100 * (updating_events.last.time - updating_events.first.time)
-          oneshot_angle = gesture_buffer.sum_attrs(:rotate) / updating_time
+          oneshot_angle = if updating_events.size >= 10
+                            updating_time = 100 * (updating_events[-1].time - updating_events[-10].time)
+                            last_10 = gesture_buffer.class.new(updating_events[-10..-1])
+                            last_10.sum_attrs(:rotate) / updating_time
+                          else
+                            updating_time = 100 * (updating_events.last.time - updating_events.first.time)
+                            gesture_buffer.sum_attrs(:rotate) / updating_time
+                          end
 
           return if updating_events.empty?
 
