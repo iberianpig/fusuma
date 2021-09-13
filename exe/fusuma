@@ -22,6 +22,11 @@ opt.on('-l', '--list-devices',
   option[:list] = v
 end
 
+opt.on('--log=path/to/file',
+       'Print logs to file') do |v|
+  option[:log_filepath] = v
+end
+
 opt.on('--device="Device name"',
        'Open the given device only (DEPRECATED)') do |v|
   option[:device] = v

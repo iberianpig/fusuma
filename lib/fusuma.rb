@@ -29,6 +29,7 @@ module Fusuma
       end
 
       def read_options(option)
+        MultiLogger.filepath = option[:log_filepath]
         MultiLogger.instance.debug_mode = option[:verbose]
 
         load_custom_config(option[:config_path])

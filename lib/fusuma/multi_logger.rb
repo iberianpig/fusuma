@@ -11,9 +11,21 @@ module Fusuma
     attr_reader :err_logger
     attr_accessor :debug_mode
 
+    @@filepath = nil
+    def self.filepath=(filepath)
+      @@filepath = filepath
+    end
+
     def initialize
-      super($stdout)
-      @err_logger = Logger.new($stderr)
+      if @@filepath
+        logfile = File.new(@@filepath, 'a')
+        super(logfile)
+        $stderr = logfile
+        @err_logger = Logger.new($stderr)
+      else
+        super($stdout)
+        @err_logger = Logger.new($stderr)
+      end
       @debug_mode = false
     end
 
