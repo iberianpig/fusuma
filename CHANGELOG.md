@@ -1,5 +1,39 @@
 # Changelog
 
+## [v2.0.5](https://github.com/iberianpig/fusuma/tree/v2.0.5) (2021-05-21)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.0.4...v2.0.5)
+
+**Implemented enhancements:**
+
+- Three finger drag [\#173](https://github.com/iberianpig/fusuma/issues/173)
+
+**Fixed bugs:**
+
+- No fallback to default with modifier keypress [\#237](https://github.com/iberianpig/fusuma/issues/237)
+
+**Closed issues:**
+
+- Assigning keys for 3 finger tap in fusuma config.yml file [\#230](https://github.com/iberianpig/fusuma/issues/230)
+- Uninstall Fusuma [\#228](https://github.com/iberianpig/fusuma/issues/228)
+
+**Merged pull requests:**
+
+- Fallback default with modifier keypress [\#238](https://github.com/iberianpig/fusuma/pull/238) ([iberianpig](https://github.com/iberianpig))
+- Upgrade to GitHub-native Dependabot [\#231](https://github.com/iberianpig/fusuma/pull/231) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+
+## [v2.0.4](https://github.com/iberianpig/fusuma/tree/v2.0.4) (2021-04-24)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.0.3...v2.0.4)
+
+**Implemented enhancements:**
+
+- Opening application with fusuma [\#218](https://github.com/iberianpig/fusuma/issues/218)
+
+**Closed issues:**
+
+- Doesn't run commands [\#215](https://github.com/iberianpig/fusuma/issues/215)
+
 ## [v2.0.3](https://github.com/iberianpig/fusuma/tree/v2.0.3) (2021-04-20)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.0.2...v2.0.3)
@@ -180,10 +214,6 @@
 ## [v1.3.2](https://github.com/iberianpig/fusuma/tree/v1.3.2) (2020-01-07)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v1.3.1...v1.3.2)
-
-**Closed issues:**
-
-- Two-finger zoom direction not reversing [\#143](https://github.com/iberianpig/fusuma/issues/143)
 
 **Merged pull requests:**
 
@@ -366,14 +396,14 @@
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v0.3.7...v0.4.0)
 
-## [v0.3.7](https://github.com/iberianpig/fusuma/tree/v0.3.7) (2018-04-15)
-
-[Full Changelog](https://github.com/iberianpig/fusuma/compare/v0.3.5...v0.3.7)
-
 **Merged pull requests:**
 
 - Assigning commands [\#73](https://github.com/iberianpig/fusuma/pull/73) ([iberianpig](https://github.com/iberianpig))
 - Update rake requirement to ~\> 12.3 [\#72](https://github.com/iberianpig/fusuma/pull/72) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+
+## [v0.3.7](https://github.com/iberianpig/fusuma/tree/v0.3.7) (2018-04-15)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v0.3.5...v0.3.7)
 
 ## [v0.3.5](https://github.com/iberianpig/fusuma/tree/v0.3.5) (2018-01-01)
 
@@ -413,7 +443,7 @@
 
 **Fixed bugs:**
 
-- parse\_finger\_directions: undefined method `tr' for nil:NilClass \(NoMethodError\) [\#29](https://github.com/iberianpig/fusuma/issues/29)
+- parse_finger_directions: undefined method `tr' for nil:NilClass \(NoMethodError\) [\#29](https://github.com/iberianpig/fusuma/issues/29)
 - Error after upgrading to libinput 1.6.0 [\#26](https://github.com/iberianpig/fusuma/issues/26)
 
 **Merged pull requests:**

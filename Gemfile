@@ -7,7 +7,7 @@ gemspec
 
 gem 'bundler'
 gem 'coveralls'
-gem 'github_changelog_generator', '~> 1.14'
+gem 'github_changelog_generator', '~> 1.16'
 gem 'pry-byebug', '~> 3.4'
 gem 'pry-doc'
 gem 'pry-inline'
