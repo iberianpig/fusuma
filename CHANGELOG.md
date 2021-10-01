@@ -1,5 +1,19 @@
 # Changelog
 
+## [v2.1.0](https://github.com/iberianpig/fusuma/tree/v2.1.0) (2021-10-01)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.0.5...v2.1.0)
+
+**Implemented enhancements:**
+
+- continuous gestures  [\#205](https://github.com/iberianpig/fusuma/issues/205)
+
+**Closed issues:**
+
+- Suggestion: Allow independent interval value in keypress gestures [\#240](https://github.com/iberianpig/fusuma/issues/240)
+- GNOME 40 fusuma not working  [\#239](https://github.com/iberianpig/fusuma/issues/239)
+- Touch input detected but ignored? [\#236](https://github.com/iberianpig/fusuma/issues/236)
+
 ## [v2.0.5](https://github.com/iberianpig/fusuma/tree/v2.0.5) (2021-05-21)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.0.4...v2.0.5)
