@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in fusuma.gemspec
 gemspec
 
+gem 'bump'
 gem 'bundler'
 gem 'coveralls'
 gem 'github_changelog_generator', '~> 1.16'
