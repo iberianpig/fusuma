@@ -327,13 +327,9 @@ Following features are provided as plugins.
 - Features for specific Linux distributions
 - Setting different gestures per applications
 
-### Installation of Fusuma plugins
+### Available plugins
 
 Fusuma plugins are provided with the `fusuma-plugin-XXXXX` naming convention and hosted on [RubyGems](https://rubygems.org/search?utf8=%E2%9C%93&query=fusuma-plugins).
-
-`$ sudo gem install fusuma-plugin-XXXXX`
-
-### Available plugins
 
 | Name                                                                               | Version                                                               | About                                         |
 | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------- |
@@ -342,6 +338,18 @@ Fusuma plugins are provided with the `fusuma-plugin-XXXXX` naming convention and
 | [fusuma-plugin-keypress](https://github.com/iberianpig/fusuma-plugin-keypress)     | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-keypress.svg)   | Detects gestures while pressing multiple keys |
 | [fusuma-plugin-tap](https://github.com/iberianpig/fusuma-plugin-tap)               | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-tap.svg)        | Detects Tap and Hold gestures                 |
 | [fusuma-plugin-appmatcher](https://github.com/iberianpig/fusuma-plugin-appmatcher) | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-appmatcher.svg) | Configure app-specific gestures               |
+
+
+### Installation of Fusuma plugins
+
+```bash
+# install fusuma-plugin-XXXX
+$ sudo gem install fusuma-plugin-XXXXX`
+```
+```bash
+# update
+$ sudo gem list fusuma-plugin- | cut -d' ' -f1 | xargs --no-run-if-empty sudo gem update
+```
 
 ## Tutorial Video
 
