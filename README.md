@@ -22,13 +22,13 @@ This gem makes your linux able to recognize swipes or pinchs and assign commands
 **IMPORTANT**: You **MUST** be a member of the **INPUT** group to read touchpad by Fusuma.
 
 ```bash
-$ sudo gpasswd -a $USER input
+sudo gpasswd -a $USER input
 ```
 
 Then, You apply the change with no logout or reboot.
 
 ```bash
-$ newgrp input
+newgrp input
 ```
 
 ### For Debian Based Distros (Ubuntu, Debian, Mint, Pop!OS)
@@ -38,7 +38,7 @@ $ newgrp input
 You need `libinput` release 1.0 or later.
 
 ```bash
-$ sudo apt-get install libinput-tools
+sudo apt-get install libinput-tools
 ```
 
 #### 2. Install Ruby
@@ -46,13 +46,13 @@ $ sudo apt-get install libinput-tools
 Fusuma runs in Ruby, so you must install it first.
 
 ```bash
-$ sudo apt-get install ruby
+sudo apt-get install ruby
 ```
 
 #### 3. Install Fusuma
 
 ```bash
-$ sudo gem install fusuma
+sudo gem install fusuma
 ```
 
 #### 4. Install xdotool (optional)
@@ -60,7 +60,7 @@ $ sudo gem install fusuma
 For sending shortcuts:
 
 ```bash
-$ sudo apt-get install xdotool
+sudo apt-get install xdotool
 ```
 
 ### For Arch Based Distros (Manjaro, Arch)
@@ -70,7 +70,7 @@ $ sudo apt-get install xdotool
 You need `libinput` release 1.0 or later. This is most probably installed by default on Manjaro
 
 ```z-h
-$ sudo pacman -S libinput
+sudo pacman -S libinput
 ```
 
 #### 2. Install Ruby
@@ -78,7 +78,7 @@ $ sudo pacman -S libinput
 Fusuma runs in Ruby, so you must install it first.
 
 ```zsh
-$ sudo pacman -S ruby
+sudo pacman -S ruby
 ```
 
 #### 3. Install Fusuma
@@ -88,7 +88,7 @@ $ sudo pacman -S ruby
 To install gems system-wide, see any of the methods listed on [Arch Wiki](https://wiki.archlinux.org/index.php/ruby#Installing_gems_system-wide)
 
 ```zsh
-$ sudo gem install fusuma
+sudo gem install fusuma
 ```
 
 #### 4. Install xdotool (optional)
@@ -96,7 +96,7 @@ $ sudo gem install fusuma
 For sending shortcuts:
 
 ```zsh
-$ sudo pacman -S xdotool
+sudo pacman -S xdotool
 ```
 
 ### Touchpad not working in GNOME
@@ -104,19 +104,19 @@ $ sudo pacman -S xdotool
 Ensure the touchpad events are being sent to the GNOME desktop by running the following command:
 
 ```bash
-$ gsettings set org.gnome.desktop.peripherals.touchpad send-events enabled
+gsettings set org.gnome.desktop.peripherals.touchpad send-events enabled
 ```
 
 ## Usage
 
 ```bash
-$ fusuma
+fusuma
 ```
 
 ## Update
 
 ```bash
-$ sudo gem update fusuma
+sudo gem update fusuma
 ```
 
 ## Customize Gesture Mapping
@@ -125,8 +125,8 @@ You can customize the settings for gestures to put and edit `~/.config/fusuma/co
 **NOTE: You will need to create the `~/.config/fusuma` directory if it doesn't exist yet.**
 
 ```bash
-$ mkdir -p ~/.config/fusuma        # create config directory
-$ nano ~/.config/fusuma/config.yml # edit config file.
+mkdir -p ~/.config/fusuma        # create config directory
+nano ~/.config/fusuma/config.yml # edit config file.
 ```
 
 
@@ -314,8 +314,8 @@ plugin:
 
 ## Autostart (gnome-session-properties)
 
-1. Check the path where you installed fusuma with `$ which fusuma`
-2. Open `$ gnome-session-properties`
+1. Check the path where you installed fusuma with `which fusuma`
+2. Open `gnome-session-properties`
 3. Add Fusuma and enter the location where the above path was checked in the command input field
 4. Add the `-d` option at the end of the command input field
 
@@ -344,11 +344,11 @@ Fusuma plugins are provided with the `fusuma-plugin-XXXXX` naming convention and
 
 ```bash
 # install fusuma-plugin-XXXX
-$ sudo gem install fusuma-plugin-XXXXX`
+sudo gem install fusuma-plugin-XXXXX`
 ```
 ```bash
 # update
-$ sudo gem list fusuma-plugin- | cut -d' ' -f1 | xargs --no-run-if-empty sudo gem update
+sudo gem list fusuma-plugin- | cut -d' ' -f1 | xargs --no-run-if-empty sudo gem update
 ```
 
 ## Tutorial Video
