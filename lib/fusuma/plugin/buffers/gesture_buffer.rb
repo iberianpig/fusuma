@@ -46,7 +46,12 @@ module Fusuma
         def ended?
           return false if empty?
 
-          @events.last.record.status == 'end'
+          case @events.last.record.status
+          when 'end','cancelled'
+            true
+          else
+            false
+          end
         end
 
         # @param attr [Symbol]

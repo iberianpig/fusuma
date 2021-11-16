@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'rspec-parameterized'
 
 require './lib/fusuma/plugin/events/event'
 require './lib/fusuma/plugin/events/records/gesture_record'
@@ -13,7 +14,7 @@ module Fusuma
         before do
           @buffer = GestureBuffer.new
           delta = Events::Records::GestureRecord::Delta.new(-1, 0, 0, 0, 0, 0)
-          @event_generator = lambda { |time = nil, status = 'updating'|
+          @event_generator = lambda { |time = nil, status = 'update'|
             Events::Event.new(time: time,
                               tag: 'libinput_gesture_parser',
                               record: Events::Records::GestureRecord.new(
@@ -53,20 +54,39 @@ module Fusuma
         end
 
         describe '#clear_expired' do
-          it 'should keep only events generated within 30 seconds' do
-            time = Time.now
-            event1 = @event_generator.call(time)
-            @buffer.buffer(event1)
-            event2 = @event_generator.call(time + 100)
-            event3 = @event_generator.call(time + 100)
-            @buffer.buffer(event2)
-            @buffer.buffer(event3)
+          context 'default' do
+            before do
+              @time = Time.now
+              event1 = @event_generator.call(@time)
+              @buffer.buffer(event1)
+              @event2 = @event_generator.call(@time + 100)
+              @event3 = @event_generator.call(@time + 100)
+              @buffer.buffer(@event2)
+              @buffer.buffer(@event3)
+            end
+            it 'should keep only events generated within 30 seconds' do
+              @buffer.clear_expired(current_time: @time + 100.1)
+              expect(@buffer.events).to eq [@event2, @event3]
+            end
+            context 'with cancelled or ended' do
+              where(:last_state, :want) do
+                [
+                  ['end',       []],
+                  ['cancelled', []]
+                ]
+              end
 
-            @buffer.clear_expired(current_time: time + 100.1)
+              with_them do
+                it 'should clear events' do
+                  event4 = @event_generator.call(@time + 100, last_state)
+                  @buffer.buffer(event4)
 
-            expect(@buffer.events).to eq [event2, event3]
+                  @buffer.clear_expired(current_time: @time + 100.1)
+                  expect(@buffer.events).to eq want
+                end
+              end
+            end
           end
-
           context 'change seconds to keep' do
             around do |example|
               ConfigHelper.load_config_yml = <<~CONFIG
