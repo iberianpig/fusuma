@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.2.0](https://github.com/iberianpig/fusuma/tree/2.2.0) (2021-11-21)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.1.0...2.2.0)
+
+**Implemented enhancements:**
+
+- Support libinput 1.19 Hold gestures [\#260](https://github.com/iberianpig/fusuma/issues/260)
+
+**Closed issues:**
+
+- Problem in readme [\#256](https://github.com/iberianpig/fusuma/issues/256)
+- Migrate CI from Travis CI to Github Actions [\#252](https://github.com/iberianpig/fusuma/issues/252)
+- Fusuma wont work after resuming from suspend on wayland [\#208](https://github.com/iberianpig/fusuma/issues/208)
+
+**Merged pull requests:**
+
+- Hold gestures [\#261](https://github.com/iberianpig/fusuma/pull/261) ([iberianpig](https://github.com/iberianpig))
+- Remove the '$' symbol that creates an error when copying the code. [\#257](https://github.com/iberianpig/fusuma/pull/257) ([Alexanderdivv](https://github.com/Alexanderdivv))
+- Remove .travis.yml [\#255](https://github.com/iberianpig/fusuma/pull/255) ([iberianpig](https://github.com/iberianpig))
+- feat\(github/workflows\): Automatic release to RubyGems [\#254](https://github.com/iberianpig/fusuma/pull/254) ([iberianpig](https://github.com/iberianpig))
+- feat\(github/workflows\): Testing on Ubuntu [\#253](https://github.com/iberianpig/fusuma/pull/253) ([iberianpig](https://github.com/iberianpig))
+
 ## [v2.1.0](https://github.com/iberianpig/fusuma/tree/v2.1.0) (2021-10-01)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.0.5...v2.1.0)
