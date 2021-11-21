@@ -132,18 +132,28 @@ nano ~/.config/fusuma/config.yml # edit config file.
 
 ### Available gestures
 
-* `swipe:`
-  * support `3:`, `4:` fingers
-  * support `left:`, `right:`, `up:`, `down:` directions
-  * support `begin:`, `update:`, `end:` events
-* `pinch:`
-  * support `2:`, `3:`, `4:` fingers
-  * support `in:`, `out:` directions
-  * support `begin:`, `update:`, `end:` events
-* `rotate:`
-  * support `2:`, `3:`, `4:` fingers
-  * support `clockwise:`,`counterclockwise:` directions
-  * support `begin:`, `update:`, `end:` events
+#### swipe:
+
+ * support `3:`, `4:` fingers
+ * support `left:`, `right:`, `up:`, `down:` directions
+ * support `begin:`, `update:`, `end:` events
+
+#### pinch:
+
+ * support `2:`, `3:`, `4:` fingers
+ * support `in:`, `out:` directions
+ * support `begin:`, `update:`, `end:` events
+
+#### rotate:
+
+ * support `2:`, `3:`, `4:` fingers
+ * support `clockwise:`,`counterclockwise:` directions
+ * support `begin:`, `update:`, `end:` events
+
+#### hold:
+ * require libinput version 1.19.0 or later
+ * support `1:`, `2:`, `3:`, `4:` fingers
+ * support `begin:`, `end:`, `cancelled:` events
 
 ### About YAML Basic Syntax
 
@@ -181,6 +191,9 @@ pinch:
     command: "xdotool keydown ctrl click 4 keyup ctrl" # Zoom in
   out:
     command: "xdotool keydown ctrl click 5 keyup ctrl" # Zoom out
+hold:
+  4:
+    command: "xdotool key super" # Activity
 ```
 
 ### More Example of config.yml
@@ -201,12 +214,12 @@ If you have a nice configuration, please share `~/.config/fusuma/config.yml` wit
 
 ### Threshold and Interval
 
-if `command:` properties are blank, the swipe/pinch doesn't execute command.
+if `command:` properties are blank, the swipe/pinch/hold doesn't execute command.
 
-`threshold:` is sensitivity to swipe/pinch. Default value is 1.
+`threshold:` is sensitivity to swipe/pinch/hold. Default value is 1.
 If the swipe's threshold is `0.5`, shorten swipe-length by half.
 
-`interval:` is delay between swipes/pinches. Default value is 1.
+`interval:` is delay between swipes/pinches/hold. Default value is 1.
 If the swipe's interval is `0.5`, shorten swipe-interval by half to recognize a next swipe.
 
 ### Example of `threshold:` / `interval:` settings
@@ -243,7 +256,7 @@ There are three priorities of `threshold:` and `interval:`.
 The individual `threshold:` and `interval:` settings (under "direction") have a higher priority than the global one (under "root")
 
 1. child elements in the direction (left/right/down/up → threshold/interval)
-1. root child elements (threshold/interval → swipe/pinch)
+1. root child elements (threshold/interval → swipe/pinch/hold)
 1. default value (= 1)
 
 ### `command:` property for assigning commands

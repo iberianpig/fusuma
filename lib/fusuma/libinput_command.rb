@@ -13,10 +13,7 @@ module Fusuma
 
     # `libinput-list-devices` and `libinput-debug-events` are deprecated,
     # use `libinput list-devices` and `libinput debug-events` from 1.8.
-    NEW_CLI_OPTION_VERSION = 1.8
-
-    DEFAULT_WAIT_TIME = 0.3
-    TIMEOUT_MESSAGE = 'LIBINPUT TIMEOUT'
+    NEW_CLI_OPTION_VERSION = '1.8'
 
     # @return [Boolean]
     def new_cli_option_available?
@@ -91,10 +88,6 @@ module Fusuma
     end
 
     private
-
-    def wait_time
-      DEFAULT_WAIT_TIME
-    end
 
     # which in ruby: Checking if program exists in $PATH from ruby
     # (https://stackoverflow.com/questions/2108727/which-in-ruby-checking-if-program-exists-in-path-from-ruby)

@@ -14,7 +14,7 @@ module Fusuma
         # @return [Records::GestureRecord, nil]
         def parse_record(record)
           case line = record.to_s
-          when /GESTURE_SWIPE|GESTURE_PINCH/
+          when /GESTURE_SWIPE|GESTURE_PINCH|GESTURE_HOLD/
             gesture, status, finger, delta = parse_libinput(line)
           else
             return
@@ -32,13 +32,18 @@ module Fusuma
           _device, event_name, _time, other = line.strip.split(nil, 4)
           finger, other = other.split(nil, 2)
 
+          gesture, status = *detect_gesture(event_name)
+
+          status = 'cancelled' if gesture == 'hold' && status == 'end' && other == 'cancelled'
           delta = parse_delta(other)
-          [*detect_gesture(event_name), finger, delta]
+          [gesture, status, finger, delta]
         end
 
         def detect_gesture(event_name)
-          event_name =~ /GESTURE_(SWIPE|PINCH)_(BEGIN|UPDATE|END)/
-          [Regexp.last_match(1).downcase, Regexp.last_match(2).downcase]
+          event_name =~ /GESTURE_(SWIPE|PINCH|HOLD)_(BEGIN|UPDATE|END)/
+          gesture = Regexp.last_match(1).downcase
+          status = Regexp.last_match(2).downcase
+          [gesture, status]
         end
 
         def parse_delta(line)

@@ -68,7 +68,7 @@ module Fusuma
       context 'without NEW_CLI_OPTION_VERSION' do
         before do
           allow(libinput_command).to receive(:version)
-            .and_return(LibinputCommand::NEW_CLI_OPTION_VERSION - 0.1)
+            .and_return('1.7')
         end
         it { is_expected.to eq false }
       end
