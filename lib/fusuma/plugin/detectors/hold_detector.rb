@@ -62,7 +62,6 @@ module Fusuma
             ))
           end
 
-          pp repeat_index
           create_event(record: Events::Records::IndexRecord.new(
             index: repeat_index, trigger: :repeat
           ))

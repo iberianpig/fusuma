@@ -13,7 +13,7 @@ module Fusuma
 
     # `libinput-list-devices` and `libinput-debug-events` are deprecated,
     # use `libinput list-devices` and `libinput debug-events` from 1.8.
-    NEW_CLI_OPTION_VERSION = 1.8
+    NEW_CLI_OPTION_VERSION = '1.8'
 
     # @return [Boolean]
     def new_cli_option_available?
