@@ -47,7 +47,7 @@ module Fusuma
           return false if empty?
 
           case @events.last.record.status
-          when 'end','cancelled'
+          when 'end', 'cancelled'
             true
           else
             false
