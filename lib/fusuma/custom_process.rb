@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'fusuma/string_support'
+
 module Fusuma
   # Rename process
   module CustomProcess
