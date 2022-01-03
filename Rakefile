@@ -31,3 +31,8 @@ task :bump, :type do |_, args|
 
   Bump::Bump.run(label)
 end
+
+desc 'Create and Push tag'
+task :release_tag do
+  Rake::Task['release:source_control_push'].invoke
+end
