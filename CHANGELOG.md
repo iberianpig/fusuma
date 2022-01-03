@@ -1,8 +1,8 @@
 # Changelog
 
-## [2.2.0](https://github.com/iberianpig/fusuma/tree/2.2.0) (2021-11-21)
+## [v2.2.0](https://github.com/iberianpig/fusuma/tree/v2.2.0) (2021-11-21)
 
-[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.1.0...2.2.0)
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.1.0...v2.2.0)
 
 **Implemented enhancements:**
 
