@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.4.0](https://github.com/iberianpig/fusuma/tree/2.4.0) (2022-03-13)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.3.0...2.4.0)
+
+**Closed issues:**
+
+- Little change for Readme.md @ Installing Fusuma [\#265](https://github.com/iberianpig/fusuma/issues/265)
+
+## [v2.3.0](https://github.com/iberianpig/fusuma/tree/v2.3.0) (2022-01-03)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.2.0...v2.3.0)
+
 ## [v2.2.0](https://github.com/iberianpig/fusuma/tree/v2.2.0) (2021-11-21)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.1.0...v2.2.0)
