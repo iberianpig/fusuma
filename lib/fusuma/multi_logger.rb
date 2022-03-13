@@ -19,6 +19,7 @@ module Fusuma
       filepath = self.class.instance_variable_get('@filepath')
       if filepath
         logfile = File.new(filepath, 'a')
+        logfile.sync = true
         super(logfile)
         $stderr = logfile
       else
