@@ -297,7 +297,7 @@ swipe:
 
 - `xte`
   - [xte(1) - Linux man page](https://linux.die.net/man/1/xte)
-  - install with `sudo apt xautomation`
+  - install with `sudo apt install xautomation`
 
 - [ydotool](https://github.com/ReimuNotMoe/ydotool)
   - Wayland compatible
