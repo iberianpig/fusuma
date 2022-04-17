@@ -7,7 +7,6 @@ gemspec
 
 gem 'bump'
 gem 'bundler'
-gem 'coveralls'
 gem 'github_changelog_generator', '~> 1.16'
 gem 'pry-byebug', '~> 3.4'
 gem 'pry-doc'
@@ -21,4 +20,5 @@ gem 'rspec-parameterized'
 gem 'rubocop'
 gem 'rubocop-rake'
 gem 'rubocop-rspec'
+gem 'simplecov'
 gem 'yard'
