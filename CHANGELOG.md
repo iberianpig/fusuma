@@ -1,8 +1,23 @@
 # Changelog
 
-## [2.4.0](https://github.com/iberianpig/fusuma/tree/2.4.0) (2022-03-13)
+## [2.4.1](https://github.com/iberianpig/fusuma/tree/2.4.1) (2022-04-17)
 
-[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.3.0...2.4.0)
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.4.0...2.4.1)
+
+**Fixed bugs:**
+
+- (Test) undefined local variable or method `proctitle' [\#272](https://github.com/iberianpig/fusuma/issues/272)
+- Coverall failed in Github Actions [\#270](https://github.com/iberianpig/fusuma/issues/270)
+
+**Merged pull requests:**
+
+- fix\(coverage\): use Simplecov instead of Coverall [\#273](https://github.com/iberianpig/fusuma/pull/273) ([iberianpig](https://github.com/iberianpig))
+- test\(custom\_process\): stub block\_context in fork [\#271](https://github.com/iberianpig/fusuma/pull/271) ([iberianpig](https://github.com/iberianpig))
+- Small typo in README.md [\#268](https://github.com/iberianpig/fusuma/pull/268) ([kintrix007](https://github.com/kintrix007))
+
+## [v2.4.0](https://github.com/iberianpig/fusuma/tree/v2.4.0) (2022-03-13)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.3.0...v2.4.0)
 
 **Closed issues:**
 
