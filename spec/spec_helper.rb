@@ -2,8 +2,8 @@
 
 require 'bundler/setup'
 require 'helpers/config_helper'
-require 'coveralls'
-Coveralls.wear!
+
+require 'simplecov'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -18,3 +18,6 @@ RSpec.configure do |config|
 
   config.include(Fusuma::ConfigHelper)
 end
+
+SimpleCov.formatter = SimpleCov::Formatter::HTMLFormatter
+SimpleCov.start
