@@ -15,13 +15,14 @@ module Fusuma
 
     describe '.fork' do
       before do
-        allow(Process).to receive(:fork)
+        @test_instance = ForkTest.new
       end
       it 'call Process.fork and Process.setproctitle' do
-        expect(Process).to receive(:fork).and_yield do
-          expect(Process).to receive(:setproctitle)
+        expect(Process).to receive(:fork).and_yield do |block_context|
+          allow(block_context).to receive(:proctitle).and_return(@test_instance.proctitle)
+          expect(Process).to receive(:setproctitle).with(@test_instance.proctitle)
         end
-        ForkTest.new.call
+        @test_instance.call
       end
     end
   end
