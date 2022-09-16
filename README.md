@@ -99,6 +99,38 @@ For sending shortcuts:
 sudo pacman -S xdotool
 ```
 
+### For Fedora
+
+#### 1. Install libinput-tools
+
+You need `libinput` release 1.0 or later.
+
+```bash
+sudo dnf install libinput
+```
+
+#### 2. Install Ruby
+
+Fusuma runs in Ruby, so you must install it first.
+
+```bash
+sudo dnf install ruby
+```
+
+#### 3. Install Fusuma
+
+```bash
+sudo gem install fusuma
+```
+
+#### 4. Install xdotool (optional)
+
+For sending shortcuts:
+
+```bash
+sudo dnf install xdotool
+```
+
 ### Touchpad not working in GNOME
 
 Ensure the touchpad events are being sent to the GNOME desktop by running the following command:
