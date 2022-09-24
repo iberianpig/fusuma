@@ -51,6 +51,9 @@ module Fusuma
       MultiLogger.info "reload config: #{path}"
       @keymap = validate(path)
       self
+    rescue InvalidFileError => e
+      MultiLogger.error e.message
+      exit 1
     end
 
     # @return [Hash] If check passes
@@ -64,10 +67,11 @@ module Fusuma
       raise InvalidFileError, "Detect duplicate keys #{duplicates}" unless duplicates.empty?
 
       yamls = YAML.load_stream(File.read(path)).compact
-      yamls.map(&:deep_symbolize_keys)
-    rescue StandardError => e
-      MultiLogger.error e.message
-      raise InvalidFileError, e.message
+      yamls.map do |yaml|
+        raise InvalidFileError, "invalid config.yml: #{path}" unless yaml.is_a? Hash
+
+        yaml.deep_symbolize_keys
+      end
     end
 
     # @param index [Index]
