@@ -54,13 +54,13 @@ module Fusuma
                   command: echo 'swipe left'
 
           CONFIG
-          @file_path = Tempfile.open do |temp_file|
+          @config_file = Tempfile.open do |temp_file|
             temp_file.tap { |f| f.write(string) }
           end
         end
 
         it 'should return Hash' do
-          Config.instance.validate(@file_path)
+          Config.instance.validate(@config_file.path)
         end
       end
 
@@ -69,13 +69,13 @@ module Fusuma
           string = <<~CONFIG
             this is not yaml
           CONFIG
-          @file_path = Tempfile.open do |temp_file|
+          @config_file = Tempfile.open do |temp_file|
             temp_file.tap { |f| f.write(string) }
           end
         end
 
         it 'raise InvalidFileError' do
-          expect { Config.instance.validate(@file_path) }.to raise_error(Config::InvalidFileError)
+          expect { Config.instance.validate(@config_file.path) }.to raise_error(Config::InvalidFileError)
         end
 
         context 'with duplicated key' do
@@ -89,13 +89,13 @@ module Fusuma
                   out:
                     command: "xdotool keydown ctrl click 5 keyup ctrl" # threshold: 0.5, interval: 0.5
             CONFIG
-            @file_path = Tempfile.open do |temp_file|
+            @config_file = Tempfile.open do |temp_file|
               temp_file.tap { |f| f.write(string) }
             end
           end
 
           it 'raise InvalidFileError' do
-            expect { Config.instance.validate(@file_path) }.to raise_error(Config::InvalidFileError)
+            expect { Config.instance.validate(@config_file.path) }.to raise_error(Config::InvalidFileError)
           end
         end
       end
