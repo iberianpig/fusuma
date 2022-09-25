@@ -132,8 +132,12 @@ module Fusuma
         end
 
         it 'should call dummy events' do
-          expect(Process).to receive(:spawn).with('dummy_debug_events',
-                                                  { out: @dummy_io, in: '/dev/null' }).once
+          th = double(Thread, pid: 'dummy pid')
+          expect(Open3).to receive(:pipeline_start).with(
+            ['dummy_debug_events'],
+            ['grep -v POINTER_ --line-buffered'],
+            { out: @dummy_io, in: '/dev/null' }
+          ).once.and_return([th])
           subject
         end
       end
