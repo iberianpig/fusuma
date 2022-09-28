@@ -1,43 +1,8 @@
-inherit_from: .rubocop_todo.yml
+require:
+  - standard
+inherit_gem:
+  standard: config/base.yml
 
 AllCops:
-  TargetRubyVersion: '2.5'
+  TargetRubyVersion: "2.5"
   NewCops: enable
-
-Metrics/ModuleLength:
-  Exclude:
-    - "**/*_spec.rb"
-
-Metrics/BlockLength:
-  Exclude:
-    - "**/*_spec.rb"
-    - "fusuma.gemspec"
-
-Layout/LineLength:
-  Max: 100
-  Exclude:
-    - "fusuma.gemspec"
-    - "**/*_spec.rb"
-
-# For rubocop < 1.0.0
-Style/HashEachMethods:
-  Enabled: true
-
-# For rubocop < 1.0.0
-Style/HashTransformKeys:
-  Enabled: true
-
-# For rubocop < 1.0.0
-Style/HashTransformValues:
-  Enabled: true
-
-Lint/RaiseException:
-   Enabled: true
-Lint/StructNewOverride:
-   Enabled: true
-
-# for declaring dummy classes in ./spec
-Lint/ConstantDefinitionInBlock:
-  Exclude:
-    - "**/*_spec.rb"
-
