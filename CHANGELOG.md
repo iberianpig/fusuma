@@ -1,8 +1,23 @@
 # Changelog
 
-## [2.4.1](https://github.com/iberianpig/fusuma/tree/2.4.1) (2022-04-17)
+## [2.5.0](https://github.com/iberianpig/fusuma/tree/2.5.0) (2022-09-28)
 
-[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.4.0...2.4.1)
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.4.1...2.5.0)
+
+**Closed issues:**
+
+- Fusuma setup instructions for Fedora  [\#277](https://github.com/iberianpig/fusuma/issues/277)
+- Feature Request: Modifier Keys [\#275](https://github.com/iberianpig/fusuma/issues/275)
+- Bring back Tap and hold Gestures ! [\#259](https://github.com/iberianpig/fusuma/issues/259)
+
+**Merged pull requests:**
+
+- use grep to filter out pointer events [\#279](https://github.com/iberianpig/fusuma/pull/279) ([ces42](https://github.com/ces42))
+- Update README with Fusuma installation requirements on Fedora [\#278](https://github.com/iberianpig/fusuma/pull/278) ([thaneesh-babu](https://github.com/thaneesh-babu))
+
+## [v2.4.1](https://github.com/iberianpig/fusuma/tree/v2.4.1) (2022-04-17)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.4.0...v2.4.1)
 
 **Fixed bugs:**
 
