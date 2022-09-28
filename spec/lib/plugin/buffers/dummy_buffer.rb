@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require './lib/fusuma/plugin/buffers/buffer'
+require "./lib/fusuma/plugin/buffers/buffer"
 
 module Fusuma
   module Plugin
     module Buffers
       class DummyBuffer < Buffer
-        DEFAULT_SOURCE = 'dummy'
+        DEFAULT_SOURCE = "dummy"
 
         def config_param_types
           {

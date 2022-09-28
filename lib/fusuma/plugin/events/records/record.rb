@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../../base'
+require_relative "../../base"
 
 module Fusuma
   module Plugin
@@ -11,7 +11,7 @@ module Fusuma
         class Record < Base
           # @return [Symbol]
           def type
-            raise NotImplementedError, 'override #type'
+            raise NotImplementedError, "override #type"
           end
         end
       end

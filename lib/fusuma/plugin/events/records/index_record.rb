@@ -44,11 +44,11 @@ module Fusuma
 
             record = records.shift
             new_index = case record.position
-                        when :surfix
-                          Config::Index.new([*index.keys, *record.index.keys])
-                        else
-                          raise "invalid index position: #{record}"
-                        end
+            when :surfix
+              Config::Index.new([*index.keys, *record.index.keys])
+            else
+              raise "invalid index position: #{record}"
+            end
 
             return unless exist_on_conf?(new_index)
 

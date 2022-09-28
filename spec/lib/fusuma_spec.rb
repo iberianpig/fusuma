@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require './lib/fusuma'
-require './lib/fusuma/plugin/inputs/libinput_command_input'
-require './lib/fusuma/plugin/filters/libinput_device_filter'
+require "spec_helper"
+require "./lib/fusuma"
+require "./lib/fusuma/plugin/inputs/libinput_command_input"
+require "./lib/fusuma/plugin/filters/libinput_device_filter"
 
 module Fusuma
   RSpec.describe Runner do
-    describe '.run' do
+    describe ".run" do
       before do
         Singleton.__init__(MultiLogger)
         Singleton.__init__(Config)
@@ -16,8 +16,8 @@ module Fusuma
           .and_return("1.8\n")
       end
 
-      context 'when without option' do
-        it 'should not enable debug mode' do
+      context "when without option" do
+        it "should not enable debug mode" do
           expect(MultiLogger.instance).not_to be_debug_mode
           Runner.run
         end
@@ -26,7 +26,7 @@ module Fusuma
       context 'when run with argument "--version"' do
         # NOTE: skip print reload config message
         before { allow(MultiLogger).to receive(:info).with(anything) }
-        it 'should print version' do
+        it "should print version" do
           expect(MultiLogger).to receive(:info)
             .with("Fusuma: #{Fusuma::VERSION}")
           expect(MultiLogger).to receive(:info)
@@ -42,11 +42,11 @@ module Fusuma
       end
 
       context 'when run with argument "-l"' do
-        it 'should print device list' do
+        it "should print device list" do
           allow(Device).to receive(:available) {
             [
-              Device.new(name: 'test_device1'),
-              Device.new(name: 'test_device2')
+              Device.new(name: "test_device1"),
+              Device.new(name: "test_device2")
             ]
           }
 
@@ -61,16 +61,16 @@ module Fusuma
 
       # TODO: remove from_option and command line options
       context 'when run with argument "--device="test_device2"' do
-        it 'should set device' do
+        it "should set device" do
           allow(Device).to receive(:names) { %w[test_device1 test_device2] }
           expect(Plugin::Filters::LibinputDeviceFilter::KeepDevice)
-            .to receive(:from_option=).with('test_device2')
-          Runner.run(device: 'test_device2')
+            .to receive(:from_option=).with("test_device2")
+          Runner.run(device: "test_device2")
         end
       end
 
       context 'when run with argument "-v"' do
-        it 'should enable debug mode' do
+        it "should enable debug mode" do
           MultiLogger.send(:new)
           Runner.run(verbose: true)
           expect(MultiLogger.instance).to be_debug_mode
@@ -93,7 +93,7 @@ module Fusuma
             temp_file.tap { |f| f.write(string) }
           end
         end
-        it 'should assign custom_path' do
+        it "should assign custom_path" do
           expect { Runner.run(config_path: @file_path) }
             .to change { @config.custom_path }.from(nil).to(@file_path)
         end

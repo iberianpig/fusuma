@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../base'
+require_relative "../base"
 
 module Fusuma
   module Plugin
@@ -26,11 +26,11 @@ module Fusuma
         # Set source for tag from config.yml.
         # DEFAULT_SOURCE is defined in each Parser plugins.
         def source
-          @source ||= config_params(:source) || self.class.const_get('DEFAULT_SOURCE')
+          @source ||= config_params(:source) || self.class.const_get(:DEFAULT_SOURCE)
         end
 
         def tag
-          @tag ||= self.class.name.split('::').last.underscore
+          @tag ||= self.class.name.split("::").last.underscore
         end
 
         # parse Record object

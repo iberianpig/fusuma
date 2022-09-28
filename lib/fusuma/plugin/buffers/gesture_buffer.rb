@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative './buffer'
+require_relative "./buffer"
 
 module Fusuma
   module Plugin
     module Buffers
       # manage events and generate command
       class GestureBuffer < Buffer
-        DEFAULT_SOURCE = 'libinput_gesture_parser'
+        DEFAULT_SOURCE = "libinput_gesture_parser"
         DEFAULT_SECONDS_TO_KEEP = 100
 
         def config_param_types
@@ -47,7 +47,7 @@ module Fusuma
           return false if empty?
 
           case @events.last.record.status
-          when 'end', 'cancelled'
+          when "end", "cancelled"
             true
           else
             false
@@ -63,7 +63,7 @@ module Fusuma
         end
 
         def updating_events
-          @events.select { |e| e.record.status == 'update' }
+          @events.select { |e| e.record.status == "update" }
         end
 
         # @param attr [Symbol]
@@ -90,7 +90,7 @@ module Fusuma
         end
 
         def select_by_events(&block)
-          return enum_for(:select_by_events) unless block_given?
+          return enum_for(:select_by_events) unless block
 
           events = @events.select(&block)
           self.class.new events
@@ -99,7 +99,7 @@ module Fusuma
         def select_from_last_begin
           return self if empty?
 
-          index_from_last = @events.reverse.find_index { |e| e.record.status == 'begin' }
+          index_from_last = @events.reverse.find_index { |e| e.record.status == "begin" }
           return GestureBuffer.new([]) if index_from_last.nil?
 
           index_last_begin = events.length - index_from_last - 1

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require './lib/fusuma/plugin/inputs/input'
+require "spec_helper"
+require "./lib/fusuma/plugin/inputs/input"
 
 module Fusuma
   module Plugin
@@ -9,19 +9,19 @@ module Fusuma
       RSpec.describe Input do
         let(:input) { described_class.new }
 
-        describe '#io' do
-          subject { input.io { 'dummy' } }
+        describe "#io" do
+          subject { input.io { "dummy" } }
           it { expect { subject }.to raise_error(NotImplementedError) }
         end
 
-        describe '#create_event' do
+        describe "#create_event" do
           subject { input.create_event }
           it { is_expected.to be_a Events::Event }
 
-          it { expect(input.tag).to eq 'input' }
+          it { expect(input.tag).to eq "input" }
         end
 
-        describe '.select' do
+        describe ".select" do
           subject { Input.select([DummyInput.new]) }
 
           it { is_expected.to be_a Events::Event }
@@ -32,7 +32,7 @@ module Fusuma
         def io
           @io ||= begin
             r, w = IO.pipe
-            w.puts 'hoge'
+            w.puts "hoge"
             w.close
             r
           end
@@ -55,14 +55,14 @@ module Fusuma
           Config.custom_path = nil
         end
 
-        describe '#io' do
+        describe "#io" do
           subject { dummy_input.io }
           it { is_expected.to be_a IO }
         end
 
-        describe '#config_params' do
+        describe "#config_params" do
           subject { dummy_input.config_params }
-          it { is_expected.to eq(dummy: 'dummy') }
+          it { is_expected.to eq(dummy: "dummy") }
         end
       end
     end

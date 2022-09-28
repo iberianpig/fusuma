@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require './lib/fusuma/plugin/parsers/parser'
-require './lib/fusuma/plugin/events/event'
+require "spec_helper"
+require "./lib/fusuma/plugin/parsers/parser"
+require "./lib/fusuma/plugin/events/event"
 
 module Fusuma
   module Plugin
     module Parsers
       class DummyParser < Parser
-        DEFAULT_SOURCE = 'dummy_input'
+        DEFAULT_SOURCE = "dummy_input"
       end
 
       RSpec.describe Parser do
@@ -27,15 +27,15 @@ module Fusuma
           Config.custom_path = nil
         end
 
-        describe '#source' do
+        describe "#source" do
           subject { parser.source }
 
           it { is_expected.to be DummyParser::DEFAULT_SOURCE }
         end
 
-        describe '#parse' do
+        describe "#parse" do
           subject { parser.parse(event) }
-          let(:event) { Events::Event.new(tag: 'dummy_input', record: 'dummy') }
+          let(:event) { Events::Event.new(tag: "dummy_input", record: "dummy") }
 
           it { is_expected.to be event }
         end

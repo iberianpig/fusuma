@@ -7,17 +7,17 @@ module Fusuma
     class Index
       def initialize(keys)
         @keys = case keys
-                when Array
-                  keys.map do |key|
-                    if key.is_a? Key
-                      key
-                    else
-                      Key.new(key)
-                    end
-                  end
-                else
-                  [Key.new(keys)]
-                end
+        when Array
+          keys.map do |key|
+            if key.is_a? Key
+              key
+            else
+              Key.new(key)
+            end
+          end
+        else
+          [Key.new(keys)]
+        end
       end
 
       def inspect
@@ -29,11 +29,11 @@ module Fusuma
       def cache_key
         case @keys
         when Array
-          @keys.map(&:symbol).join(',')
+          @keys.map(&:symbol).join(",")
         when Key
           @keys.symbol
         else
-          raise 'invalid keys'
+          raise "invalid keys"
         end
       end
 
@@ -56,7 +56,7 @@ module Fusuma
         def initialize(symbol_word, skippable: false, fallback: nil)
           @symbol = begin
             symbol_word.to_sym
-          rescue StandardError
+          rescue
             symbol_word
           end
 
@@ -64,14 +64,14 @@ module Fusuma
 
           @fallback = begin
             fallback.to_sym
-          rescue StandardError
+          rescue
             fallback
           end
         end
 
         def inspect
-          skip_marker = @skippable && Searcher.skip? ? '(skip)' : ''
-          fallback_marker = @fallback && Searcher.fallback? ? '(fallback)' : ''
+          skip_marker = @skippable && Searcher.skip? ? "(skip)" : ""
+          fallback_marker = @fallback && Searcher.fallback? ? "(fallback)" : ""
           "#{@symbol}#{skip_marker}#{fallback_marker}"
         end
 

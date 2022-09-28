@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './input'
+require_relative "./input"
 
 module Fusuma
   module Plugin
@@ -39,11 +39,11 @@ module Fusuma
           begin
             loop do
               sleep interval
-              writer.puts 'timer'
+              writer.puts "timer"
             end
           rescue Errno::EPIPE
             exit 0
-          rescue StandardError => e
+          rescue => e
             MultiLogger.error e
           end
         end

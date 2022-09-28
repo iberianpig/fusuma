@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative './manager'
-require_relative '../config'
-require_relative '../custom_process'
+require_relative "./manager"
+require_relative "../config"
+require_relative "../custom_process"
 
 module Fusuma
   module Plugin
@@ -44,15 +44,15 @@ module Fusuma
 
             next if param_types.any? { |klass| val.is_a?(klass) }
 
-            MultiLogger.error('Please fix config.yml.')
+            MultiLogger.error("Please fix config.yml.")
             MultiLogger.error(":#{base.keys.map(&:symbol)
-            .join(' => :')} => :#{key} should be #{param_types.join(' OR ')}.")
+            .join(" => :")} => :#{key} should be #{param_types.join(" OR ")}.")
             exit 1
           end
       end
 
       def config_index
-        Config::Index.new(self.class.name.gsub('Fusuma::', '').underscore.split('/'))
+        Config::Index.new(self.class.name.gsub("Fusuma::", "").underscore.split("/"))
       end
     end
   end

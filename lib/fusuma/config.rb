@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require_relative './multi_logger'
-require_relative './config/index'
-require_relative './config/searcher'
-require_relative './config/yaml_duplication_checker'
-require_relative './hash_support'
-require 'singleton'
-require 'yaml'
+require_relative "./multi_logger"
+require_relative "./config/index"
+require_relative "./config/searcher"
+require_relative "./config/yaml_duplication_checker"
+require_relative "./hash_support"
+require "singleton"
+require "yaml"
 
 # module as namespace
 module Fusuma
@@ -90,13 +90,13 @@ module Fusuma
       execute_params = search(index)
       return if execute_params.nil? || !execute_params.is_a?(Hash)
 
-      @execute_keys.find { |k| execute_params.keys.include?(k) }
+      @execute_keys.find { |k| execute_params.key?(k) }
     end
 
     private
 
     def find_filepath
-      filename = 'fusuma/config.yml'
+      filename = "fusuma/config.yml"
       if custom_path
         return expand_custom_path if File.exist?(expand_custom_path)
 

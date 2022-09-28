@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative '../multi_logger'
-require_relative '../string_support'
+require_relative "../multi_logger"
+require_relative "../string_support"
 
 module Fusuma
   module Plugin
@@ -16,7 +16,7 @@ module Fusuma
       end
 
       def fusuma_default_plugin_paths
-        search_key = File.join('../../', plugin_dir_name, '*.rb')
+        search_key = File.join("../../", plugin_dir_name, "*.rb")
         Dir.glob(File.expand_path("#{__dir__}/#{search_key}")).sort
       end
 
@@ -25,18 +25,18 @@ module Fusuma
       end
 
       def fusuma_external_plugin_paths
-        search_key = File.join(plugin_dir_name, '*.rb')
+        search_key = File.join(plugin_dir_name, "*.rb")
         Gem.find_latest_files(search_key).map do |siblings_plugin|
-          next unless siblings_plugin =~ %r{fusuma-plugin-(.+).*/lib/#{plugin_dir_name}/.+\.rb}
+          next unless %r{fusuma-plugin-(.+).*/lib/#{plugin_dir_name}/.+\.rb}.match?(siblings_plugin)
 
           match_data = siblings_plugin.match(%r{(.*)/(.*)/lib/(.*)})
           gemspec_path = Dir.glob("#{match_data[1]}/#{match_data[2]}/*.gemspec").first
           raise "Not Found: #{match_data[1]}/#{match_data[2]}/*.gemspec" unless gemspec_path
 
           gemspec = Gem::Specification.load(gemspec_path)
-          fusuma_gemspec_path = File.expand_path('../../../fusuma.gemspec', __dir__)
+          fusuma_gemspec_path = File.expand_path("../../../fusuma.gemspec", __dir__)
           fusuma_gemspec = Gem::Specification.load(fusuma_gemspec_path)
-          if gemspec.dependencies.find { |d| d.name == 'fusuma' }&.match?(fusuma_gemspec)
+          if gemspec.dependencies.find { |d| d.name == "fusuma" }&.match?(fusuma_gemspec)
             siblings_plugin
           else
             MultiLogger.warn "#{gemspec.name} #{gemspec.version} is incompatible with running #{fusuma_gemspec.name} #{fusuma_gemspec.version}"
@@ -75,14 +75,14 @@ module Fusuma
         end
 
         def require_base_plugins
-          require_relative './base'
-          require_relative './events/event'
-          require_relative './inputs/input'
-          require_relative './filters/filter'
-          require_relative './parsers/parser'
-          require_relative './buffers/buffer'
-          require_relative './detectors/detector'
-          require_relative './executors/executor'
+          require_relative "./base"
+          require_relative "./events/event"
+          require_relative "./inputs/input"
+          require_relative "./filters/filter"
+          require_relative "./parsers/parser"
+          require_relative "./buffers/buffer"
+          require_relative "./detectors/detector"
+          require_relative "./executors/executor"
         end
 
         def plugins

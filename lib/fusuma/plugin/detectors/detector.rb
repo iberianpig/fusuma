@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative '../base'
-require_relative '../events/event'
+require_relative "../base"
+require_relative "../events/event"
 
 module Fusuma
   module Plugin
@@ -10,7 +10,7 @@ module Fusuma
       class Detector < Base
         # @return [Array<String>]
         def sources
-          @source ||= self.class.const_get('SOURCES')
+          @source ||= self.class.const_get(:SOURCES)
         end
 
         # Always watch buffers and detect them or not
@@ -53,11 +53,11 @@ module Fusuma
 
         class << self
           def tag
-            name.split('Detectors::').last.underscore
+            name.split("Detectors::").last.underscore
           end
 
           def type(tag_name = tag)
-            tag_name.gsub('_detector', '')
+            tag_name.gsub("_detector", "")
           end
         end
       end

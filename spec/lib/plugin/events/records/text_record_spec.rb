@@ -1,23 +1,23 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require './lib/fusuma/plugin/events/records/text_record'
+require "spec_helper"
+require "./lib/fusuma/plugin/events/records/text_record"
 
 module Fusuma
   module Plugin
     module Events
       module Records
         RSpec.describe TextRecord do
-          let(:record) { described_class.new('this is dummy') }
+          let(:record) { described_class.new("this is dummy") }
 
-          describe '#type' do
+          describe "#type" do
             subject { record.type }
             it { is_expected.to eq :text }
           end
 
-          describe '#to_s' do
+          describe "#to_s" do
             subject { record.to_s }
-            it { is_expected.to eq 'this is dummy' }
+            it { is_expected.to eq "this is dummy" }
           end
         end
       end

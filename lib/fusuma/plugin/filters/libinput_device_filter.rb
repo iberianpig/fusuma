@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require_relative './filter'
-require_relative '../../device'
+require_relative "./filter"
+require_relative "../../device"
 
 module Fusuma
   module Plugin
     module Filters
       # Filter device log
       class LibinputDeviceFilter < Filter
-        DEFAULT_SOURCE = 'libinput_command_input'
+        DEFAULT_SOURCE = "libinput_command_input"
 
         def config_param_types
           {
@@ -64,18 +64,18 @@ module Fusuma
           # @return [Array]
           def all
             @all ||= if @name_patterns.empty?
-                       Device.available
-                     else
-                       Device.all.select do |device|
-                         match_pattern?(device.name)
-                       end
-                     end.tap do |devices|
-                       print_not_found_messages if devices.empty?
-                     end
+              Device.available
+            else
+              Device.all.select do |device|
+                match_pattern?(device.name)
+              end
+            end.tap do |devices|
+              print_not_found_messages if devices.empty?
+            end
           end
 
           def print_not_found_messages
-            puts 'Device is not found. Check following section on your config.yml'
+            puts "Device is not found. Check following section on your config.yml"
             puts LibinputDeviceFilter.new.config_param_sample
           end
 

@@ -7,13 +7,13 @@ module Fusuma
     module YAMLDuplicationChecker
       def self.check(yaml_string, filename, &on_duplicated)
         # Ruby 2.6+
-        tree = if Gem::Version.new(Psych::VERSION) >= Gem::Version.new('3.1.0')
-                 # Specify filename to display helpful message when it raises
-                 # an error.
-                 YAML.parse(yaml_string, filename: filename)
-               else
-                 YAML.parse(yaml_string, filename)
-               end
+        tree = if Gem::Version.new(Psych::VERSION) >= Gem::Version.new("3.1.0")
+          # Specify filename to display helpful message when it raises
+          # an error.
+          YAML.parse(yaml_string, filename: filename)
+        else
+          YAML.parse(yaml_string, filename)
+        end
         return unless tree
 
         traverse(tree, &on_duplicated)

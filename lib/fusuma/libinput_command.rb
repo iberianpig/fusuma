@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'open3'
+require "open3"
 
 module Fusuma
   # Execute libinput command
@@ -13,7 +13,7 @@ module Fusuma
 
     # `libinput-list-devices` and `libinput-debug-events` are deprecated,
     # use `libinput list-devices` and `libinput debug-events` from 1.8.
-    NEW_CLI_OPTION_VERSION = '1.8'
+    NEW_CLI_OPTION_VERSION = "1.8"
 
     # @return [Boolean]
     def new_cli_option_available?
@@ -40,8 +40,8 @@ module Fusuma
     # @return [Integer] return a latest line libinput debug-events
     def debug_events(writer)
       @debug_events ||= begin
-        t = Open3.pipeline_start([debug_events_with_options], ['grep -v POINTER_ --line-buffered'],
-                                 out: writer, in: '/dev/null')
+        t = Open3.pipeline_start([debug_events_with_options], ["grep -v POINTER_ --line-buffered"],
+          out: writer, in: "/dev/null")
         t[0].pid
       end
     end
@@ -51,12 +51,12 @@ module Fusuma
     def version_command
       if @debug_events_command && @list_devices_command
         "#{@list_devices_command} --version"
-      elsif which('libinput')
-        'libinput --version'
-      elsif which('libinput-list-devices')
-        'libinput-list-devices --version'
+      elsif which("libinput")
+        "libinput --version"
+      elsif which("libinput-list-devices")
+        "libinput-list-devices --version"
       else
-        MultiLogger.error 'Please install libinput-tools'
+        MultiLogger.error "Please install libinput-tools"
         exit 1
       end
     end
@@ -65,9 +65,9 @@ module Fusuma
       if @list_devices_command
         @list_devices_command
       elsif new_cli_option_available?
-        'libinput list-devices'
+        "libinput list-devices"
       else
-        'libinput-list-devices'
+        "libinput-list-devices"
       end
     end
 
@@ -75,15 +75,15 @@ module Fusuma
       if @debug_events_command
         @debug_events_command
       elsif new_cli_option_available?
-        'libinput debug-events'
+        "libinput debug-events"
       else
-        'libinput-debug-events'
+        "libinput-debug-events"
       end
     end
 
     def debug_events_with_options
-      prefix = 'stdbuf -oL --'
-      "#{prefix} #{debug_events_command} #{@libinput_options.join(' ')}".strip
+      prefix = "stdbuf -oL --"
+      "#{prefix} #{debug_events_command} #{@libinput_options.join(" ")}".strip
     end
 
     private
@@ -95,8 +95,8 @@ module Fusuma
     #   which('ruby') #=> /usr/bin/ruby
     # @return [String, nil]
     def which(command)
-      exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
-      ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
+      exts = ENV["PATHEXT"] ? ENV["PATHEXT"].split(";") : [""]
+      ENV["PATH"].split(File::PATH_SEPARATOR).each do |path|
         exts.each do |ext|
           exe = File.join(path, "#{command}#{ext}")
           return exe if File.executable?(exe) && !File.directory?(exe)

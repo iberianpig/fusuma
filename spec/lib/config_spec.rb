@@ -1,51 +1,51 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require './lib/fusuma/config'
+require "spec_helper"
+require "./lib/fusuma/config"
 
 # spec for Config
 module Fusuma
   RSpec.describe Config do
     let(:keymap) do
       {
-        'swipe' => {
+        "swipe" => {
           3 => {
-            'left' => { 'command' => 'alt+Left' },
-            'right' => { 'command' => 'alt+Right' }
+            "left" => {"command" => "alt+Left"},
+            "right" => {"command" => "alt+Right"}
           },
           4 => {
-            'left' => { 'command' => 'super+Left' },
-            'right' => { 'command' => 'super+Right' }
+            "left" => {"command" => "super+Left"},
+            "right" => {"command" => "super+Right"}
           }
         },
-        'pinch' => {
-          'in' => { 'command' => 'ctrl+plus' },
-          'out' => { 'command' => 'ctrl+minus' }
+        "pinch" => {
+          "in" => {"command" => "ctrl+plus"},
+          "out" => {"command" => "ctrl+minus"}
         }
       }
     end
 
-    describe '.custom_path=' do
+    describe ".custom_path=" do
       before { Singleton.__init__(Config) }
-      it 'should reload keymap file' do
+      it "should reload keymap file" do
         keymap = Config.instance.keymap
-        Config.custom_path = './spec/lib/dummy_config.yml'
+        Config.custom_path = "./spec/lib/dummy_config.yml"
         custom_keymap = Config.instance.keymap
         expect(keymap).not_to eq custom_keymap
       end
     end
 
-    describe '#reload' do
+    describe "#reload" do
       before { Singleton.__init__(Config) }
-      it 'set Seacher' do
+      it "set Seacher" do
         old = Config.instance.searcher
         Config.instance.reload
         expect(Config.instance.searcher).not_to eq(old)
       end
     end
 
-    describe '#validate' do
-      context 'with valid yaml' do
+    describe "#validate" do
+      context "with valid yaml" do
         before do
           string = <<~CONFIG
             swipe:
@@ -59,12 +59,12 @@ module Fusuma
           end
         end
 
-        it 'should return Hash' do
+        it "should return Hash" do
           Config.instance.validate(@config_file.path)
         end
       end
 
-      context 'with invalid yaml' do
+      context "with invalid yaml" do
         before do
           string = <<~CONFIG
             this is not yaml
@@ -74,11 +74,11 @@ module Fusuma
           end
         end
 
-        it 'raise InvalidFileError' do
+        it "raise InvalidFileError" do
           expect { Config.instance.validate(@config_file.path) }.to raise_error(Config::InvalidFileError)
         end
 
-        context 'with duplicated key' do
+        context "with duplicated key" do
           before do
             string = <<~CONFIG
               pinch:
@@ -94,7 +94,7 @@ module Fusuma
             end
           end
 
-          it 'raise InvalidFileError' do
+          it "raise InvalidFileError" do
             expect { Config.instance.validate(@config_file.path) }.to raise_error(Config::InvalidFileError)
           end
         end

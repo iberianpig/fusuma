@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative '../base'
-require_relative '../events/event'
+require_relative "../base"
+require_relative "../events/event"
 
 module Fusuma
   module Plugin
@@ -23,13 +23,13 @@ module Fusuma
             line = io.readline_nonblock("\n").chomp
           rescue EOFError => e
             warn "#{input.class.name}: #{e}"
-            warn 'Send SIGKILL to fusuma processes'
+            warn "Send SIGKILL to fusuma processes"
             inputs.reject { |i| i == input }.each do |i|
               warn "stop process: #{i.class.name.underscore}"
               Process.kill(:SIGKILL, i.pid)
             end
             exit 1
-          rescue StandardError => e
+          rescue => e
             warn "#{input.class.name}: #{e}"
             exit 1
           end
@@ -48,14 +48,14 @@ module Fusuma
         end
 
         # @return [Event]
-        def create_event(record: 'dummy input')
+        def create_event(record: "dummy input")
           e = Events::Event.new(tag: tag, record: record)
           MultiLogger.debug(input_event: e)
           e
         end
 
         def tag
-          self.class.name.split('Inputs::').last.underscore
+          self.class.name.split("Inputs::").last.underscore
         end
       end
     end
@@ -65,8 +65,8 @@ end
 # ref: https://github.com/Homebrew/brew/blob/6b2dbbc96f7d8aa12f9b8c9c60107c9cc58befc4/Library/Homebrew/extend/io.rb
 class IO
   def readline_nonblock(sep = $INPUT_RECORD_SEPARATOR)
-    line = +''
-    buffer = +''
+    line = +""
+    buffer = +""
 
     loop do
       break if buffer == sep

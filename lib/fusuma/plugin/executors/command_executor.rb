@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './executor'
+require_relative "./executor"
 
 module Fusuma
   module Plugin
@@ -20,8 +20,8 @@ module Fusuma
 
           accel = args_accel(event)
           additional_env = event.record.args
-                                .deep_transform_keys(&:to_s)
-                                .deep_transform_values { |v| (v * accel).to_s }
+            .deep_transform_keys(&:to_s)
+            .deep_transform_values { |v| (v * accel).to_s }
 
           pid = Process.spawn(additional_env, command.to_s)
           Process.detach(pid)
@@ -30,7 +30,7 @@ module Fusuma
         end
 
         def executable?(event)
-          event.tag.end_with?('_detector') &&
+          event.tag.end_with?("_detector") &&
             event.record.type == :index &&
             search_command(event)
         end

@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative './buffer'
+require_relative "./buffer"
 
 module Fusuma
   module Plugin
     module Buffers
       # manage events and generate command
       class TimerBuffer < Buffer
-        DEFAULT_SOURCE = 'timer_input'
+        DEFAULT_SOURCE = "timer_input"
         DEFAULT_SECONDS_TO_KEEP = 3
 
         def config_param_types

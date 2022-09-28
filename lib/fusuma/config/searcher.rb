@@ -55,7 +55,7 @@ module Fusuma
 
       def cache(key)
         @cache ||= {}
-        key = key.join(',') if key.is_a? Array
+        key = key.join(",") if key.is_a? Array
         if @cache.key?(key)
           @cache[key]
         else

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require './lib/fusuma/plugin/inputs/libinput_command_input'
+require "spec_helper"
+require "./lib/fusuma/plugin/inputs/libinput_command_input"
 
 module Fusuma
   module Plugin
@@ -9,9 +9,9 @@ module Fusuma
       RSpec.describe LibinputCommandInput do
         let(:input) { described_class.new }
 
-        describe '#io' do
+        describe "#io" do
           before do
-            @dummy_io = StringIO.new('dummy')
+            @dummy_io = StringIO.new("dummy")
             dummy_pid = 999_999_999
             libinput_command = instance_double(LibinputCommand)
             allow(LibinputCommand).to receive(:new).and_return(libinput_command)
@@ -22,10 +22,10 @@ module Fusuma
           it { expect(input.io).to eq @dummy_io }
         end
 
-        describe '#libinput_options' do
+        describe "#libinput_options" do
           it { expect(input.libinput_options).to be_a Array }
 
-          context 'when device: awesome_device is given as config_params' do
+          context "when device: awesome_device is given as config_params" do
             around do |example|
               ConfigHelper.load_config_yml = <<~CONFIG
                 plugin:
@@ -43,7 +43,7 @@ module Fusuma
             end
           end
 
-          context 'when enable-tap: true is given as config_params' do
+          context "when enable-tap: true is given as config_params" do
             around do |example|
               ConfigHelper.load_config_yml = <<~CONFIG
                 plugin:
@@ -56,12 +56,12 @@ module Fusuma
 
               Config.custom_path = nil
             end
-            it 'contains --enable-tap' do
-              expect(input.libinput_options).to be_include '--enable-tap'
+            it "contains --enable-tap" do
+              expect(input.libinput_options).to be_include "--enable-tap"
             end
           end
 
-          context 'when enable-dwt: true is given as config_params' do
+          context "when enable-dwt: true is given as config_params" do
             around do |example|
               ConfigHelper.load_config_yml = <<~CONFIG
                 plugin:
@@ -74,12 +74,12 @@ module Fusuma
 
               Config.custom_path = nil
             end
-            it 'contains --enable-dwt' do
-              expect(input.libinput_options).to be_include '--enable-dwt'
+            it "contains --enable-dwt" do
+              expect(input.libinput_options).to be_include "--enable-dwt"
             end
           end
 
-          context 'when show-keycodes: true is given as config_params' do
+          context "when show-keycodes: true is given as config_params" do
             around do |example|
               ConfigHelper.load_config_yml = <<~CONFIG
                 plugin:
@@ -92,12 +92,12 @@ module Fusuma
 
               Config.custom_path = nil
             end
-            it 'contains --show-keycodes' do
-              expect(input.libinput_options).to be_include '--show-keycodes'
+            it "contains --show-keycodes" do
+              expect(input.libinput_options).to be_include "--show-keycodes"
             end
           end
 
-          context 'when verbose: true is given as config_params' do
+          context "when verbose: true is given as config_params" do
             around do |example|
               ConfigHelper.load_config_yml = <<~CONFIG
                 plugin:
@@ -110,8 +110,8 @@ module Fusuma
 
               Config.custom_path = nil
             end
-            it 'contains --verbose' do
-              expect(input.libinput_options).to be_include '--verbose'
+            it "contains --verbose" do
+              expect(input.libinput_options).to be_include "--verbose"
             end
           end
         end

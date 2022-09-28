@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require_relative '../events/records/record'
-require_relative '../events/records/gesture_record'
+require_relative "../events/records/record"
+require_relative "../events/records/gesture_record"
 
 module Fusuma
   module Plugin
     module Parsers
       # parse libinput and generate gesture record
       class LibinputGestureParser < Parser
-        DEFAULT_SOURCE = 'libinput_command_input'
+        DEFAULT_SOURCE = "libinput_command_input"
 
         # @param record [String]
         # @return [Records::GestureRecord, nil]
@@ -21,9 +21,9 @@ module Fusuma
           end
 
           Events::Records::GestureRecord.new(status: status,
-                                             gesture: gesture,
-                                             finger: finger,
-                                             delta: delta)
+            gesture: gesture,
+            finger: finger,
+            delta: delta)
         end
 
         private
@@ -34,7 +34,7 @@ module Fusuma
 
           gesture, status = *detect_gesture(event_name)
 
-          status = 'cancelled' if gesture == 'hold' && status == 'end' && other == 'cancelled'
+          status = "cancelled" if gesture == "hold" && status == "end" && other == "cancelled"
           delta = parse_delta(other)
           [gesture, status, finger, delta]
         end
@@ -50,10 +50,10 @@ module Fusuma
           return if line.nil?
 
           move_x, move_y, unaccelerated_x, unaccelerated_y, _, zoom, _, rotate =
-            line.tr('/|(|)', ' ').split
+            line.tr("/|(|)", " ").split
           Events::Records::GestureRecord::Delta.new(move_x.to_f, move_y.to_f,
-                                                    unaccelerated_x.to_f, unaccelerated_y.to_f,
-                                                    zoom.to_f, rotate.to_f)
+            unaccelerated_x.to_f, unaccelerated_y.to_f,
+            zoom.to_f, rotate.to_f)
         end
       end
     end

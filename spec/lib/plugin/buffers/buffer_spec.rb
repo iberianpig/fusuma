@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
-require './lib/fusuma/plugin/events/event'
-require_relative './dummy_buffer'
+require "./lib/fusuma/plugin/events/event"
+require_relative "./dummy_buffer"
 
 module Fusuma
   module Plugin
@@ -13,33 +13,33 @@ module Fusuma
           @buffer = DummyBuffer.new
         end
 
-        describe '#type' do
+        describe "#type" do
           subject { @buffer.type }
-          it { is_expected.to eq 'dummy' }
+          it { is_expected.to eq "dummy" }
         end
 
-        describe '#buffer' do
-          it 'should buffer event' do
-            event = Events::Event.new(tag: 'dummy', record: 'dummy record')
+        describe "#buffer" do
+          it "should buffer event" do
+            event = Events::Event.new(tag: "dummy", record: "dummy record")
             expect(@buffer.buffer(event)).to eq [event]
             expect(@buffer.events).to eq [event]
           end
 
-          it 'should NOT buffer event' do
-            event = Events::Event.new(tag: 'SHOULD NOT BUFFER', record: 'dummy record')
+          it "should NOT buffer event" do
+            event = Events::Event.new(tag: "SHOULD NOT BUFFER", record: "dummy record")
             @buffer.buffer(event)
             expect(@buffer.events).to eq []
           end
         end
 
-        describe '#source' do
+        describe "#source" do
           subject { @buffer.source }
 
           it { is_expected.to eq DummyBuffer::DEFAULT_SOURCE }
 
-          context 'with config' do
+          context "with config" do
             around do |example|
-              @source = 'custom_event'
+              @source = "custom_event"
 
               ConfigHelper.load_config_yml = <<~CONFIG
                 plugin:
@@ -57,7 +57,7 @@ module Fusuma
           end
         end
 
-        describe '#config_params' do
+        describe "#config_params" do
           around do |example|
             ConfigHelper.load_config_yml = <<~CONFIG
               plugin:
@@ -72,7 +72,7 @@ module Fusuma
           end
 
           subject { @buffer.config_params }
-          it { is_expected.to eq(dummy: 'dummy') }
+          it { is_expected.to eq(dummy: "dummy") }
         end
       end
     end

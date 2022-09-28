@@ -2,8 +2,8 @@
 
 # module as namespace
 module Fusuma
-  require 'logger'
-  require 'singleton'
+  require "logger"
+  require "singleton"
   # logger separate between stdout and strerr
   class MultiLogger < Logger
     include Singleton
@@ -16,9 +16,9 @@ module Fusuma
     end
 
     def initialize
-      filepath = self.class.instance_variable_get('@filepath')
+      filepath = self.class.instance_variable_get(:@filepath)
       if filepath
-        logfile = File.new(filepath, 'a')
+        logfile = File.new(filepath, "a")
         logfile.sync = true
         super(logfile)
         $stderr = logfile

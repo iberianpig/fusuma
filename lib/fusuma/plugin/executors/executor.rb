@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../base'
+require_relative "../base"
 
 module Fusuma
   module Plugin
@@ -47,8 +47,8 @@ module Fusuma
           index = event.record.index
           @interval_time[index.cache_key] ||= begin
             config_value =
-              Config.search(Config::Index.new([*index.keys, 'interval'])) ||
-              Config.search(Config::Index.new(['interval', Detectors::Detector.type(event.tag)]))
+              Config.search(Config::Index.new([*index.keys, "interval"])) ||
+              Config.search(Config::Index.new(["interval", Detectors::Detector.type(event.tag)]))
             if event.record.trigger == :oneshot
               (config_value || 1) * BASE_ONESHOT_INTERVAL
             else

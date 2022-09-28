@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require_relative './detector'
+require_relative "./detector"
 
 module Fusuma
   module Plugin
     module Detectors
       class PinchDetector < Detector
-        SOURCES = ['gesture'].freeze
-        BUFFER_TYPE = 'gesture'
-        GESTURE_RECORD_TYPE = 'pinch'
+        SOURCES = ["gesture"].freeze
+        BUFFER_TYPE = "gesture"
+        GESTURE_RECORD_TYPE = "pinch"
 
         FINGERS = [2, 3, 4].freeze
         BASE_THERESHOLD = 1.3
@@ -18,8 +18,8 @@ module Fusuma
         # @return [NilClass] if event is NOT detected
         def detect(buffers)
           gesture_buffer = buffers.find { |b| b.type == BUFFER_TYPE }
-                                  .select_from_last_begin
-                                  .select_by_events { |e| e.record.gesture == GESTURE_RECORD_TYPE }
+            .select_from_last_begin
+            .select_by_events { |e| e.record.gesture == GESTURE_RECORD_TYPE }
 
           updating_events = gesture_buffer.updating_events
           return if updating_events.empty?
@@ -27,29 +27,29 @@ module Fusuma
           finger = gesture_buffer.finger
 
           status = case gesture_buffer.events.last.record.status
-                   when 'end'
-                     'end'
-                   when 'update'
-                     if updating_events.length == 1
-                       'begin'
-                     else
-                       'update'
-                     end
-                   else
-                     gesture_buffer.events.last.record.status
-                   end
+          when "end"
+            "end"
+          when "update"
+            if updating_events.length == 1
+              "begin"
+            else
+              "update"
+            end
+          else
+            gesture_buffer.events.last.record.status
+          end
 
-          prev_event, event = if status == 'end'
-                                [
-                                  gesture_buffer.events[-3],
-                                  gesture_buffer.events[-2]
-                                ]
-                              else
-                                [
-                                  gesture_buffer.events[-2],
-                                  gesture_buffer.events[-1]
-                                ]
-                              end
+          prev_event, event = if status == "end"
+            [
+              gesture_buffer.events[-3],
+              gesture_buffer.events[-2]
+            ]
+          else
+            [
+              gesture_buffer.events[-2],
+              gesture_buffer.events[-1]
+            ]
+          end
           delta = event.record.delta
           prev_delta = prev_event.record.delta
 
@@ -57,25 +57,25 @@ module Fusuma
           # repeat_quantity = Quantity.new(target: delta.zoom, base: (prev_delta&.zoom || 1.0)).to_f
 
           repeat_index = create_repeat_index(gesture: type, finger: finger,
-                                             direction: repeat_direction,
-                                             status: status)
-          if status == 'update'
+            direction: repeat_direction,
+            status: status)
+          if status == "update"
             return unless moved?(prev_event, event)
 
             first_zoom, avg_zoom = if updating_events.size >= 10
-                                     [updating_events[-10].record.delta.zoom,
-                                      gesture_buffer.class.new(
-                                        updating_events[-10..-1]
-                                      ).avg_attrs(:zoom)]
-                                   else
-                                     [updating_events.first.record.delta.zoom,
-                                      gesture_buffer.avg_attrs(:zoom)]
-                                   end
+              [updating_events[-10].record.delta.zoom,
+                gesture_buffer.class.new(
+                  updating_events[-10..-1]
+                ).avg_attrs(:zoom)]
+            else
+              [updating_events.first.record.delta.zoom,
+                gesture_buffer.avg_attrs(:zoom)]
+            end
 
             oneshot_quantity = Quantity.new(target: avg_zoom, base: first_zoom).to_f
             oneshot_direction = Direction.new(target: avg_zoom, base: first_zoom).to_s
             oneshot_index = create_oneshot_index(gesture: type, finger: finger,
-                                                 direction: oneshot_direction)
+              direction: oneshot_direction)
             if enough_oneshot_threshold?(index: oneshot_index, quantity: oneshot_quantity)
               return [
                 create_event(record: Events::Records::IndexRecord.new(
@@ -137,18 +137,18 @@ module Fusuma
         def threshold(index:)
           @threshold ||= {}
           @threshold[index.cache_key] ||= begin
-            keys_specific = Config::Index.new [*index.keys, 'threshold']
-            keys_global   = Config::Index.new ['threshold', type]
-            config_value  = Config.search(keys_specific) ||
-                            Config.search(keys_global) || 1
+            keys_specific = Config::Index.new [*index.keys, "threshold"]
+            keys_global = Config::Index.new ["threshold", type]
+            config_value = Config.search(keys_specific) ||
+              Config.search(keys_global) || 1
             BASE_THERESHOLD * config_value
           end
         end
 
         # direction of gesture
         class Direction
-          IN = 'in'
-          OUT = 'out'
+          IN = "in"
+          OUT = "out"
 
           def initialize(target:, base:)
             @target = target.to_f

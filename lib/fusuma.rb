@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require_relative './fusuma/version'
-require_relative './fusuma/multi_logger'
-require_relative './fusuma/config'
-require_relative './fusuma/environment'
-require_relative './fusuma/device'
-require_relative './fusuma/plugin/manager'
+require_relative "./fusuma/version"
+require_relative "./fusuma/multi_logger"
+require_relative "./fusuma/config"
+require_relative "./fusuma/environment"
+require_relative "./fusuma/device"
+require_relative "./fusuma/plugin/manager"
 
 # this is top level module
 module Fusuma
@@ -24,8 +24,8 @@ module Fusuma
       private
 
       def set_trap
-        Signal.trap('INT') { puts exit } # Trap ^C
-        Signal.trap('TERM') { puts exit } # Trap `Kill `
+        Signal.trap("INT") { puts exit } # Trap ^C
+        Signal.trap("TERM") { puts exit } # Trap `Kill `
       end
 
       def read_options(option)
@@ -81,8 +81,8 @@ module Fusuma
 
     # For performance monitoring
     def run_with_lineprof(count: 1000)
-      require 'rblineprof'
-      require 'rblineprof-report'
+      require "rblineprof"
+      require "rblineprof-report"
 
       profile = lineprof(%r{#{Pathname.new(__FILE__).parent}/.}) do
         count.times { pipeline }

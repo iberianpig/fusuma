@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require 'tempfile'
+require "spec_helper"
+require "tempfile"
 
-require './lib/fusuma/config'
-require './lib/fusuma/plugin/filters/libinput_device_filter'
-require './lib/fusuma/plugin/events/event'
+require "./lib/fusuma/config"
+require "./lib/fusuma/plugin/filters/libinput_device_filter"
+require "./lib/fusuma/plugin/events/event"
 
 module Fusuma
   module Plugin
@@ -15,12 +15,12 @@ module Fusuma
           @filter = LibinputDeviceFilter.new
         end
 
-        describe '#source' do
+        describe "#source" do
           it { expect(@filter.source).to eq LibinputDeviceFilter::DEFAULT_SOURCE }
 
-          context 'with config' do
+          context "with config" do
             around do |example|
-              @custom_source = 'custom_input'
+              @custom_source = "custom_input"
 
               ConfigHelper.load_config_yml = <<~CONFIG
                 plugin:
@@ -38,12 +38,12 @@ module Fusuma
           end
         end
 
-        describe '#filter' do
+        describe "#filter" do
           before do
-            @event = Events::Event.new(tag: 'libinput_command_input', record: 'dummy')
+            @event = Events::Event.new(tag: "libinput_command_input", record: "dummy")
           end
 
-          context 'when filter#keep? return false' do
+          context "when filter#keep? return false" do
             before do
               allow(@filter).to receive(:keep?).and_return(false)
             end
@@ -51,7 +51,7 @@ module Fusuma
             it { expect(@filter.filter(@event)).to be nil }
           end
 
-          context 'when filter#keep? return true' do
+          context "when filter#keep? return true" do
             before do
               allow(@filter).to receive(:keep?).and_return(true)
             end
@@ -60,53 +60,53 @@ module Fusuma
           end
         end
 
-        describe '#keep?' do
+        describe "#keep?" do
           before do
-            device = Device.new(id: 'event18', name: 'Awesome Touchpad', available: true)
+            device = Device.new(id: "event18", name: "Awesome Touchpad", available: true)
             allow(Device).to receive(:all).and_return([device])
             @keep_device = LibinputDeviceFilter::KeepDevice.new(name_patterns: [])
             allow(@filter).to receive(:keep_device).and_return(@keep_device)
           end
 
-          context 'when including record generated from touchpad' do
+          context "when including record generated from touchpad" do
             before do
-              text = ' event18  GESTURE_SWIPE_UPDATE  +1.44s  4 11.23/ 1.00 (36.91/ 3.28 unaccelerated) '
-              @event = Events::Event.new(tag: 'libinput_command_input', record: text)
+              text = " event18  GESTURE_SWIPE_UPDATE  +1.44s  4 11.23/ 1.00 (36.91/ 3.28 unaccelerated) "
+              @event = Events::Event.new(tag: "libinput_command_input", record: text)
             end
-            it 'should keep record' do
+            it "should keep record" do
               expect(@filter.keep?(@event.record)).to be true
             end
 
-            context 'when including -' do
+            context "when including -" do
               before do
-                text = '-event18  GESTURE_SWIPE_UPDATE  +1.44s  4 11.23/ 1.00 (36.91/ 3.28 unaccelerated) '
-                @event = Events::Event.new(tag: 'libinput_command_input', record: text)
+                text = "-event18  GESTURE_SWIPE_UPDATE  +1.44s  4 11.23/ 1.00 (36.91/ 3.28 unaccelerated) "
+                @event = Events::Event.new(tag: "libinput_command_input", record: text)
               end
-              it 'should keep record' do
+              it "should keep record" do
                 expect(@filter.keep?(@event.record)).to be true
               end
             end
           end
-          context 'when new device is added' do
+          context "when new device is added" do
             before do
-              text = '-event18 DEVICE_ADDED Apple Wireless Trackpad seat0 default group13 cap:pg size 132x112mm tap(dl off) left scroll-nat scroll-2fg-edge click-buttonareas-clickfing '
-              @event = Events::Event.new(tag: 'libinput_command_input', record: text)
+              text = "-event18 DEVICE_ADDED Apple Wireless Trackpad seat0 default group13 cap:pg size 132x112mm tap(dl off) left scroll-nat scroll-2fg-edge click-buttonareas-clickfing "
+              @event = Events::Event.new(tag: "libinput_command_input", record: text)
             end
-            it 'should reset KeepDevice' do
+            it "should reset KeepDevice" do
               expect(@keep_device).to receive(:reset)
               @filter.keep?(@event.record)
             end
 
-            it 'discard DEVICE_ADDED record' do
+            it "discard DEVICE_ADDED record" do
               expect(@filter.keep?(@event.record)).to be false
             end
 
-            context 'when keep device is NOT matched' do
+            context "when keep device is NOT matched" do
               before do
-                @keep_device = LibinputDeviceFilter::KeepDevice.new(name_patterns: ['Microsoft Arc Mouse'])
+                @keep_device = LibinputDeviceFilter::KeepDevice.new(name_patterns: ["Microsoft Arc Mouse"])
                 allow(@filter).to receive(:keep_device).and_return(@keep_device)
               end
-              it 'should NOT reset KeepDevice' do
+              it "should NOT reset KeepDevice" do
                 expect(@keep_device).not_to receive(:reset)
                 # NOTE: @event.record is 'Apple Wireless Touchpad'
                 @filter.keep?(@event.record)

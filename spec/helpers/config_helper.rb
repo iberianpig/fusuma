@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'tempfile'
-require './lib/fusuma/config'
+require "tempfile"
+require "./lib/fusuma/config"
 
 module Fusuma
   module ConfigHelper

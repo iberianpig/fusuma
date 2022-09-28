@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require './lib/fusuma/plugin/events/records/gesture_record'
+require "spec_helper"
+require "./lib/fusuma/plugin/events/records/gesture_record"
 
 module Fusuma
   module Plugin
@@ -9,10 +9,10 @@ module Fusuma
       module Records
         RSpec.describe GestureRecord do
           let(:record) do
-            described_class.new(status: 'updating',
-                                gesture: 'swipe',
-                                finger: 3,
-                                direction: direction)
+            described_class.new(status: "updating",
+              gesture: "swipe",
+              finger: 3,
+              direction: direction)
           end
           let(:direction) { GestureRecord::Delta.new(0, 0, 1, 0) }
         end

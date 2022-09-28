@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-require_relative './version'
-require_relative './libinput_command'
-require_relative './multi_logger'
+require_relative "./version"
+require_relative "./libinput_command"
+require_relative "./multi_logger"
 
 module Fusuma
   # Output Environment information
   class Environment
     class << self
       def dump_information
-        MultiLogger.info '---------------------------------------------'
+        MultiLogger.info "---------------------------------------------"
         print_version
-        MultiLogger.info '---------------------------------------------'
+        MultiLogger.info "---------------------------------------------"
         print_enabled_plugins
-        MultiLogger.info '---------------------------------------------'
+        MultiLogger.info "---------------------------------------------"
       end
 
       def print_version
@@ -27,11 +27,11 @@ module Fusuma
       end
 
       def print_enabled_plugins
-        MultiLogger.info 'Enabled Plugins: '
+        MultiLogger.info "Enabled Plugins: "
         Plugin::Manager.plugins
-                       .reject { |k, _v| k.to_s =~ /Base/ }
-                       .map { |_base, plugins| plugins.map { |plugin| "  #{plugin}" } }
-                       .flatten.sort.each { |name| MultiLogger.info(name) }
+          .reject { |k, _v| k.to_s =~ /Base/ }
+          .map { |_base, plugins| plugins.map { |plugin| "  #{plugin}" } }
+          .flatten.sort.each { |name| MultiLogger.info(name) }
       end
 
       def print_device_list

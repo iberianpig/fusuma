@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './detector'
+require_relative "./detector"
 
 module Fusuma
   module Plugin
@@ -8,8 +8,8 @@ module Fusuma
       # Detect Hold gesture
       class HoldDetector < Detector
         SOURCES = %w[gesture timer].freeze
-        BUFFER_TYPE = 'gesture'
-        GESTURE_RECORD_TYPE = 'hold'
+        BUFFER_TYPE = "gesture"
+        GESTURE_RECORD_TYPE = "hold"
 
         BASE_THERESHOLD = 0.7
 
@@ -23,7 +23,7 @@ module Fusuma
 
           hold_events = hold_buffer.events
 
-          timer_buffer = buffers.find { |b| b.type == 'timer' }
+          timer_buffer = buffers.find { |b| b.type == "timer" }
           timer_events = timer_buffer.events
 
           finger = hold_buffer.finger
@@ -31,27 +31,27 @@ module Fusuma
 
           @timeout ||= nil
           status = case hold_events.last.record.status
-                   when 'begin'
-                     if holding_time.zero?
-                       'begin'
-                     else
-                       'timer'
-                     end
-                   when 'cancelled'
-                     'cancelled'
-                   when 'end'
-                     'end'
-                   else
-                     last_record = hold_events.last.record.status
-                     raise "Unexpected Status:#{last_record.status} in #{last_record}"
-                   end
+          when "begin"
+            if holding_time.zero?
+              "begin"
+            else
+              "timer"
+            end
+          when "cancelled"
+            "cancelled"
+          when "end"
+            "end"
+          else
+            last_record = hold_events.last.record.status
+            raise "Unexpected Status:#{last_record.status} in #{last_record}"
+          end
 
           repeat_index = create_repeat_index(finger: finger, status: status)
           oneshot_index = create_oneshot_index(finger: finger)
 
-          @timeout = nil if status == 'begin'
+          @timeout = nil if status == "begin"
 
-          if status == 'timer'
+          if status == "timer"
             return if @timeout
 
             return unless enough?(index: oneshot_index, holding_time: holding_time)
@@ -96,16 +96,16 @@ module Fusuma
         # @return [Buffers::GestureBuffer]
         def find_hold_buffer(buffers)
           buffers.find { |b| b.type == BUFFER_TYPE }
-                 .select_from_last_begin
-                 .select_by_events { |e| e.record.gesture == GESTURE_RECORD_TYPE }
+            .select_from_last_begin
+            .select_by_events { |e| e.record.gesture == GESTURE_RECORD_TYPE }
         end
 
         def calc_holding_time(hold_events:, timer_events:)
           last_time = if !timer_events.empty? && (hold_events.last.time < timer_events.last.time)
-                        timer_events.last.time
-                      else
-                        hold_events.last.time
-                      end
+            timer_events.last.time
+          else
+            hold_events.last.time
+          end
           last_time - hold_events.first.time
         end
 
@@ -116,10 +116,10 @@ module Fusuma
         def threshold(index:)
           @threshold ||= {}
           @threshold[index.cache_key] ||= begin
-            keys_specific = Config::Index.new [*index.keys, 'threshold']
-            keys_global = Config::Index.new ['threshold', type]
+            keys_specific = Config::Index.new [*index.keys, "threshold"]
+            keys_global = Config::Index.new ["threshold", type]
             config_value = Config.search(keys_specific) ||
-                           Config.search(keys_global) || 1
+              Config.search(keys_global) || 1
             BASE_THERESHOLD * config_value
           end
         end

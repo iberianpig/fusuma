@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require './lib/fusuma/plugin/detectors/detector'
-require './lib/fusuma/plugin/buffers/buffer'
-require './lib/fusuma/plugin/events/records/index_record'
+require "./lib/fusuma/plugin/detectors/detector"
+require "./lib/fusuma/plugin/buffers/buffer"
+require "./lib/fusuma/plugin/events/records/index_record"
 
 module Fusuma
   module Plugin
@@ -12,7 +12,7 @@ module Fusuma
         # @return [Event]
         def detect(buffers)
           buffers.each do |buffer|
-            next unless buffer.type == 'dummy'
+            next unless buffer.type == "dummy"
 
             record = Events::Records::IndexRecord.new(index: Config::Index.new(%w[dummy index]))
             return create_event(record: record)

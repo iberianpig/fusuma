@@ -6,7 +6,7 @@ class Hash
   def deep_symbolize_keys
     deep_transform_keys do |key|
       key.to_sym
-    rescue StandardError
+    rescue
       key
     end
   end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative '../../libinput_command'
-require_relative './input'
+require_relative "../../libinput_command"
+require_relative "./input"
 
 module Fusuma
   module Plugin
@@ -13,12 +13,12 @@ module Fusuma
         def config_param_types
           {
             device: [String],
-            'enable-dwt': [TrueClass, FalseClass],
-            'enable-tap': [TrueClass, FalseClass],
-            'show-keycodes': [TrueClass, FalseClass],
+            "enable-dwt": [TrueClass, FalseClass],
+            "enable-tap": [TrueClass, FalseClass],
+            "show-keycodes": [TrueClass, FalseClass],
             verbose: [TrueClass, FalseClass],
-            'libinput-debug-events': [String],
-            'libinput-list-devices': [String]
+            "libinput-debug-events": [String],
+            "libinput-list-devices": [String]
           }
         end
 
@@ -45,10 +45,10 @@ module Fusuma
         # @return [Array]
         def libinput_options
           device = ("--device='#{config_params(:device)}'" if config_params(:device))
-          enable_tap = '--enable-tap' if config_params(:'enable-tap')
-          enable_dwt = '--enable-dwt' if config_params(:'enable-dwt')
-          show_keycodes = '--show-keycodes' if config_params(:'show-keycodes')
-          verbose = '--verbose' if config_params(:verbose)
+          enable_tap = "--enable-tap" if config_params(:"enable-tap")
+          enable_dwt = "--enable-dwt" if config_params(:"enable-dwt")
+          show_keycodes = "--show-keycodes" if config_params(:"show-keycodes")
+          verbose = "--verbose" if config_params(:verbose)
           [
             device,
             enable_dwt,
@@ -59,11 +59,11 @@ module Fusuma
         end
 
         def debug_events_command
-          config_params(:'libinput-debug-events')
+          config_params(:"libinput-debug-events")
         end
 
         def list_devices_command
-          config_params(:'libinput-list-devices')
+          config_params(:"libinput-list-devices")
         end
 
         private

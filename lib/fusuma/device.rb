@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative './multi_logger'
-require_relative './libinput_command'
+require_relative "./multi_logger"
+require_relative "./libinput_command"
 
 module Fusuma
   # detect input device
@@ -46,7 +46,7 @@ module Fusuma
       def available
         @available ||= all.select(&:available).tap do |d|
           MultiLogger.debug(available_devices: d)
-          raise 'Touchpad is not found' if d.empty?
+          raise "Touchpad is not found" if d.empty?
         end
       rescue RuntimeError => e
         # FIXME: should not exit without Runner class
@@ -106,40 +106,40 @@ module Fusuma
       # @return [Hash]
       def extract_attribute(line:)
         if (id = id_from(line))
-          { id: id }
+          {id: id}
         elsif (name = name_from(line))
-          { name: name }
+          {name: name}
         elsif (capabilities = capabilities_from(line))
-          { capabilities: capabilities }
+          {capabilities: capabilities}
         elsif (available = available_from(line))
-          { available: available }
+          {available: available}
         else
           {}
         end
       end
 
       def id_from(line)
-        line.match('^Kernel:[[:space:]]*') do |m|
+        line.match("^Kernel:[[:space:]]*") do |m|
           m.post_match.match(/event[0-9]+/).to_s
         end
       end
 
       def name_from(line)
-        line.match('^Device:[[:space:]]*') do |m|
+        line.match("^Device:[[:space:]]*") do |m|
           m.post_match.strip
         end
       end
 
       def capabilities_from(line)
-        line.match('^Capabilities:[[:space:]]*') do |m|
+        line.match("^Capabilities:[[:space:]]*") do |m|
           m.post_match.strip
         end
       end
 
       def available_from(line)
         # NOTE: is natural scroll available?
-        if line =~ /^Nat.scrolling: /
-          return false if line =~ %r{n/a}
+        if /^Nat.scrolling: /.match?(line)
+          return false if %r{n/a}.match?(line)
 
           return true # disabled / enabled
         end
