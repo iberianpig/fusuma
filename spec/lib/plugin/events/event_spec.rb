@@ -10,8 +10,10 @@ module Fusuma
         let(:event) { Event.new(**args) }
         let(:args) { {tag: "text", record: "dummy_text"} }
 
-        class DummyRecord < Records::Record
-        end
+        before {
+          allow(Records::Record).to receive(:inherited) # disable autoload
+          stub_const("DummyRecord", Class.new(Records::Record))
+        }
 
         describe "#record" do
           context "with text" do

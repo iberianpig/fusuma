@@ -8,11 +8,14 @@ module Fusuma
     module Events
       module Records
         RSpec.describe Record do
-          class DummyRecord < Records::Record
-            def type
-              :dummy
-            end
-          end
+          before {
+            allow(Record).to receive(:inherited) # disable autoload
+            stub_const("DummyRecord", Class.new(Record) do
+              def type
+                :dummy
+              end
+            end)
+          }
           let(:record) { described_class.new }
 
           describe "#type" do
