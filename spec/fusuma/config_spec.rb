@@ -29,7 +29,7 @@ module Fusuma
       before { Singleton.__init__(Config) }
       it "should reload keymap file" do
         keymap = Config.instance.keymap
-        Config.custom_path = "./spec/lib/dummy_config.yml"
+        Config.custom_path = "./spec/fusuma/dummy_config.yml"
         custom_keymap = Config.instance.keymap
         expect(keymap).not_to eq custom_keymap
       end

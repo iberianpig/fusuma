@@ -31,7 +31,7 @@ module Fusuma
 
       context "with XPS-9360 (have a correct device)" do
         let(:list_devices_output) do
-          File.open("./spec/lib/libinput-list-devices_iberianpig-XPS-9360.txt")
+          File.open("./spec/fusuma/libinput-list-devices_iberianpig-XPS-9360.txt")
         end
 
         it { expect(Device.available).to be_a Array }
@@ -41,7 +41,7 @@ module Fusuma
 
       context "with no tap to click device (like a bluetooth apple trackpad)" do
         let(:list_devices_output) do
-          File.open("spec/lib/libinput-list-devices_magic_trackpad.txt")
+          File.open("spec/fusuma/libinput-list-devices_magic_trackpad.txt")
         end
 
         it { expect(Device.available).to be_a Array }
@@ -50,7 +50,7 @@ module Fusuma
 
       context "context with the device's name not found at first line" do
         let(:list_devices_output) do
-          File.open("spec/lib/libinput-list-devices_thejinx0r.txt")
+          File.open("spec/fusuma/libinput-list-devices_thejinx0r.txt")
         end
 
         it { expect(Device.available).to be_a Array }
@@ -59,7 +59,7 @@ module Fusuma
 
       context "when no devices" do
         let(:list_devices_output) do
-          File.open("spec/lib/libinput-list-devices_unavailable.txt")
+          File.open("spec/fusuma/libinput-list-devices_unavailable.txt")
         end
 
         it "should failed with exit" do
@@ -74,7 +74,7 @@ module Fusuma
 
       context "with some device has same names" do
         let(:list_devices_output) do
-          File.open("spec/lib/libinput-list-devices_razer_razer_blade.txt")
+          File.open("spec/fusuma/libinput-list-devices_razer_razer_blade.txt")
         end
 
         it { expect(Device.available).to be_a Array }
