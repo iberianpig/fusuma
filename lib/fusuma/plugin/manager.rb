@@ -36,16 +36,23 @@ module Fusuma
           gemspec = Gem::Specification.load(gemspec_path)
           fusuma_gemspec_path = File.expand_path("../../../fusuma.gemspec", __dir__)
           fusuma_gemspec = Gem::Specification.load(fusuma_gemspec_path)
+
           if gemspec.dependencies.find { |d| d.name == "fusuma" }&.match?(fusuma_gemspec)
             siblings_plugin
           else
             MultiLogger.warn "#{gemspec.name} #{gemspec.version} is incompatible with running #{fusuma_gemspec.name} #{fusuma_gemspec.version}"
+            MultiLogger.warn "gemspec: #{gemspec_path}"
+            next
           end
         end.compact
       end
 
       private
 
+      # @example
+      #  plugin_dir_name
+      #   => "fusuma/plugin/detectors"
+      # @return [String]
       def plugin_dir_name
         @plugin_class.name.match(/(Fusuma::.*)::/)[1].to_s.underscore
       end
