@@ -8,7 +8,6 @@ RSpec::Core::RakeTask.new(:spec)
 
 task default: :spec
 
-require "github_changelog_generator/task"
 
 desc "bump version and generate CHANGELOG with the version"
 task :bump, :type do |_, args|
@@ -19,6 +18,7 @@ task :bump, :type do |_, args|
 
   next_version = Bump::Bump.next_version(label)
 
+  require "github_changelog_generator/task"
   GitHubChangelogGenerator::RakeTask.new :changelog do |config|
     config.user = "iberianpig"
     config.project = "fusuma"
