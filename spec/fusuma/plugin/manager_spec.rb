@@ -28,18 +28,31 @@ module Fusuma
       end
 
       describe "#fusuma_default_pugin_paths" do
-        it {
-          expect(Manager.new(Inputs::Input).fusuma_default_plugin_paths).to match [
-            %r{fusuma/plugin/inputs/input.rb},
-            %r{fusuma/plugin/inputs/libinput_command_input.rb},
-            %r{fusuma/plugin/inputs/timer_input.rb}
-          ]
-        }
+        context "inputs" do
+          subject { Manager.new(Inputs::Input).fusuma_default_plugin_paths }
+          it {
+            is_expected.to match [
+              %r{fusuma/plugin/inputs/input.rb},
+              %r{fusuma/plugin/inputs/libinput_command_input.rb},
+              %r{fusuma/plugin/inputs/timer_input.rb}
+            ]
+          }
+        end
+      end
+
+      describe "#fusuma_external_plugin_paths" do
       end
 
       describe ".plugins" do
         subject { Manger.plugins }
         pending
+      end
+
+      describe ".add" do
+        it "requires and loads siblings hierarchy from fusuma"
+        it "requires and loads siblings hierarchy from fusuma-plugin"
+        it "does not register plugin already added"
+        it "does not require plugin already tried"
       end
     end
   end
