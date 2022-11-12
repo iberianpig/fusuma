@@ -23,5 +23,5 @@ def reload!(print = true)
   true
 end
 
-require 'pry'
-Pry.start
+require "irb"
+IRB.start(__FILE__)
