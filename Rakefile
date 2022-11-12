@@ -1,13 +1,10 @@
 # frozen_string_literal: true
 
-require "bundler/gem_tasks"
 require "rspec/core/rake_task"
-require "bump"
 
 RSpec::Core::RakeTask.new(:spec)
 
 task default: :spec
-
 
 desc "bump version and generate CHANGELOG with the version"
 task :bump, :type do |_, args|
@@ -16,6 +13,7 @@ task :bump, :type do |_, args|
     raise "Usage: rake bump[LABEL] (LABEL: ['major', 'minor', 'patch', 'pre'])"
   end
 
+  require "bump"
   next_version = Bump::Bump.next_version(label)
 
   require "github_changelog_generator/task"
@@ -39,5 +37,6 @@ end
 
 desc "Create and Push tag"
 task :release_tag do
+  require "bundler/gem_tasks"
   Rake::Task["release:source_control_push"].invoke
 end
