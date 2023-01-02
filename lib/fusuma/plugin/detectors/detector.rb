@@ -10,7 +10,7 @@ module Fusuma
       class Detector < Base
         # @return [Array<String>]
         def sources
-          @source ||= self.class.const_get(:SOURCES)
+          @sources ||= self.class.const_get(:SOURCES)
         end
 
         # Always watch buffers and detect them or not
