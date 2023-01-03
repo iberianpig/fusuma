@@ -117,9 +117,11 @@ module Fusuma
         # @return [Hash]
         def find_context(request_context, &block)
           # Search in blocks in the following order.
-          # 1. complete match config[:context] == request_context
-          # 2. partial match config[:context] =~ request_context
-          # 3. no context
+          # 1. primary context(no context)
+          # 2. complete match config[:context] == request_context
+          # 3. partial match config[:context] =~ request_context
+          return {} if with_context({}) { block.call }
+
           Config.instance.keymap.each do |config|
             next unless config[:context] == request_context
             return config[:context] if with_context(config[:context]) { block.call }
@@ -132,7 +134,6 @@ module Fusuma
               return config[:context] if with_context(config[:context]) { block.call }
             end
           end
-          return {} if with_context({}) { block.call }
         end
 
         attr_reader :context
