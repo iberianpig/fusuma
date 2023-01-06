@@ -21,15 +21,18 @@ This gem makes your linux able to recognize swipes or pinchs and assign commands
 
 **IMPORTANT**: You **MUST** be a member of the **INPUT** group to read touchpad by Fusuma.
 
-```bash
+```sh
 sudo gpasswd -a $USER input
 ```
 
 Then, You apply the change with no logout or reboot.
 
-```bash
+```sh
 newgrp input
 ```
+
+<details>
+<summary>For Debian Based Distros (Ubuntu, Debian, Mint, Pop!OS)</summary>
 
 ### For Debian Based Distros (Ubuntu, Debian, Mint, Pop!OS)
 
@@ -37,7 +40,7 @@ newgrp input
 
 You need `libinput` release 1.0 or later.
 
-```bash
+```sh
 sudo apt-get install libinput-tools
 ```
 
@@ -45,13 +48,13 @@ sudo apt-get install libinput-tools
 
 Fusuma runs in Ruby, so you must install it first.
 
-```bash
+```sh
 sudo apt-get install ruby
 ```
 
 #### 3. Install Fusuma
 
-```bash
+```sh
 sudo gem install fusuma
 ```
 
@@ -59,9 +62,14 @@ sudo gem install fusuma
 
 For sending shortcuts:
 
-```bash
+```sh
 sudo apt-get install xdotool
 ```
+
+</details>
+
+<details>
+<summary> For Arch Based Distros (Manjaro, Arch) </summary>
 
 ### For Arch Based Distros (Manjaro, Arch)
 
@@ -69,7 +77,7 @@ sudo apt-get install xdotool
 
 You need `libinput` release 1.0 or later. This is most probably installed by default on Manjaro
 
-```z-h
+```sh
 sudo pacman -S libinput
 ```
 
@@ -77,7 +85,7 @@ sudo pacman -S libinput
 
 Fusuma runs in Ruby, so you must install it first.
 
-```zsh
+```sh
 sudo pacman -S ruby
 ```
 
@@ -87,7 +95,7 @@ sudo pacman -S ruby
 
 To install gems system-wide, see any of the methods listed on [Arch Wiki](https://wiki.archlinux.org/index.php/ruby#Installing_gems_system-wide)
 
-```zsh
+```sh
 sudo gem install fusuma
 ```
 
@@ -95,9 +103,14 @@ sudo gem install fusuma
 
 For sending shortcuts:
 
-```zsh
+```sh
 sudo pacman -S xdotool
 ```
+
+</details>
+
+<details>
+<summary>For Fedora</summary>
 
 ### For Fedora
 
@@ -105,7 +118,7 @@ sudo pacman -S xdotool
 
 You need `libinput` release 1.0 or later.
 
-```bash
+```sh
 sudo dnf install libinput
 ```
 
@@ -113,13 +126,13 @@ sudo dnf install libinput
 
 Fusuma runs in Ruby, so you must install it first.
 
-```bash
+```sh
 sudo dnf install ruby
 ```
 
 #### 3. Install Fusuma
 
-```bash
+```sh
 sudo gem install fusuma
 ```
 
@@ -127,27 +140,28 @@ sudo gem install fusuma
 
 For sending shortcuts:
 
-```bash
+```sh
 sudo dnf install xdotool
 ```
+</details>
 
 ### Touchpad not working in GNOME
 
 Ensure the touchpad events are being sent to the GNOME desktop by running the following command:
 
-```bash
+```sh
 gsettings set org.gnome.desktop.peripherals.touchpad send-events enabled
 ```
 
 ## Usage
 
-```bash
+```sh
 fusuma
 ```
 
 ## Update
 
-```bash
+```sh
 sudo gem update fusuma
 ```
 
@@ -156,7 +170,7 @@ sudo gem update fusuma
 You can customize the settings for gestures to put and edit `~/.config/fusuma/config.yml`.
 **NOTE: You will need to create the `~/.config/fusuma` directory if it doesn't exist yet.**
 
-```bash
+```sh
 mkdir -p ~/.config/fusuma        # create config directory
 nano ~/.config/fusuma/config.yml # edit config file.
 ```
@@ -322,7 +336,6 @@ swipe:
 #### Alternatives to xdotool
 
 - [fusuma-plugin-sendkey](https://github.com/iberianpig/fusuma-plugin-sendkey)
-
   - Emulates keyboard events
   - Low latency
   - Wayland compatible
@@ -334,7 +347,8 @@ swipe:
 - [ydotool](https://github.com/ReimuNotMoe/ydotool)
   - Wayland compatible
   - Needs more maintainers.
-  - Requires only replacing `xdotool` with `ydotool` in fusuma conf.
+
+
 
 ## Options
 
@@ -376,22 +390,22 @@ Following features are provided as plugins.
 
 Fusuma plugins are provided with the `fusuma-plugin-XXXXX` naming convention and hosted on [RubyGems](https://rubygems.org/search?utf8=%E2%9C%93&query=fusuma-plugins).
 
-| Name                                                                               | Version                                                               | About                                         |
-| ---------------------------------------------------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------- |
-| [fusuma-plugin-sendkey](https://github.com/iberianpig/fusuma-plugin-sendkey)       | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-sendkey.svg)    | Emulates keyboard events                      |
-| [fusuma-plugin-wmctrl](https://github.com/iberianpig/fusuma-plugin-wmctrl)         | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-wmctrl.svg)     | Manages Window and Workspace                  |
-| [fusuma-plugin-keypress](https://github.com/iberianpig/fusuma-plugin-keypress)     | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-keypress.svg)   | Detects gestures while pressing multiple keys |
-| [fusuma-plugin-tap](https://github.com/iberianpig/fusuma-plugin-tap)               | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-tap.svg)        | Detects Tap and Hold gestures                 |
-| [fusuma-plugin-appmatcher](https://github.com/iberianpig/fusuma-plugin-appmatcher) | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-appmatcher.svg) | Configure app-specific gestures               |
+| Name                                                                               | Version                                                               | About                                                        |
+| ---                                                                                | ---                                                                   | ---                                                          |
+| [fusuma-plugin-sendkey](https://github.com/iberianpig/fusuma-plugin-sendkey)       | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-sendkey.svg)    | Emulates keyboard events(Wayland compatible)                 |
+| [fusuma-plugin-wmctrl](https://github.com/iberianpig/fusuma-plugin-wmctrl)         | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-wmctrl.svg)     | Manages Window and Workspace                                 |
+| [fusuma-plugin-keypress](https://github.com/iberianpig/fusuma-plugin-keypress)     | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-keypress.svg)   | Detecting a combination of key presses and touchpad gestures |
+| [fusuma-plugin-tap](https://github.com/iberianpig/fusuma-plugin-tap)               | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-tap.svg)        | Detects Tap gesture                                          |
+| [fusuma-plugin-appmatcher](https://github.com/iberianpig/fusuma-plugin-appmatcher) | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-appmatcher.svg) | Configure app-specific gestures                              |
 
 
 ### Installation of Fusuma plugins
 
-```bash
+```sh
 # install fusuma-plugin-XXXX
 sudo gem install fusuma-plugin-XXXXX`
 ```
-```bash
+```sh
 # update
 sudo gem list fusuma-plugin- | cut -d' ' -f1 | xargs --no-run-if-empty sudo gem update
 ```
