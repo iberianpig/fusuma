@@ -48,7 +48,7 @@ module Fusuma
       # @return [Hash]
       # @return [Object]
       def search_with_cache(index, location:)
-        cache([index.cache_key, Searcher.context, Searcher.skip?, Searcher.fallback?]) do
+        cache([index.cache_key, Searcher.context, Searcher.skip?]) do
           search_with_context(index, location: location, context: Searcher.context)
         end
       end
@@ -138,20 +138,8 @@ module Fusuma
 
         attr_reader :context
 
-        def fallback?
-          @fallback
-        end
-
         def skip?
           @skip
-        end
-
-        # switch context for fallback
-        def fallback(&block)
-          @fallback = true
-          result = block.call
-          @fallback = false
-          result
         end
 
         def skip(&block)

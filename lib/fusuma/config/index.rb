@@ -42,18 +42,14 @@ module Fusuma
         keys = @keys.map do |key|
           next if Searcher.skip? && key.skippable
 
-          if Searcher.fallback? && key.fallback
-            key.fallback
-          else
-            key
-          end
+          key
         end
         self.class.new(keys.compact)
       end
 
       # Keys in Index
       class Key
-        def initialize(symbol_word, skippable: false, fallback: nil)
+        def initialize(symbol_word, skippable: false)
           @symbol = begin
             symbol_word.to_sym
           rescue
@@ -61,21 +57,16 @@ module Fusuma
           end
 
           @skippable = skippable
-
-          @fallback = begin
-            fallback.to_sym
-          rescue
-            fallback
-          end
         end
 
         def inspect
-          skip_marker = @skippable && Searcher.skip? ? "(skip)" : ""
-          fallback_marker = @fallback && Searcher.fallback? ? "(fallback)" : ""
-          "#{@symbol}#{skip_marker}#{fallback_marker}"
+          skip_marker = if @skippable && Searcher.skip?
+            "(skip)"
+          end
+          "#{@symbol}#{skip_marker}"
         end
 
-        attr_reader :symbol, :skippable, :fallback
+        attr_reader :symbol, :skippable
       end
     end
   end
