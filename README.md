@@ -1,4 +1,4 @@
-# Fusuma [![Gem Version](https://badge.fury.io/rb/fusuma.svg)](https://badge.fury.io/rb/fusuma) [![Build Status](https://github.com/iberianpig/fusuma/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/iberianpig/fusuma/actions/workflows/ubuntu.yml)
+# Fusuma ![Gem](https://img.shields.io/gem/v/fusuma?color=brightgreen) [![Build Status](https://github.com/iberianpig/fusuma/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/iberianpig/fusuma/actions/workflows/ubuntu.yml)
 
 Fusuma is multitouch gesture recognizer.
 This gem makes your linux able to recognize swipes or pinchs and assign commands to them.
@@ -390,13 +390,13 @@ Following features are provided as plugins.
 
 Fusuma plugins are provided with the `fusuma-plugin-XXXXX` naming convention and hosted on [RubyGems](https://rubygems.org/search?utf8=%E2%9C%93&query=fusuma-plugins).
 
-| Name                                                                               | Version                                                               | About                                                        |
-| ---                                                                                | ---                                                                   | ---                                                          |
-| [fusuma-plugin-sendkey](https://github.com/iberianpig/fusuma-plugin-sendkey)       | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-sendkey.svg)    | Emulates keyboard events(Wayland compatible)                 |
-| [fusuma-plugin-wmctrl](https://github.com/iberianpig/fusuma-plugin-wmctrl)         | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-wmctrl.svg)     | Manages Window and Workspace                                 |
-| [fusuma-plugin-keypress](https://github.com/iberianpig/fusuma-plugin-keypress)     | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-keypress.svg)   | Detecting a combination of key presses and touchpad gestures |
-| [fusuma-plugin-tap](https://github.com/iberianpig/fusuma-plugin-tap)               | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-tap.svg)        | Detects Tap gesture                                          |
-| [fusuma-plugin-appmatcher](https://github.com/iberianpig/fusuma-plugin-appmatcher) | ![Gem Version](https://badge.fury.io/rb/fusuma-plugin-appmatcher.svg) | Configure app-specific gestures                              |
+| Name                                                                               | Version                                                                         | About                                                        |
+| ---                                                                                | ---                                                                             | ---                                                          |
+| [fusuma-plugin-sendkey](https://github.com/iberianpig/fusuma-plugin-sendkey)       | ![Gem](https://img.shields.io/gem/v/fusuma-plugin-sendkey?color=brightgreen)    | Emulates keyboard events(Wayland compatible)                 |
+| [fusuma-plugin-wmctrl](https://github.com/iberianpig/fusuma-plugin-wmctrl)         | ![Gem](https://img.shields.io/gem/v/fusuma-plugin-wmctrl?color=brightgreen)     | Manages Window and Workspace                                 |
+| [fusuma-plugin-keypress](https://github.com/iberianpig/fusuma-plugin-keypress)     | ![Gem](https://img.shields.io/gem/v/fusuma-plugin-keypress?color=brightgreen)   | Detecting a combination of key presses and touchpad gestures |
+| [fusuma-plugin-tap](https://github.com/iberianpig/fusuma-plugin-tap)               | ![Gem](https://img.shields.io/gem/v/fusuma-plugin-tap?color=brightgreen)        | Detects Tap gesture                                          |
+| [fusuma-plugin-appmatcher](https://github.com/iberianpig/fusuma-plugin-appmatcher) | ![Gem](https://img.shields.io/gem/v/fusuma-plugin-appmatcher?color=brightgreen) | Configure app-specific gestures                              |
 
 
 ### Installation of Fusuma plugins
