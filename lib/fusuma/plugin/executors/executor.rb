@@ -26,12 +26,9 @@ module Fusuma
         end
 
         # @param event [Events::Event]
-        # @param time [Time]
         # @return [TrueClass, FalseClass]
         def enough_interval?(event)
-          # NOTE: Cache at the index that is actually used, reflecting Fallback and Skip.
-          #       Otherwise, a wrong index will cause invalid intervals.
-          return true if event.record.index.with_context.keys.any? { |key| key.symbol == :end }
+          return true if event.record.index.keys.any? { |key| key.symbol == :end }
 
           return false if @wait_until && event.time < @wait_until
 
