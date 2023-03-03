@@ -109,7 +109,7 @@ module Fusuma
           Config::Index.new(
             [
               Config::Index::Key.new(gesture),
-              Config::Index::Key.new(finger.to_i, skippable: true),
+              Config::Index::Key.new(finger.to_i),
               Config::Index::Key.new(direction)
             ]
           )
