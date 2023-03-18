@@ -11,9 +11,12 @@ module Fusuma
           # define gesture format
           attr_reader :status, :gesture, :finger, :delta
 
-          Delta = Struct.new(:move_x, :move_y,
+          Delta = Struct.new(
+            :move_x, :move_y,
             :unaccelerated_x, :unaccelerated_y,
-            :zoom, :rotate)
+            :zoom,
+            :rotate
+          )
 
           # @param status [String]
           # @param gesture [String]
