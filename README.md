@@ -32,6 +32,9 @@ Then, You apply the change with no logout or reboot.
 newgrp input
 ```
 
+**IMPORTANT**
+This makes `/dev/input/` readable, so if that's an issue for you for some reason (like for privacy- or securityconcerns etc. or if it causes other parts of your OS to misbehave), **consider this your heads-up.** 
+
 <details>
 <summary>For Debian Based Distros (Ubuntu, Debian, Mint, Pop!OS)</summary>
 
@@ -107,7 +110,12 @@ For sending shortcuts:
 ```sh
 sudo pacman -S xdotool
 ```
+**For the truly lazy people:** As with pretty much anything else available as Open-Source-Software, you can install Fusuma via a package from the AUR. As off time of writing (March 2023), the package you would want is called `ruby-fusuma`.
 
+Please keep in mind that this community-built package is NOT officially supported here and while it might do the job, it is not the intended way to install.
+Installing Fusuma this way means that if things do not work as intended during or after the installation, you are on your own.
+So please do not bombard the Issues-Page here on Github if Fusuma isn't working correctly after installing it via the AUR.
+Fusuma's plugins as listed below here in this Readme can be installed as optional dependencies also via the AUR, namescheme being `ruby-fusuma-replacewithnameofplugin`.
 </details>
 
 <details>
