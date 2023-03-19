@@ -32,8 +32,7 @@ Then, You apply the change with no logout or reboot.
 newgrp input
 ```
 
-**IMPORTANT**
-This makes `/dev/input/` readable, so if that's an issue for you for some reason (like for privacy- or securityconcerns etc. or if it causes other parts of your OS to misbehave), **consider this your heads-up.** 
+**IMPORTANT**: This makes `/dev/input/` readable, so if that's an issue for you for some reason (like for privacy- or securityconcerns etc. or if it causes other parts of your OS to misbehave), **consider this your heads-up.** 
 
 <details>
 <summary>For Debian Based Distros (Ubuntu, Debian, Mint, Pop!OS)</summary>
