@@ -50,7 +50,7 @@ module Fusuma
             end
           end
 
-          context "with enough pinch IN event" do
+          context "with enough pinch OUT event" do
             before do
               deltas = [
                 Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 1.0, 0),
@@ -68,13 +68,13 @@ module Fusuma
             it "should detect 3 fingers pinch-in (oneshot/repeat)" do
               events = @detector.detect([@buffer])
               expect(events[0].record.index.keys.map(&:symbol))
-                .to eq([:pinch, 3, :in])
+                .to eq([:pinch, 3, :out])
               expect(events[1].record.index.keys.map(&:symbol))
-                .to eq([:pinch, 3, :in, :update])
+                .to eq([:pinch, 3, :out, :update])
             end
           end
 
-          context "with enough pinch OUT event" do
+          context "with enough pinch In event" do
             before do
               deltas = [
                 Events::Records::GestureRecord::Delta.new(0, 0, 0, 0, 1.0, 0),
@@ -85,12 +85,12 @@ module Fusuma
 
               events.each { |event| @buffer.buffer(event) }
             end
-            it "should detect 3 fingers pinch-out (oneshot/repeat)" do
+            it "should detect 3 fingers pinch-in (oneshot/repeat)" do
               events = @detector.detect([@buffer])
               expect(events[0].record.index.keys.map(&:symbol))
-                .to eq([:pinch, 3, :out])
+                .to eq([:pinch, 3, :in])
               expect(events[1].record.index.keys.map(&:symbol))
-                .to eq([:pinch, 3, :out, :update])
+                .to eq([:pinch, 3, :in, :update])
             end
           end
         end
