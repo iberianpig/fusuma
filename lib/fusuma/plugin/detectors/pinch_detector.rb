@@ -100,10 +100,10 @@ module Fusuma
         def create_repeat_index(gesture:, finger:, direction:, status:)
           Config::Index.new(
             [
-              Config::Index::Key.new(gesture),
-              Config::Index::Key.new(finger.to_i),
-              Config::Index::Key.new(direction, skippable: true),
-              Config::Index::Key.new(status)
+              Config::Index::Key.new(gesture), # 'pinch'
+              Config::Index::Key.new(finger.to_i), # 2, 3, 4
+              Config::Index::Key.new(direction, skippable: true), # 'in', 'out'
+              Config::Index::Key.new(status) # 'begin', 'update', 'end'
             ]
           )
         end
@@ -115,9 +115,9 @@ module Fusuma
         def create_oneshot_index(gesture:, finger:, direction:)
           Config::Index.new(
             [
-              Config::Index::Key.new(gesture),
-              Config::Index::Key.new(finger.to_i, skippable: true),
-              Config::Index::Key.new(direction)
+              Config::Index::Key.new(gesture), # 'pinch'
+              Config::Index::Key.new(finger.to_i, skippable: true), # 2, 3, 4
+              Config::Index::Key.new(direction) # 'in', 'out'
             ]
           )
         end
@@ -161,9 +161,9 @@ module Fusuma
 
           def calc
             if @target > @base
-              IN
-            else
               OUT
+            else
+              IN
             end
           end
         end
