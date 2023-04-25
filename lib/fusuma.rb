@@ -98,12 +98,14 @@ module Fusuma
 
     # @param [Plugin::Events::Event]
     # @return [Plugin::Events::Event]
+    # @return [NilClass]
     def filter(event)
       event if @filters.any? { |f| f.filter(event) }
     end
 
     # @param [Plugin::Events::Event]
     # @return [Plugin::Events::Event]
+    # @return [NilClass]
     def parse(event)
       @parsers.reduce(event) { |e, p| p.parse(e) if e }
     end
@@ -117,6 +119,7 @@ module Fusuma
 
     # @param buffers [Array<Buffer>]
     # @return [Array<Event>]
+    # @return [NilClass]
     def detect(buffers)
       matched_detectors = @detectors.select do |detector|
         detector.watch? ||
@@ -146,13 +149,18 @@ module Fusuma
       matched_condition = nil
       matched_context = nil
       event = main_events.find do |main_event|
+        # Find executable condition and executor with context
         matched_context = Config::Searcher.find_context(request_context) do
+          # Find matched condition with modifiers or without modifiers
           matched_condition, modified_record = Config::Searcher.find_condition do
             main_event.record.merge(records: modifiers.map(&:record))
           end
-          if matched_condition && modified_record
+
+          if matched_condition && modified_record # found matched condition
+            # overwrite with modified record
             main_event.record = modified_record
           else
+            # find condition without modifiers
             matched_condition, = Config::Searcher.find_condition do
               Config.search(main_event.record.index) &&
                 Config.find_execute_key(main_event.record.index)
@@ -166,6 +174,7 @@ module Fusuma
     end
 
     # @param event [Plugin::Events::Event]
+    # @return [NilClass]
     def execute(condition, context, event)
       return unless event
 
@@ -177,6 +186,8 @@ module Fusuma
       end
 
       return if executor.nil?
+
+      MultiLogger.debug({condition: condition, context: context, index: event.record.index})
 
       # Check interval and execute
       Config::Searcher.with_context(context) do
