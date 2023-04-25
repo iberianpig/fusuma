@@ -67,8 +67,7 @@ module Fusuma
 
             oneshot_direction = Direction.new(move_x: oneshot_move_x, move_y: oneshot_move_y).to_s
             oneshot_quantity = Quantity.new(move_x: oneshot_move_x, move_y: oneshot_move_y).to_f
-            oneshot_index = create_oneshot_index(gesture: type, finger: finger,
-              direction: oneshot_direction)
+            oneshot_index = create_oneshot_index(gesture: type, finger: finger, direction: oneshot_direction)
             if enough_oneshot_threshold?(index: oneshot_index, quantity: oneshot_quantity)
               return [
                 create_event(record: Events::Records::IndexRecord.new(
