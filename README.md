@@ -81,7 +81,7 @@ sudo apt-get install xdotool
 You need `libinput` release 1.0 or later. This is most probably installed by default on Manjaro
 
 ```sh
-sudo pacman -S libinput
+sudo pacman -Syu libinput
 ```
 
 #### 2. Install Ruby
@@ -89,7 +89,7 @@ sudo pacman -S libinput
 Fusuma runs in Ruby, so you must install it first.
 
 ```sh
-sudo pacman -S ruby
+sudo pacman -Syu ruby
 ```
 
 #### 3. Install Fusuma
@@ -107,7 +107,7 @@ sudo gem install fusuma
 For sending shortcuts:
 
 ```sh
-sudo pacman -S xdotool
+sudo pacman -Syu xdotool
 ```
 **For the truly lazy people:** As with pretty much anything else available as Open-Source-Software, you can install Fusuma via a package from the AUR. As off time of writing (March 2023), the package you would want is called `ruby-fusuma`.
 
