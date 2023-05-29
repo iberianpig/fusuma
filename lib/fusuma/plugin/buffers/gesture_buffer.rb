@@ -10,6 +10,18 @@ module Fusuma
         DEFAULT_SOURCE = "libinput_gesture_parser"
         DEFAULT_SECONDS_TO_KEEP = 100
 
+        def initialize(*args)
+          super(*args)
+          @mem_last_begin = nil # last index at which we saw a begin
+          @mem_checked = 0 # length of @events when we saw it
+        end
+
+        def clear
+          super.clear
+          @mem_last_begin = nil
+          @mem_checked = 0
+        end
+
         def config_param_types
           {
             source: [String],
@@ -40,6 +52,8 @@ module Fusuma
             MultiLogger.debug("#{self.class.name}##{__method__}")
 
             @events.delete(e)
+            @mem_last_begin = nil
+            @mem_checked = 0
           end
         end
 
@@ -99,11 +113,15 @@ module Fusuma
         def select_from_last_begin
           return self if empty?
 
-          index_from_last = @events.reverse.find_index { |e| e.record.status == "begin" }
-          return GestureBuffer.new([]) if index_from_last.nil?
+          @mem_last_begin = (@events.length - 1).downto(@mem_checked).find do |i|
+            @events[i].record.status == "begin"
+          end || @mem_last_begin
+          @mem_checked = @events.length
 
-          index_last_begin = events.length - index_from_last - 1
-          GestureBuffer.new(@events[index_last_begin..-1])
+          return self if @mem_last_begin == 0
+          return GestureBuffer.new([]) if @mem_last_begin.nil?
+
+          GestureBuffer.new(@events[@mem_last_begin..-1])
         end
       end
     end
