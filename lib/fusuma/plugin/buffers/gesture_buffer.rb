@@ -7,19 +7,19 @@ module Fusuma
     module Buffers
       # manage events and generate command
       class GestureBuffer < Buffer
+        CacheEntry = Struct.new(:checked, :value)
         DEFAULT_SOURCE = "libinput_gesture_parser"
         DEFAULT_SECONDS_TO_KEEP = 100
 
+
         def initialize(*args)
           super(*args)
-          @mem_last_begin = nil # last index at which we saw a begin
-          @mem_checked = 0 # length of @events when we saw it
+          @cache = {}
         end
 
         def clear
           super.clear
-          @mem_last_begin = nil
-          @mem_checked = 0
+          @cache = {}
         end
 
         def config_param_types
@@ -52,8 +52,7 @@ module Fusuma
             MultiLogger.debug("#{self.class.name}##{__method__}")
 
             @events.delete(e)
-            @mem_last_begin = nil
-            @mem_checked = 0
+            @cache = {}
           end
         end
 
@@ -77,7 +76,12 @@ module Fusuma
         end
 
         def updating_events
-          @events.select { |e| e.record.status == "update" }
+          cache_entry = ( @cache[:updating_events] ||= CacheEntry.new(0, []) )
+          cache_entry.checked.upto(@events.length - 1).each do |i|
+            (cache_entry.value << @events[i]) if @events[i].record.status == "update"
+          end
+          cache_entry.checked = @events.length
+          cache_entry.value
         end
 
         # @param attr [Symbol]
@@ -110,18 +114,28 @@ module Fusuma
           self.class.new events
         end
 
+        def select_by_type(type)
+          cache_entry = ( @cache[[:select_by, type]] ||= CacheEntry.new(0, self.class.new([])) )
+          cache_entry.checked.upto(@events.length - 1).each do |i|
+            (cache_entry.value.events << @events[i]) if @events[i].record.gesture == type
+          end
+          cache_entry.checked = @events.length
+          cache_entry.value
+        end
+
         def select_from_last_begin
           return self if empty?
+          cache_entry = ( @cache[:last_begin] ||= CacheEntry.new(0, nil) )
 
-          @mem_last_begin = (@events.length - 1).downto(@mem_checked).find do |i|
+          cache_entry.value = (@events.length - 1).downto(cache_entry.checked).find do |i|
             @events[i].record.status == "begin"
-          end || @mem_last_begin
-          @mem_checked = @events.length
+          end || cache_entry.value
+          cache_entry.checked = @events.length
 
-          return self if @mem_last_begin == 0
-          return GestureBuffer.new([]) if @mem_last_begin.nil?
+          return self if cache_entry.value == 0
+          return GestureBuffer.new([]) if cache_entry.value.nil?
 
-          GestureBuffer.new(@events[@mem_last_begin..-1])
+          GestureBuffer.new(@events[cache_entry.value..-1])
         end
       end
     end
