@@ -79,8 +79,8 @@ module Fusuma
         # @return [Hash]
         def conditions(&block)
           {
-            nothing: -> { block.call },
-            skip: -> { Config::Searcher.skip { block.call } }
+            nothing: block,
+            skip: -> { Config::Searcher.skip(&block) }
           }
         end
 
@@ -94,12 +94,21 @@ module Fusuma
         # Execute block with all conditions
         # @return [Array<Symbol, Object>]
         def find_condition(&block)
-          conditions(&block).find do |c, l|
-            result = l.call
-            return [c, result] if result
+          # conditions(&block).find do |c, l|
+          #   result = l.call
+          #   return [c, result] if result
 
-            nil
-          end
+          #   nil
+          # end
+          # That code is equivalent to
+          result = block.call
+          return [:nothing, result] if result
+          # result = Config::Searcher.skip(&block).call
+          @skip = true
+          result = block.call
+          @skip = false
+          return [:skip, result] if result
+          nil
         end
 
         # Search with context from load_streamed Config
@@ -120,18 +129,18 @@ module Fusuma
           # 1. primary context(no context)
           # 2. complete match config[:context] == request_context
           # 3. partial match config[:context] =~ request_context
-          return {} if with_context({}) { block.call }
+          return {} if with_context({}, &block)
 
           Config.instance.keymap.each do |config|
             next unless config[:context] == request_context
-            return config[:context] if with_context(config[:context]) { block.call }
+            return config[:context] if with_context(config[:context], &block)
           end
           if request_context.keys.size > 1
             Config.instance.keymap.each do |config|
               next if config[:context].nil?
 
               next unless config[:context].all? { |k, v| request_context[k] == v }
-              return config[:context] if with_context(config[:context]) { block.call }
+              return config[:context] if with_context(config[:context], &block)
             end
           end
         end
