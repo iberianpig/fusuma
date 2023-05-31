@@ -9,6 +9,13 @@ module Fusuma
       # Inherite this base
       # @abstract Subclass and override {#io} to implement
       class Input < Base
+        def initialize(*args)
+          super(*args)
+          @tag = self.class.name.split("Inputs::").last.underscore
+        end
+
+        attr_reader :tag
+
         # Wait multiple inputs until it becomes readable
         # @param inputs [Array<Input>]
         # @return [Event]
@@ -52,10 +59,6 @@ module Fusuma
           e = Events::Event.new(tag: tag, record: record)
           MultiLogger.debug(input_event: e)
           e
-        end
-
-        def tag
-          self.class.name.split("Inputs::").last.underscore
         end
       end
     end
