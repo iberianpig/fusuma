@@ -34,7 +34,6 @@ module Fusuma
             [gesture_buffer.sum_attrs(:move_x) / updating_time,
               gesture_buffer.sum_attrs(:move_y) / updating_time]
           end
-          (gesture_buffer.sum_attrs(:move_x) / updating_time)
 
           finger = gesture_buffer.finger
           status = case gesture_buffer.events.last.record.status
