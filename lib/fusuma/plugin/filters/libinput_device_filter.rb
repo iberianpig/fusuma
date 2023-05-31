@@ -25,7 +25,8 @@ module Fusuma
             keep_device.reset
             return false
           end
-          keep_device.all.map(&:id).any? { |device_id| record.to_s =~ /^[\s-]?#{device_id}\s/ }
+          # keep_device.all.map(&:id).any? { |device_id| record.to_s =~ /^[\s-]?#{device_id}\s/ }
+          keep_device.filter_record(record)
         end
 
         def keep_device
@@ -57,13 +58,18 @@ module Fusuma
 
           # remove cache for reloading new devices
           def reset
-            @all = nil
+            @all = @accept_any = nil
             Device.reset
+          end
+
+          def filter_record(record)
+            @accept_any || all.any? { |device| record.to_s =~ /^[\s-]?#{device.id}\s/ }
           end
 
           # @return [Array]
           def all
             @all ||= if @name_patterns.empty?
+              @accept_any = true
               Device.available
             else
               Device.all.select do |device|
