@@ -26,16 +26,13 @@ module Fusuma
         end
 
         def start(reader, writer)
-          pid = fork do
-            timer_loop(reader, writer)
+          Thread.new do
+            timer_loop(writer)
           end
-          Process.detach(pid)
-          writer.close
-          pid
+          nil
         end
 
-        def timer_loop(reader, writer)
-          reader.close
+        def timer_loop(writer)
           begin
             loop do
               sleep interval
