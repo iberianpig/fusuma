@@ -29,7 +29,6 @@ module Fusuma
           pid = fork do
             timer_loop(reader, writer)
           end
-          Process.detach(pid)
           writer.close
           pid
         end
