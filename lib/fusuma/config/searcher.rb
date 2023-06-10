@@ -6,7 +6,7 @@ module Fusuma
     # Search config.yml
     class Searcher
       def initialize
-        @cache = nil
+        @cache = {}
       end
 
       # @param index [Index]
@@ -36,10 +36,11 @@ module Fusuma
 
         return search(index, location: location[0]) if context == {}
 
-        new_location = location.find do |conf|
-          search(index, location: conf) if conf[:context] == context
+        value = nil
+        location.find do |conf|
+          value = search(index, location: conf) if conf[:context] == context
         end
-        search(index, location: new_location)
+        value
       end
 
       # @param index [Index]
@@ -54,7 +55,6 @@ module Fusuma
       end
 
       def cache(key)
-        @cache ||= {}
         key = key.join(",") if key.is_a? Array
         if @cache.key?(key)
           @cache[key]
