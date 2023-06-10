@@ -6,17 +6,20 @@ module Fusuma
     # index for config.yml
     class Index
       def initialize(keys)
-        @keys = case keys
+        @count = 0
+        case keys
         when Array
-          keys.map do |key|
-            if key.is_a? Key
-              key
-            else
-              Key.new(key)
-            end
-          end
+          @keys = []
+          @cache_key = keys.map do |key|
+            key = Key.new(key) if not key.is_a? Key
+            @keys << key
+            key.symbol
+          end.join(",")
+          # @cache_key = @keys.map(&:symbol).join(",")
         else
-          [Key.new(keys)]
+          key = Key.new(keys)
+          @cache_key = key.symbol
+          @keys = [key]
         end
       end
 
@@ -24,18 +27,11 @@ module Fusuma
         @keys.map(&:inspect)
       end
 
-      attr_reader :keys
-
-      def cache_key
-        case @keys
-        when Array
-          @keys.map(&:symbol).join(",")
-        when Key
-          @keys.symbol
-        else
-          raise "invalid keys"
-        end
-      end
+      attr_reader :keys, :cache_key
+      # def cache_key
+      #   puts @count += 1
+      #   @cache_key
+      # end
 
       # Keys in Index
       class Key
