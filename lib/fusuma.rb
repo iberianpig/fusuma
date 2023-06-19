@@ -124,7 +124,8 @@ module Fusuma
       end
 
       events = matched_detectors.each_with_object([]) do |detector, detected|
-        Array(detector.detect(@buffers)).each { |e| detected << e }
+        # Array(detector.detect(@buffers)).each { |e| detected << e }
+        detected.concat(Array(detector.detect(@buffers)))
       end
 
       return if events.empty?
@@ -152,7 +153,9 @@ module Fusuma
           end
           if matched_condition && modified_record
             main_event.record = modified_record
-          else
+          elsif !modifiers.empty?
+            # try basically the same, but without any modifiers
+            # if modifiers is empty then we end up here only if there is no execute key for this
             matched_condition, = Config::Searcher.find_condition do
               Config.instance.search(main_event.record.index) &&
                 Config.instance.find_execute_key(main_event.record.index)
@@ -170,20 +173,15 @@ module Fusuma
       return unless event
 
       # Find executable condition and executor
-      executor = Config::Searcher.with_context(context) do
-        Config::Searcher.with_condition(condition) do
-          @executors.find { |e| e.executable?(event) }
-        end
-      end
-
-      return if executor.nil?
-
-      # Check interval and execute
       Config::Searcher.with_context(context) do
         Config::Searcher.with_condition(condition) do
-          executor.enough_interval?(event) &&
-            executor.update_interval(event) &&
-            executor.execute(event)
+          executor = @executors.find { |e| e.executable?(event) }
+          if executor
+            # Check interval and execute
+            executor.enough_interval?(event) &&
+              executor.update_interval(event) &&
+              executor.execute(event)
+          end
         end
       end
     end
