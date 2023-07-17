@@ -75,9 +75,7 @@ module Fusuma
       parsed = parse(filtered) || return
       buffered = buffer(parsed) || return
       detected = detect(buffered) || return
-      # condition, context, event = merge(detected) || return
       context, event = merge(detected) || return
-      # binding.irb
       execute(context, event)
     end
 
@@ -150,23 +148,13 @@ module Fusuma
       matched_context = nil
       event = main_events.find do |main_event|
         matched_context = Config::Searcher.find_context(request_context) do
-          # matched_condition, modified_record = Config::Searcher.find_condition do # find_condition tries :nothing and :skip for matched_condition
-          #   main_event.record.merge(records: modifiers.map(&:record)) 
-          #   # will call Config.find_execute_key 
-          #   #       -> Config::Searcher.search_with_cache(index, location: keymap)
-          #   #       -> Config::Searcher.serch_with_context(index, location: keymap, context: Searcher.context)
-          # end
           if modified_record = main_event.record.merge(records: modifiers.map(&:record))
             main_event.record = modified_record
-          # if matched_condition && modified_record
-          #   main_event.record = modified_record
           elsif !modifiers.empty?
             # try basically the same, but without any modifiers
             # if modifiers is empty then we end up here only if there is no execute key for this
-            # matched_condition, = Config::Searcher.find_condition do
-              Config.instance.search(main_event.record.index) &&
-                Config.instance.find_execute_key(main_event.record.index)
-            # end
+            Config.instance.search(main_event.record.index) &&
+              Config.instance.find_execute_key(main_event.record.index)
           end
         end
       end
@@ -177,21 +165,18 @@ module Fusuma
     end
 
     # @param event [Plugin::Events::Event]
-    # def execute(condition, context, event)
     def execute(context, event)
       return unless event
 
       # Find executable condition and executor
       Config::Searcher.with_context(context) do
-        # Config::Searcher.with_condition(condition) do
-          executor = @executors.find { |e| e.executable?(event) }
-          if executor
-            # Check interval and execute
-            executor.enough_interval?(event) &&
-              executor.update_interval(event) &&
-              executor.execute(event)
-          end
-        # end
+        executor = @executors.find { |e| e.executable?(event) }
+        if executor
+          # Check interval and execute
+          executor.enough_interval?(event) &&
+            executor.update_interval(event) &&
+            executor.execute(event)
+        end
       end
     end
 

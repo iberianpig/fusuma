@@ -15,7 +15,6 @@ module Fusuma
             @keys << key
             key.symbol
           end.join(",")
-          # @cache_key = @keys.map(&:symbol).join(",")
         else
           key = Key.new(keys)
           @cache_key = key.symbol
@@ -28,10 +27,6 @@ module Fusuma
       end
 
       attr_reader :keys, :cache_key
-      # def cache_key
-      #   puts @count += 1
-      #   @cache_key
-      # end
 
       # Keys in Index
       class Key

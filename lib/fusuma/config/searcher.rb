@@ -49,7 +49,6 @@ module Fusuma
       # @return [Hash]
       # @return [Object]
       def search_with_cache(index, location:)
-        # cache([index.cache_key, Searcher.context, Searcher.skip?]) do
         cache([index.cache_key, Searcher.context]) do
           search_with_context(index, location: location, context: Searcher.context)
         end
@@ -78,41 +77,6 @@ module Fusuma
       end
 
       class << self
-        # @return [Hash]
-        # def conditions(&block)
-        #   {
-        #     nothing: block,
-        #     skip: -> { Config::Searcher.skip(&block) }
-        #   }
-        # end
-
-        # Execute block with specified conditions
-        # @param conidtion [Symbol]
-        # @return [Object]
-        # def with_condition(condition, &block)
-        #   conditions(&block)[condition].call
-        # end
-
-        # Execute block with all conditions
-        # @return [Array<Symbol, Object>]
-        # def find_condition(&block)
-        #   # conditions(&block).find do |c, l|
-        #   #   result = l.call
-        #   #   return [c, result] if result
-
-        #   #   nil
-        #   # end
-        #   # That code is equivalent to
-        #   result = block.call
-        #   return [:nothing, result] if result
-        #   # result = Config::Searcher.skip(&block).call
-        #   @skip = true
-        #   result = block.call
-        #   @skip = false
-        #   return [:skip, result] if result
-        #   nil
-        # end
-
         # Search with context from load_streamed Config
         # @param context [Hash]
         # @return [Object]
@@ -149,16 +113,6 @@ module Fusuma
 
         attr_reader :context
 
-        # def skip?
-        #   @skip
-        # end
-
-        # def skip(&block)
-        #   @skip = true
-        #   result = block.call
-        #   @skip = false
-        #   result
-        # end
       end
     end
   end
