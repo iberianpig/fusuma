@@ -80,13 +80,13 @@ module Fusuma
         def sum_last10_attrs(attr) # sums last 10 values of attr (or all if length < 10)
           cache_entry = ( @cache[[:sum10, attr]] ||= CacheEntry.new(0, 0) )
           upd_ev = updating_events
-          cache_entry.value = if upd_ev.length > cache_entry.checked + 1 then
-            upd_ev.last(10).map do |gesture_event|
+          if upd_ev.length > cache_entry.checked + 1 then
+            cache_entry.value = upd_ev.last(10).map do |gesture_event|
               gesture_event.record.delta[attr].to_f
             end.reduce(:+)
           elsif upd_ev.length > cache_entry.checked
-            cache_entry.value + upd_ev[-1].record.delta[attr].to_f - \
-            (upd_ev.length > 10 ? upd_ev[-11].record.delta[attr].to_f : 0)
+            cache_entry.value = cache_entry.value + upd_ev[-1].record.delta[attr].to_f - \
+              (upd_ev.length > 10 ? upd_ev[-11].record.delta[attr].to_f : 0)
           else
             return cache_entry.value
           end
