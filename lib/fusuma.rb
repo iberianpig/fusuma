@@ -59,7 +59,6 @@ module Fusuma
       @inputs = Plugin::Inputs::Input.plugins.map do |cls|
         cls.ancestors.include?(Singleton) ? cls.instance : cls.new
       end
-      @inputs.push(Plugin::Inputs::TimerInput.instance)
       @filters = Plugin::Filters::Filter.plugins.map(&:new)
       @parsers = Plugin::Parsers::Parser.plugins.map(&:new)
       @buffers = Plugin::Buffers::Buffer.plugins.map(&:new)
