@@ -19,22 +19,15 @@ module Fusuma
         def detect(buffers)
           gesture_buffer = buffers.find { |b| b.type == BUFFER_TYPE }
             .select_from_last_begin
-            .select_by_events { |e| e.record.gesture == GESTURE_RECORD_TYPE }
+            .select_by_type(GESTURE_RECORD_TYPE)
 
           updating_events = gesture_buffer.updating_events
           return if updating_events.empty?
 
-          oneshot_move_x, oneshot_move_y = if updating_events.size >= 10
-            updating_time = 100 * (updating_events[-1].time - updating_events[-10].time)
-            last_10 = gesture_buffer.class.new(updating_events[-10..-1])
-            [last_10.sum_attrs(:move_x) / updating_time,
-              last_10.sum_attrs(:move_y) / updating_time]
-          else
-            updating_time = 100 * (updating_events.last.time - updating_events.first.time)
-            [gesture_buffer.sum_attrs(:move_x) / updating_time,
-              gesture_buffer.sum_attrs(:move_y) / updating_time]
-          end
-          (gesture_buffer.sum_attrs(:move_x) / updating_time)
+          updating_time = 100 * (updating_events.last.time -
+                                 (updating_events[-10] || updating_events.first).time)
+          oneshot_move_x = gesture_buffer.sum_last10_attrs(:move_x) / updating_time
+          oneshot_move_y = gesture_buffer.sum_last10_attrs(:move_y) / updating_time
 
           finger = gesture_buffer.finger
           status = case gesture_buffer.events.last.record.status
@@ -67,8 +60,7 @@ module Fusuma
 
             oneshot_direction = Direction.new(move_x: oneshot_move_x, move_y: oneshot_move_y).to_s
             oneshot_quantity = Quantity.new(move_x: oneshot_move_x, move_y: oneshot_move_y).to_f
-            oneshot_index = create_oneshot_index(gesture: type, finger: finger,
-              direction: oneshot_direction)
+            oneshot_index = create_oneshot_index(gesture: type, finger: finger, direction: oneshot_direction)
             if enough_oneshot_threshold?(index: oneshot_index, quantity: oneshot_quantity)
               return [
                 create_event(record: Events::Records::IndexRecord.new(

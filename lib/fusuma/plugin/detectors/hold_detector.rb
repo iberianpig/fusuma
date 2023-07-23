@@ -101,7 +101,7 @@ module Fusuma
         def find_hold_buffer(buffers)
           buffers.find { |b| b.type == BUFFER_TYPE }
             .select_from_last_begin
-            .select_by_events { |e| e.record.gesture == GESTURE_RECORD_TYPE }
+            .select_by_type(GESTURE_RECORD_TYPE)
         end
 
         def calc_holding_time(hold_events:, last_timer:)

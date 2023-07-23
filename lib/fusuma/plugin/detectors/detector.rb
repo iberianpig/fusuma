@@ -8,6 +8,15 @@ module Fusuma
     module Detectors
       # Inherite this base
       class Detector < Base
+        def initialize(*args)
+          super(*args)
+          @tag = self.class.tag
+          @type = self.class.type
+        end
+
+        attr_reader :tag
+        attr_reader :type
+
         # @return [Array<String>]
         def sources
           @sources ||= self.class.const_get(:SOURCES)
@@ -41,14 +50,6 @@ module Fusuma
 
         def first_time?
           @last_time.nil?
-        end
-
-        def tag
-          self.class.tag
-        end
-
-        def type
-          self.class.type
         end
 
         class << self
