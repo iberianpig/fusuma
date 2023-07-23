@@ -56,7 +56,9 @@ module Fusuma
     end
 
     def initialize
-      @inputs = Plugin::Inputs::Input.plugins.map(&:new)
+      @inputs = Plugin::Inputs::Input.plugins.map do |cls|
+        cls.ancestors.include?(Singleton) ? cls.instance : cls.new
+      end
       @filters = Plugin::Filters::Filter.plugins.map(&:new)
       @parsers = Plugin::Parsers::Parser.plugins.map(&:new)
       @buffers = Plugin::Buffers::Buffer.plugins.map(&:new)

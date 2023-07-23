@@ -6,6 +6,7 @@ require "./lib/fusuma/plugin/detectors/hold_detector"
 require "./lib/fusuma/plugin/buffers/gesture_buffer"
 require "./lib/fusuma/plugin/events/records/gesture_record"
 require "./lib/fusuma/config"
+require "./lib/fusuma/plugin/inputs/timer_input"
 
 module Fusuma
   module Plugin
@@ -15,6 +16,7 @@ module Fusuma
           @detector = HoldDetector.new
           @buffer = Buffers::GestureBuffer.new
           @timer_buffer = Buffers::TimerBuffer.new
+          @timer = Inputs::TimerInput.instance
         end
 
         around do |example|
