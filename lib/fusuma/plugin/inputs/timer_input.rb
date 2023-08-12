@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "./input"
-require 'timeout'
+require "timeout"
 
 module Fusuma
   module Plugin
@@ -42,29 +42,25 @@ module Fusuma
         end
 
         def timer_loop(writer)
-          begin
-            delta_t = @interval
-            next_wake = Time.now + delta_t
-            loop do
-              begin
-                timeout = next_wake - Time.now
-                if timeout <= 0
-                  raise Timeout::Error
-                end
-
-                Timeout.timeout(timeout) do
-                  next_wake = [@early_wake_queue.deq, next_wake].min
-                end
-              rescue Timeout::Error
-                writer.puts "timer"
-                next_wake = Time.now + delta_t
-              end
+          delta_t = @interval
+          next_wake = Time.now + delta_t
+          loop do
+            sleep_time = next_wake - Time.now
+            if sleep_time <= 0
+              raise Timeout::Error
             end
-          rescue Errno::EPIPE
-            exit 0
-          rescue => e
-            MultiLogger.error e
+
+            Timeout.timeout(sleep_time) do
+              next_wake = [@early_wake_queue.deq, next_wake].min
+            end
+          rescue Timeout::Error
+            writer.puts "timer"
+            next_wake = Time.now + delta_t
           end
+        rescue Errno::EPIPE
+          exit 0
+        rescue => e
+          MultiLogger.error e
         end
 
         def wake_early(t)
