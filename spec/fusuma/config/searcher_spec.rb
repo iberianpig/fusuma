@@ -57,10 +57,8 @@ module Fusuma
             ]
           end
           it "detects ctrl+minus with skip" do
-            condition, value = Config::Searcher.find_condition do
-              Config::Searcher.new.search(index, location: location)
-            end
-            expect([condition, value]).to eq([:skip, "ctrl+minus"])
+            value =  Config::Searcher.new.search(index, location: location)
+            expect(value).to eq("ctrl+minus")
           end
         end
 
@@ -76,10 +74,8 @@ module Fusuma
             ]
           end
           it "detects ctrl+plus with skip" do
-            condition, value = Config::Searcher.find_condition do
-              Config::Searcher.new.search(index, location: location)
-            end
-            expect([condition, value]).to eq([:skip, "ctrl+plus"])
+            value = Config::Searcher.new.search(index, location: location)
+            expect(value).to eq("ctrl+plus")
           end
         end
 
@@ -116,10 +112,8 @@ module Fusuma
             end
 
             it "detects with skip" do
-              condition, value = Config::Searcher.find_condition do
-                Config::Searcher.new.search(index, location: location)
-              end
-              expect([condition, value]).to eq([:skip, "echo end"])
+              value = Config::Searcher.new.search(index, location: location)
+              expect([value]).to eq(["echo end"])
             end
           end
           context "with keypress" do
@@ -136,10 +130,8 @@ module Fusuma
                 ]
               end
               it "detects end+ctrl with skip" do
-                condition, value = Config::Searcher.find_condition do
-                  Config::Searcher.new.search(index, location: location)
-                end
-                expect([condition, value]).to eq([:skip, "echo end+ctrl"])
+                value = Config::Searcher.new.search(index, location: location)
+                expect(value).to eq("echo end+ctrl")
               end
             end
             context "with non-existing key not existing in config.yml" do
@@ -155,10 +147,8 @@ module Fusuma
                 ]
               end
               it "detects end with skip (fallback to no keypress)" do
-                condition, value = Config::Searcher.find_condition do
-                  Config::Searcher.new.search(index, location: location)
-                end
-                expect([condition, value]).to eq([:skip, "echo end"])
+                value = Config::Searcher.new.search(index, location: location)
+                expect(value).to eq("echo end")
               end
             end
           end

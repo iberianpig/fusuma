@@ -77,8 +77,8 @@ module Fusuma
       parsed = parse(filtered) || return
       buffered = buffer(parsed) || return
       detected = detect(buffered) || return
-      condition, context, event = merge(detected) || return
-      execute(condition, context, event)
+      context, event = merge(detected) || return
+      execute(context, event)
     end
 
     # For performance monitoring
@@ -129,7 +129,8 @@ module Fusuma
       end
 
       events = matched_detectors.each_with_object([]) do |detector, detected|
-        Array(detector.detect(@buffers)).each { |e| detected << e }
+        # Array(detector.detect(@buffers)).each { |e| detected << e }
+        detected.concat(Array(detector.detect(@buffers)))
       end
 
       return if events.empty?
@@ -138,7 +139,7 @@ module Fusuma
     end
 
     # @param events [Array<Plugin::Events::Event>]
-    # @return [Plugin::Events::Event] Event merged all records from arguments
+    # @return [Array<Hash, Plugin::Events::Event>] Event merged all events from arguments and used context
     # @return [NilClass] when event is NOT given
     def merge(events)
       index_events, context_events = events.partition { |event| event.record.type == :index }
@@ -148,52 +149,34 @@ module Fusuma
       end
       main_events.sort_by! { |e| e.record.trigger_priority }
 
-      matched_condition = nil
       matched_context = nil
       event = main_events.find do |main_event|
-        # Find executable condition and executor with context
         matched_context = Config::Searcher.find_context(request_context) do
-          # Find matched condition with modifiers or without modifiers
-          matched_condition, modified_record = Config::Searcher.find_condition do
-            main_event.record.merge(records: modifiers.map(&:record))
-          end
-
-          if matched_condition && modified_record # found matched condition
-            # overwrite with modified record
+          if modified_record = main_event.record.merge(records: modifiers.map(&:record))
             main_event.record = modified_record
-          else
-            # find condition without modifiers
-            matched_condition, = Config::Searcher.find_condition do
-              Config.search(main_event.record.index) &&
-                Config.find_execute_key(main_event.record.index)
-            end
+          elsif !modifiers.empty?
+            # try basically the same, but without any modifiers
+            # if modifiers is empty then we end up here only if there is no execute key for this
+            Config.instance.search(main_event.record.index) &&
+              Config.instance.find_execute_key(main_event.record.index)
           end
         end
       end
       return if event.nil?
 
-      [matched_condition, matched_context, event]
+      [matched_context, event]
     end
 
+    # @return [NilClass] when event is NOT given or executable context is NOT found
     # @param event [Plugin::Events::Event]
-    # @return [NilClass]
-    def execute(condition, context, event)
+    def execute(context, event)
       return unless event
 
-      # Find executable condition and executor
-      executor = Config::Searcher.with_context(context) do
-        Config::Searcher.with_condition(condition) do
-          @executors.find { |e| e.executable?(event) }
-        end
-      end
-
-      return if executor.nil?
-
-      MultiLogger.debug({condition: condition, context: context, index: event.record.index})
-
-      # Check interval and execute
+      # Find executable context
       Config::Searcher.with_context(context) do
-        Config::Searcher.with_condition(condition) do
+        executor = @executors.find { |e| e.executable?(event) }
+        if executor
+          # Check interval and execute
           executor.enough_interval?(event) &&
             executor.update_interval(event) &&
             executor.execute(event)

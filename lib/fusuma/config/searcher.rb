@@ -6,7 +6,7 @@ module Fusuma
     # Search config.yml
     class Searcher
       def initialize
-        @cache = nil
+        @cache = {}
       end
 
       # @param index [Index]
@@ -36,10 +36,11 @@ module Fusuma
 
         return search(index, location: location[0]) if context == {}
 
-        new_location = location.find do |conf|
-          search(index, location: conf) if conf[:context] == context
+        value = nil
+        location.find do |conf|
+          value = search(index, location: conf) if conf[:context] == context
         end
-        search(index, location: new_location)
+        value
       end
 
       # @param index [Index]
@@ -48,13 +49,12 @@ module Fusuma
       # @return [Hash]
       # @return [Object]
       def search_with_cache(index, location:)
-        cache([index.cache_key, Searcher.context, Searcher.skip?]) do
+        cache([index.cache_key, Searcher.context]) do
           search_with_context(index, location: location, context: Searcher.context)
         end
       end
 
       def cache(key)
-        @cache ||= {}
         key = key.join(",") if key.is_a? Array
         if @cache.key?(key)
           @cache[key]
@@ -71,37 +71,11 @@ module Fusuma
       def next_location_cadidates(location, key)
         [
           location[key.symbol],
-          Searcher.skip? && key.skippable && location
+          key.skippable && location
         ].compact
       end
 
       class << self
-        # @return [Hash]
-        def conditions(&block)
-          {
-            nothing: -> { block.call },
-            skip: -> { Config::Searcher.skip { block.call } }
-          }
-        end
-
-        # Execute block with specified conditions
-        # @param conidtion [Symbol]
-        # @return [Object]
-        def with_condition(condition, &block)
-          conditions(&block)[condition].call
-        end
-
-        # Execute block with all conditions
-        # @return [Array<Symbol, Object>]
-        def find_condition(&block)
-          conditions(&block).find do |c, l|
-            result = l.call
-            return [c, result] if result
-
-            nil
-          end
-        end
-
         # Search with context from load_streamed Config
         # @param context [Hash]
         # @return [Object]
@@ -120,34 +94,24 @@ module Fusuma
           # 1. primary context(no context)
           # 2. complete match config[:context] == request_context
           # 3. partial match config[:context] =~ request_context
-          return {} if with_context({}) { block.call }
+          return {} if with_context({}, &block)
 
           Config.instance.keymap.each do |config|
             next unless config[:context] == request_context
-            return config[:context] if with_context(config[:context]) { block.call }
+            return config[:context] if with_context(config[:context], &block)
           end
           if request_context.keys.size > 1
             Config.instance.keymap.each do |config|
               next if config[:context].nil?
 
               next unless config[:context].all? { |k, v| request_context[k] == v }
-              return config[:context] if with_context(config[:context]) { block.call }
+              return config[:context] if with_context(config[:context], &block)
             end
           end
         end
 
         attr_reader :context
 
-        def skip?
-          @skip
-        end
-
-        def skip(&block)
-          @skip = true
-          result = block.call
-          @skip = false
-          result
-        end
       end
     end
   end

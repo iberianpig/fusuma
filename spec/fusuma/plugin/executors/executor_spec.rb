@@ -91,7 +91,7 @@ module Fusuma
             expect(@executor.interval(@event)).to eq interval_time
           end
 
-          context "without skippable direction" do
+          context "with interval at gesture level" do
             around do |example|
               ConfigHelper.load_config_yml = <<~CONFIG
                 dummy_gesture:
@@ -109,17 +109,32 @@ module Fusuma
 
               Config.custom_path = nil
             end
-            it "should not return parent interval" do
-              expect(@executor.interval(@event)).to eq DummyExecutor::BASE_ONESHOT_INTERVAL
-              expect(@executor.interval(@event)).not_to eq 0.1 * DummyExecutor::BASE_ONESHOT_INTERVAL
+            it "should not return level interval" do
+              expect(@executor.interval(@event)).to eq 0.1 * DummyExecutor::BASE_ONESHOT_INTERVAL
             end
+          end
 
-            context "with Config::Searcher.skip" do
-              it "should return parent interval" do
-                Config::Searcher.skip do
-                  expect(@executor.interval(@event)).to eq 0.1 * DummyExecutor::BASE_ONESHOT_INTERVAL
-                end
-              end
+          context "with interval at direction level" do
+            around do |example|
+              ConfigHelper.load_config_yml = <<~CONFIG
+                dummy_gesture:
+                  interval: 0.1
+                  dummy_direction:
+                    interval: 0.2
+                    dummy: 'echo dummy'
+
+                plugin:
+                 executors:
+                   dummy_executor:
+                     dummy: dummy
+              CONFIG
+
+              example.run
+
+              Config.custom_path = nil
+            end
+            it "should not return level interval" do
+              expect(@executor.interval(@event)).to eq 0.2 * DummyExecutor::BASE_ONESHOT_INTERVAL
             end
           end
         end

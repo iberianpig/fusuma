@@ -39,14 +39,14 @@ module Fusuma
         # @return [String]
         def search_command(event)
           command_index = Config::Index.new([*event.record.index.keys, :command])
-          Config.search(command_index)
+          Config.instance.search(command_index)
         end
 
         # @param event [Event]
         # @return [Float]
         def args_accel(event)
           accel_index = Config::Index.new([*event.record.index.keys, :accel])
-          (Config.search(accel_index) || 1).to_f
+          (Config.instance.search(accel_index) || 1).to_f
         end
       end
     end
