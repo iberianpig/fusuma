@@ -47,7 +47,12 @@ module Fusuma
             next_wake = Time.now + delta_t
             loop do
               begin
-                Timeout.timeout(next_wake - Time.now) do
+                timeout = next_wake - Time.now
+                if timeout <= 0
+                  raise Timeout::Error
+                end
+
+                Timeout.timeout(timeout) do
                   next_wake = [@early_wake_queue.deq, next_wake].min
                 end
               rescue Timeout::Error
