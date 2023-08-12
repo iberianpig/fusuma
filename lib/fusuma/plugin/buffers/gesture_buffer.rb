@@ -7,8 +7,24 @@ module Fusuma
     module Buffers
       # manage events and generate command
       class GestureBuffer < Buffer
+        CacheEntry = Struct.new(:checked, :value)
         DEFAULT_SOURCE = "libinput_gesture_parser"
         DEFAULT_SECONDS_TO_KEEP = 100
+
+
+        def initialize(*args)
+          super(*args)
+          @cache = {}
+          @cache_select_by = {}
+          @cache_sum10 = {}
+        end
+
+        def clear
+          super.clear
+          @cache = {}
+          @cache_select_by = {}
+          @cache_sum10 = {}
+        end
 
         def config_param_types
           {
@@ -40,6 +56,9 @@ module Fusuma
             MultiLogger.debug("#{self.class.name}##{__method__}")
 
             @events.delete(e)
+            @cache = {}
+            @cache_select_by = {}
+            @cache_sum10 = {}
           end
         end
 
@@ -59,11 +78,35 @@ module Fusuma
         def sum_attrs(attr)
           updating_events.map do |gesture_event|
             gesture_event.record.delta[attr].to_f
-          end.inject(:+)
+          end.reduce(:+)
+        end
+
+        # @param attr [Symbol]
+        # @return [Float]
+        def sum_last10_attrs(attr) # sums last 10 values of attr (or all if length < 10)
+          cache_entry = ( @cache_sum10[attr] ||= CacheEntry.new(0, 0) )
+          upd_ev = updating_events
+          if upd_ev.length > cache_entry.checked + 1 then
+            cache_entry.value = upd_ev.last(10).map do |gesture_event|
+              gesture_event.record.delta[attr].to_f
+            end.reduce(:+)
+          elsif upd_ev.length > cache_entry.checked
+            cache_entry.value = cache_entry.value + upd_ev[-1].record.delta[attr].to_f - \
+              (upd_ev.length > 10 ? upd_ev[-11].record.delta[attr].to_f : 0)
+          else
+            return cache_entry.value
+          end
+          cache_entry.checked = upd_ev.length
+          cache_entry.value
         end
 
         def updating_events
-          @events.select { |e| e.record.status == "update" }
+          cache_entry = ( @cache[:updating_events] ||= CacheEntry.new(0, []) )
+          cache_entry.checked.upto(@events.length - 1).each do |i|
+            (cache_entry.value << @events[i]) if @events[i].record.status == "update"
+          end
+          cache_entry.checked = @events.length
+          cache_entry.value
         end
 
         # @param attr [Symbol]
@@ -96,14 +139,28 @@ module Fusuma
           self.class.new events
         end
 
+        def select_by_type(type)
+          cache_entry = ( @cache_select_by[type] ||= CacheEntry.new(0, self.class.new([])) )
+          cache_entry.checked.upto(@events.length - 1).each do |i|
+            (cache_entry.value.events << @events[i]) if @events[i].record.gesture == type
+          end
+          cache_entry.checked = @events.length
+          cache_entry.value
+        end
+
         def select_from_last_begin
           return self if empty?
+          cache_entry = ( @cache[:last_begin] ||= CacheEntry.new(0, nil) )
 
-          index_from_last = @events.reverse.find_index { |e| e.record.status == "begin" }
-          return GestureBuffer.new([]) if index_from_last.nil?
+          cache_entry.value = (@events.length - 1).downto(cache_entry.checked).find do |i|
+            @events[i].record.status == "begin"
+          end || cache_entry.value
+          cache_entry.checked = @events.length
 
-          index_last_begin = events.length - index_from_last - 1
-          GestureBuffer.new(@events[index_last_begin..-1])
+          return self if cache_entry.value == 0
+          return GestureBuffer.new([]) if cache_entry.value.nil?
+
+          GestureBuffer.new(@events[cache_entry.value..-1])
         end
       end
     end

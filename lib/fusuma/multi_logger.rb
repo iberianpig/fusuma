@@ -32,6 +32,8 @@ module Fusuma
     def debug(msg)
       return unless debug_mode?
 
+      return if ignore_pattern?(msg)
+
       super(msg)
     end
 
@@ -45,6 +47,20 @@ module Fusuma
 
     def debug_mode?
       debug_mode
+    end
+
+    def ignore_pattern?(msg)
+      # TODO: configurable from config.yml
+      pattern = /timer_input/
+      case msg
+      when Hash
+        e = msg.values.find { |v| v.is_a? Fusuma::Plugin::Events::Event }
+        return unless e
+
+        e.tag.match?(pattern)
+      else
+        false
+      end
     end
 
     class << self

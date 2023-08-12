@@ -1,20 +1,29 @@
 # frozen_string_literal: true
 
 require_relative "./input"
+require "timeout"
 
 module Fusuma
   module Plugin
     module Inputs
       # libinput commands wrapper
       class TimerInput < Input
-        DEFAULT_INTERVAL = 0.3
+        include Singleton
+        DEFAULT_INTERVAL = 5
+        EPSILON_TIME = 0.02
         def config_param_types
           {
             interval: [Float]
           }
         end
 
-        attr_reader :pid
+        def initialize(*args, interval: nil)
+          super(*args)
+          @interval = interval || config_params(:interval) || DEFAULT_INTERVAL
+          @early_wake_queue = Queue.new
+        end
+
+        attr_reader :pid, :interval
 
         def io
           @io ||= begin
@@ -26,36 +35,42 @@ module Fusuma
         end
 
         def start(reader, writer)
-          pid = fork do
-            timer_loop(reader, writer)
+          Thread.new do
+            timer_loop(writer)
           end
-          Process.detach(pid)
-          writer.close
-          pid
+          nil
         end
 
-        def timer_loop(reader, writer)
-          reader.close
-          begin
-            loop do
-              sleep interval
-              writer.puts "timer"
+        def timer_loop(writer)
+          delta_t = @interval
+          next_wake = Time.now + delta_t
+          loop do
+            sleep_time = next_wake - Time.now
+            if sleep_time <= 0
+              raise Timeout::Error
             end
-          rescue Errno::EPIPE
-            exit 0
-          rescue => e
-            MultiLogger.error e
+
+            Timeout.timeout(sleep_time) do
+              next_wake = [@early_wake_queue.deq, next_wake].min
+            end
+          rescue Timeout::Error
+            writer.puts "timer"
+            next_wake = Time.now + delta_t
           end
+        rescue Errno::EPIPE
+          exit 0
+        rescue => e
+          MultiLogger.error e
+        end
+
+        def wake_early(t)
+          @early_wake_queue.push(t + EPSILON_TIME)
         end
 
         private
 
         def create_io
           IO.pipe
-        end
-
-        def interval
-          config_params(:interval) || DEFAULT_INTERVAL
         end
       end
     end

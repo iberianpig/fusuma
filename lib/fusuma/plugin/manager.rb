@@ -27,29 +27,34 @@ module Fusuma
         @_fusuma_default_plugin_paths ||= Dir.glob(File.expand_path("#{__dir__}/../../#{search_key}")).grep_v(exclude_path_pattern).sort
       end
 
+      # @return [Array<String>] paths of external plugins (installed by gem)
       def fusuma_external_plugin_paths
         @_fusuma_external_plugin_paths ||=
           Gem.find_latest_files(search_key).map do |siblings_plugin|
             next unless %r{fusuma-plugin-(.+).*/lib/#{plugin_dir_name}/.+\.rb}.match?(siblings_plugin)
 
             match_data = siblings_plugin.match(%r{(.*)/(.*)/lib/(.*)})
-            gemspec_path = Dir.glob("#{match_data[1]}/#{match_data[2]}/*.gemspec").first
-            raise "Not Found: #{match_data[1]}/#{match_data[2]}/*.gemspec" unless gemspec_path
+            plugin_gemspec_path = Dir.glob("#{match_data[1]}/#{match_data[2]}/*.gemspec").first
+            raise "Not Found: #{match_data[1]}/#{match_data[2]}/*.gemspec" unless plugin_gemspec_path
 
-            gemspec = Gem::Specification.load(gemspec_path)
+            plugin_gemspec = Gem::Specification.load(plugin_gemspec_path)
             fusuma_gemspec_path = File.expand_path("../../../fusuma.gemspec", __dir__)
             fusuma_gemspec = Gem::Specification.load(fusuma_gemspec_path)
 
-            if gemspec.dependencies.find { |d| d.name == "fusuma" }&.match?(fusuma_gemspec)
+            if plugin_gemspec.dependencies.find { |d| d.name == "fusuma" }&.match?(fusuma_gemspec)
               siblings_plugin
             else
-              MultiLogger.warn "#{gemspec.name} #{gemspec.version} is incompatible with running #{fusuma_gemspec.name} #{fusuma_gemspec.version}"
-              MultiLogger.warn "gemspec: #{gemspec_path}"
+              MultiLogger.warn "#{plugin_gemspec.name} #{plugin_gemspec.version} is incompatible with running #{fusuma_gemspec.name} #{fusuma_gemspec.version}"
+              MultiLogger.warn "gemspec: #{plugin_gemspec_path}"
               next
             end
           end.compact.grep_v(exclude_path_pattern).sort
       end
 
+      # @return [String] search key for plugin
+      # @example
+      # search_key
+      # => "fusuma/plugin/detectors/*rb"
       def search_key
         File.join(plugin_dir_name, "*rb")
       end

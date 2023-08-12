@@ -56,7 +56,9 @@ module Fusuma
     end
 
     def initialize
-      @inputs = Plugin::Inputs::Input.plugins.map(&:new)
+      @inputs = Plugin::Inputs::Input.plugins.map do |cls|
+        cls.ancestors.include?(Singleton) ? cls.instance : cls.new
+      end
       @filters = Plugin::Filters::Filter.plugins.map(&:new)
       @parsers = Plugin::Parsers::Parser.plugins.map(&:new)
       @buffers = Plugin::Buffers::Buffer.plugins.map(&:new)
@@ -98,12 +100,14 @@ module Fusuma
 
     # @param [Plugin::Events::Event]
     # @return [Plugin::Events::Event]
+    # @return [NilClass]
     def filter(event)
       event if @filters.any? { |f| f.filter(event) }
     end
 
     # @param [Plugin::Events::Event]
     # @return [Plugin::Events::Event]
+    # @return [NilClass]
     def parse(event)
       @parsers.reduce(event) { |e, p| p.parse(e) if e }
     end
@@ -117,6 +121,7 @@ module Fusuma
 
     # @param buffers [Array<Buffer>]
     # @return [Array<Event>]
+    # @return [NilClass]
     def detect(buffers)
       matched_detectors = @detectors.select do |detector|
         detector.watch? ||
@@ -134,7 +139,7 @@ module Fusuma
     end
 
     # @param events [Array<Plugin::Events::Event>]
-    # @return [Plugin::Events::Event] Event merged all records from arguments
+    # @return [Array<Hash, Plugin::Events::Event>] Event merged all events from arguments and used context
     # @return [NilClass] when event is NOT given
     def merge(events)
       index_events, context_events = events.partition { |event| event.record.type == :index }
@@ -144,7 +149,6 @@ module Fusuma
       end
       main_events.sort_by! { |e| e.record.trigger_priority }
 
-      # matched_condition = nil
       matched_context = nil
       event = main_events.find do |main_event|
         matched_context = Config::Searcher.find_context(request_context) do
@@ -160,15 +164,15 @@ module Fusuma
       end
       return if event.nil?
 
-      # [matched_condition, matched_context, event]
       [matched_context, event]
     end
 
+    # @return [NilClass] when event is NOT given or executable context is NOT found
     # @param event [Plugin::Events::Event]
     def execute(context, event)
       return unless event
 
-      # Find executable condition and executor
+      # Find executable context
       Config::Searcher.with_context(context) do
         executor = @executors.find { |e| e.executable?(event) }
         if executor
