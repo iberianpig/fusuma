@@ -11,7 +11,7 @@ module Fusuma
         when Array
           @keys = []
           @cache_key = keys.map do |key|
-            key = Key.new(key) if not key.is_a? Key
+            key = Key.new(key) if !key.is_a? Key
             @keys << key
             key.symbol
           end.join(",")
@@ -41,10 +41,11 @@ module Fusuma
         end
 
         def inspect
-          skip_marker = if @skippable && Searcher.skip?
-            "(skip)"
+          if @skippable
+            "#{@symbol}(skippable)"
+          else
+            "#{@symbol}"
           end
-          "#{@symbol}#{skip_marker}"
         end
 
         attr_reader :symbol, :skippable

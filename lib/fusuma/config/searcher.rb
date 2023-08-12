@@ -71,7 +71,6 @@ module Fusuma
       def next_location_cadidates(location, key)
         [
           location[key.symbol],
-          # Searcher.skip? && key.skippable && location
           key.skippable && location
         ].compact
       end
