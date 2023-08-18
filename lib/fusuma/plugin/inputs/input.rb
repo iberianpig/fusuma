@@ -30,15 +30,11 @@ module Fusuma
             # each input plugin must write line to pipe (include `\n`)
             line = io.readline(chomp: true)
           rescue EOFError => e
-            warn "#{input.class.name}: #{e}"
-            warn "Send SIGKILL to fusuma processes"
-            inputs.reject { |i| i == input }.each do |i|
-              warn "stop process: #{i.class.name.underscore}"
-              Process.kill(:SIGKILL, i.pid)
-            end
-            exit 1
+            MultiLogger.error "#{input.class.name}: #{e}"
+            MultiLogger.error "Shutdown fusuma process..."
+            Process.kill("TERM", Process.pid)
           rescue => e
-            warn "#{input.class.name}: #{e}"
+            MultiLogger.error "#{input.class.name}: #{e}"
             exit 1
           end
           input.create_event(record: line)

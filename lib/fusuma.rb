@@ -13,20 +13,15 @@ module Fusuma
   class Runner
     class << self
       def run(option = {})
-        set_trap
         read_options(option)
         instance = new
+        instance.set_trap
         ## NOTE: Uncomment following line to measure performance
         # instance.run_with_lineprof
         instance.run
       end
 
       private
-
-      def set_trap
-        Signal.trap("INT") { puts exit } # Trap ^C
-        Signal.trap("TERM") { puts exit } # Trap `Kill `
-      end
 
       def read_options(option)
         MultiLogger.filepath = option[:log_filepath]
@@ -186,6 +181,25 @@ module Fusuma
 
     def clear_expired_events
       @buffers.each(&:clear_expired)
+    end
+
+    def set_trap
+      Signal.trap("INT") {
+        shutdown
+        puts exit
+      } # Trap ^C
+      Signal.trap("TERM") {
+        shutdown
+        puts exit
+      } # Trap `Kill `
+    end
+
+    private
+
+    def shutdown
+      [@inputs, @filters, @parsers, @buffers, @detectors, @executors].flatten.each do |plugin|
+        plugin.shutdown
+      end
     end
   end
 end

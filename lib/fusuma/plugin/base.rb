@@ -8,7 +8,6 @@ module Fusuma
   module Plugin
     # Create a Plugin Class with extending this class
     class Base
-      include CustomProcess
       # when inherited from subclass
       def self.inherited(subclass)
         super
@@ -20,6 +19,10 @@ module Fusuma
       # @return [Array<Class>]
       def self.plugins
         Manager.plugins[name]
+      end
+
+      # @abstract override `#shutdown` to implement
+      def shutdown
       end
 
       # config parameter name and Type of the value of parameter
