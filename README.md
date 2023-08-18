@@ -430,7 +430,6 @@ Currently, my open-source contribution times is not enough.
 If you like my work and want to contribute and become a sponsor, I will be able to focus on my projects.
 
 - [GitHub Sponsors](https://github.com/sponsors/iberianpig)
-- [Patreon](https://www.patreon.com/iberianpig)
 
 ## Contributing
 
