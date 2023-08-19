@@ -14,27 +14,8 @@ task :bump, :type do |_, args|
   end
 
   require "bump"
-  next_version = Bump::Bump.next_version(label)
-
-  require "github_changelog_generator/task"
-
-  GitHubChangelogGenerator::RakeTask.new :changelog do |config|
-    gemspec_path = Dir.glob(File.join(File.dirname(File.expand_path(__FILE__)), "*.gemspec")).first
-    gemspec = Gem::Specification.load(gemspec_path)
-    config.user = gemspec.authors.first
-    config.project = gemspec.name
-    config.future_release = next_version
-  end
-
-  Rake::Task[:changelog].execute
-
-  puts "update CHANGELOG"
-  `git add CHANGELOG.md`
-
   puts "Bump version to #{label}"
   Bump::Bump.run(label)
-
-  puts "Please check CHANGELOG.md"
   puts 'Next step: "bundle exec rake release_tag"'
 end
 
@@ -42,4 +23,22 @@ desc "Create and Push tag"
 task :release_tag do
   require "bundler/gem_tasks"
   Rake::Task["release:source_control_push"].invoke
+  puts 'Next step: "bundle exec rake generate_changelog"'
+end
+
+desc "Generate CHANGELOG.md"
+task :generate_changelog do
+  require "github_changelog_generator/task"
+
+  GitHubChangelogGenerator::RakeTask.new :changelog do |config|
+    gemspec_path = Dir.glob(File.join(File.dirname(File.expand_path(__FILE__)), "*.gemspec")).first
+    gemspec = Gem::Specification.load(gemspec_path)
+    config.user = gemspec.authors.first
+    config.project = gemspec.name
+  end
+
+  Rake::Task[:changelog].execute
+
+  puts "update CHANGELOG"
+  `git add CHANGELOG.md && git commit -m "docs(CHANGELOG) update"`
 end
