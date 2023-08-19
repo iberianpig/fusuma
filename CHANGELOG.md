@@ -1,5 +1,30 @@
 # Changelog
 
+## [v3.0.0](https://github.com/iberianpig/fusuma/tree/v3.0.0) (2023-08-19)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.5.1...v3.0.0)
+
+**Fixed bugs:**
+
+- Pinch using 4 fingers not working on eOS at all [\#291](https://github.com/iberianpig/fusuma/issues/291)
+
+**Closed issues:**
+
+- mentioning of AUR-Builds in the Archsection? [\#276](https://github.com/iberianpig/fusuma/issues/276)
+
+**Merged pull requests:**
+
+- Optimize by avoiding pattern matching [\#304](https://github.com/iberianpig/fusuma/pull/304) ([ces42](https://github.com/ces42))
+- Optimize merge [\#303](https://github.com/iberianpig/fusuma/pull/303) ([ces42](https://github.com/ces42))
+- Optimize timer [\#302](https://github.com/iberianpig/fusuma/pull/302) ([ces42](https://github.com/ces42))
+- Optimize gesture buffer [\#301](https://github.com/iberianpig/fusuma/pull/301) ([ces42](https://github.com/ces42))
+- Fixing Installsection for Arch Part 2 - Electric Bogaloo :D [\#294](https://github.com/iberianpig/fusuma/pull/294) ([Shadowphoenix](https://github.com/Shadowphoenix))
+- Issue 276 [\#289](https://github.com/iberianpig/fusuma/pull/289) ([Shadowphoenix](https://github.com/Shadowphoenix))
+
+## [v2.5.1](https://github.com/iberianpig/fusuma/tree/v2.5.1) (2022-11-12)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.5.0...v2.5.1)
+
 ## [v2.5.0](https://github.com/iberianpig/fusuma/tree/v2.5.0) (2022-09-28)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.4.1...v2.5.0)
