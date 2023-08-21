@@ -17,7 +17,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.1
+        ruby-version: 3.2
 
     - name: Publish to RubyGems
       run: |
