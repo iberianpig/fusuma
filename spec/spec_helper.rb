@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 require "bundler/setup"
-require "helpers/config_helper"
+require "rspec/debug"
 
+require "helpers/config_helper"
 require "simplecov"
 
 RSpec.configure do |config|
