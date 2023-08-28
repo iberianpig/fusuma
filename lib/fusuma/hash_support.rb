@@ -2,6 +2,10 @@
 
 # Patch to hash
 class Hash
+  def deep_stringify_keys
+    deep_transform_keys(&:to_s)
+  end
+
   # activesupport-4.1.1/lib/active_support/core_ext/hash/keys.rb
   def deep_symbolize_keys
     deep_transform_keys do |key|

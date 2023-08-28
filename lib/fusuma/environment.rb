@@ -39,6 +39,12 @@ module Fusuma
           puts device.name
         end
       end
+
+      def print_config
+        Config.instance.keymap.each do |conf|
+          puts conf.deep_stringify_keys.to_yaml
+        end
+      end
     end
   end
 end

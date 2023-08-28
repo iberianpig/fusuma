@@ -27,6 +27,10 @@ opt.on('--log=path/to/file',
   option[:log_filepath] = v
 end
 
+opt.on('--show-config', 'Show config as YAML format which is loaded internally') do |v|
+  option[:show_config] = v
+end
+
 opt.on('--device="Device name"',
        'Open the given device only (DEPRECATED)') do |v|
   option[:device] = v
