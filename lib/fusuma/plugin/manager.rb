@@ -115,6 +115,12 @@ module Fusuma
           @plugins ||= {}
         end
 
+        # @return [Array<String>]
+        # @example
+        #   Manager.load_paths
+        #   => ["/path/to/fusuma/lib/fusuma/plugin/inputs/input.rb",
+        #       "/path/to/fusuma/lib/fusuma/plugin/inputs/libinput_command_input.rb",
+        #       "/path/to/fusuma/lib/fusuma/plugin/inputs/timer_input.rb"]
         def load_paths
           @load_paths ||= []
         end

@@ -46,14 +46,44 @@ module Fusuma
     end
 
     def reload
+      plugin_defaults = {
+        context: :plugin_defaults,
+        plugin: {}
+      }
+
+      plugin_defaults_paths.each do |default_yml|
+        plugin_defaults.deep_merge!(validate(default_yml)[0])
+      end
+
+      find_config_filepath.tap do |path|
+        MultiLogger.info "reload config: #{path}"
+
+        @keymap = validate(path).tap do |yamls|
+          yamls << plugin_defaults
+        end
+      end
+
+      # reset searcher cache
       @searcher = Searcher.new
-      path = find_filepath
-      MultiLogger.info "reload config: #{path}"
-      @keymap = validate(path)
+
       self
     rescue InvalidFileError => e
       MultiLogger.error e.message
       exit 1
+    end
+
+    # @param key [Symbol]
+    # @param base [Config::Index]
+    # @return [Hash]
+    def fetch_config_params(key, base)
+      [{}, :plugin_defaults].find do |context|
+        ret = Config::Searcher.with_context(context) do
+          Config.search(base)
+        end
+        if ret&.key?(key)
+          return ret
+        end
+      end || {}
     end
 
     # @return [Hash] If check passes
@@ -75,7 +105,6 @@ module Fusuma
     end
 
     # @param index [Index]
-    # @param context [Hash]
     def search(index)
       @searcher.search_with_cache(index, location: keymap)
     end
@@ -95,7 +124,7 @@ module Fusuma
 
     private
 
-    def find_filepath
+    def find_config_filepath
       filename = "fusuma/config.yml"
       if custom_path
         return expand_custom_path if File.exist?(expand_custom_path)
@@ -119,6 +148,13 @@ module Fusuma
 
     def expand_default_path(filename)
       File.expand_path "../../#{filename}", __FILE__
+    end
+
+    def plugin_defaults_paths
+      Plugin::Manager.load_paths.map do |plugin_path|
+        yml = plugin_path.gsub(/\.rb$/, ".yml")
+        yml if File.exist?(yml)
+      end.compact
     end
   end
 end

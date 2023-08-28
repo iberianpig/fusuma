@@ -31,14 +31,20 @@ module Fusuma
         raise NotImplementedError, "override #{self.class.name}##{__method__}"
       end
 
+      # @param key [Symbol]
+      # @param base [Config::Index]
       # @return [Object]
-      def config_params(key = nil, base: config_index)
-        params = Config.search(base) || {}
+      def config_params(key = nil)
+        @config_params ||= {}
+        if @config_params["#{config_index.cache_key},#{key}"]
+          return @config_params["#{config_index.cache_key},#{key}"]
+        end
+
+        params = Config.instance.fetch_config_params(key, config_index)
 
         return params unless key
 
-        @config_params ||= {}
-        @config_params["#{base.cache_key},#{key}"] ||=
+        @config_params["#{config_index.cache_key},#{key}"] =
           params.fetch(key, nil).tap do |val|
             next if val.nil?
 
@@ -55,7 +61,7 @@ module Fusuma
       end
 
       def config_index
-        Config::Index.new(self.class.name.gsub("Fusuma::", "").underscore.split("/"))
+        @config_index ||= Config::Index.new(self.class.name.gsub("Fusuma::", "").underscore.split("/"))
       end
     end
   end
