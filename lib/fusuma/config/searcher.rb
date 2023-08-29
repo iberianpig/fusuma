@@ -111,7 +111,6 @@ module Fusuma
         end
 
         attr_reader :context
-
       end
     end
   end

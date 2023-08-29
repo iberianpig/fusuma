@@ -57,7 +57,7 @@ module Fusuma
             ]
           end
           it "detects ctrl+minus with skip" do
-            value =  Config::Searcher.new.search(index, location: location)
+            value = Config::Searcher.new.search(index, location: location)
             expect(value).to eq("ctrl+minus")
           end
         end

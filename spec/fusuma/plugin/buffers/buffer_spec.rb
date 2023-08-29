@@ -71,8 +71,8 @@ module Fusuma
             Config.custom_path = nil
           end
 
-          subject { @buffer.config_params }
-          it { is_expected.to eq(dummy: "dummy") }
+          subject { @buffer.config_params(:dummy) }
+          it { is_expected.to eq("dummy") }
         end
       end
     end
