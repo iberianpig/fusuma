@@ -76,6 +76,8 @@ module Fusuma
       end
 
       class << self
+        attr_reader :context
+
         # Search with context from load_streamed Config
         # @param context [Hash]
         # @return [Object]
@@ -86,20 +88,50 @@ module Fusuma
           result
         end
 
+        CONEXT_SEARCH_ORDER = [:no_context, :complete_match_context, :partial_match_context]
         # Return a matching context from config
         # @params request_context [Hash]
         # @return [Hash]
-        def find_context(request_context, &block)
+        def find_context(request_context, fallbacks = CONEXT_SEARCH_ORDER, &block)
           # Search in blocks in the following order.
           # 1. primary context(no context)
           # 2. complete match config[:context] == request_context
           # 3. partial match config[:context] =~ request_context
-          return {} if with_context({}, &block)
+          # no_context?(&block) ||
+          #   complete_match_context(request_context, &block) ||
+          #   partial_match_context(request_context, &block)
+          fallbacks.each do |method|
+            result = send(method, request_context, &block)
+            return result if result
+          end
+        end
 
+        private
+
+        # No context(primary context)
+        # @return [Hash]
+        # @return [NilClass]
+        def no_context(_request_context, &block)
+          return {} if with_context({}, &block)
+        end
+
+        # Complete match request context
+        # @param request_context [Hash]
+        # @return [Hash] matched context
+        # @return [NilClass] if not matched
+        def complete_match_context(request_context, &block)
           Config.instance.keymap.each do |config|
             next unless config[:context] == request_context
             return config[:context] if with_context(config[:context], &block)
           end
+          nil
+        end
+
+        # One of multiple request contexts matched
+        # @param request_context [Hash]
+        # @return [Hash] matched context
+        # @return [NilClass] if not matched
+        def partial_match_context(request_context, &block)
           if request_context.keys.size > 1
             Config.instance.keymap.each do |config|
               next if config[:context].nil?
@@ -107,10 +139,34 @@ module Fusuma
               next unless config[:context].all? { |k, v| request_context[k] == v }
               return config[:context] if with_context(config[:context], &block)
             end
+            nil
           end
         end
 
-        attr_reader :context
+        # Search context for plugin
+        # If the plugin_defaults key is a complete match,
+        # it is the default value for that plugin, so it is postponed.
+        # This is because prioritize overwriting by other plugins.
+        # The search order is as follows
+        # 1. complete match config[:context].key?(:plugin_defaults)
+        # 2. complete match config[:context] == request_context
+        # @param request_context [Hash]
+        # @return [Hash] matched context
+        # @return [NilClass] if not matched
+        def plugin_default_context(request_context, &block)
+          complete_match_context = nil
+          Config.instance.keymap.each do |config|
+            next unless config[:context]&.key?(:plugin_defaults)
+
+            if config[:context][:plugin_defaults] == request_context[:plugin_defaults]
+              complete_match_context = config[:context]
+              next
+            end
+
+            return config[:context] if with_context(config[:context], &block)
+          end
+          complete_match_context
+        end
       end
     end
   end

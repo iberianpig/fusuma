@@ -4,6 +4,7 @@ require_relative "./multi_logger"
 require_relative "./config/index"
 require_relative "./config/searcher"
 require_relative "./config/yaml_duplication_checker"
+require_relative "./plugin/manager"
 require_relative "./hash_support"
 require "singleton"
 require "yaml"
@@ -46,22 +47,16 @@ module Fusuma
     end
 
     def reload
-      plugin_defaults = {
-        context: :plugin_defaults,
-        plugin: {}
-      }
-
-      plugin_defaults_paths.each do |default_yml|
-        plugin_defaults.deep_merge!(validate(default_yml)[0])
+      plugin_defaults = plugin_defaults_paths.map do |default_yml|
+        {
+          context: {plugin_defaults: default_yml.split("/").last.delete_suffix(".yml")},
+          **validate(default_yml)[0]
+        }
       end
 
-      find_config_filepath.tap do |path|
-        MultiLogger.info "reload config: #{path}"
-
-        @keymap = validate(path).tap do |yamls|
-          yamls << plugin_defaults
-        end
-      end
+      config_path = find_config_filepath
+      @keymap = validate(config_path) | plugin_defaults
+      MultiLogger.info "reload config: #{config_path}"
 
       # reset searcher cache
       @searcher = Searcher.new
@@ -76,14 +71,15 @@ module Fusuma
     # @param base [Config::Index]
     # @return [Hash]
     def fetch_config_params(key, base)
-      [{}, :plugin_defaults].find do |context|
-        ret = Config::Searcher.with_context(context) do
-          Config.search(base)
-        end
+      request_context = {plugin_defaults: base.keys.last.symbol.to_s}
+      fallbacks = [:no_context, :plugin_default_context]
+      Config::Searcher.find_context(request_context, fallbacks) do
+        ret = Config.search(base)
         if ret&.key?(key)
           return ret
         end
-      end || {}
+      end
+      {}
     end
 
     # @return [Hash] If check passes
