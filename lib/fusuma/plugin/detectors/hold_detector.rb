@@ -11,9 +11,13 @@ module Fusuma
         SOURCES = %w[gesture timer].freeze
         BUFFER_TYPE = "gesture"
         GESTURE_RECORD_TYPE = "hold"
-        Timer = Inputs::TimerInput.instance
 
         BASE_THERESHOLD = 0.7
+
+        def initialize(*args)
+          super(*args)
+          @timer = Inputs::TimerInput.instance
+        end
 
         # @param buffers [Array<Buffers::Buffer>]
         # @return [Events::Event] if event is detected
@@ -50,10 +54,10 @@ module Fusuma
           repeat_index = create_repeat_index(finger: finger, status: status)
           oneshot_index = create_oneshot_index(finger: finger)
 
-          if status == "begin" then
+          if status == "begin"
             @timeout = nil
-            if threshold(index: oneshot_index) < Timer.interval then
-              Timer.wake_early(Time.now + threshold(index: oneshot_index))
+            if threshold(index: oneshot_index) < @timer.interval
+              @timer.wake_early(Time.now + threshold(index: oneshot_index))
             end
           elsif status == "timer"
             return if @timeout
@@ -115,10 +119,10 @@ module Fusuma
 
         def enough?(index:, holding_time:)
           diff = threshold(index: index) - holding_time
-          if diff < 0 then
+          if diff < 0
             true
-          elsif diff < Timer.interval
-            Timer.wake_early(Time.now + diff)
+          elsif diff < @timer.interval
+            @timer.wake_early(Time.now + diff)
             false
           end
         end
