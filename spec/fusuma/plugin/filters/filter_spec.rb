@@ -15,7 +15,8 @@ module Fusuma
 
         def config_param_types
           {
-            source: String
+            source: String,
+            dummy: String,
           }
         end
       end
@@ -83,8 +84,8 @@ module Fusuma
             Config.custom_path = nil
           end
 
-          subject { filter.config_params }
-          it { is_expected.to eq(dummy: "dummy") }
+          subject { filter.config_params(:dummy) }
+          it { is_expected.to eq("dummy") }
         end
       end
     end

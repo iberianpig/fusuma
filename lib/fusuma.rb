@@ -27,12 +27,17 @@ module Fusuma
         MultiLogger.filepath = option[:log_filepath]
         MultiLogger.instance.debug_mode = option[:verbose]
 
-        load_custom_config(option[:config_path])
-
         Plugin::Manager.require_base_plugins
+
+        load_custom_config(option[:config_path])
 
         Environment.dump_information
         Kernel.exit(0) if option[:version]
+
+        if option[:show_config]
+          Environment.print_config
+          Kernel.exit(0)
+        end
 
         if option[:list]
           Environment.print_device_list

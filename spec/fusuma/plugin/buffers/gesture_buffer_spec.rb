@@ -102,7 +102,7 @@ module Fusuma
             end
 
             it "should keep only events generated within 0.3 seconds" do
-              expect(@buffer.config_params).to eq(seconds_to_keep: 0.3)
+              expect(@buffer.config_params(:seconds_to_keep)).to eq(0.3)
               time = Time.now
               event1 = @event_generator.call(time)
               @buffer.buffer(event1)

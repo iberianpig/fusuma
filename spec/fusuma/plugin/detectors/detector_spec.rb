@@ -35,7 +35,7 @@ module Fusuma
         end
 
         describe "#config_params" do
-          it { expect(@detector.config_params).to eq(dummy: "dummy") }
+          it { expect(@detector.config_params(:dummy)).to eq("dummy") }
         end
       end
     end

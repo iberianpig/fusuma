@@ -18,6 +18,12 @@ module Fusuma
             return create_event(record: record)
           end
         end
+
+        def config_param_types
+          {
+            dummy: String
+          }
+        end
       end
     end
   end

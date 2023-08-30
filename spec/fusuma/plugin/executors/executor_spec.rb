@@ -27,6 +27,12 @@ module Fusuma
       end
 
       class DummyExecutor < Executor
+        def config_param_types
+          {
+            dummy: String
+          }
+        end
+
         def execute_keys
           [:dummy]
         end
@@ -171,7 +177,7 @@ module Fusuma
         end
 
         describe "#config_params" do
-          it { expect(@executor.config_params).to eq(dummy: "dummy") }
+          it { expect(@executor.config_params(:dummy)).to eq("dummy") }
         end
       end
     end

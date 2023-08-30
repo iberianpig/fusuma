@@ -29,6 +29,12 @@ module Fusuma
       end
 
       class DummyInput < Input
+        def config_param_types
+          {
+            dummy: String
+          }
+        end
+
         def io
           @io ||= begin
             r, w = IO.pipe
@@ -61,8 +67,8 @@ module Fusuma
         end
 
         describe "#config_params" do
-          subject { dummy_input.config_params }
-          it { is_expected.to eq(dummy: "dummy") }
+          subject { dummy_input.config_params(:dummy) }
+          it { is_expected.to eq("dummy") }
         end
       end
     end
