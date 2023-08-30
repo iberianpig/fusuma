@@ -152,7 +152,7 @@ module Fusuma
       matched_context = nil
       event = main_events.find do |main_event|
         matched_context = Config::Searcher.find_context(request_context) do
-          if modified_record = main_event.record.merge(records: modifiers.map(&:record))
+          if (modified_record = main_event.record.merge(records: modifiers.map(&:record)))
             main_event.record = modified_record
           elsif !modifiers.empty?
             # try basically the same, but without any modifiers

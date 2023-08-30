@@ -167,7 +167,7 @@ module Fusuma
           end
 
           def calc
-            @x > @y ? @x.abs : @y.abs
+            (@x > @y) ? @x.abs : @y.abs
           end
         end
       end

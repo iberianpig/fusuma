@@ -44,7 +44,7 @@ module Fusuma
           if @skippable
             "#{@symbol}(skippable)"
           else
-            "#{@symbol}"
+            @symbol.to_s
           end
         end
 

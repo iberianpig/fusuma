@@ -16,7 +16,7 @@ module Fusuma
         def config_param_types
           {
             source: String,
-            dummy: String,
+            dummy: String
           }
         end
       end
