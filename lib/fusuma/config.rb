@@ -33,7 +33,7 @@ module Fusuma
       end
     end
 
-    attr_reader :keymap, :custom_path, :searcher
+    attr_reader :custom_path, :searcher
 
     def initialize
       @searcher = Searcher.new
@@ -44,6 +44,11 @@ module Fusuma
     def custom_path=(new_path)
       @custom_path = new_path
       reload
+    end
+
+    def keymap
+      # FIXME: @keymap is not initialized when called from outside Fusuma::Runner like fusuma-senkey
+      @keymap || reload.keymap
     end
 
     def reload
