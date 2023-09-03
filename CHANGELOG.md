@@ -1,5 +1,13 @@
 # Changelog
 
+## [v3.1.0](https://github.com/iberianpig/fusuma/tree/v3.1.0) (2023-09-03)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.0.0...v3.1.0)
+
+**Implemented enhancements:**
+
+- Set default values for config\_params [\#309](https://github.com/iberianpig/fusuma/pull/309) ([iberianpig](https://github.com/iberianpig))
+
 ## [v3.0.0](https://github.com/iberianpig/fusuma/tree/v3.0.0) (2023-08-19)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v2.5.1...v3.0.0)
