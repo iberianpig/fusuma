@@ -403,8 +403,8 @@ Fusuma plugins are provided with the `fusuma-plugin-XXXXX` naming convention and
 | [fusuma-plugin-sendkey](https://github.com/iberianpig/fusuma-plugin-sendkey)       | ![Gem](https://img.shields.io/gem/v/fusuma-plugin-sendkey?color=brightgreen)    | Emulates keyboard events(Wayland compatible)                 |
 | [fusuma-plugin-wmctrl](https://github.com/iberianpig/fusuma-plugin-wmctrl)         | ![Gem](https://img.shields.io/gem/v/fusuma-plugin-wmctrl?color=brightgreen)     | Manages Window and Workspace                                 |
 | [fusuma-plugin-keypress](https://github.com/iberianpig/fusuma-plugin-keypress)     | ![Gem](https://img.shields.io/gem/v/fusuma-plugin-keypress?color=brightgreen)   | Detecting a combination of key presses and touchpad gestures |
-| [fusuma-plugin-tap](https://github.com/iberianpig/fusuma-plugin-tap)               | ![Gem](https://img.shields.io/gem/v/fusuma-plugin-tap?color=brightgreen)        | Detects Tap gesture                                          |
 | [fusuma-plugin-appmatcher](https://github.com/iberianpig/fusuma-plugin-appmatcher) | ![Gem](https://img.shields.io/gem/v/fusuma-plugin-appmatcher?color=brightgreen) | Configure app-specific gestures                              |
+| [fusuma-plugin-thumbsense](https://github.com/iberianpig/fusuma-plugin-thumbsense) | ![Gem](https://img.shields.io/gem/v/fusuma-plugin-thumbsense?color=brightgreen) | Remapper from key to click only while tapping                |
 
 
 ### Installation of Fusuma plugins
