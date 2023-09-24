@@ -1,5 +1,9 @@
 # Changelog
 
+## [v3.2.0](https://github.com/iberianpig/fusuma/tree/v3.2.0) (2023-09-24)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.1.0...v3.2.0)
+
 ## [v3.1.0](https://github.com/iberianpig/fusuma/tree/v3.1.0) (2023-09-03)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.0.0...v3.1.0)
