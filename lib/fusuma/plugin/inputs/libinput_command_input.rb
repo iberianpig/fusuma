@@ -14,6 +14,7 @@ module Fusuma
           {
             device: [String],
             "enable-dwt": [TrueClass, FalseClass],
+            "disable-dwt": [TrueClass, FalseClass],
             "enable-tap": [TrueClass, FalseClass],
             "show-keycodes": [TrueClass, FalseClass],
             verbose: [TrueClass, FalseClass],
@@ -47,14 +48,16 @@ module Fusuma
           device = ("--device='#{config_params(:device)}'" if config_params(:device))
           enable_tap = "--enable-tap" if config_params(:"enable-tap")
           enable_dwt = "--enable-dwt" if config_params(:"enable-dwt")
+          disable_dwt = "--disable-dwt" if config_params(:"disable-dwt")
           show_keycodes = "--show-keycodes" if config_params(:"show-keycodes")
           verbose = "--verbose" if config_params(:verbose)
           [
             device,
-            enable_dwt,
             enable_tap,
+            enable_dwt,
+            disable_dwt,
             show_keycodes,
-            verbose
+            verbose,
           ].compact
         end
 
