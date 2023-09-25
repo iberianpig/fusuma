@@ -1,5 +1,13 @@
 # Changelog
 
+## [v3.3.0](https://github.com/iberianpig/fusuma/tree/v3.3.0) (2023-09-25)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.2.0...v3.3.0)
+
+**Fixed bugs:**
+
+- fix: call block with plugin\_default\_context [\#311](https://github.com/iberianpig/fusuma/pull/311) ([iberianpig](https://github.com/iberianpig))
+
 ## [v3.2.0](https://github.com/iberianpig/fusuma/tree/v3.2.0) (2023-09-24)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.1.0...v3.2.0)
