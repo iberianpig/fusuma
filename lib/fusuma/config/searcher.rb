@@ -112,7 +112,7 @@ module Fusuma
         # @return [Hash]
         # @return [NilClass]
         def no_context(_request_context, &block)
-          return {} if with_context({}, &block)
+          {} if with_context({}, &block)
         end
 
         # Complete match request context
