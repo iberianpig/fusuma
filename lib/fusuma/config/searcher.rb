@@ -165,7 +165,10 @@ module Fusuma
 
             return config[:context] if with_context(config[:context], &block)
           end
-          complete_match_context
+          if complete_match_context
+            with_context(complete_match_context, &block)
+            complete_match_context
+          end
         end
       end
     end

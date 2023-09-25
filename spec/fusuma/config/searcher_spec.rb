@@ -156,6 +156,42 @@ module Fusuma
       end
     end
 
+    describe ".find_context" do
+      around do |example|
+        ConfigHelper.load_config_yml = <<~CONFIG
+          ---
+          context: { plugin_defaults: "libinput_command_input" }
+          plugin:
+            inputs:
+              libinput_command_input:
+          ---
+          context: { plugin_defaults: "sendkey_executor" }
+          plugin:
+            executors:
+              sendkey_executor:
+                device_name: keyboard|Keyboard|KEYBOARD
+        CONFIG
+
+        example.run
+
+        ConfigHelper.clear_config_yml
+      end
+
+      it "should find matched context and matched value" do
+        request_context = {plugin_defaults: "sendkey_executor"}
+        fallbacks = [:no_context, :plugin_default_context]
+
+        device_name = nil
+        matched = Config::Searcher.find_context(request_context, fallbacks) do
+          # search device_name from sendkey_executor context
+          device_name = Config.search(Config::Index.new(%w[plugin executors sendkey_executor device_name]))
+        end
+
+        expect(matched).to eq request_context
+        expect(device_name).to eq "keyboard|Keyboard|KEYBOARD"
+      end
+    end
+
     describe "private_method: :cache" do
       it "should cache command" do
         key = %w[event_type finger direction command].join(",")
