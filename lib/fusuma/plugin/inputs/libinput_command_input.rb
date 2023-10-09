@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "../../libinput_command"
-require_relative "./input"
+require_relative "input"
 
 module Fusuma
   module Plugin
@@ -57,7 +57,7 @@ module Fusuma
             enable_dwt,
             disable_dwt,
             show_keycodes,
-            verbose,
+            verbose
           ].compact
         end
 

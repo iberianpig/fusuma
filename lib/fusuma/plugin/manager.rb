@@ -101,14 +101,14 @@ module Fusuma
         end
 
         def require_base_plugins
-          require_relative "./base"
-          require_relative "./events/event"
-          require_relative "./inputs/input"
-          require_relative "./filters/filter"
-          require_relative "./parsers/parser"
-          require_relative "./buffers/buffer"
-          require_relative "./detectors/detector"
-          require_relative "./executors/executor"
+          require_relative "base"
+          require_relative "events/event"
+          require_relative "inputs/input"
+          require_relative "filters/filter"
+          require_relative "parsers/parser"
+          require_relative "buffers/buffer"
+          require_relative "detectors/detector"
+          require_relative "executors/executor"
         end
 
         def plugins

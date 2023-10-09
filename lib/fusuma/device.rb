@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative "./multi_logger"
-require_relative "./libinput_command"
+require_relative "multi_logger"
+require_relative "libinput_command"
 
 module Fusuma
   # detect input device

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "./text_record"
+require_relative "text_record"
 
 module Fusuma
   module Plugin

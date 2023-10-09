@@ -6,7 +6,7 @@ require "./lib/fusuma/plugin/events/event"
 require "./lib/fusuma/plugin/detectors/detector"
 require "./lib/fusuma/config"
 require_relative "../buffers/dummy_buffer"
-require_relative "./dummy_detector"
+require_relative "dummy_detector"
 
 module Fusuma
   module Plugin

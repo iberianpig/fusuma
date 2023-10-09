@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "./buffer"
+require_relative "buffer"
 
 module Fusuma
   module Plugin

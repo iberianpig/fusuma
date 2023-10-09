@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "./executor"
+require_relative "executor"
 
 module Fusuma
   module Plugin

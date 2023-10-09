@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "./detector"
+require_relative "detector"
 require_relative "../inputs/timer_input"
 
 module Fusuma

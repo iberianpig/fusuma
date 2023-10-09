@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "./string_support"
+require_relative "string_support"
 
 module Fusuma
   # Rename process

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require_relative "../base"
-require_relative "./records/record"
-require_relative "./records/text_record"
+require_relative "records/record"
+require_relative "records/text_record"
 
 module Fusuma
   module Plugin

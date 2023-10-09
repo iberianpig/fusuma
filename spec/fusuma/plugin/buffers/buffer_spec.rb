@@ -3,7 +3,7 @@
 require "spec_helper"
 
 require "./lib/fusuma/plugin/events/event"
-require_relative "./dummy_buffer"
+require_relative "dummy_buffer"
 
 module Fusuma
   module Plugin
