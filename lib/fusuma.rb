@@ -19,6 +19,10 @@ module Fusuma
         ## NOTE: Uncomment following line to measure performance
         # instance.run_with_lineprof
         instance.run
+      rescue => e
+        MultiLogger.error("Shutdown by error")
+        MultiLogger.error(e)
+        instance.send(:shutdown)
       end
 
       private
@@ -191,11 +195,11 @@ module Fusuma
     def set_trap
       Signal.trap("INT") {
         shutdown
-        puts exit
+        exit
       } # Trap ^C
       Signal.trap("TERM") {
         shutdown
-        puts exit
+        exit
       } # Trap `Kill `
     end
 
