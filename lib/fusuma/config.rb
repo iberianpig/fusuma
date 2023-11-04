@@ -65,6 +65,7 @@ module Fusuma
 
       # reset searcher cache
       @searcher = Searcher.new
+      @cache_execute_keys = nil
 
       self
     rescue InvalidFileError => e
@@ -117,10 +118,17 @@ module Fusuma
         executor.new.execute_keys
       end.flatten
 
-      execute_params = search(index)
-      return if execute_params.nil? || !execute_params.is_a?(Hash)
+      @cache_execute_keys ||= {}
 
-      @execute_keys.find { |k| execute_params.key?(k) }
+      cache_key = [index.cache_key, Searcher.context].join
+
+      return @cache_execute_keys[cache_key] if @cache_execute_keys.has_key?(cache_key)
+
+      @cache_execute_keys[cache_key] =
+        @execute_keys.find do |execute_key|
+          new_index = Config::Index.new(index.keys | [execute_key])
+          search(new_index)
+        end
     end
 
     private
