@@ -100,7 +100,7 @@ module Fusuma
           # no_context?(&block) ||
           #   complete_match_context(request_context, &block) ||
           #   partial_match_context(request_context, &block)
-          fallbacks.each do |method|
+          fallbacks.find do |method|
             result = send(method, request_context, &block)
             return result if result
           end
