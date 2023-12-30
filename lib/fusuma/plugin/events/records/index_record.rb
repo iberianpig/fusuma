@@ -22,6 +22,10 @@ module Fusuma
             @args = args
           end
 
+          def to_s
+            "#{@index}, #{@position}, #{@trigger}, #{@args}"
+          end
+
           def type
             :index
           end
