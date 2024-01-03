@@ -26,7 +26,7 @@ task :bump, :type do |_, args|
     gemspec = Gem::Specification.load(gemspec_path)
     config.user = gemspec.authors.first
     config.project = gemspec.name
-    config.future_release = next_version
+    config.future_release = "v#{next_version}"
   end
 
   Rake::Task[:changelog].execute
