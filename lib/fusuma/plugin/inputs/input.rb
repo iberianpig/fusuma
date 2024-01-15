@@ -25,19 +25,22 @@ module Fusuma
 
           input = inputs.find { |i| i.io == io }
 
-          begin
-            # NOTE: io.readline is blocking method
-            # each input plugin must write line to pipe (include `\n`)
-            line = io.readline(chomp: true)
-          rescue EOFError => e
-            MultiLogger.error "#{input.class.name}: #{e}"
-            MultiLogger.error "Shutdown fusuma process..."
-            Process.kill("TERM", Process.pid)
-          rescue => e
-            MultiLogger.error "#{input.class.name}: #{e}"
-            exit 1
-          end
-          input.create_event(record: line)
+          input.create_event(record: input.read_from_io)
+        end
+
+        # @return [String, Record]
+        # IO#readline is blocking method
+        # so input plugin must write line to pipe (include `\n`)
+        # or, override read_from_io and implement your own read method
+        def read_from_io
+          io.readline(chomp: true)
+        rescue EOFError => e
+          MultiLogger.error "#{self.class.name}: #{e}"
+          MultiLogger.error "Shutdown fusuma process..."
+          Process.kill("TERM", Process.pid)
+        rescue => e
+          MultiLogger.error "#{self.class.name}: #{e}"
+          exit 1
         end
 
         # @return [Integer]
