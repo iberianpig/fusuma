@@ -29,6 +29,10 @@ module Fusuma
             @finger = finger.to_i
             @delta = delta
           end
+
+          def to_s
+            "#{@gesture}, #{@finger}, #{@status}, #{@delta}"
+          end
         end
       end
     end
