@@ -66,6 +66,11 @@ module Fusuma
           it { is_expected.to be_a IO }
         end
 
+        describe "#read_from_io" do
+          subject { dummy_input.read_from_io }
+          it { is_expected.to eq "hoge" }
+        end
+
         describe "#config_params" do
           subject { dummy_input.config_params(:dummy) }
           it { is_expected.to eq("dummy") }
