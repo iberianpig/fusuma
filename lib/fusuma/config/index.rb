@@ -14,7 +14,7 @@ module Fusuma
             key = Key.new(key) if !key.is_a? Key
             @keys << key
             key.symbol
-          end.join(",")
+          end.join(",").to_sym
         else
           key = Key.new(keys)
           @cache_key = key.symbol
@@ -24,6 +24,12 @@ module Fusuma
 
       def to_s
         @keys.map(&:inspect)
+      end
+
+      def ==(other)
+        return false unless other.is_a? Index
+
+        cache_key == other.cache_key
       end
 
       attr_reader :keys, :cache_key
