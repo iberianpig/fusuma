@@ -22,7 +22,7 @@ module Fusuma
         end
       end
 
-      def inspect
+      def to_s
         @keys.map(&:inspect)
       end
 
@@ -40,7 +40,7 @@ module Fusuma
           @skippable = skippable
         end
 
-        def inspect
+        def to_s
           if @skippable
             "#{@symbol}(skippable)"
           else
