@@ -1,5 +1,21 @@
 # Changelog
 
+## [v3.4.0](https://github.com/iberianpig/fusuma/tree/v3.4.0) (2024-01-19)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.3.1...v3.4.0)
+
+**Implemented enhancements:**
+
+- Enable Comparison of Index Records [\#316](https://github.com/iberianpig/fusuma/pull/316) ([iberianpig](https://github.com/iberianpig))
+
+**Fixed bugs:**
+
+- Extract method Input\#read\_from\_io [\#315](https://github.com/iberianpig/fusuma/pull/315) ([iberianpig](https://github.com/iberianpig))
+
+## [v3.3.1](https://github.com/iberianpig/fusuma/tree/v3.3.1) (2023-11-04)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.3.0...v3.3.1)
+
 ## [v3.3.0](https://github.com/iberianpig/fusuma/tree/v3.3.0) (2023-09-25)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.2.0...v3.3.0)
