@@ -84,6 +84,7 @@ module Fusuma
         def with_context(context, &block)
           @context = context || {}
           result = block.call
+        ensure # NOTE: ensure is called even if return in block
           @context = {}
           result
         end
