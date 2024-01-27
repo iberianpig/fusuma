@@ -82,9 +82,11 @@ module Fusuma
         # @param context [Hash]
         # @return [Object]
         def with_context(context, &block)
+          before = @context || {}
           @context = context || {}
           result = block.call
-          @context = {}
+        ensure # NOTE: ensure is called even if return in block
+          @context = before
           result
         end
 
