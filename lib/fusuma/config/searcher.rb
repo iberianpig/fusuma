@@ -81,11 +81,12 @@ module Fusuma
         # Search with context from load_streamed Config
         # @param context [Hash]
         # @return [Object]
-        def with_context(context, &block)
-          @context = context || {}
+        def with_context(context = {}, &block)
+          before = @context
+          @context = context
           result = block.call
         ensure # NOTE: ensure is called even if return in block
-          @context = {}
+          @context = before
           result
         end
 
