@@ -88,11 +88,11 @@ module Fusuma
           result
         end
 
-        CONEXT_SEARCH_ORDER = [:no_context, :complete_match_context, :partial_match_context]
+        CONTEXT_SEARCH_ORDER = [:no_context, :complete_match_context, :partial_match_context]
         # Return a matching context from config
         # @params request_context [Hash]
         # @return [Hash]
-        def find_context(request_context, fallbacks = CONEXT_SEARCH_ORDER, &block)
+        def find_context(request_context, fallbacks = CONTEXT_SEARCH_ORDER, &block)
           # Search in blocks in the following order.
           # 1. primary context(no context)
           # 2. complete match config[:context] == request_context
