@@ -31,6 +31,11 @@ module Fusuma
         def clear_expired(current_time: Time.now)
         end
 
+        # @return [TrueClass, FalseClass]
+        def empty?
+          @events.empty?
+        end
+
         # clear buffer
         def clear
           @events.clear

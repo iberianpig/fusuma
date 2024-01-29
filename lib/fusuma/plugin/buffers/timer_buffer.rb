@@ -34,10 +34,6 @@ module Fusuma
             @events.delete(e)
           end
         end
-
-        def empty?
-          @events.empty?
-        end
       end
     end
   end

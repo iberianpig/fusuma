@@ -127,10 +127,6 @@ module Fusuma
           @events.last.record.gesture
         end
 
-        def empty?
-          @events.empty?
-        end
-
         def select_by_events(&block)
           return enum_for(:select_by_events) unless block
 
