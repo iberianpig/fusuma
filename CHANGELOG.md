@@ -1,5 +1,17 @@
 # Changelog
 
+## [v3.5.0](https://github.com/iberianpig/fusuma/tree/v3.5.0) (2024-01-29)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.4.0...v3.5.0)
+
+**Fixed bugs:**
+
+- fix: restore context after block.call [\#318](https://github.com/iberianpig/fusuma/pull/318) ([iberianpig](https://github.com/iberianpig))
+
+**Closed issues:**
+
+- Config::Searcher.with\_context does not reset context after execution [\#317](https://github.com/iberianpig/fusuma/issues/317)
+
 ## [v3.4.0](https://github.com/iberianpig/fusuma/tree/v3.4.0) (2024-01-19)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.3.1...v3.4.0)
