@@ -58,6 +58,8 @@ module Fusuma
         return unless e
 
         e.tag.match?(pattern)
+      when String
+        msg.match?(pattern)
       else
         false
       end
