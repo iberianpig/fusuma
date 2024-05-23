@@ -15,6 +15,7 @@ module Fusuma
       def run(option = {})
         read_options(option)
         instance = new
+        instance.initialize_plugins
         instance.set_trap
         ## NOTE: Uncomment following line to measure performance
         # instance.run_with_lineprof
@@ -59,7 +60,9 @@ module Fusuma
       end
     end
 
-    def initialize
+    def initialize; end
+
+    def initialize_plugins
       @inputs = Plugin::Inputs::Input.plugins.map do |cls|
         cls.ancestors.include?(Singleton) ? cls.instance : cls.new
       end
@@ -206,7 +209,7 @@ module Fusuma
     private
 
     def shutdown
-      [@inputs, @filters, @parsers, @buffers, @detectors, @executors].flatten.each do |plugin|
+      [@inputs, @filters, @parsers, @buffers, @detectors, @executors].flatten.compact.each do |plugin|
         plugin.shutdown
       end
     end
