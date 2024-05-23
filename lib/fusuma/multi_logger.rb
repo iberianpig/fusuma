@@ -13,6 +13,22 @@ module Fusuma
 
     class << self
       attr_writer :filepath
+
+      def info(msg)
+        instance.info(msg)
+      end
+
+      def debug(msg)
+        instance.debug(msg)
+      end
+
+      def warn(msg)
+        instance.warn(msg)
+      end
+
+      def error(msg)
+        instance.error(msg)
+      end
     end
 
     def initialize
@@ -49,6 +65,8 @@ module Fusuma
       debug_mode
     end
 
+    private
+
     def ignore_pattern?(msg)
       # TODO: configurable from config.yml
       pattern = /timer_input/
@@ -62,24 +80,6 @@ module Fusuma
         msg.match?(pattern)
       else
         false
-      end
-    end
-
-    class << self
-      def info(msg)
-        instance.info(msg)
-      end
-
-      def debug(msg)
-        instance.debug(msg)
-      end
-
-      def warn(msg)
-        instance.warn(msg)
-      end
-
-      def error(msg)
-        instance.error(msg)
       end
     end
   end
