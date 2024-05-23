@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "tempfile"
 
 require "./lib/fusuma/config"
 require "./lib/fusuma/plugin/filters/filter"
