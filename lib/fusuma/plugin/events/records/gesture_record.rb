@@ -31,7 +31,7 @@ module Fusuma
           end
 
           def to_s
-            "#{@gesture}, #{@finger}, #{@status}, #{@delta}"
+            "#{@gesture}, Finger: #{@finger}, Status: #{@status}"
           end
         end
       end

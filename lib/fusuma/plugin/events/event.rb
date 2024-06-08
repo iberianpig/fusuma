@@ -31,7 +31,7 @@ module Fusuma
         end
 
         def inspect
-          "time: #{time}, tag: #{tag}, record: #{record}"
+          "tag: #{tag}, record: #{record}"
         end
       end
     end
