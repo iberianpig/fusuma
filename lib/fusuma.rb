@@ -20,13 +20,8 @@ module Fusuma
         ## NOTE: Uncomment following line to measure performance
         # instance.run_with_lineprof
         instance.run
-      rescue SystemExit => e
-        MultiLogger.info("Shutdown by #{e}")
-        instance.send(:shutdown)
-      rescue Exception => e
-        MultiLogger.error("Shutdown by error")
-        MultiLogger.error(e)
-        instance.send(:shutdown)
+      ensure
+        instance&.send(:shutdown)
       end
 
       private
