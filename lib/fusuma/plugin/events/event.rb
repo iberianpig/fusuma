@@ -26,7 +26,7 @@ module Fusuma
             Records::TextRecord.new(record)
           else
             raise ArgumentError,
-              "@record should be String or Record"
+              "@record should be String or Record: #{record.class}, #{record}"
           end
         end
 
