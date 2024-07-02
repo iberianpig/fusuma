@@ -69,6 +69,7 @@ module Fusuma
 
     def ignore_pattern?(msg)
       # TODO: configurable from config.yml
+      # pattern = /timer_input|remap_touchpad_input|thumbsense context|libinput_command_input/
       pattern = /timer_input/
       case msg
       when Hash
