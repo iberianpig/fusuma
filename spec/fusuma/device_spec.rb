@@ -29,6 +29,10 @@ module Fusuma
           .and_return([@dummy_io, list_devices_output, @dummy_io, nil])
       end
 
+      after do
+        Device.reset
+      end
+
       context "with XPS-9360 (have a correct device)" do
         let(:list_devices_output) do
           File.open("./spec/fusuma/libinput-list-devices_iberianpig-XPS-9360.txt")
