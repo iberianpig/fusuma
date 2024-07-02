@@ -78,6 +78,23 @@ module Fusuma
           expect { Config.instance.validate(@config_file.path) }.to raise_error(Config::InvalidFileError)
         end
 
+        context "invalid syntax" do
+
+          before do
+            string = <<~CONFIG
+              - "aaaa"
+              "bbbb" # invalid syntax
+            CONFIG
+            @config_file = Tempfile.open do |temp_file|
+              temp_file.tap { |f| f.write(string) }
+            end
+          end
+
+          it "raise InvalidFileError" do
+            expect { Config.instance.validate(@config_file.path) }.to raise_error(Config::InvalidFileError)
+          end
+        end
+
         context "with duplicated key" do
           before do
             string = <<~CONFIG

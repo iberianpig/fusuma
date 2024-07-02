@@ -100,10 +100,12 @@ module Fusuma
 
       yamls = YAML.load_stream(File.read(path)).compact
       yamls.map do |yaml|
-        raise InvalidFileError, "invalid config.yml: #{path}" unless yaml.is_a? Hash
+        raise InvalidFileError, "Invalid config.yml: #{path}" unless yaml.is_a? Hash
 
         yaml.deep_symbolize_keys
       end
+    rescue Psych::SyntaxError => e
+      raise InvalidFileError, "Invalid syntax: #{path} #{e.message}"
     end
 
     # @param index [Index]
