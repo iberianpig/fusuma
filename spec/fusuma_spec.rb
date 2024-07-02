@@ -27,16 +27,11 @@ module Fusuma
         # NOTE: skip print reload config message
         before { allow(MultiLogger).to receive(:info).with(anything) }
         it "should print version" do
-          expect(MultiLogger).to receive(:info)
-            .with("Fusuma: #{Fusuma::VERSION}")
-          expect(MultiLogger).to receive(:info)
-            .with("libinput: #{LibinputCommand.new.version}")
-          expect(MultiLogger).to receive(:info)
-            .with("OS: #{`uname -rsv`}".strip)
-          expect(MultiLogger).to receive(:info)
-            .with("Distribution: #{`cat /etc/issue`}".strip)
-          expect(MultiLogger).to receive(:info)
-            .with("Desktop session: #{`echo $DESKTOP_SESSION $XDG_SESSION_TYPE`}".strip)
+          expect(MultiLogger).to receive(:info).with("Fusuma: #{Fusuma::VERSION}")
+          expect(MultiLogger).to receive(:info).with("libinput: #{LibinputCommand.new.version}")
+          expect(MultiLogger).to receive(:info).with("OS: #{`uname -rsv`}".strip)
+          expect(MultiLogger).to receive(:info).with("Distribution: #{`cat /etc/issue`}".strip)
+          expect(MultiLogger).to receive(:info).with("Desktop session: #{`echo $DESKTOP_SESSION $XDG_SESSION_TYPE`}".strip)
           expect { Runner.run(version: true) }.to raise_error(SystemExit)
         end
       end
