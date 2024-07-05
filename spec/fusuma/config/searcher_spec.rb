@@ -46,7 +46,7 @@ module Fusuma
         it { expect(Config::Searcher.new.search(index, location: location)).not_to eq "ctrl+plus" }
       end
 
-      context "with Skip condtions" do
+      context "with Skip conditions" do
         context "when index includes skippable key" do
           let(:index) do
             Config::Index.new [

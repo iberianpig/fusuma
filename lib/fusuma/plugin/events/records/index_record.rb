@@ -36,7 +36,7 @@ module Fusuma
           # @return [NilClass] when merge is not succeeded
           def merge(records:, index: @index)
             # FIXME: cache
-            raise "position is NOT body: #{self}" unless mergable?
+            raise "position is NOT body: #{self}" unless mergeable?
 
             if records.empty?
               if Config.instance.find_execute_key(index)
@@ -76,7 +76,7 @@ module Fusuma
             end
           end
 
-          def mergable?
+          def mergeable?
             @position == :body
           end
         end

@@ -60,7 +60,7 @@ module Fusuma
             it { expect(@detector.detect([@buffer, @timer_buffer])).to be_a Events::Event }
             it { expect(@detector.detect([@buffer, @timer_buffer]).record).to be_a Events::Records::IndexRecord }
             it { expect(@detector.detect([@buffer, @timer_buffer]).record.index).to be_a Config::Index }
-            it "should detect 3 fingers hold canclled" do
+            it "should detect 3 fingers hold cancelled" do
               event = @detector.detect([@buffer, @timer_buffer])
               expect(event.record.index.keys.map(&:symbol)).to eq([:hold, 3, :cancelled])
             end
@@ -86,14 +86,14 @@ module Fusuma
                 events = create_hold_events(statuses: %w[begin])
                 events.each { |event| @buffer.buffer(event) }
                 @time = events.last.time
-                @timer_buffer.buffer(create_timer_event(time: @time + HoldDetector::BASE_THERESHOLD))
+                @timer_buffer.buffer(create_timer_event(time: @time + HoldDetector::BASE_THRESHOLD))
               end
               it { expect(@detector.detect([@buffer, @timer_buffer])).to eq nil }
 
               context "with enough holding time" do
                 before do
                   @timer_buffer.clear
-                  @timer_buffer.buffer(create_timer_event(time: @time + HoldDetector::BASE_THERESHOLD + 0.01))
+                  @timer_buffer.buffer(create_timer_event(time: @time + HoldDetector::BASE_THRESHOLD + 0.01))
                 end
                 it { expect(@detector.detect([@buffer, @timer_buffer])).to be_a Events::Event }
                 it { expect(@detector.detect([@buffer, @timer_buffer]).record).to be_a Events::Records::IndexRecord }

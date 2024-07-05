@@ -148,7 +148,7 @@ module Fusuma
     # @return [NilClass] when event is NOT given
     def merge(events)
       index_events, context_events = events.partition { |event| event.record.type == :index }
-      main_events, modifiers = index_events.partition { |event| event.record.mergable? }
+      main_events, modifiers = index_events.partition { |event| event.record.mergeable? }
       request_context = context_events.each_with_object({}) do |e, results|
         results[e.record.name] = e.record.value
       end

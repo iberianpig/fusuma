@@ -11,7 +11,7 @@ module Fusuma
         GESTURE_RECORD_TYPE = "pinch"
 
         FINGERS = [2, 3, 4].freeze
-        BASE_THERESHOLD = 0.5
+        BASE_THRESHOLD = 0.5
 
         # @param buffers [Array<Buffer>]
         # @return [Events::Event] if event is detected
@@ -126,7 +126,7 @@ module Fusuma
             keys_global = Config::Index.new ["threshold", type]
             config_value = Config.search(keys_specific) ||
               Config.search(keys_global) || 1
-            BASE_THERESHOLD * config_value
+            BASE_THRESHOLD * config_value
           end
         end
 

@@ -22,7 +22,7 @@ module Fusuma
 
     # @return [String]
     def version
-      # versiom_command prints "1.6.3\n"
+      # version_command prints "1.6.3\n"
       @version ||= `#{version_command}`.strip
     end
 

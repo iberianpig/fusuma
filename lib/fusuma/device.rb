@@ -66,7 +66,7 @@ module Fusuma
         line_parser = LineParser.new
 
         libinput_command = Plugin::Inputs::LibinputCommandInput.new.command
-        # note: this libinput command takes a nontrivial amout of time (~200ms)
+        # note: this libinput command takes a nontrivial amount of time (~200ms)
         libinput_command.list_devices do |line|
           line_parser.push(line)
         end

@@ -12,7 +12,7 @@ module Fusuma
         BUFFER_TYPE = "gesture"
         GESTURE_RECORD_TYPE = "hold"
 
-        BASE_THERESHOLD = 0.7
+        BASE_THRESHOLD = 0.7
 
         def initialize(*args)
           super(*args)
@@ -134,7 +134,7 @@ module Fusuma
             keys_global = Config::Index.new ["threshold", type]
             config_value = Config.search(keys_specific) ||
               Config.search(keys_global) || 1
-            BASE_THERESHOLD * config_value
+            BASE_THRESHOLD * config_value
           end
         end
       end

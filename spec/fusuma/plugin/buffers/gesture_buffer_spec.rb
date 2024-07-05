@@ -170,7 +170,7 @@ module Fusuma
           end
         end
 
-        describe "#slect_by_events" do
+        describe "#select_by_events" do
           context "without block" do
             it { expect(@buffer.select_by_events).to be_a Enumerator }
           end
