@@ -43,11 +43,6 @@ module Fusuma
           exit 1
         end
 
-        # @return [Integer]
-        def pid
-          raise NotImplementedError, "override #{self.class.name}##{__method__}"
-        end
-
         # @return [IO]
         def io
           raise NotImplementedError, "override #{self.class.name}##{__method__}"

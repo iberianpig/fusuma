@@ -23,12 +23,12 @@ module Fusuma
           @early_wake_queue = Queue.new
         end
 
-        attr_reader :pid, :interval
+        attr_reader :interval
 
         def io
           @io ||= begin
             reader, writer = create_io
-            @pid = start(reader, writer)
+            start(reader, writer)
 
             reader
           end
@@ -38,7 +38,6 @@ module Fusuma
           Thread.new do
             timer_loop(writer)
           end
-          nil
         end
 
         def timer_loop(writer)

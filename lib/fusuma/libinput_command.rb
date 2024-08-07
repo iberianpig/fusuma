@@ -39,11 +39,7 @@ module Fusuma
 
     # @return [Integer] return a latest line libinput debug-events
     def debug_events(writer)
-      @debug_events ||= begin
-        t = Open3.pipeline_start([debug_events_with_options], ["grep -v POINTER_ --line-buffered"],
-          out: writer, in: "/dev/null")
-        t[0].pid
-      end
+      Open3.pipeline_start([debug_events_with_options], ["grep -v POINTER_ --line-buffered"], out: writer, in: "/dev/null")
     end
 
     # @return [String] command
