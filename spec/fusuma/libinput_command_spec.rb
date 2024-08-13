@@ -49,7 +49,7 @@ module Fusuma
             .with("libinput-list-devices") { false }
         end
 
-        it "shold print error and exit 1" do
+        it "should print error and exit 1" do
           expect(MultiLogger).to receive(:error)
           expect { subject }.to raise_error(SystemExit)
         end
