@@ -35,9 +35,9 @@ newgrp input
 **IMPORTANT**: This makes `/dev/input/` readable, so if that's an issue for you for some reason (like for privacy- or securityconcerns etc. or if it causes other parts of your OS to misbehave), **consider this your heads-up.** 
 
 <details>
-<summary>For Debian Based Distros (Ubuntu, Debian, Mint, Pop!OS)</summary>
+<summary>For Debian Based Distros (Ubuntu, Debian, Mint, Pop!_OS)</summary>
 
-### For Debian Based Distros (Ubuntu, Debian, Mint, Pop!OS)
+### For Debian Based Distros (Ubuntu, Debian, Mint, Pop!_OS)
 
 #### 1. Install libinput-tools
 
@@ -258,8 +258,8 @@ The following wiki pages can be edited by everyone.
 - [elementary OS](https://github.com/iberianpig/fusuma/wiki/elementary-OS)
 - [i3](https://github.com/iberianpig/fusuma/wiki/i3)
 - [KDE to mimic MacOS](https://github.com/iberianpig/fusuma/wiki/KDE-to-mimic-MacOS)
-- [POP OS with Cinnamon](https://github.com/iberianpig/fusuma/wiki/POP-OS-with-Cinnamon)
-- [PopOS Default Gnome](https://github.com/iberianpig/fusuma/wiki/PopOS-Default-Gnome)
+- [Pop!_OS with Cinnamon](https://github.com/iberianpig/fusuma/wiki/POP-OS-with-Cinnamon)
+- [Pop!_OS Default Gnome](https://github.com/iberianpig/fusuma/wiki/PopOS-Default-Gnome)
 - [Ubuntu OS to mimic Mac a little](https://github.com/iberianpig/fusuma/wiki/Ubuntu-OS-to-mimic-Mac-a-little)
 - [3 fingers Drag (OS X Style)](https://github.com/iberianpig/fusuma/wiki/3-fingers-Drag-(OS-X-Style))
 - [3 fingers Alt Tab Switcher(Windows Style)](https://github.com/iberianpig/fusuma/wiki/3-fingers-Alt-Tab-Switcher(Windows-Style))
