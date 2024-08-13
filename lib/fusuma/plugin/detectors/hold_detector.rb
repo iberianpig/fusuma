@@ -15,7 +15,7 @@ module Fusuma
         BASE_THRESHOLD = 0.7
 
         def initialize(*args)
-          super(*args)
+          super
           @timer = Inputs::TimerInput.instance
         end
 

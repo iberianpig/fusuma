@@ -10,7 +10,7 @@ module Fusuma
       # @abstract Subclass and override {#io} to implement
       class Input < Base
         def initialize(*args)
-          super(*args)
+          super
           @tag = self.class.name.split("Inputs::").last.underscore
         end
 

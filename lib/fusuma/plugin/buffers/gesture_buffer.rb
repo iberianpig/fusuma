@@ -12,7 +12,7 @@ module Fusuma
         DEFAULT_SECONDS_TO_KEEP = 100
 
         def initialize(*args)
-          super(*args)
+          super
           @cache = {}
           @cache_select_by = {}
           @cache_sum10 = {}

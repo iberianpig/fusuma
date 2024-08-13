@@ -9,7 +9,7 @@ module Fusuma
       # Inherite this base
       class Detector < Base
         def initialize(*args)
-          super(*args)
+          super
           @tag = self.class.tag
           @type = self.class.type
         end
