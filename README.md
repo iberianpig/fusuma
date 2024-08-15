@@ -11,10 +11,10 @@ This gem makes your linux able to recognize swipes or pinchs and assign commands
 ## Features
 
 - Easy installation with RubyGems
-- Defining Gestures and Actions in YAML
-- Sensitivity setting (threshold, interval) for gesture recognition
-- Automatic device addition for reconnecting external touchpads
-- Extension of gesture recognition by [plugin system](https://github.com/iberianpig/fusuma/#fusuma-plugins)
+- Define gestures and actions in YAML format
+- Sensitivity settings (threshold, interval) for gesture recognition
+- Automatic addition of external touchpads
+- Feature extension via a [plugin system](https://github.com/iberianpig/fusuma/#fusuma-plugins)
 
 ## Installation
 
