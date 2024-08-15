@@ -420,7 +420,7 @@ sudo gem list fusuma-plugin- | cut -d' ' -f1 | xargs --no-run-if-empty sudo gem 
 
 ## Tutorial Video
 
-[![Multitouch Touchpad Gestures in Linux with Fusuma](http://img.youtube.com/vi/bn11Iwvf29I/0.jpg)](http://www.youtube.com/watch?v=bn11Iwvf29I "Multitouch Touchpad Gestures in Linux with Fusuma")
+[![Multitouch Touchpad Gestures in Linux with Fusuma](http://img.youtube.com/vi/bn11Iwvf29I/0.jpg)](http://www.youtube.com/watch?v=bn11Iwvf29I "Multitouch Touchpad Gestures in Linux with Fusuma")  
 [Multitouch Touchpad Gestures in Linux with Fusuma](http://www.youtube.com/watch?v=bn11Iwvf29I) by [Eric Adams](https://www.youtube.com/user/igster75)
 
 ## Support
