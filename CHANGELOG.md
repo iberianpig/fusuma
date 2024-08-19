@@ -1,5 +1,9 @@
 # Changelog
 
+## [v3.6.0](https://github.com/iberianpig/fusuma/tree/v3.6.0) (2024-07-02)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.5.0...v3.6.0)
+
 ## [v3.5.0](https://github.com/iberianpig/fusuma/tree/v3.5.0) (2024-01-29)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.4.0...v3.5.0)
