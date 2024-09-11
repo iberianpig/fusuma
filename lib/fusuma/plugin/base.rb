@@ -53,9 +53,8 @@ module Fusuma
 
             next if param_types.any? { |klass| val.is_a?(klass) }
 
-            MultiLogger.error("Please fix config.yml.")
-            MultiLogger.error(":#{config_index.keys.map(&:symbol)
-            .join(" => :")} => :#{key} should be #{param_types.join(" OR ")}.")
+            MultiLogger.error("Please fix config.yml")
+            MultiLogger.error("`#{config_index.keys.join(".")}.#{key}` should be #{param_types.join(" OR ")}.")
             exit 1
           end
       end
