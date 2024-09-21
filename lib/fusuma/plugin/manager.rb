@@ -40,6 +40,7 @@ module Fusuma
             plugin_gemspec = Gem::Specification.load(plugin_gemspec_path)
             fusuma_gemspec_path = File.expand_path("../../../fusuma.gemspec", __dir__)
             fusuma_gemspec = Gem::Specification.load(fusuma_gemspec_path)
+            next if plugin_gemspec == fusuma_gemspec
 
             if plugin_gemspec.dependencies.find { |d| d.name == "fusuma" }&.match?(fusuma_gemspec)
               siblings_plugin
