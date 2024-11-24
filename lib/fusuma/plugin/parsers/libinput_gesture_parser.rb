@@ -2,6 +2,7 @@
 
 require_relative "../events/records/record"
 require_relative "../events/records/gesture_record"
+require_relative "../../libinput_command"
 
 module Fusuma
   module Plugin
@@ -29,8 +30,38 @@ module Fusuma
         private
 
         def parse_libinput(line)
+          if libinput_1_27_0_or_later?
+            parse_line_1_27_0_or_later(line)
+          else
+            parse_line(line)
+          end
+        end
+
+        def libinput_1_27_0_or_later?
+          return @libinput_1_27_0_or_later if defined?(@libinput_1_27_0_or_later)
+
+          @libinput_1_27_0_or_later = Inputs::LibinputCommandInput.new.command.libinput_1_27_0_or_later?
+        end
+
+        def parse_line(line)
           _device, event_name, _time, other = line.strip.split(nil, 4)
           finger, other = other.split(nil, 2)
+
+          gesture, status = *detect_gesture(event_name)
+
+          status = "cancelled" if gesture == "hold" && status == "end" && other == "cancelled"
+          delta = parse_delta(other)
+          [gesture, status, finger, delta]
+        end
+
+        def parse_line_1_27_0_or_later(line)
+          _device, event_name, other = line.strip.split(nil, 3)
+
+          if other[0] != "+"
+            _seq, other = other.split(nil, 2)
+          end
+
+          _time, finger, other = other.split(nil, 3)
 
           gesture, status = *detect_gesture(event_name)
 

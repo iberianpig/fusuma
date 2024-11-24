@@ -20,6 +20,11 @@ module Fusuma
       Gem::Version.new(version) >= Gem::Version.new(NEW_CLI_OPTION_VERSION)
     end
 
+    # @return [Boolean]
+    def libinput_1_27_0_or_later?
+      Gem::Version.new(version) >= Gem::Version.new("1.27.0")
+    end
+
     # @return [String]
     def version
       # version_command prints "1.6.3\n"
