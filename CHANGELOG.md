@@ -1,5 +1,25 @@
 # Changelog
 
+## [v3.7.0](https://github.com/iberianpig/fusuma/tree/v3.7.0) (2024-11-24)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.6.2...v3.7.0)
+
+**Fixed bugs:**
+
+- Support libinput 1.27.0 or later [\#325](https://github.com/iberianpig/fusuma/pull/325) ([iberianpig](https://github.com/iberianpig))
+
+**Closed issues:**
+
+- Fusuma does not work with libinput 1.27.0-1 \(Arch Linux and Hyprland\) [\#324](https://github.com/iberianpig/fusuma/issues/324)
+
+**Merged pull requests:**
+
+- feat: use actions/checkout@v4 [\#326](https://github.com/iberianpig/fusuma/pull/326) ([iberianpig](https://github.com/iberianpig))
+
+## [v3.6.2](https://github.com/iberianpig/fusuma/tree/v3.6.2) (2024-09-21)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.6.1...v3.6.2)
+
 ## [v3.6.1](https://github.com/iberianpig/fusuma/tree/v3.6.1) (2024-08-19)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.6.0...v3.6.1)
