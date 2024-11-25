@@ -121,42 +121,42 @@ module Fusuma
                 expect(parser.parse(event.call).record.finger).to eq 3
               end
             end
-          end
 
-          context "with hold gestures" do
-            before do
-              @debug_events = <<~EVENTS
+            context "with hold gestures" do
+              before do
+                @debug_events = <<~EVENTS
                 -event10  GESTURE_HOLD_BEGIN      +2.125s       3
                 event10  GESTURE_HOLD_END        +3.274s       3
                 event10  GESTURE_HOLD_BEGIN      +5.573s       4
                 event10  GESTURE_HOLD_END        +6.462s       4 cancelled
-              EVENTS
-                .split("\n")
-            end
+                EVENTS
+                  .split("\n")
+              end
 
-            let(:event) {
-              -> {
-                record = @debug_events.shift
-                Events::Event.new(tag: "libinput_command_input", record: record)
+              let(:event) {
+                -> {
+                  record = @debug_events.shift
+                  Events::Event.new(tag: "libinput_command_input", record: record)
+                }
               }
-            }
 
-            it "has a gesture record" do
-              expect(parser.parse(event.call).record).to be_a Events::Records::GestureRecord
-            end
+              it "has a gesture record" do
+                expect(parser.parse(event.call).record).to be_a Events::Records::GestureRecord
+              end
 
-            it "has a gesture record that it has a status" do
-              expect(parser.parse(event.call).record.status).to eq "begin"
-              expect(parser.parse(event.call).record.status).to eq "end"
-              expect(parser.parse(event.call).record.status).to eq "begin"
-              expect(parser.parse(event.call).record.status).to eq "cancelled"
-            end
+              it "has a gesture record that it has a status" do
+                expect(parser.parse(event.call).record.status).to eq "begin"
+                expect(parser.parse(event.call).record.status).to eq "end"
+                expect(parser.parse(event.call).record.status).to eq "begin"
+                expect(parser.parse(event.call).record.status).to eq "cancelled"
+              end
 
-            it "has a gesture record that it has finger num" do
-              expect(parser.parse(event.call).record.finger).to eq 3
-              expect(parser.parse(event.call).record.finger).to eq 3
-              expect(parser.parse(event.call).record.finger).to eq 4
-              expect(parser.parse(event.call).record.finger).to eq 4
+              it "has a gesture record that it has finger num" do
+                expect(parser.parse(event.call).record.finger).to eq 3
+                expect(parser.parse(event.call).record.finger).to eq 3
+                expect(parser.parse(event.call).record.finger).to eq 4
+                expect(parser.parse(event.call).record.finger).to eq 4
+              end
             end
           end
         end
