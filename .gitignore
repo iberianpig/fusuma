@@ -1,6 +1,5 @@
 /.bundle/
 /.yardoc
-/Gemfile.lock
 /_yardoc/
 /coverage/
 /doc/
@@ -17,4 +16,4 @@
 todo.md
 
 # direnv
-.envrc
+.direnv
