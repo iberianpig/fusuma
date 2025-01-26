@@ -379,12 +379,34 @@ plugin:
         - "EXTERNAL TOUCHPAD NAME"
 ```
 
-## Autostart (gnome-session-properties)
+## Autostart
+
+### Method 1: Using gnome-session-properties
 
 1. Check the path where you installed fusuma with `which fusuma`
 2. Open `gnome-session-properties`
 3. Add Fusuma and enter the location where the above path was checked in the command input field
 4. Add the `-d` option at the end of the command input field
+
+### Method 2: Creating a Desktop Entry Manually
+
+1. Check the path where you installed fusuma with `which fusuma`
+2. Create a new file named `fusuma.desktop` in the `~/.config/autostart/` directory.
+3. Add the following content to the `fusuma.desktop` file:
+
+```ini
+[Desktop Entry]
+Name=fusuma
+Comment=run fusuma
+Exec={path_to_fusuma} -d --log=/tmp/fusuma.log
+Icon=input-touchpad
+X-GNOME-Autostart-enabled=true
+Type=Application
+```
+
+   Replace `{path_to_fusuma}` with the path obtained from `which fusuma`.
+4. Save the file and ensure its permissions are correctly set to be executable.
+5. Restart your system or session to verify that fusuma starts automatically.
 
 ## Fusuma Plugins
 
