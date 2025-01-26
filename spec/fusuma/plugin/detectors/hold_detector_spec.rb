@@ -40,8 +40,7 @@ module Fusuma
 
           context "with only hold begin event" do
             before do
-              events = create_hold_events(statuses: ["begin"])
-              events.each { |event| @buffer.buffer(event) }
+              buffer(create_hold_events(statuses: ["begin"]))
             end
             it { expect(@detector.detect([@buffer, @timer_buffer])).to be_a Events::Event }
             it { expect(@detector.detect([@buffer, @timer_buffer]).record).to be_a Events::Records::IndexRecord }
@@ -54,8 +53,7 @@ module Fusuma
 
           context "with hold events(begin,cancelled)" do
             before do
-              events = create_hold_events(statuses: %w[begin cancelled])
-              events.each { |event| @buffer.buffer(event) }
+              buffer(create_hold_events(statuses: %w[begin cancelled]))
             end
             it { expect(@detector.detect([@buffer, @timer_buffer])).to be_a Events::Event }
             it { expect(@detector.detect([@buffer, @timer_buffer]).record).to be_a Events::Records::IndexRecord }
@@ -68,8 +66,7 @@ module Fusuma
 
           context "with hold events(begin,end)" do
             before do
-              events = create_hold_events(statuses: %w[begin end])
-              events.each { |event| @buffer.buffer(event) }
+              buffer(create_hold_events(statuses: %w[begin end]))
             end
             it { expect(@detector.detect([@buffer, @timer_buffer])).to be_a Events::Event }
             it { expect(@detector.detect([@buffer, @timer_buffer]).record).to be_a Events::Records::IndexRecord }
@@ -83,10 +80,9 @@ module Fusuma
           context "with hold events and timer events" do
             context "with begin event and timer events" do
               before do
-                events = create_hold_events(statuses: %w[begin])
-                events.each { |event| @buffer.buffer(event) }
-                @time = events.last.time
-                @timer_buffer.buffer(create_timer_event(time: @time + HoldDetector::BASE_THRESHOLD))
+                buffer(create_hold_events(statuses: %w[begin]))
+                @time = @buffer.events.last.time
+                buffer(create_timer_event(time: @time + HoldDetector::BASE_THRESHOLD))
               end
               it { expect(@detector.detect([@buffer, @timer_buffer])).to eq nil }
 
@@ -140,6 +136,11 @@ module Fusuma
 
         def create_timer_event(time: Time.now)
           Events::Event.new(time: time, tag: "timer_input", record: Events::Records::TextRecord.new("timer"))
+        end
+
+        def buffer(events)
+          events = Array(events) # wrap in array if not already an array
+          events.each { |event| @buffer.buffer(event) || @timer_buffer.buffer(event) }
         end
       end
     end
