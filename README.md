@@ -1,8 +1,7 @@
 # Fusuma
 ![Gem](https://img.shields.io/gem/v/fusuma?color=brightgreen) [![Build Status](https://github.com/iberianpig/fusuma/actions/workflows/main.yml/badge.svg)](https://github.com/iberianpig/fusuma/actions/workflows/main.yml)
 
-Fusuma is multitouch gesture recognizer.
-This gem makes your linux able to recognize swipes or pinchs and assign commands to them.
+Fusuma is a powerful tool designed to enable multitouch gesture recognition on Linux, providing intuitive operations for users. By utilizing gestures like swipes and pinches on laptops and devices with touchpads, you can create a more efficient working environment.
 
 ![fusuma_image](https://repository-images.githubusercontent.com/69813387/60879a00-166c-11ea-9875-3bf0818c62ec)
 
@@ -10,11 +9,12 @@ This gem makes your linux able to recognize swipes or pinchs and assign commands
 
 ## Features
 
-- Easy installation with RubyGems
-- Define gestures and actions in YAML format
-- Sensitivity settings (threshold, interval) for gesture recognition
-- Automatic addition of external touchpads
-- Feature extension via a [plugin system](https://github.com/iberianpig/fusuma/#fusuma-plugins)
+- **Easy Installation**: Quick setup via RubyGems.
+- **Flexible Configuration**: Customize gestures and actions freely in YAML file format.
+- **Sensitivity Settings**: Fine-tune gesture recognition with adjustable thresholds and intervals to suit your preferences and enhance precision.
+- **Extension through Plugins**: A [plugin system](https://github.com/iberianpig/fusuma/#fusuma-plugins) allows for additional functionality as needed.
+
+Enhance your Linux experience by evolving your interaction with Fusuma!
 
 ## Installation
 
@@ -410,13 +410,9 @@ Type=Application
 
 ## Fusuma Plugins
 
-Following features are provided as plugins.
+Fusuma's functionality can be extended with a variety of plugins. Below is a list of available plugins along with their purposes:
 
-- Adding new gestures or combinations
-- Features for specific Linux distributions
-- Setting different gestures per applications
-
-### Available plugins
+### Available Plugins
 
 Fusuma plugins are provided with the `fusuma-plugin-XXXXX` naming convention and hosted on [RubyGems](https://rubygems.org/search?utf8=%E2%9C%93&query=fusuma-plugins).
 
@@ -445,13 +441,13 @@ sudo gem list fusuma-plugin- | cut -d' ' -f1 | xargs --no-run-if-empty sudo gem 
 [![Multitouch Touchpad Gestures in Linux with Fusuma](http://img.youtube.com/vi/bn11Iwvf29I/0.jpg)](http://www.youtube.com/watch?v=bn11Iwvf29I "Multitouch Touchpad Gestures in Linux with Fusuma")  
 [Multitouch Touchpad Gestures in Linux with Fusuma](http://www.youtube.com/watch?v=bn11Iwvf29I) by [Eric Adams](https://www.youtube.com/user/igster75)
 
-## Support
+### Support and Sponsorship
+
+If you enjoy working on Fusuma or find it beneficial, consider supporting the developer through [GitHub Sponsors](https://github.com/sponsors/iberianpig).
 
 I'm a Freelance Engineer in Japan and working on these products after finishing my regular work or on my holidays.
 Currently, my open-source contribution times is not enough.
 If you like my work and want to contribute and become a sponsor, I will be able to focus on my projects.
-
-- [GitHub Sponsors](https://github.com/sponsors/iberianpig)
 
 ## Contributing
 
