@@ -6,6 +6,7 @@ module Fusuma
   # Execute libinput command
   class LibinputCommand
     def initialize(libinput_options: [], commands: {})
+      @libinput_command = commands[:libinput_command]
       @debug_events_command = commands[:debug_events_command]
       @list_devices_command = commands[:list_devices_command]
       @libinput_options = libinput_options
@@ -50,7 +51,9 @@ module Fusuma
     # @return [String] command
     # @raise [SystemExit]
     def version_command
-      if @debug_events_command && @list_devices_command
+      if @libinput_command
+        "#{@libinput_command} --version"
+      elsif @debug_events_command && @list_devices_command
         "#{@list_devices_command} --version"
       elsif which("libinput")
         "libinput --version"
@@ -63,7 +66,9 @@ module Fusuma
     end
 
     def list_devices_command
-      if @list_devices_command
+      if @libinput_command
+        @libinput_command + " list-devices"
+      elsif @list_devices_command
         @list_devices_command
       elsif new_cli_option_available?
         "libinput list-devices"
@@ -73,7 +78,9 @@ module Fusuma
     end
 
     def debug_events_command
-      if @debug_events_command
+      if @libinput_command
+        @libinput_command + " debug-events"
+      elsif @debug_events_command
         @debug_events_command
       elsif new_cli_option_available?
         "libinput debug-events"

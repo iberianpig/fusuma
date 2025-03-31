@@ -16,6 +16,7 @@ module Fusuma
             "enable-tap": [TrueClass, FalseClass],
             "show-keycodes": [TrueClass, FalseClass],
             verbose: [TrueClass, FalseClass],
+            "libinput-command": [String],
             "libinput-debug-events": [String],
             "libinput-list-devices": [String]
           }
@@ -35,6 +36,7 @@ module Fusuma
           @command ||= LibinputCommand.new(
             libinput_options: libinput_options,
             commands: {
+              libinput_command: libinput_command,
               debug_events_command: debug_events_command,
               list_devices_command: list_devices_command
             }
@@ -57,6 +59,10 @@ module Fusuma
             show_keycodes,
             verbose
           ].compact
+        end
+
+        def libinput_command
+          config_params(:"libinput-command")
         end
 
         def debug_events_command
