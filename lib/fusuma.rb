@@ -200,7 +200,7 @@ module Fusuma
       } # Trap ^C
       Signal.trap("TERM") {
         shutdown
-        exit
+        exit 1
       } # Trap `Kill `
     end
 
