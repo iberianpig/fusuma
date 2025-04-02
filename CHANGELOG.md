@@ -1,16 +1,21 @@
 # Changelog
 
+## [v3.8.0](https://github.com/iberianpig/fusuma/tree/v3.8.0) (2025-04-02)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.7.0...v3.8.0)
+
+**Merged pull requests:**
+
+- Fix context hierarchy in RSpec [\#328](https://github.com/iberianpig/fusuma/pull/328) ([iberianpig](https://github.com/iberianpig))
+
 ## [v3.7.0](https://github.com/iberianpig/fusuma/tree/v3.7.0) (2024-11-24)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.6.2...v3.7.0)
 
 **Fixed bugs:**
 
-- Support libinput 1.27.0 or later [\#325](https://github.com/iberianpig/fusuma/pull/325) ([iberianpig](https://github.com/iberianpig))
-
-**Closed issues:**
-
 - Fusuma does not work with libinput 1.27.0-1 \(Arch Linux and Hyprland\) [\#324](https://github.com/iberianpig/fusuma/issues/324)
+- Support libinput 1.27.0 or later [\#325](https://github.com/iberianpig/fusuma/pull/325) ([iberianpig](https://github.com/iberianpig))
 
 **Merged pull requests:**
 
@@ -153,7 +158,6 @@
 
 - Problem in readme [\#256](https://github.com/iberianpig/fusuma/issues/256)
 - Migrate CI from Travis CI to Github Actions [\#252](https://github.com/iberianpig/fusuma/issues/252)
-- Fusuma wont work after resuming from suspend on wayland [\#208](https://github.com/iberianpig/fusuma/issues/208)
 
 **Merged pull requests:**
 
@@ -329,7 +333,6 @@
 - Each action took about 2 secs to react [\#167](https://github.com/iberianpig/fusuma/issues/167)
 - ruby2.7 [\#164](https://github.com/iberianpig/fusuma/issues/164)
 - Zoom-in not really usable on Vivaldi [\#159](https://github.com/iberianpig/fusuma/issues/159)
-- Reversed directions with no alternatives [\#133](https://github.com/iberianpig/fusuma/issues/133)
 
 **Merged pull requests:**
 
