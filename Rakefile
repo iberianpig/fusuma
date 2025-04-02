@@ -26,6 +26,7 @@ task :bump, :type do |_, args|
     gemspec = Gem::Specification.load(gemspec_path)
     config.user = gemspec.authors.first
     config.project = gemspec.name
+    config.exclude_labels = ["duplicate", "question", "invalid", "wontfix", "Duplicate", "Question", "Invalid", "Wontfix", "Meta: Exclude From Changelog", "cannot reproduce"]
     config.future_release = "v#{next_version}"
   end
 
