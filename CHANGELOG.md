@@ -1,5 +1,13 @@
 # Changelog
 
+## [v3.8.1](https://github.com/iberianpig/fusuma/tree/v3.8.1) (2025-04-12)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.8.0...v3.8.1)
+
+**Closed issues:**
+
+- Fusuma doesn't detect touchpad when mouse plugged in [\#341](https://github.com/iberianpig/fusuma/issues/341)
+
 ## [v3.8.0](https://github.com/iberianpig/fusuma/tree/v3.8.0) (2025-04-02)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.7.0...v3.8.0)
