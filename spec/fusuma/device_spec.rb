@@ -23,10 +23,11 @@ module Fusuma
           .to receive(:list_devices_command)
           .and_return(libinput_device_command)
 
-        @dummy_io = StringIO.new("dummy")
-        allow(Open3).to receive(:popen3)
+        dummy_io = StringIO.new("dummy")
+        dummy_status = double("Process::Status", success?: true)
+        allow(Open3).to receive(:capture3)
           .with(libinput_device_command)
-          .and_return([@dummy_io, list_devices_output, @dummy_io, nil])
+          .and_return([list_devices_output, dummy_io, dummy_status])
       end
 
       after do

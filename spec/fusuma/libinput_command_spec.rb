@@ -80,16 +80,16 @@ module Fusuma
 
       before do
         dummy_io = StringIO.new("dummy")
+        dummy_status = double("Process::Status", success?: true)
         io = StringIO.new("dummy output")
-        allow(Open3).to receive(:popen3).with(anything).and_return([dummy_io, io, dummy_io,
-          dummy_io, nil])
+        allow(Open3).to receive(:capture3).with(anything).and_return([io, dummy_io, dummy_status])
       end
 
       context "with the alternative command" do
         let(:commands) { {list_devices_command: "dummy_list_devices"} }
 
         it "should call dummy events" do
-          expect(Open3).to receive(:popen3).with(/dummy_list_devices/)
+          expect(Open3).to receive(:capture3).with(/dummy_list_devices/)
         end
       end
 
@@ -101,8 +101,7 @@ module Fusuma
 
         it "call `libinput list-devices`" do
           command = "libinput list-devices"
-          expect(Open3).to receive(:popen3)
-            .with(command)
+          expect(Open3).to receive(:capture3).with(command)
         end
       end
       context "with old cli version" do
@@ -113,8 +112,7 @@ module Fusuma
 
         it "call `libinput-list-devices`" do
           command = "libinput-list-devices"
-          expect(Open3).to receive(:popen3)
-            .with(command)
+          expect(Open3).to receive(:capture3).with(command)
         end
       end
     end
