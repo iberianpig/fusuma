@@ -15,8 +15,8 @@ module Fusuma
       def run(option = {})
         read_options(option)
         instance = new
-        instance.initialize_plugins
         instance.set_trap
+        instance.initialize_plugins
         ## NOTE: Uncomment following line to measure performance
         # instance.run_with_lineprof
         instance.run
