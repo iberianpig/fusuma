@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "multi_logger"
-require_relative "libinput_command"
+require "fusuma/plugin/inputs/libinput_command_input"
 
 module Fusuma
   # detect input device
@@ -65,12 +65,15 @@ module Fusuma
       def fetch_devices
         line_parser = LineParser.new
 
-        libinput_command = Plugin::Inputs::LibinputCommandInput.new.command
         # note: this libinput command takes a nontrivial amount of time (~200ms)
         libinput_command.list_devices do |line|
           line_parser.push(line)
         end
         line_parser.generate_devices
+      end
+
+      def libinput_command
+        @libinput_command ||= Plugin::Inputs::LibinputCommandInput.new.command
       end
     end
 
