@@ -6,7 +6,6 @@ module Fusuma
     # index for config.yml
     class Index
       def initialize(keys)
-        @count = 0
         case keys
         when Array
           @keys = []
