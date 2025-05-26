@@ -24,7 +24,7 @@ module Fusuma
     def shutdown
       child_pids.each do |pid|
         Process.kill("TERM", pid)
-      rescue Errno::ESRCH
+      rescue Errno::ESRCH, IOError
         # ignore
       end
 
