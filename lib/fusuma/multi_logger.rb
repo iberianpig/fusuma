@@ -50,7 +50,7 @@ module Fusuma
 
       return if ignore_pattern?(msg)
 
-      super(msg)
+      super
     end
 
     def warn(msg)

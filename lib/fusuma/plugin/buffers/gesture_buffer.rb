@@ -48,7 +48,7 @@ module Fusuma
         def clear_expired(current_time: Time.now)
           clear if ended?
 
-          @seconds_to_keep ||= (config_params(:seconds_to_keep) || DEFAULT_SECONDS_TO_KEEP)
+          @seconds_to_keep ||= config_params(:seconds_to_keep) || DEFAULT_SECONDS_TO_KEEP
           @events.each do |e|
             break if current_time - e.time < @seconds_to_keep
 
@@ -90,7 +90,7 @@ module Fusuma
               gesture_event.record.delta[attr].to_f
             end.reduce(:+)
           elsif upd_ev.length > cache_entry.checked
-            cache_entry.value = cache_entry.value + upd_ev[-1].record.delta[attr].to_f - \
+            cache_entry.value = cache_entry.value + upd_ev[-1].record.delta[attr].to_f -
               ((upd_ev.length > 10) ? upd_ev[-11].record.delta[attr].to_f : 0)
           else
             return cache_entry.value

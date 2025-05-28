@@ -84,10 +84,9 @@ module Fusuma
         def with_context(context = {}, &block)
           before = @context
           @context = context
-          result = block.call
+          block.call
         ensure # NOTE: ensure is called even if return in block
           @context = before
-          result
         end
 
         CONTEXT_SEARCH_ORDER = [:no_context, :complete_match_context, :partial_match_context]

@@ -125,10 +125,10 @@ module Fusuma
             context "with hold gestures" do
               before do
                 @debug_events = <<~EVENTS
-                -event10  GESTURE_HOLD_BEGIN      +2.125s       3
-                event10  GESTURE_HOLD_END        +3.274s       3
-                event10  GESTURE_HOLD_BEGIN      +5.573s       4
-                event10  GESTURE_HOLD_END        +6.462s       4 cancelled
+                  -event10  GESTURE_HOLD_BEGIN      +2.125s       3
+                  event10  GESTURE_HOLD_END        +3.274s       3
+                  event10  GESTURE_HOLD_BEGIN      +5.573s       4
+                  event10  GESTURE_HOLD_END        +6.462s       4 cancelled
                 EVENTS
                   .split("\n")
               end

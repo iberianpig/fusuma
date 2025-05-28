@@ -58,7 +58,8 @@ module Fusuma
       end
     end
 
-    def initialize; end
+    def initialize
+    end
 
     def initialize_plugins
       @inputs = Plugin::Inputs::Input.plugins.map do |cls|

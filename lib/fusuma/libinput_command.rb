@@ -36,7 +36,7 @@ module Fusuma
     def list_devices(&block)
       cmd = list_devices_command
       MultiLogger.debug(list_devices: cmd)
-      o, e, s = Open3.capture3(cmd)
+      o, _, s = Open3.capture3(cmd)
 
       unless s.success?
         MultiLogger.error("libinput list-devices failed with output: #{o}")
