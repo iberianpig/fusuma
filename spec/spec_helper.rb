@@ -18,6 +18,18 @@ RSpec.configure do |config|
   end
 
   config.include(Fusuma::ConfigHelper)
+
+  # rbs-trace
+  begin
+    require "rbs-trace"
+    trace = RBS::Trace.new
+
+    config.before(:suite) { trace.enable }
+    config.after(:suite) do
+      trace.disable
+      trace.save_comments(:rbs_colon)
+    end
+  end
 end
 
 SimpleCov.formatter = SimpleCov::Formatter::HTMLFormatter

@@ -18,5 +18,7 @@ gem "rspec-debug"
 gem "rspec-parameterized"
 gem "rubocop"
 gem "simplecov"
-gem "standard", require: false
-gem "yard"
+gem "standard"
+
+gem "rbs-trace", "~> 0.6.0", require: false
+gem "rbs-inline", require: false
