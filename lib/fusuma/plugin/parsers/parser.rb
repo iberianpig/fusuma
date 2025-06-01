@@ -12,6 +12,7 @@ module Fusuma
         # if `#parse_record` return nil, this method will return original event
         # @param event [Event]
         # @return [Event]
+        #: (Fusuma::Plugin::Events::Event) -> Fusuma::Plugin::Events::Event
         def parse(event)
           return event if event.tag != source
 
@@ -25,10 +26,12 @@ module Fusuma
 
         # Set source for tag from config.yml.
         # DEFAULT_SOURCE is defined in each Parser plugins.
+        #: () -> String
         def source
           @source ||= config_params(:source) || self.class.const_get(:DEFAULT_SOURCE)
         end
 
+        #: () -> String
         def tag
           @tag ||= self.class.name.split("::").last.underscore
         end
@@ -36,6 +39,7 @@ module Fusuma
         # parse Record object
         # @param _record [Record]
         # @return [Record, nil]
+        #: (Fusuma::Plugin::Events::Records::TextRecord) -> nil
         def parse_record(_record)
           nil
         end

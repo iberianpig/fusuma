@@ -25,6 +25,7 @@ class Hash
   end
 
   # activesupport-4.1.1/lib/active_support/core_ext/hash/keys.rb
+  #: () -> Hash[untyped, untyped]
   def deep_symbolize_keys
     deep_transform_keys do |key|
       key.to_sym
@@ -33,6 +34,7 @@ class Hash
     end
   end
 
+  #: () -> Hash[untyped, untyped]
   def deep_transform_keys(&block)
     result = {}
     each do |key, value|
@@ -42,6 +44,7 @@ class Hash
   end
 
   # activesupport/lib/active_support/core_ext/hash/deep_transform_values.rb
+  #: () -> Hash[untyped, untyped]
   def deep_transform_values(&block)
     _deep_transform_values_in_object(self, &block)
   end
@@ -49,6 +52,7 @@ class Hash
   private
 
   # Support methods for deep transforming nested hashes and arrays.
+  #: (Hash[untyped, untyped]) -> Hash[untyped, untyped]
   def _deep_transform_values_in_object(object, &block)
     case object
     when Hash

@@ -20,6 +20,7 @@ module Fusuma
     include Singleton
 
     class << self
+      #: (Fusuma::Config::Index) -> (String | Hash[untyped, untyped] | Integer | Float)?
       def search(index)
         instance.search(index)
       end
@@ -28,6 +29,7 @@ module Fusuma
         instance.find_execute_key(index)
       end
 
+      #: ((Tempfile | String)?) -> (Tempfile | String)?
       def custom_path=(new_path)
         instance.custom_path = new_path
       end
@@ -35,22 +37,26 @@ module Fusuma
 
     attr_reader :custom_path, :searcher
 
+    #: () -> void
     def initialize
       @searcher = Searcher.new
       @custom_path = nil
       @keymap = nil
     end
 
+    #: ((Tempfile | String)?) -> (Tempfile | String)?
     def custom_path=(new_path)
       @custom_path = new_path
       reload
     end
 
+    #: () -> Array[untyped]
     def keymap
       # FIXME: @keymap is not initialized when called from outside Fusuma::Runner like fusuma-senkey
       @keymap || reload.keymap
     end
 
+    #: () -> Fusuma::Config
     def reload
       plugin_defaults = plugin_defaults_paths.map do |default_yml|
         {
@@ -76,6 +82,7 @@ module Fusuma
     # @param key [Symbol]
     # @param base [Config::Index]
     # @return [Hash]
+    #: (Symbol?, Fusuma::Config::Index) -> Hash[untyped, untyped]
     def fetch_config_params(key, base)
       request_context = {plugin_defaults: base.keys.last.symbol.to_s}
       fallbacks = [:no_context, :plugin_default_context]
@@ -90,6 +97,7 @@ module Fusuma
 
     # @return [Hash] If check passes
     # @raise [InvalidFileError] If check does not pass
+    #: (String) -> Array[untyped]?
     def validate(path)
       duplicates = []
       YAMLDuplicationChecker.check(File.read(path), path) do |ignored, duplicate|
@@ -109,6 +117,7 @@ module Fusuma
     end
 
     # @param index [Index]
+    #: (Fusuma::Config::Index) -> (String | Hash[untyped, untyped] | Integer | Float)?
     def search(index)
       @searcher.search_with_cache(index, location: keymap)
     end
@@ -135,6 +144,7 @@ module Fusuma
 
     private
 
+    #: () -> String
     def find_config_filepath
       filename = "fusuma/config.yml"
       if custom_path
@@ -149,10 +159,12 @@ module Fusuma
       end
     end
 
+    #: () -> String
     def expand_custom_path
       File.expand_path(custom_path)
     end
 
+    #: (String) -> String
     def expand_config_path(filename)
       File.expand_path "~/.config/#{filename}"
     end
@@ -161,6 +173,7 @@ module Fusuma
       File.expand_path "../../#{filename}", __FILE__
     end
 
+    #: () -> Array[untyped]
     def plugin_defaults_paths
       Plugin::Manager.load_paths.map do |plugin_path|
         yml = plugin_path.gsub(/\.rb$/, ".yml")

@@ -29,12 +29,14 @@ module Fusuma
       end
 
       class DummyInput < Input
+        #: () -> Hash[untyped, untyped]
         def config_param_types
           {
             dummy: String
           }
         end
 
+        #: () -> IO
         def io
           @io ||= begin
             r, w = IO.pipe

@@ -7,10 +7,12 @@ module Fusuma
   module CustomProcess
     attr_writer :proctitle
 
+    #: () -> Array[untyped]
     def child_pids
       @child_pids ||= []
     end
 
+    #: () -> nil
     def fork
       pid = Process.fork do
         Process.setproctitle(proctitle)
@@ -35,6 +37,7 @@ module Fusuma
       end
     end
 
+    #: () -> String
     def proctitle
       @proctitle ||= self.class.name.underscore
     end

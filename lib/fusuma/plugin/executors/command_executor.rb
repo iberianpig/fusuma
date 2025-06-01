@@ -13,6 +13,7 @@ module Fusuma
           [:command]
         end
 
+        #: (Fusuma::Plugin::Events::Event) -> nil
         def execute(event)
           command = search_command(event)
 
@@ -29,6 +30,7 @@ module Fusuma
           MultiLogger.error("#{event.record.index.keys}": e.message.to_s)
         end
 
+        #: (Fusuma::Plugin::Events::Event) -> (String | bool)
         def executable?(event)
           event.tag.end_with?("_detector") &&
             event.record.type == :index &&
@@ -37,6 +39,7 @@ module Fusuma
 
         # @param event [Event]
         # @return [String]
+        #: (Fusuma::Plugin::Events::Event) -> String
         def search_command(event)
           command_index = Config::Index.new([*event.record.index.keys, :command])
           Config.instance.search(command_index)
@@ -44,6 +47,7 @@ module Fusuma
 
         # @param event [Event]
         # @return [Float]
+        #: (Fusuma::Plugin::Events::Event) -> Float
         def args_accel(event)
           accel_index = Config::Index.new([*event.record.index.keys, :accel])
           (Config.instance.search(accel_index) || 1).to_f

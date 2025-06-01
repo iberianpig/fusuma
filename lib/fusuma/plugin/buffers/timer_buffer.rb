@@ -19,6 +19,7 @@ module Fusuma
 
         # @param event [Event]
         # @return [Buffer, NilClass]
+        #: (Fusuma::Plugin::Events::Event) -> Fusuma::Plugin::Buffers::TimerBuffer
         def buffer(event)
           return if event&.tag != source
 

@@ -22,6 +22,7 @@ module Fusuma
       end
 
       # @abstract override `#shutdown` to implement
+      #: () -> nil
       def shutdown
       end
 
@@ -34,6 +35,7 @@ module Fusuma
       # @param key [Symbol]
       # @param base [Config::Index]
       # @return [Object]
+      #: (?Symbol?) -> (String | Hash[untyped, untyped] | Float | bool)?
       def config_params(key = nil)
         @config_params ||= {}
         if @config_params["#{config_index.cache_key},#{key}"]
@@ -59,6 +61,7 @@ module Fusuma
           end
       end
 
+      #: () -> Fusuma::Config::Index
       def config_index
         @config_index ||= Config::Index.new(self.class.name.gsub("Fusuma::", "").underscore.split("/"))
       end

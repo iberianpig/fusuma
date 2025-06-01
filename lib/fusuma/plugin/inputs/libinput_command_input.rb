@@ -8,6 +8,7 @@ module Fusuma
     module Inputs
       # libinput commands wrapper
       class LibinputCommandInput < Input
+        #: () -> Hash[untyped, untyped]
         def config_param_types
           {
             device: [String],
@@ -23,6 +24,7 @@ module Fusuma
         end
 
         # @return [IO]
+        #: () -> StringIO
         def io
           @io ||= begin
             reader, writer = create_io
@@ -32,6 +34,7 @@ module Fusuma
         end
 
         # @return [LibinputCommand]
+        #: () -> (Fusuma::LibinputCommand | RSpec::Mocks::InstanceVerifyingDouble)
         def command
           @command ||= LibinputCommand.new(
             libinput_options: libinput_options,
@@ -44,6 +47,7 @@ module Fusuma
         end
 
         # @return [Array]
+        #: () -> Array[untyped]
         def libinput_options
           device = ("--device='#{config_params(:device)}'" if config_params(:device))
           enable_tap = "--enable-tap" if config_params(:"enable-tap")
@@ -61,14 +65,17 @@ module Fusuma
           ].compact
         end
 
+        #: () -> String?
         def libinput_command
           config_params(:"libinput-command")
         end
 
+        #: () -> nil
         def debug_events_command
           config_params(:"libinput-debug-events")
         end
 
+        #: () -> nil
         def list_devices_command
           config_params(:"libinput-list-devices")
         end

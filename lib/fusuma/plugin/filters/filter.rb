@@ -11,6 +11,7 @@ module Fusuma
         # @param event [Event]
         # @return [Event] when keeping event
         # @return [NilClass] when discarding record
+        #: (Fusuma::Plugin::Events::Event) -> Fusuma::Plugin::Events::Event?
         def filter(event)
           return event if !/#{source}/.match?(event.tag)
 
@@ -29,6 +30,7 @@ module Fusuma
 
         # Set source for tag from config.yml.
         # DEFAULT_SOURCE is defined in each Filter plugins.
+        #: () -> String
         def source
           @source ||= config_params(:source) || self.class.const_get(:DEFAULT_SOURCE)
         end

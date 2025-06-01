@@ -14,23 +14,28 @@ module Fusuma
     class << self
       attr_writer :filepath
 
+      #: (String | Hash[untyped, untyped]) -> bool
       def info(msg)
         instance.info(msg)
       end
 
+      #: (Hash[untyped, untyped] | String) -> bool?
       def debug(msg)
         instance.debug(msg)
       end
 
+      #: (String) -> bool
       def warn(msg)
         instance.warn(msg)
       end
 
+      #: (String) -> bool
       def error(msg)
         instance.error(msg)
       end
     end
 
+    #: () -> void
     def initialize
       filepath = self.class.instance_variable_get(:@filepath)
       if filepath
@@ -45,6 +50,7 @@ module Fusuma
       @debug_mode = false
     end
 
+    #: (Hash[untyped, untyped] | String) -> bool?
     def debug(msg)
       return unless debug_mode?
 
@@ -53,20 +59,24 @@ module Fusuma
       super
     end
 
+    #: (String) -> bool
     def warn(msg)
       err_logger.warn(msg)
     end
 
+    #: (String) -> bool
     def error(msg)
       err_logger.error(msg)
     end
 
+    #: () -> bool
     def debug_mode?
       debug_mode
     end
 
     private
 
+    #: (String) -> bool
     def ignore_pattern?(msg)
       # TODO: configurable from config.yml
       # pattern = /timer_input|remap_touchpad_input|thumbsense context|libinput_command_input/

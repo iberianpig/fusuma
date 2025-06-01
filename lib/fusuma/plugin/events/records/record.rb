@@ -10,6 +10,7 @@ module Fusuma
         # @abstract Subclass and override {#type} to implement
         class Record < Base
           # @return [Symbol]
+          #: () -> nil
           def type
             raise NotImplementedError, "override #type"
           end

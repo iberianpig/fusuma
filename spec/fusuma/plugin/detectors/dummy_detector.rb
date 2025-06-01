@@ -10,6 +10,7 @@ module Fusuma
       class DummyDetector < Detector
         # @param buffers [Array<Buffers::Buffer>]
         # @return [Event]
+        #: (Array[untyped]) -> Fusuma::Plugin::Events::Event
         def detect(buffers)
           buffers.each do |buffer|
             next unless buffer.type == "dummy"
@@ -19,6 +20,7 @@ module Fusuma
           end
         end
 
+        #: () -> Hash[untyped, untyped]
         def config_param_types
           {
             dummy: String

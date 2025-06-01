@@ -15,6 +15,7 @@ module Fusuma
         # @param time [Time]
         # @param tag [Tag]
         # @param record [String, Record]
+        #: (tag: String, record: String | Fusuma::Plugin::Events::Records::GestureRecord | Fusuma::Plugin::Events::Records::IndexRecord | Fusuma::Plugin::Events::Records::TextRecord | DummyRecord, ?time: Time | nil) -> void
         def initialize(tag:, record:, time: Time.now)
           super()
           @time = time
@@ -30,6 +31,7 @@ module Fusuma
           end
         end
 
+        #: () -> String
         def inspect
           "tag: #{tag}, record: #{record}"
         end

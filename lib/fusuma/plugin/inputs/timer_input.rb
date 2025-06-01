@@ -17,6 +17,7 @@ module Fusuma
           }
         end
 
+        #: (*nil, ?interval: nil) -> void
         def initialize(*args, interval: nil)
           super(*args)
           @interval = interval || config_params(:interval) || DEFAULT_INTERVAL
@@ -25,6 +26,7 @@ module Fusuma
 
         attr_reader :interval
 
+        #: () -> StringIO
         def io
           @io ||= begin
             reader, writer = create_io
@@ -34,6 +36,7 @@ module Fusuma
           end
         end
 
+        #: (StringIO, StringIO) -> nil
         def start(reader, writer)
           Thread.new do
             timer_loop(writer)
@@ -62,6 +65,7 @@ module Fusuma
           MultiLogger.error e
         end
 
+        #: (Time) -> Thread::Queue
         def wake_early(t)
           @early_wake_queue.push(t + EPSILON_TIME)
         end

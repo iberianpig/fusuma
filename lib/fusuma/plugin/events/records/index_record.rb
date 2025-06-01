@@ -14,6 +14,7 @@ module Fusuma
           # @param [Config::Index] index
           # @param [Symbol] position [:prefix, :body, :surfix]
           # @param [Symbol] trigger [:oneshot, :repeat]
+          #: (index: Fusuma::Config::Index, ?position: Symbol, ?trigger: Symbol, ?args: Hash[untyped, untyped]) -> void
           def initialize(index:, position: :body, trigger: :oneshot, args: {})
             super()
             @index = index
@@ -26,6 +27,7 @@ module Fusuma
             "#{@index}, #{@position}, #{@trigger}, #{@args}"
           end
 
+          #: () -> Symbol
           def type
             :index
           end

@@ -27,6 +27,7 @@ module Fusuma
       end
 
       class DummyExecutor < Executor
+        #: () -> Hash[untyped, untyped]
         def config_param_types
           {
             dummy: String
@@ -37,6 +38,7 @@ module Fusuma
           [:dummy]
         end
 
+        #: (Fusuma::Plugin::Events::Event) -> nil
         def execute(event)
           index = Config::Index.new([*event.record.index.keys, :dummy])
           content = Config.search(index)
@@ -45,6 +47,7 @@ module Fusuma
           puts content if executable?(event)
         end
 
+        #: (Fusuma::Plugin::Events::Event) -> bool
         def executable?(event)
           event.tag == "dummy"
         end

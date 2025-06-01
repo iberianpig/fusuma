@@ -5,6 +5,7 @@ module Fusuma
     # ref: https://github.com/rubocop-hq/rubocop/blob/97e4ffc8a71e9e5239a927c6a534dfc1e0da917f/lib/rubocop/yaml_duplication_checker.rb
     # Find duplicated keys from YAML.
     module YAMLDuplicationChecker
+      #: (String, String) -> void
       def self.check(yaml_string, filename, &on_duplicated)
         tree = YAML.parse(yaml_string, filename: filename)
         return unless tree
@@ -12,6 +13,7 @@ module Fusuma
         traverse(tree, &on_duplicated)
       end
 
+      #: (Psych::Nodes::Scalar | Psych::Nodes::Mapping | Psych::Nodes::Document | Psych::Nodes::Sequence) -> Array[untyped]?
       def self.traverse(tree, &on_duplicated)
         case tree
         when Psych::Nodes::Mapping

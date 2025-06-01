@@ -8,6 +8,7 @@ module Fusuma
     module Detectors
       # Inherite this base
       class Detector < Base
+        #: (*nil) -> void
         def initialize(*args)
           super
           @tag = self.class.tag
@@ -39,6 +40,7 @@ module Fusuma
 
         # @param record [Events::Records::Record]
         # @return [Events::Event]
+        #: (record: Fusuma::Plugin::Events::Records::IndexRecord) -> Fusuma::Plugin::Events::Event
         def create_event(record:)
           @last_time = Time.now
           Events::Event.new(time: @last_time, tag: tag, record: record)

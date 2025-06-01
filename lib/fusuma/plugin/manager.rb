@@ -7,22 +7,27 @@ module Fusuma
   module Plugin
     # Manage Fusuma plugins
     class Manager
+      #: (Class) -> void
       def initialize(plugin_class)
         @plugin_class = plugin_class
       end
 
+      #: () -> Array[untyped]
       def require_siblings_from_plugin_dir
         fusuma_default_plugin_paths.each { |siblings_plugin| require(siblings_plugin) }
       end
 
+      #: () -> Array[untyped]
       def require_siblings_from_gems
         fusuma_external_plugin_paths.each { |siblings_plugin| require(siblings_plugin) }
       end
 
+      #: () -> Regexp
       def exclude_path_pattern
         %r{fusuma/plugin/[^/]*.rb}
       end
 
+      #: () -> Array[untyped]
       def fusuma_default_plugin_paths
         @_fusuma_default_plugin_paths ||= Dir.glob(File.expand_path("#{__dir__}/../../#{search_key}")).grep_v(exclude_path_pattern).sort
       end
@@ -56,6 +61,7 @@ module Fusuma
       # @example
       # search_key
       # => "fusuma/plugin/detectors/*rb"
+      #: () -> String
       def search_key
         File.join(plugin_dir_name, "*rb")
       end
@@ -66,6 +72,7 @@ module Fusuma
       #  plugin_dir_name
       #   => "fusuma/plugin/detectors"
       # @return [String]
+      #: () -> String
       def plugin_dir_name
         @plugin_class.name.match(/(Fusuma::.*)::/)[1].to_s.underscore
       end
@@ -101,6 +108,7 @@ module Fusuma
           manager.require_siblings_from_gems
         end
 
+        #: () -> void
         def require_base_plugins
           require_relative "base"
           require_relative "events/event"
@@ -112,6 +120,7 @@ module Fusuma
           require_relative "executors/executor"
         end
 
+        #: () -> Hash[untyped, untyped]
         def plugins
           @plugins ||= {}
         end
@@ -122,6 +131,7 @@ module Fusuma
         #   => ["/path/to/fusuma/lib/fusuma/plugin/inputs/input.rb",
         #       "/path/to/fusuma/lib/fusuma/plugin/inputs/libinput_command_input.rb",
         #       "/path/to/fusuma/lib/fusuma/plugin/inputs/timer_input.rb"]
+        #: () -> Array[untyped]
         def load_paths
           @load_paths ||= []
         end

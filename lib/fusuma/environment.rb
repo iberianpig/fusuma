@@ -8,6 +8,7 @@ module Fusuma
   # Output Environment information
   class Environment
     class << self
+      #: () -> void
       def dump_information
         MultiLogger.info "---------------------------------------------"
         print_version
@@ -16,6 +17,7 @@ module Fusuma
         MultiLogger.info "---------------------------------------------"
       end
 
+      #: () -> void
       def print_version
         libinput_command = Plugin::Inputs::LibinputCommandInput.new.command
         MultiLogger.info "Fusuma: #{VERSION}"
@@ -26,6 +28,7 @@ module Fusuma
         MultiLogger.info "Desktop session: #{`echo $DESKTOP_SESSION $XDG_SESSION_TYPE`}".strip
       end
 
+      #: () -> void
       def print_enabled_plugins
         MultiLogger.info "Enabled Plugins: "
         Plugin::Manager.plugins
@@ -34,6 +37,7 @@ module Fusuma
           .flatten.sort.each { |name| MultiLogger.info(name) }
       end
 
+      #: () -> void
       def print_device_list
         Plugin::Filters::LibinputDeviceFilter.new.keep_device.all.map do |device|
           puts device.name

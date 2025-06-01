@@ -5,6 +5,7 @@ module Fusuma
   class Config
     # index for config.yml
     class Index
+      #: (Array[untyped]) -> void
       def initialize(keys)
         case keys
         when Array
@@ -35,6 +36,7 @@ module Fusuma
 
       # Keys in Index
       class Key
+        #: (String | Integer | Symbol, ?skippable: bool) -> void
         def initialize(symbol_word, skippable: false)
           @symbol = begin
             symbol_word.to_sym

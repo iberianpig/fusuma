@@ -5,6 +5,7 @@ module Fusuma
   class Config
     # Search config.yml
     class Searcher
+      #: () -> void
       def initialize
         @cache = {}
       end
@@ -14,6 +15,7 @@ module Fusuma
       # @return [NilClass]
       # @return [Hash]
       # @return [Object]
+      #: (Fusuma::Config::Index, location: String | Hash[untyped, untyped] | bool | Integer | Float) -> (String | bool | Hash[untyped, untyped] | Integer | Float)?
       def search(index, location:)
         key = index.keys.first
         return location if key.nil?
@@ -31,6 +33,7 @@ module Fusuma
         value
       end
 
+      #: (Fusuma::Config::Index, location: Array[untyped], context: Hash[untyped, untyped] | nil) -> (String | Hash[untyped, untyped] | Integer | Float)?
       def search_with_context(index, location:, context:)
         return nil if location.nil?
 
@@ -48,12 +51,14 @@ module Fusuma
       # @return [NilClass]
       # @return [Hash]
       # @return [Object]
+      #: (Fusuma::Config::Index, location: Array[untyped]) -> (String | Hash[untyped, untyped] | Integer | Float)?
       def search_with_cache(index, location:)
         cache([index.cache_key, Searcher.context]) do
           search_with_context(index, location: location, context: Searcher.context)
         end
       end
 
+      #: (Array[untyped] | String) -> (String | Hash[untyped, untyped] | Integer | Float)?
       def cache(key)
         key = key.join(",") if key.is_a? Array
         if @cache.key?(key)
@@ -68,6 +73,7 @@ module Fusuma
       # next locations' candidates sorted by priority
       #  1. look up location with key
       #  2. skip the key and go to child location
+      #: (Hash[untyped, untyped], Fusuma::Config::Index::Key) -> Array[untyped]
       def next_location_cadidates(location, key)
         [
           location[key.symbol],
@@ -81,6 +87,7 @@ module Fusuma
         # Search with context from load_streamed Config
         # @param context [Hash]
         # @return [Object]
+        #: (?Hash[untyped, untyped]) -> String?
         def with_context(context = {}, &block)
           before = @context
           @context = context
@@ -93,6 +100,7 @@ module Fusuma
         # Return a matching context from config
         # @params request_context [Hash]
         # @return [Hash]
+        #: (Hash[untyped, untyped], ?Array[untyped]) -> Hash[untyped, untyped]?
         def find_context(request_context, fallbacks = CONTEXT_SEARCH_ORDER, &block)
           # Search in blocks in the following order.
           # 1. primary context(no context)
@@ -112,6 +120,7 @@ module Fusuma
         # No context(primary context)
         # @return [Hash]
         # @return [NilClass]
+        #: (Hash[untyped, untyped]) -> nil
         def no_context(_request_context, &block)
           {} if with_context({}, &block)
         end
@@ -154,6 +163,7 @@ module Fusuma
         # @param request_context [Hash]
         # @return [Hash] matched context
         # @return [NilClass] if not matched
+        #: (Hash[untyped, untyped]) -> Hash[untyped, untyped]?
         def plugin_default_context(request_context, &block)
           complete_match_context = nil
           Config.instance.keymap.each do |config|

@@ -16,6 +16,7 @@ module Fusuma
         # @param buffers [Array<Buffer>]
         # @return [Events::Event] if event is detected
         # @return [NilClass] if event is NOT detected
+        #: (Array[untyped]) -> (Fusuma::Plugin::Events::Event | Array[untyped])?
         def detect(buffers)
           gesture_buffer = buffers.find { |b| b.type == BUFFER_TYPE }
             .select_from_last_begin
@@ -97,6 +98,7 @@ module Fusuma
         # @param [String] direction
         # @param [String] status
         # @return [Config::Index]
+        #: (gesture: String, finger: Integer, direction: String, status: String) -> Fusuma::Config::Index
         def create_repeat_index(gesture:, finger:, direction:, status:)
           Config::Index.new(
             [
@@ -112,6 +114,7 @@ module Fusuma
         # @param [Integer] finger
         # @param [String] direction
         # @return [Config::Index]
+        #: (gesture: String, finger: Integer, direction: String) -> Fusuma::Config::Index
         def create_oneshot_index(gesture:, finger:, direction:)
           Config::Index.new(
             [
@@ -124,16 +127,19 @@ module Fusuma
 
         private
 
+        #: (Fusuma::Plugin::Events::Event, Fusuma::Plugin::Events::Event) -> bool
         def moved?(prev_event, event)
           zoom_delta = (event.record.delta.zoom - prev_event.record.delta.zoom).abs
           updating_time = (event.time - prev_event.time) * 100
           zoom_delta / updating_time > 0.01
         end
 
+        #: (index: Fusuma::Config::Index, quantity: Float) -> bool
         def enough_oneshot_threshold?(index:, quantity:)
           quantity >= threshold(index: index)
         end
 
+        #: (index: Fusuma::Config::Index) -> Float
         def threshold(index:)
           @threshold ||= {}
           @threshold[index.cache_key] ||= begin
@@ -150,15 +156,18 @@ module Fusuma
           IN = "in"
           OUT = "out"
 
+          #: (target: Float, base: Integer | Float) -> void
           def initialize(target:, base:)
             @target = target.to_f
             @base = base.to_f
           end
 
+          #: () -> String
           def to_s
             calc
           end
 
+          #: () -> String
           def calc
             if @target > @base
               OUT
@@ -170,15 +179,18 @@ module Fusuma
 
         # quantity of gesture
         class Quantity
+          #: (target: Float, base: Float) -> void
           def initialize(target:, base:)
             @target = target.to_f
             @base = base.to_f
           end
 
+          #: () -> Float
           def to_f
             calc.to_f
           end
 
+          #: () -> Float
           def calc
             if @target > @base
               @target / @base

@@ -8,6 +8,7 @@ module Fusuma
       class DummyBuffer < Buffer
         DEFAULT_SOURCE = "dummy"
 
+        #: () -> Hash[untyped, untyped]
         def config_param_types
           {
             source: String,
