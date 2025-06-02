@@ -29,7 +29,7 @@ module Fusuma
         instance.find_execute_key(index)
       end
 
-      #: ((Tempfile | String)?) -> (Tempfile | String)?
+      #: (String?) -> Fusuma::Config
       def custom_path=(new_path)
         instance.custom_path = new_path
       end
@@ -44,7 +44,7 @@ module Fusuma
       @keymap = nil
     end
 
-    #: ((Tempfile | String)?) -> (Tempfile | String)?
+    #: (String?) -> Fusuma::Config
     def custom_path=(new_path)
       @custom_path = new_path
       reload

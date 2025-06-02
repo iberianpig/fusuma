@@ -55,7 +55,7 @@ module Fusuma
         Process.daemon if option[:daemon]
       end
 
-      #: (?Tempfile?) -> void
+      #: (String?) -> void
       def load_custom_config(config_path = nil)
         Config.custom_path = config_path
       end

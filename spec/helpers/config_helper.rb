@@ -7,7 +7,7 @@ module Fusuma
   module ConfigHelper
     module_function
 
-    #: (String) -> Tempfile
+    #: (String) -> void
     def load_config_yml=(string)
       Config.custom_path = Tempfile.open do |temp_file|
         temp_file.tap { |f| f.write(string) }
