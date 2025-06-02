@@ -1,0 +1,272 @@
+---
+path: ".gem_rbs_collection"
+gems:
+- name: activesupport
+  version: '7.0'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 6f2d93ab244008bec51db7b4fffae68b40232502
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: addressable
+  version: '2.8'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 6f2d93ab244008bec51db7b4fffae68b40232502
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: ast
+  version: '2.4'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 6f2d93ab244008bec51db7b4fffae68b40232502
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: async
+  version: '2.12'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 6f2d93ab244008bec51db7b4fffae68b40232502
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: base64
+  version: 0.3.0
+  source:
+    type: rubygems
+- name: benchmark
+  version: '0'
+  source:
+    type: stdlib
+- name: bigdecimal
+  version: '3.1'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 6f2d93ab244008bec51db7b4fffae68b40232502
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: binding_of_caller
+  version: '1.0'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 6f2d93ab244008bec51db7b4fffae68b40232502
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: concurrent-ruby
+  version: '1.1'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 6f2d93ab244008bec51db7b4fffae68b40232502
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: connection_pool
+  version: '2.4'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 6f2d93ab244008bec51db7b4fffae68b40232502
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: date
+  version: '0'
+  source:
+    type: stdlib
+- name: dbm
+  version: '0'
+  source:
+    type: stdlib
+- name: diff-lcs
+  version: '1.5'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 6f2d93ab244008bec51db7b4fffae68b40232502
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: digest
+  version: '0'
+  source:
+    type: stdlib
+- name: erb
+  version: '0'
+  source:
+    type: stdlib
+- name: faraday
+  version: '2.7'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 6f2d93ab244008bec51db7b4fffae68b40232502
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: fileutils
+  version: '0'
+  source:
+    type: stdlib
+- name: forwardable
+  version: '0'
+  source:
+    type: stdlib
+- name: i18n
+  version: '1.10'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 6f2d93ab244008bec51db7b4fffae68b40232502
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: io-console
+  version: '0'
+  source:
+    type: stdlib
+- name: json
+  version: '0'
+  source:
+    type: stdlib
+- name: logger
+  version: '0'
+  source:
+    type: stdlib
+- name: minitest
+  version: '5.25'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 6f2d93ab244008bec51db7b4fffae68b40232502
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: monitor
+  version: '0'
+  source:
+    type: stdlib
+- name: mutex_m
+  version: 0.3.0
+  source:
+    type: rubygems
+- name: net-http
+  version: '0'
+  source:
+    type: stdlib
+- name: net-protocol
+  version: '0'
+  source:
+    type: stdlib
+- name: octokit
+  version: '8.0'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 6f2d93ab244008bec51db7b4fffae68b40232502
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: openssl
+  version: '0'
+  source:
+    type: stdlib
+- name: parser
+  version: '3.2'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 6f2d93ab244008bec51db7b4fffae68b40232502
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: pp
+  version: '0'
+  source:
+    type: stdlib
+- name: prettyprint
+  version: '0'
+  source:
+    type: stdlib
+- name: prism
+  version: 1.2.0
+  source:
+    type: rubygems
+- name: pstore
+  version: '0'
+  source:
+    type: stdlib
+- name: psych
+  version: '0'
+  source:
+    type: stdlib
+- name: rainbow
+  version: '3.0'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 6f2d93ab244008bec51db7b4fffae68b40232502
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: rake
+  version: '13.0'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 6f2d93ab244008bec51db7b4fffae68b40232502
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: rdoc
+  version: '0'
+  source:
+    type: stdlib
+- name: rspec-parameterized-core
+  version: 2.0.0
+  source:
+    type: rubygems
+- name: rspec-parameterized-table_syntax
+  version: 2.0.0
+  source:
+    type: rubygems
+- name: securerandom
+  version: '0'
+  source:
+    type: stdlib
+- name: singleton
+  version: '0'
+  source:
+    type: stdlib
+- name: socket
+  version: '0'
+  source:
+    type: stdlib
+- name: stringio
+  version: '0'
+  source:
+    type: stdlib
+- name: tempfile
+  version: '0'
+  source:
+    type: stdlib
+- name: time
+  version: '0'
+  source:
+    type: stdlib
+- name: timeout
+  version: '0'
+  source:
+    type: stdlib
+- name: tzinfo
+  version: '2.0'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 6f2d93ab244008bec51db7b4fffae68b40232502
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: uri
+  version: '0'
+  source:
+    type: stdlib
+- name: yaml
+  version: '0'
+  source:
+    type: stdlib
+gemfile_lock_path: Gemfile.lock
