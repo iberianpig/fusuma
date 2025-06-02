@@ -16,9 +16,16 @@ gem "reek"
 gem "rspec", "~> 3.0"
 gem "rspec-debug"
 gem "rspec-parameterized"
-gem "rubocop"
-gem "simplecov"
-gem "standard"
 
+gem "simplecov", require: false
+gem "standard", require: false
+
+# generate rbs files
 gem "rbs-trace", "~> 0.6.0", require: false
 gem "rbs-inline", require: false
+
+# typecheck
+gem "steep", require: false
+
+# irb completion using rbs
+gem "repl_type_completor", require: false

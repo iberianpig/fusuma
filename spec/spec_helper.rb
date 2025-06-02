@@ -22,12 +22,14 @@ RSpec.configure do |config|
   # rbs-trace
   begin
     require "rbs-trace"
-    trace = RBS::Trace.new
+    # RBS::Trace.new(paths: Dir.glob("#{Dir.pwd}/app/models/**/*.rb"))
+    trace = RBS::Trace.new(paths: Dir.glob("#{Dir.pwd}/lib/**/*.rb"))
 
     config.before(:suite) { trace.enable }
     config.after(:suite) do
       trace.disable
       trace.save_comments(:rbs_colon)
+      # trace.save_files(out_dir: "sig/trace/")
     end
   end
 end
