@@ -5,9 +5,7 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in fusuma.gemspec
 gemspec
 
-gem "bump"
 gem "bundler"
-gem "github_changelog_generator", "~> 1.16"
 gem "debug"
 gem "rake", "~> 13.0"
 gem "rblineprof"
@@ -16,6 +14,10 @@ gem "reek"
 gem "rspec", "~> 3.0"
 gem "rspec-debug"
 gem "rspec-parameterized"
+
+# release management
+gem "bump", require: false
+gem "github_changelog_generator", "~> 1.16", require: false
 
 gem "simplecov", require: false
 gem "standard", require: false
