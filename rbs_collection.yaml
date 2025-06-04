@@ -14,9 +14,9 @@ sources:
 path: .gem_rbs_collection
 
 gems:
-#   # If you want to avoid installing rbs files for gems, you can specify them here.
-#   - name: GEM_NAME
-#     ignore: true
-  - name: tempfile
-  - name: psych
+  - name: fusuma
+    ignore: true
+  - name: singleton
   - name: yaml
+  - name: open3
+  - name: timeout
