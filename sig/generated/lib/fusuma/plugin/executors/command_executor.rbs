@@ -1,0 +1,28 @@
+module Fusuma
+  module Plugin
+    module Executors
+      # Exector plugin
+      class CommandExecutor < Executor
+        # Executor parameter on config.yml
+        # @return [Array<Symbol>]
+        def execute_keys: () -> untyped
+
+        # : (Fusuma::Plugin::Events::Event) -> void
+        def execute: (Fusuma::Plugin::Events::Event) -> void
+
+        # : (Fusuma::Plugin::Events::Event) -> (String | bool)
+        def executable?: (Fusuma::Plugin::Events::Event) -> (String | bool)
+
+        # @param event [Event]
+        # @return [String]
+        # : (Fusuma::Plugin::Events::Event) -> String
+        def search_command: (Fusuma::Plugin::Events::Event) -> String
+
+        # @param event [Event]
+        # @return [Float]
+        # : (Fusuma::Plugin::Events::Event) -> Float
+        def args_accel: (Fusuma::Plugin::Events::Event) -> Float
+      end
+    end
+  end
+end

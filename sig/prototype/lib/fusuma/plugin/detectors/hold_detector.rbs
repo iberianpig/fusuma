@@ -1,0 +1,14 @@
+module Fusuma
+  module Plugin
+    module Detectors
+      # Detect Hold gesture
+      class HoldDetector < Detector
+        @timer: untyped
+
+        @timeout: untyped
+
+        @threshold: untyped
+      end
+    end
+  end
+end

@@ -1,0 +1,73 @@
+module Fusuma
+  # detect input device
+  class Device
+    attr_reader id: untyped
+
+    attr_reader name: untyped
+
+    attr_reader capabilities: untyped
+
+    attr_reader available: untyped
+
+    # : (?id: nil | String, ?name: nil | String, ?capabilities: nil, ?available: nil | bool) -> void
+    def initialize: (?id: nil | String, ?name: nil | String, ?capabilities: nil, ?available: nil | bool) -> void
+
+    # @param attributes [Hash]
+    # : (Hash[untyped, untyped]) -> Hash[untyped, untyped]
+    def assign_attributes: (Hash[untyped, untyped]) -> Hash[untyped, untyped]
+
+    # Return devices
+    # sort devices by capabilities of gesture
+    # @return [Array]
+    # : () -> Array[Device]
+    def self.all: () -> Array[Device]
+
+    # @raise [SystemExit]
+    # @return [Array]
+    # : () -> Array[Device]
+    def self.available: () -> Array[Device]
+
+    # : () -> nil
+    def self.reset: () -> nil
+
+    # @return [Array]
+    # : () -> Array[Device]
+    private def self.fetch_devices: () -> Array[Device]
+
+    # : () -> Fusuma::LibinputCommand
+    private def self.libinput_command: () -> Fusuma::LibinputCommand
+
+    # parse line and generate devices
+    class LineParser
+      attr_reader lines: untyped
+
+      # : () -> void
+      def initialize: () -> void
+
+      # @param line [String]
+      # : (String) -> Array[untyped]
+      def push: (String) -> Array[untyped]
+
+      # @return [Array]
+      # : () -> Array[Device]
+      def generate_devices: () -> Array[Device]
+
+      # @param line [String]
+      # @return [Hash]
+      # : (line: String) -> Hash[untyped, untyped]
+      def extract_attribute: (line: String) -> Hash[untyped, untyped]
+
+      # : (String) -> String?
+      def id_from: (String) -> String?
+
+      # : (String) -> String?
+      def name_from: (String) -> String?
+
+      # : (String) -> String?
+      def capabilities_from: (String) -> String?
+
+      # : (String) -> bool?
+      def available_from: (String) -> bool?
+    end
+  end
+end

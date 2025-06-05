@@ -1,0 +1,45 @@
+module Fusuma
+  module Plugin
+    module Events
+      module Records
+        # Vector Record
+        # have index
+        class IndexRecord < Record
+          # define gesture format
+          attr_accessor index: untyped
+
+          attr_reader position: untyped
+
+          attr_reader trigger: untyped
+
+          attr_reader args: untyped
+
+          # @param [Config::Index] index
+          # @param [Symbol] position [:prefix, :body, :surfix]
+          # @param [Symbol] trigger [:oneshot, :repeat]
+          # : (index: Fusuma::Config::Index, ?position: Symbol, ?trigger: Symbol, ?args: Hash[untyped, untyped]) -> void
+          def initialize: (index: Fusuma::Config::Index, ?position: Symbol, ?trigger: Symbol, ?args: Hash[untyped, untyped]) -> void
+
+          def to_s: () -> untyped
+
+          # : () -> Symbol
+          def type: () -> Symbol
+
+          # FIXME: move to Config::Index
+          # @param records [Array<IndexRecord>]
+          # @return [IndexRecord] when merge is succeeded
+          # @return [NilClass] when merge is not succeeded
+          def merge: (records: untyped, ?index: untyped) -> untyped
+
+          # @param [Config::Searcher] searcher
+          def exist_on_conf?: (?untyped index) -> untyped
+
+          # @return [Integer]
+          def trigger_priority: () -> untyped
+
+          def mergeable?: () -> untyped
+        end
+      end
+    end
+  end
+end

@@ -1,0 +1,19 @@
+module Fusuma
+  # Rename process
+  module CustomProcess
+    attr_writer proctitle: untyped
+
+    # : () -> Array[untyped]
+    def child_pids: () -> Array[untyped]
+
+    # : () { () -> void } -> nil
+    def fork: () { () -> void } -> nil
+
+    def shutdown: () -> untyped
+
+    # : () -> String
+    def proctitle: () -> String
+
+    def set_trap: () -> untyped
+  end
+end

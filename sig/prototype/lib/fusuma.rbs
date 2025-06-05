@@ -1,0 +1,17 @@
+# this is top level module
+module Fusuma
+  # main class
+  class Runner
+    @inputs: untyped
+
+    @filters: untyped
+
+    @parsers: untyped
+
+    @buffers: untyped
+
+    @detectors: untyped
+
+    @executors: untyped
+  end
+end

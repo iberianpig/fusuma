@@ -1,0 +1,30 @@
+# Index for searching value from config.yml
+module Fusuma
+  class Config
+    # index for config.yml
+    class Index
+      # : (Array[untyped] | String | Symbol | Integer) -> void
+      def initialize: (Array[untyped] | String | Symbol | Integer) -> void
+
+      attr_reader keys: Array[Key]
+
+      attr_reader cache_key: Symbol | Integer
+
+      def to_s: () -> untyped
+
+      def ==: (untyped other) -> untyped
+
+      # Keys in Index
+      class Key
+        attr_reader symbol: Symbol | Integer
+
+        attr_reader skippable: bool
+
+        # : (String | Integer | Symbol, ?skippable: bool) -> void
+        def initialize: (String | Integer | Symbol, ?skippable: bool) -> void
+
+        def to_s: () -> untyped
+      end
+    end
+  end
+end

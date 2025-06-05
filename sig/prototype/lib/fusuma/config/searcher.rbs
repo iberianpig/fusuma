@@ -1,0 +1,16 @@
+# Index for searching value from config.yml
+module Fusuma
+  class Config
+    # Search config.yml
+    class Searcher
+      CONTEXT_SEARCH_ORDER: ::Array[:no_context | :complete_match_context | :partial_match_context]
+      self.@context: untyped
+
+      @cache: untyped
+
+      private
+
+      attr_reader self.context: untyped
+    end
+  end
+end

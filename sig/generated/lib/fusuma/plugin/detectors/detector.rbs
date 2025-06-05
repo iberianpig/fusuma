@@ -1,0 +1,38 @@
+module Fusuma
+  module Plugin
+    module Detectors
+      # Inherite this base
+      class Detector < Base
+        def self.type: (untyped tag_name) -> untyped
+
+        # : (*nil) -> void
+        def initialize: (*nil) -> void
+
+        attr_reader tag: String
+
+        attr_reader type: String
+
+        # @return [Array<String>]
+        def sources: () -> untyped
+
+        # Always watch buffers and detect them or not
+        # @return [TrueClass,FalseClass]
+        def watch?: () -> untyped
+
+        # @param _buffers [Array<Buffer>]
+        # @return [Event] if event is detected
+        # @return [NilClass] if event is NOT detected
+        def detect: (untyped _buffers) -> untyped
+
+        # @param record [Events::Records::Record]
+        # @return [Events::Event]
+        # : (record: Fusuma::Plugin::Events::Records::IndexRecord) -> Fusuma::Plugin::Events::Event
+        def create_event: (record: Fusuma::Plugin::Events::Records::IndexRecord) -> Fusuma::Plugin::Events::Event
+
+        def last_time: () -> untyped
+
+        def first_time?: () -> untyped
+      end
+    end
+  end
+end

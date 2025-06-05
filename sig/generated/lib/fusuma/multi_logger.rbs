@@ -1,0 +1,45 @@
+# module as namespace
+module Fusuma
+  # logger separate between stdout and strerr
+  class MultiLogger < Logger
+    include Singleton
+
+    attr_reader err_logger: untyped
+
+    attr_accessor debug_mode: untyped
+
+    attr_writer filepath: untyped
+
+    # : (untyped) -> void
+    def self.info: (untyped) -> void
+
+    # : (untyped) -> void
+    def self.debug: (untyped) -> void
+
+    # : (untyped) -> void
+    def self.warn: (untyped) -> void
+
+    # : (untyped) -> void
+    def self.error: (untyped) -> void
+
+    # : () -> void
+    def initialize: () -> void
+
+    # : (untyped) -> void
+    def debug: (untyped) -> void
+
+    # : (untyped) -> void
+    def warn: (untyped) -> void
+
+    # : (untyped) -> void
+    def error: (untyped) -> void
+
+    # : () -> bool
+    def debug_mode?: () -> bool
+
+    private
+
+    # : (String) -> bool
+    def ignore_pattern?: (String) -> bool
+  end
+end

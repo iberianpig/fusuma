@@ -1,0 +1,11 @@
+# module as namespace
+module Fusuma
+  # read keymap from yaml file
+  class Config
+    @keymap: untyped
+
+    @cache_execute_keys: untyped
+
+    @execute_keys: untyped
+  end
+end

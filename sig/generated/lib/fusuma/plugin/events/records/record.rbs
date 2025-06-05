@@ -1,0 +1,15 @@
+module Fusuma
+  module Plugin
+    module Events
+      module Records
+        # Record
+        # @abstract Subclass and override {#type} to implement
+        class Record < Base
+          # @return [Symbol]
+          # : () -> nil
+          def type: () -> nil
+        end
+      end
+    end
+  end
+end

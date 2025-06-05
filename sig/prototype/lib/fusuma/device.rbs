@@ -1,0 +1,10 @@
+module Fusuma
+  # detect input device
+  class Device
+    self.@all: untyped
+
+    self.@available: untyped
+
+    self.@libinput_command: untyped
+  end
+end

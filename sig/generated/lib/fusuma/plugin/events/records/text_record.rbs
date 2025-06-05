@@ -1,0 +1,21 @@
+module Fusuma
+  module Plugin
+    module Events
+      module Records
+        # Default Record
+        class TextRecord < Record
+          # @param text [String]
+          # : (String) -> void
+          def initialize: (String) -> void
+
+          # : () -> Symbol
+          def type: () -> Symbol
+
+          # @return [String]
+          # : () -> String
+          def to_s: () -> String
+        end
+      end
+    end
+  end
+end

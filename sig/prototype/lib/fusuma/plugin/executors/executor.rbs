@@ -1,0 +1,13 @@
+module Fusuma
+  module Plugin
+    # executor class
+    module Executors
+      # Inherite this base
+      class Executor < Base
+        @wait_until: untyped
+
+        @interval_time: untyped
+      end
+    end
+  end
+end

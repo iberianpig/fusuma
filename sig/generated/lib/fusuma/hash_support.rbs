@@ -1,0 +1,28 @@
+# @rbs generic unchecked out K
+# @rbs generic unchecked out V
+class Hash[unchecked out K, unchecked out V]
+  # activesupport-5.2.0/lib/active_support/core_ext/hash/deep_merge.rb
+  def deep_merge: (untyped other_hash) ?{ (?) -> untyped } -> untyped
+
+  # Same as +deep_merge+, but modifies +self+.
+  def deep_merge!: (untyped other_hash) ?{ (?) -> untyped } -> untyped
+
+  def deep_stringify_keys: () -> untyped
+
+  # activesupport-4.1.1/lib/active_support/core_ext/hash/keys.rb
+  # : () -> Hash[Symbol, untyped]
+  def deep_symbolize_keys: () -> Hash[Symbol, untyped]
+
+  # : [T] () { (untyped) -> T } -> Hash[T, untyped]
+  def deep_transform_keys: [T] () { (untyped) -> T } -> Hash[T, untyped]
+
+  # activesupport/lib/active_support/core_ext/hash/deep_transform_values.rb
+  # : () { (untyped) -> untyped } -> Hash[untyped, untyped]
+  def deep_transform_values: () { (untyped) -> untyped } -> Hash[untyped, untyped]
+
+  private
+
+  # Support methods for deep transforming nested hashes and arrays.
+  # : (Hash[untyped, untyped]) { (untyped) -> untyped } -> Hash[untyped, untyped]
+  def _deep_transform_values_in_object: (Hash[untyped, untyped]) { (untyped) -> untyped } -> Hash[untyped, untyped]
+end

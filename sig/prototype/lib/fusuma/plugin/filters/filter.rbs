@@ -1,0 +1,10 @@
+module Fusuma
+  module Plugin
+    module Filters
+      # Filter to keep/discard events from input plugin
+      class Filter < Base
+        @source: untyped
+      end
+    end
+  end
+end

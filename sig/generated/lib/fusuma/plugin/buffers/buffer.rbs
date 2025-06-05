@@ -1,0 +1,38 @@
+module Fusuma
+  module Plugin
+    module Buffers
+      # buffer events and output
+      class Buffer < Base
+        # : (*nil | Array[untyped]) -> void
+        def initialize: (*nil | Array[untyped]) -> void
+
+        attr_reader events: untyped
+
+        # @return [String]
+        # : () -> String
+        def type: () -> String
+
+        # @param event [Event]
+        # : (Fusuma::Plugin::Events::Event) -> Array[untyped]?
+        def buffer: (Fusuma::Plugin::Events::Event) -> Array[untyped]?
+
+        # clear old events
+        # @param current_time [Time]
+        def clear_expired: (?current_time: untyped) -> untyped
+
+        # @return [TrueClass, FalseClass]
+        # : () -> bool
+        def empty?: () -> bool
+
+        # clear buffer
+        # : () -> void
+        def clear: () -> void
+
+        # Set source for tag from config.yml.
+        # DEFAULT_SOURCE is defined in each plugins.
+        # : () -> String
+        def source: () -> String
+      end
+    end
+  end
+end

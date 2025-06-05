@@ -1,0 +1,12 @@
+module Fusuma
+  module Plugin
+    module Buffers
+      # buffer events and output
+      class Buffer < Base
+        @type: untyped
+
+        @source: untyped
+      end
+    end
+  end
+end

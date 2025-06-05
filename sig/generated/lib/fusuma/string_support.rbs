@@ -1,0 +1,7 @@
+# support camerize and underscore
+class String
+  def camelize: () -> untyped
+
+  # : () -> String
+  def underscore: () -> String
+end

@@ -1,0 +1,10 @@
+module Fusuma
+  module Plugin
+    module Parsers
+      # parse libinput and generate gesture record
+      class LibinputGestureParser < Parser
+        @libinput_1_27_0_or_later: untyped
+      end
+    end
+  end
+end

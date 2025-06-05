@@ -1,0 +1,35 @@
+module Fusuma
+  module Plugin
+    module Inputs
+      # Inherite this base
+      # @abstract Subclass and override {#io} to implement
+      class Input < Base
+        # : (*nil) -> void
+        def initialize: (*nil) -> void
+
+        attr_reader tag: untyped
+
+        # Wait multiple inputs until it becomes readable
+        # @param inputs [Array<Input>]
+        # @return [Event]
+        # : (Array[untyped]) -> Fusuma::Plugin::Events::Event
+        def self.select: (Array[untyped]) -> Fusuma::Plugin::Events::Event
+
+        # @return [String, Record]
+        # IO#readline is blocking method
+        # so input plugin must write line to pipe (include `\n`)
+        # or, override read_from_io and implement your own read method
+        # : () -> String
+        def read_from_io: () -> String
+
+        # @return [IO]
+        # : () -> nil
+        def io: () -> nil
+
+        # @return [Event]
+        # : (?record: String) -> Fusuma::Plugin::Events::Event
+        def create_event: (?record: String) -> Fusuma::Plugin::Events::Event
+      end
+    end
+  end
+end

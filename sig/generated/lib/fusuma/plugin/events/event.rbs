@@ -1,0 +1,23 @@
+module Fusuma
+  module Plugin
+    module Events
+      # Event format
+      class Event < Base
+        attr_reader time: untyped
+
+        attr_accessor tag: String
+
+        attr_accessor record: Records::Record
+
+        # @param time [Time]
+        # @param tag [Tag]
+        # @param record [String, Record]
+        # : (tag: String, record: String | Fusuma::Plugin::Events::Records::Record, ?time: Time | nil) -> void
+        def initialize: (tag: String, record: String | Fusuma::Plugin::Events::Records::Record, ?time: Time | nil) -> void
+
+        # : () -> String
+        def inspect: () -> String
+      end
+    end
+  end
+end

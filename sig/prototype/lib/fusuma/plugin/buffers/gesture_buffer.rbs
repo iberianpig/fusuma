@@ -1,0 +1,16 @@
+module Fusuma
+  module Plugin
+    module Buffers
+      # manage events and generate command
+      class GestureBuffer < Buffer
+        @cache: untyped
+
+        @cache_select_by: untyped
+
+        @cache_sum10: untyped
+
+        @seconds_to_keep: untyped
+      end
+    end
+  end
+end

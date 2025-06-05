@@ -1,0 +1,12 @@
+module Fusuma
+  module Plugin
+    module Events
+      module Records
+        # Default Record
+        class TextRecord < Record
+          @text: untyped
+        end
+      end
+    end
+  end
+end

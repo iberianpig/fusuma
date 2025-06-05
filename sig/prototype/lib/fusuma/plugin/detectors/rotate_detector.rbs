@@ -1,0 +1,18 @@
+module Fusuma
+  module Plugin
+    module Detectors
+      class RotateDetector < Detector
+        # direction of gesture
+        class Direction
+          @angle: untyped
+        end
+
+        # quantity of gesture
+        class Quantity
+          @angle: untyped
+        end
+        @threshold: untyped
+      end
+    end
+  end
+end

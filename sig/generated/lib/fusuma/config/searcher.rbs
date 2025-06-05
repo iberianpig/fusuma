@@ -1,0 +1,87 @@
+# Index for searching value from config.yml
+module Fusuma
+  class Config
+    # Search config.yml
+    class Searcher
+      # : () -> void
+      def initialize: () -> void
+
+      # @param index [Index]
+      # @param location [Hash]
+      # @return [NilClass]
+      # @return [Hash]
+      # @return [Object]
+      # : (Fusuma::Config::Index, location: untyped) -> untyped
+      def search: (Fusuma::Config::Index, location: untyped) -> untyped
+
+      # : (Fusuma::Config::Index, location: Array[untyped], context: Hash[untyped, untyped] | nil) -> untyped
+      def search_with_context: (Fusuma::Config::Index, location: Array[untyped], context: Hash[untyped, untyped] | nil) -> untyped
+
+      # @param index [Index]
+      # @param location [Hash]
+      # @return [NilClass]
+      # @return [Hash]
+      # @return [Object]
+      # : (Fusuma::Config::Index, location: Array[untyped])
+      def search_with_cache: (untyped index, location: untyped) -> untyped
+
+      # : (Array[untyped] | String) { () -> untyped } -> untyped
+      def cache: (Array[untyped] | String) { () -> untyped } -> untyped
+
+      private
+
+      # next locations' candidates sorted by priority
+      #  1. look up location with key
+      #  2. skip the key and go to child location
+      # : (Hash[untyped, untyped], Fusuma::Config::Index::Key) -> Array[untyped]
+      def next_location_cadidates: (Hash[untyped, untyped], Fusuma::Config::Index::Key) -> Array[untyped]
+
+      attr_reader context: untyped
+
+      # Search with context from load_streamed Config
+      # @param context [Hash]
+      # @return [Object]
+      # : (?Hash[untyped, untyped]) { () -> untyped } -> untyped
+      def self.with_context: (?Hash[untyped, untyped]) { () -> untyped } -> untyped
+
+      # Return a matching context from config
+      # @params request_context [Hash]
+      # @return [Hash]
+      # : (Hash[untyped, untyped], ?Array[untyped]) { () -> untyped } -> Hash[untyped, untyped]?
+      def self.find_context: (Hash[untyped, untyped], ?Array[untyped]) { () -> untyped } -> Hash[untyped, untyped]?
+
+      # No context(primary context)
+      # @return [Hash]
+      # @return [NilClass]
+      # : (Hash[untyped, untyped]) { () -> untyped } -> Hash[untyped, untyped]?
+      private def self.no_context: (Hash[untyped, untyped]) { () -> untyped } -> Hash[untyped, untyped]?
+
+      # Complete match request context
+      # @param request_context [Hash]
+      # @return [Hash] matched context
+      # @return [NilClass] if not matched
+      # : (Hash[untyped, untyped]) { () -> untyped } -> Hash[untyped, untyped]?
+      private def self.complete_match_context: (Hash[untyped, untyped]) { () -> untyped } -> Hash[untyped, untyped]?
+
+      # One of multiple request contexts matched
+      # @param request_context [Hash]
+      # @return [Hash] matched context
+      # @return [NilClass] if not matched
+      # : (Hash[untyped, untyped]) { () -> untyped } -> Hash[untyped, untyped]?
+      private def self.partial_match_context: (Hash[untyped, untyped]) { () -> untyped } -> Hash[untyped, untyped]?
+
+      # Search context for plugin
+      # If the plugin_defaults key is a complete match,
+      # it is the default value for that plugin, so it is postponed.
+      # This is because prioritize overwriting by other plugins.
+      # The search order is as follows
+      # 1. complete match config[:context].key?(:plugin_defaults)
+      # 2. complete match config[:context] == request_context
+      # @param request_context [Hash]
+      # @return [Hash] matched context
+      # @return [NilClass] if not matched
+      # : (Hash[untyped, untyped]) { () -> untyped } -> Hash[untyped, untyped]?
+      private def self.plugin_default_context: (Hash[untyped, untyped]) { () -> untyped } -> Hash[untyped, untyped]?
+    end
+  end
+end

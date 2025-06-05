@@ -1,0 +1,21 @@
+module Fusuma
+  module Plugin
+    module Buffers
+      # manage events and generate command
+      class TimerBuffer < Buffer
+        DEFAULT_SOURCE: ::String
+
+        DEFAULT_SECONDS_TO_KEEP: ::Integer
+
+        def config_param_types: () -> untyped
+
+        # @param event [Event]
+        # @return [Buffer, NilClass]
+        # : (Fusuma::Plugin::Events::Event) -> Fusuma::Plugin::Buffers::TimerBuffer?
+        def buffer: (Fusuma::Plugin::Events::Event) -> Fusuma::Plugin::Buffers::TimerBuffer?
+
+        def clear_expired: (?current_time: untyped) -> untyped
+      end
+    end
+  end
+end

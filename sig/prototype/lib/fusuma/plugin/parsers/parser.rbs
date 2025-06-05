@@ -1,0 +1,13 @@
+module Fusuma
+  module Plugin
+    module Parsers
+      # Parser change record and tag in event
+      # Inherite this base class
+      class Parser < Base
+        @source: untyped
+
+        @tag: untyped
+      end
+    end
+  end
+end

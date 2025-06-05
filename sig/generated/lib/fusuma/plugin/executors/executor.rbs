@@ -1,0 +1,41 @@
+module Fusuma
+  module Plugin
+    # executor class
+    module Executors
+      # Inherite this base
+      class Executor < Base
+        BASE_ONESHOT_INTERVAL: ::Float
+
+        BASE_REPEAT_INTERVAL: ::Float
+
+        # Executor parameter on config.yml
+        # @return [Array<Symbol>]
+        # : () -> nil
+        def execute_keys: () -> nil
+
+        # check executable
+        # @param _event [Events::Event]
+        # @return [TrueClass, FalseClass]
+        # : (String) -> nil
+        def executable?: (String) -> nil
+
+        # @param event [Events::Event]
+        # @return [TrueClass, FalseClass]
+        # : (Fusuma::Plugin::Events::Event) -> bool
+        def enough_interval?: (Fusuma::Plugin::Events::Event) -> bool
+
+        # : (Fusuma::Plugin::Events::Event) -> Time
+        def update_interval: (Fusuma::Plugin::Events::Event) -> Time
+
+        # : (Fusuma::Plugin::Events::Event) -> Float
+        def interval: (Fusuma::Plugin::Events::Event) -> Float
+
+        # execute something
+        # @param _event [Event]
+        # @return [nil]
+        # : (String) -> nil
+        def execute: (String) -> nil
+      end
+    end
+  end
+end

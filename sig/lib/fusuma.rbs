@@ -1,0 +1,77 @@
+# 
+# # for missing module
+# 
+# module Fusuma
+# end
+# module Fusuma::Plugin
+# end
+# module Fusuma::Plugin::Buffers
+# end
+# module Fusuma::Plugin::Detectors
+# end
+# module Fusuma::Plugin::Events
+# end
+# module Fusuma::Plugin::Executors
+# end
+# module Fusuma::Plugin::Filters
+# end
+# module Fusuma::Plugin::Inputs
+# end
+# module Fusuma::Plugin::Parsers
+# end
+# module Fusuma::Plugin::Events::Records
+# end
+# 
+# # $ tree lib/
+# # lib/
+# # ├── fusuma
+# # │   ├── config
+# # │   │   ├── index.rb
+# # │   │   ├── searcher.rb
+# # │   │   └── yaml_duplication_checker.rb
+# # │   ├── config.rb
+# # │   ├── config.yml
+# # │   ├── custom_process.rb
+# # │   ├── device.rb
+# # │   ├── environment.rb
+# # │   ├── hash_support.rb
+# # │   ├── libinput_command.rb
+# # │   ├── multi_logger.rb
+# # │   ├── plugin
+# # │   │   ├── base.rb
+# # │   │   ├── buffers
+# # │   │   │   ├── buffer.rb
+# # │   │   │   ├── gesture_buffer.rb
+# # │   │   │   └── timer_buffer.rb
+# # │   │   ├── detectors
+# # │   │   │   ├── detector.rb
+# # │   │   │   ├── hold_detector.rb
+# # │   │   │   ├── pinch_detector.rb
+# # │   │   │   ├── rotate_detector.rb
+# # │   │   │   └── swipe_detector.rb
+# # │   │   ├── events
+# # │   │   │   ├── event.rb
+# # │   │   │   └── records
+# # │   │   │       ├── context_record.rb
+# # │   │   │       ├── gesture_record.rb
+# # │   │   │       ├── index_record.rb
+# # │   │   │       ├── record.rb
+# # │   │   │       └── text_record.rb
+# # │   │   ├── executors
+# # │   │   │   ├── command_executor.rb
+# # │   │   │   └── executor.rb
+# # │   │   ├── filters
+# # │   │   │   ├── filter.rb
+# # │   │   │   └── libinput_device_filter.rb
+# # │   │   ├── inputs
+# # │   │   │   ├── input.rb
+# # │   │   │   ├── libinput_command_input.rb
+# # │   │   │   ├── libinput_command_input.yml
+# # │   │   │   └── timer_input.rb
+# # │   │   ├── manager.rb
+# # │   │   └── parsers
+# # │   │       ├── libinput_gesture_parser.rb
+# # │   │       └── parser.rb
+# # │   ├── string_support.rb
+# # │   └── version.rb
+# # └── fusuma.rb

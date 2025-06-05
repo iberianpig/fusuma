@@ -1,0 +1,49 @@
+module Fusuma
+  module Plugin
+    module Events
+      module Records
+        # Gesture Record
+        class GestureRecord < Record
+          # define gesture format
+          attr_reader status: untyped
+
+          # define gesture format
+          attr_reader gesture: untyped
+
+          # define gesture format
+          attr_reader finger: untyped
+
+          # define gesture format
+          attr_reader delta: untyped
+
+          class Delta < Struct[untyped]
+            attr_accessor move_x(): untyped
+
+            attr_accessor move_y(): untyped
+
+            attr_accessor unaccelerated_x(): untyped
+
+            attr_accessor unaccelerated_y(): untyped
+
+            attr_accessor zoom(): untyped
+
+            attr_accessor rotate(): untyped
+
+            def self.new: (?untyped move_x, ?untyped move_y, ?untyped unaccelerated_x, ?untyped unaccelerated_y, ?untyped zoom, ?untyped rotate) -> instance
+                        | (?move_x: untyped, ?move_y: untyped, ?unaccelerated_x: untyped, ?unaccelerated_y: untyped, ?zoom: untyped, ?rotate: untyped) -> instance
+          end
+
+          # @param status [String]
+          # @param gesture [String]
+          # @param finger [String, Integer]
+          # @param delta [Delta, NilClass]
+          # : (status: String, gesture: String, finger: Integer | String, delta: Fusuma::Plugin::Events::Records::GestureRecord::Delta | nil) -> void
+          def initialize: (status: String, gesture: String, finger: Integer | String, delta: Fusuma::Plugin::Events::Records::GestureRecord::Delta | nil) -> void
+
+          # : () -> String
+          def to_s: () -> String
+        end
+      end
+    end
+  end
+end

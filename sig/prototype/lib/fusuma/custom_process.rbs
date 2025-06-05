@@ -1,0 +1,6 @@
+module Fusuma
+  # Rename process
+  module CustomProcess
+    @child_pids: untyped
+  end
+end

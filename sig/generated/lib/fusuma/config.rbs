@@ -1,0 +1,72 @@
+# module as namespace
+module Fusuma
+  # read keymap from yaml file
+  class Config
+    class NotFoundError < StandardError
+    end
+
+    class InvalidFileError < StandardError
+    end
+
+    include Singleton
+
+    # : (Fusuma::Config::Index) -> (String | Hash[untyped, untyped] | Integer | Float)?
+    def self.search: (Fusuma::Config::Index) -> (String | Hash[untyped, untyped] | Integer | Float)?
+
+    def self.find_execute_key: (untyped index) -> untyped
+
+    # : (String?) -> Fusuma::Config
+    def self.custom_path=: (String?) -> Fusuma::Config
+
+    attr_reader custom_path: untyped
+
+    attr_reader searcher: untyped
+
+    # : () -> void
+    def initialize: () -> void
+
+    # : (String?) -> Fusuma::Config
+    def custom_path=: (String?) -> Fusuma::Config
+
+    # : () -> Array[untyped]?
+    def keymap: () -> Array[untyped]?
+
+    # : () -> Fusuma::Config
+    def reload: () -> Fusuma::Config
+
+    # @param key [Symbol]
+    # @param base [Config::Index]
+    # @return [Hash]
+    # : (Symbol?, Fusuma::Config::Index) -> (String | Hash[untyped, untyped] | Float | Integer | bool)?
+    def fetch_config_params: (Symbol?, Fusuma::Config::Index) -> (String | Hash[untyped, untyped] | Float | Integer | bool)?
+
+    # @return [Hash] If check passes
+    # @raise [InvalidFileError] If check does not pass
+    # : (String) -> Array[Hash[Symbol, untyped]]
+    def validate: (String) -> Array[Hash[Symbol, untyped]]
+
+    # @param index [Index]
+    # : (Fusuma::Config::Index) -> (String | Hash[untyped, untyped] | Integer | Float)?
+    def search: (Fusuma::Config::Index) -> (String | Hash[untyped, untyped] | Integer | Float)?
+
+    # @param index [Config::Index]
+    # @return Symbol
+    def find_execute_key: (untyped index) -> untyped
+
+    private
+
+    # : () -> String
+    def find_config_filepath: () -> String
+
+    # : () -> String
+    def expand_custom_path: () -> String
+
+    # : (String) -> String
+    def expand_config_path: (String) -> String
+
+    def expand_default_path: (untyped filename) -> untyped
+
+    # : () -> Array[untyped]
+    def plugin_defaults_paths: () -> Array[untyped]
+  end
+end
