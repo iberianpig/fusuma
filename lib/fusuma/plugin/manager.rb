@@ -43,7 +43,7 @@ module Fusuma
             raise "Not Found: #{match_data[1]}/#{match_data[2]}/*.gemspec" unless plugin_gemspec_path
 
             plugin_gemspec = Gem::Specification.load(plugin_gemspec_path)
-            fusuma_gemspec_path = File.expand_path("../../../fusuma.gemspec", __dir__)
+            fusuma_gemspec_path = File.expand_path("../../../fusuma.gemspec", __dir__ || ".")
             fusuma_gemspec = Gem::Specification.load(fusuma_gemspec_path)
             next if plugin_gemspec == fusuma_gemspec
 

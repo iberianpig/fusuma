@@ -39,7 +39,7 @@ module Fusuma
         # parse Record object
         # @param _record [Record]
         # @return [Record, nil]
-        #: (Fusuma::Plugin::Events::Records::TextRecord) -> nil
+        #: (Fusuma::Plugin::Events::Records::Record) -> Fusuma::Plugin::Events::Records::Record?
         def parse_record(_record)
           nil
         end

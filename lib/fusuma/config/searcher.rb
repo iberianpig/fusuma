@@ -58,7 +58,7 @@ module Fusuma
         end
       end
 
-      #: (Array[untyped] | String) -> untyped
+      #: (Array[untyped] | String) { () -> untyped } -> untyped
       def cache(key)
         key = key.join(",") if key.is_a? Array
         if @cache.key?(key)
@@ -87,7 +87,7 @@ module Fusuma
         # Search with context from load_streamed Config
         # @param context [Hash]
         # @return [Object]
-        #: (?Hash[untyped, untyped]) -> String?
+        #: (?Hash[untyped, untyped]) { () -> untyped } -> untyped
         def with_context(context = {}, &block)
           before = @context
           @context = context
@@ -100,7 +100,7 @@ module Fusuma
         # Return a matching context from config
         # @params request_context [Hash]
         # @return [Hash]
-        #: (Hash[untyped, untyped], ?Array[untyped]) -> Hash[untyped, untyped]?
+        #: (Hash[untyped, untyped], ?Array[untyped]) { () -> untyped } -> Hash[untyped, untyped]?
         def find_context(request_context, fallbacks = CONTEXT_SEARCH_ORDER, &block)
           # Search in blocks in the following order.
           # 1. primary context(no context)
@@ -120,7 +120,7 @@ module Fusuma
         # No context(primary context)
         # @return [Hash]
         # @return [NilClass]
-        #: (Hash[untyped, untyped]) -> Hash[untyped, untyped]?
+        #: (Hash[untyped, untyped]) { () -> untyped } -> Hash[untyped, untyped]?
         def no_context(_request_context, &block)
           {} if with_context({}, &block)
         end
@@ -129,6 +129,7 @@ module Fusuma
         # @param request_context [Hash]
         # @return [Hash] matched context
         # @return [NilClass] if not matched
+        #: (Hash[untyped, untyped]) { () -> untyped } -> Hash[untyped, untyped]?
         def complete_match_context(request_context, &block)
           Config.instance.keymap.each do |config|
             next unless config[:context] == request_context
@@ -141,6 +142,7 @@ module Fusuma
         # @param request_context [Hash]
         # @return [Hash] matched context
         # @return [NilClass] if not matched
+        #: (Hash[untyped, untyped]) { () -> untyped } -> Hash[untyped, untyped]?
         def partial_match_context(request_context, &block)
           if request_context.keys.size > 1
             Config.instance.keymap.each do |config|
@@ -163,7 +165,7 @@ module Fusuma
         # @param request_context [Hash]
         # @return [Hash] matched context
         # @return [NilClass] if not matched
-        #: (Hash[untyped, untyped]) -> Hash[untyped, untyped]?
+        #: (Hash[untyped, untyped]) { () -> untyped } -> Hash[untyped, untyped]?
         def plugin_default_context(request_context, &block)
           complete_match_context = nil
           Config.instance.keymap.each do |config|
@@ -176,9 +178,9 @@ module Fusuma
 
             return config[:context] if with_context(config[:context], &block)
           end
-          if complete_match_context
-            with_context(complete_match_context, &block)
-            complete_match_context
+          
+          complete_match_context&.tap do |context|
+            with_context(context, &block)
           end
         end
       end

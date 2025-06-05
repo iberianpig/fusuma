@@ -12,7 +12,7 @@ module Fusuma
       @child_pids ||= []
     end
 
-    #: () -> nil
+    #: () { () -> void } -> nil
     def fork
       pid = Process.fork do
         Process.setproctitle(proctitle)

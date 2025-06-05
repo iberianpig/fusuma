@@ -16,7 +16,7 @@ module Fusuma
         traverse(tree, &on_duplicated)
       end
 
-      #: (Psych::Nodes) { () -> void } -> Array[untyped]?
+      #: (untyped) { () -> void } -> Array[untyped]?
       def self.traverse(tree, &on_duplicated)
         case tree
         when Psych::Nodes::Mapping

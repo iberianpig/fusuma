@@ -51,6 +51,7 @@ module Fusuma
           _device, event_name, _time, other = line.strip.split(nil, 4)
           finger, other = other.split(nil, 2)
 
+          return [] unless event_name
           gesture, status = *detect_gesture(event_name)
 
           status = "cancelled" if gesture == "hold" && status == "end" && other == "cancelled"
@@ -68,6 +69,7 @@ module Fusuma
 
           _time, finger, other = other.split(nil, 3)
 
+          return [] unless event_name
           gesture, status = *detect_gesture(event_name)
 
           status = "cancelled" if gesture == "hold" && status == "end" && other == "cancelled"

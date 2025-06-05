@@ -36,7 +36,7 @@ module Fusuma
     end
 
     # @yieldparam [String] gives a line in libinput list-devices output to the block
-    #: () -> void
+    #: () { (String) -> void } -> void
     def list_devices(&block)
       cmd = list_devices_command
       MultiLogger.debug(list_devices: cmd)
