@@ -13,7 +13,7 @@ module Fusuma
 
         # @param record [String]
         # @return [Records::GestureRecord, nil]
-        #: (Fusuma::Plugin::Events::Records::TextRecord) -> Fusuma::Plugin::Events::Records::GestureRecord
+        #: (Fusuma::Plugin::Events::Records::TextRecord) -> Fusuma::Plugin::Events::Records::GestureRecord?
         def parse_record(record)
           case line = record.to_s
           when /GESTURE_SWIPE|GESTURE_PINCH|GESTURE_HOLD/

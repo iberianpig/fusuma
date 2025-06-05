@@ -138,14 +138,6 @@ module Fusuma
           @events.last.record.gesture
         end
 
-        #: () -> (Enumerator | Fusuma::Plugin::Buffers::GestureBuffer)
-        def select_by_events(&block)
-          return enum_for(:select_by_events) unless block
-
-          events = @events.select(&block)
-          self.class.new events
-        end
-
         #: (String) -> Fusuma::Plugin::Buffers::GestureBuffer
         def select_by_type(type)
           cache_entry = (@cache_select_by[type] ||= CacheEntry.new(0, self.class.new([])))

@@ -127,11 +127,11 @@ module Fusuma
         def enough?(index:, holding_time:)
           diff = threshold(index: index) - holding_time
           if diff < 0
-            true
+            return true
           elsif diff < @timer.interval
             @timer.wake_early(Time.now + diff)
-            false
           end
+          false
         end
 
         #: (index: Fusuma::Config::Index) -> Float

@@ -15,7 +15,7 @@ module Fusuma
       # @return [NilClass]
       # @return [Hash]
       # @return [Object]
-      #: (Fusuma::Config::Index, location: String | Hash[untyped, untyped] | bool | Integer | Float) -> (String | bool | Hash[untyped, untyped] | Integer | Float)?
+      #: (Fusuma::Config::Index, location: untyped) -> untyped
       def search(index, location:)
         key = index.keys.first
         return location if key.nil?
@@ -24,7 +24,7 @@ module Fusuma
 
         return nil unless location.is_a?(Hash)
 
-        next_index = Index.new(index.keys[1..-1])
+        next_index = Index.new(Array(index.keys[1..-1]))
 
         value = nil
         next_location_cadidates(location, key).find do |next_location|
@@ -33,7 +33,7 @@ module Fusuma
         value
       end
 
-      #: (Fusuma::Config::Index, location: Array[untyped], context: Hash[untyped, untyped] | nil) -> (String | Hash[untyped, untyped] | Integer | Float)?
+      #: (Fusuma::Config::Index, location: Array[untyped], context: Hash[untyped, untyped] | nil) -> untyped
       def search_with_context(index, location:, context:)
         return nil if location.nil?
 
@@ -51,14 +51,14 @@ module Fusuma
       # @return [NilClass]
       # @return [Hash]
       # @return [Object]
-      #: (Fusuma::Config::Index, location: Array[untyped]) -> (String | Hash[untyped, untyped] | Integer | Float)?
+      #: (Fusuma::Config::Index, location: Array[untyped]) 
       def search_with_cache(index, location:)
         cache([index.cache_key, Searcher.context]) do
           search_with_context(index, location: location, context: Searcher.context)
         end
       end
 
-      #: (Array[untyped] | String) -> (String | Hash[untyped, untyped] | Integer | Float)?
+      #: (Array[untyped] | String) -> untyped
       def cache(key)
         key = key.join(",") if key.is_a? Array
         if @cache.key?(key)
@@ -120,7 +120,7 @@ module Fusuma
         # No context(primary context)
         # @return [Hash]
         # @return [NilClass]
-        #: (Hash[untyped, untyped]) -> nil
+        #: (Hash[untyped, untyped]) -> Hash[untyped, untyped]?
         def no_context(_request_context, &block)
           {} if with_context({}, &block)
         end

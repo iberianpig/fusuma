@@ -5,7 +5,7 @@ module Fusuma
   class Config
     # index for config.yml
     class Index
-      #: (Array[untyped]) -> void
+      #: (Array[untyped] | String | Symbol | Integer) -> void
       def initialize(keys)
         case keys
         when Array
@@ -22,6 +22,9 @@ module Fusuma
         end
       end
 
+      attr_reader :keys #: Array[Key]
+      attr_reader :cache_key #: Symbol | Integer
+
       def to_s
         @keys.map(&:inspect)
       end
@@ -32,17 +35,19 @@ module Fusuma
         cache_key == other.cache_key
       end
 
-      attr_reader :keys, :cache_key
-
       # Keys in Index
       class Key
+        attr_reader :symbol #: Symbol | Integer
+        attr_reader :skippable #: bool
+
         #: (String | Integer | Symbol, ?skippable: bool) -> void
         def initialize(symbol_word, skippable: false)
-          @symbol = begin
-            symbol_word.to_sym
-          rescue
-            symbol_word
-          end
+          @symbol = case symbol_word
+                    when Integer, Symbol
+                      symbol_word
+                    else
+                      symbol_word.to_sym
+                    end
 
           @skippable = skippable
         end
@@ -54,8 +59,6 @@ module Fusuma
             @symbol.to_s
           end
         end
-
-        attr_reader :symbol, :skippable
       end
     end
   end

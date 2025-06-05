@@ -6,7 +6,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 82dee3528a0ce270528647979205a438c92ab20e
+    revision: ed61b16bf0a42201814e6a3baa9663d9f3a69046
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: bigdecimal
@@ -14,7 +14,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 82dee3528a0ce270528647979205a438c92ab20e
+    revision: ed61b16bf0a42201814e6a3baa9663d9f3a69046
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: binding_of_caller
@@ -22,7 +22,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 82dee3528a0ce270528647979205a438c92ab20e
+    revision: ed61b16bf0a42201814e6a3baa9663d9f3a69046
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: concurrent-ruby
@@ -30,7 +30,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 82dee3528a0ce270528647979205a438c92ab20e
+    revision: ed61b16bf0a42201814e6a3baa9663d9f3a69046
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: dbm
@@ -42,7 +42,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 82dee3528a0ce270528647979205a438c92ab20e
+    revision: ed61b16bf0a42201814e6a3baa9663d9f3a69046
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: erb
@@ -65,16 +65,12 @@ gems:
   version: '0'
   source:
     type: stdlib
-- name: open3
-  version: '0'
-  source:
-    type: stdlib
 - name: parser
   version: '3.2'
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 82dee3528a0ce270528647979205a438c92ab20e
+    revision: ed61b16bf0a42201814e6a3baa9663d9f3a69046
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: pp
@@ -102,7 +98,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 82dee3528a0ce270528647979205a438c92ab20e
+    revision: ed61b16bf0a42201814e6a3baa9663d9f3a69046
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: rake
@@ -110,7 +106,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 82dee3528a0ce270528647979205a438c92ab20e
+    revision: ed61b16bf0a42201814e6a3baa9663d9f3a69046
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: rdoc
@@ -126,10 +122,6 @@ gems:
   source:
     type: rubygems
 - name: singleton
-  version: '0'
-  source:
-    type: stdlib
-- name: timeout
   version: '0'
   source:
     type: stdlib

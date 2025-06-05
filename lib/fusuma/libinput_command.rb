@@ -36,15 +36,14 @@ module Fusuma
     end
 
     # @yieldparam [String] gives a line in libinput list-devices output to the block
-    #: () -> Enumerator
+    #: () -> void
     def list_devices(&block)
       cmd = list_devices_command
       MultiLogger.debug(list_devices: cmd)
       o, _, s = Open3.capture3(cmd)
 
       unless s.success?
-        MultiLogger.error("libinput list-devices failed with output: #{o}")
-        return
+        raise "libinput list-devices failed with output: #{o}"
       end
 
       o.each_line(&block)

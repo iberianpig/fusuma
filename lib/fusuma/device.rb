@@ -37,7 +37,7 @@ module Fusuma
       # Return devices
       # sort devices by capabilities of gesture
       # @return [Array]
-      #: () -> Array[untyped]
+      #: () -> Array[Device]
       def all
         @all ||= fetch_devices.partition do |d|
           d.capabilities.match?(/gesture/)
@@ -46,7 +46,7 @@ module Fusuma
 
       # @raise [SystemExit]
       # @return [Array]
-      #: () -> Array[untyped]?
+      #: () -> Array[Device]
       def available
         @available ||= all.select(&:available).tap do |d|
           MultiLogger.debug(available_devices: d)
@@ -67,7 +67,7 @@ module Fusuma
       private
 
       # @return [Array]
-      #: () -> Array[untyped]
+      #: () -> Array[Device]
       def fetch_devices
         line_parser = LineParser.new
 
@@ -100,7 +100,7 @@ module Fusuma
       end
 
       # @return [Array]
-      #: () -> Array[untyped]
+      #: () -> Array[Device]
       def generate_devices
         lines.each_with_object([]) do |line, devices|
           attributes = extract_attribute(line: line)

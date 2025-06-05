@@ -8,15 +8,19 @@ module Fusuma
     module Detectors
       # Inherite this base
       class Detector < Base
+        def self.type(tag_name)
+          tag_name.gsub("_detector", "")
+        end
+
         #: (*nil) -> void
         def initialize(*args)
           super
-          @tag = self.class.tag
-          @type = self.class.type
+          @tag = self.class.name.split("Detectors::").last.underscore
+          @type = self.class.type(@tag)
         end
 
-        attr_reader :tag
-        attr_reader :type
+        attr_reader :tag #: String
+        attr_reader :type #: String
 
         # @return [Array<String>]
         def sources
@@ -43,7 +47,7 @@ module Fusuma
         #: (record: Fusuma::Plugin::Events::Records::IndexRecord) -> Fusuma::Plugin::Events::Event
         def create_event(record:)
           @last_time = Time.now
-          Events::Event.new(time: @last_time, tag: tag, record: record)
+          Events::Event.new(time: @last_time, tag: @tag, record: record)
         end
 
         def last_time
@@ -52,16 +56,6 @@ module Fusuma
 
         def first_time?
           @last_time.nil?
-        end
-
-        class << self
-          def tag
-            name.split("Detectors::").last.underscore
-          end
-
-          def type(tag_name = tag)
-            tag_name.gsub("_detector", "")
-          end
         end
       end
     end

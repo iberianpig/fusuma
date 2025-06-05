@@ -26,7 +26,7 @@ module Fusuma
 
         attr_reader :interval
 
-        #: () -> StringIO
+        #: () -> IO
         def io
           @io ||= begin
             reader, writer = create_io
@@ -36,7 +36,7 @@ module Fusuma
           end
         end
 
-        #: (StringIO, StringIO) -> nil
+        #: (IO, IO) -> Thread
         def start(reader, writer)
           Thread.new do
             timer_loop(writer)

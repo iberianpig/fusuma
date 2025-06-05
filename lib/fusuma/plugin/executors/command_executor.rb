@@ -13,7 +13,7 @@ module Fusuma
           [:command]
         end
 
-        #: (Fusuma::Plugin::Events::Event) -> nil
+        #: (Fusuma::Plugin::Events::Event) -> void
         def execute(event)
           command = search_command(event)
 
@@ -27,7 +27,7 @@ module Fusuma
           pid = Process.spawn(additional_env, command.to_s)
           Process.detach(pid)
         rescue SystemCallError => e
-          MultiLogger.error("#{event.record.index.keys}": e.message.to_s)
+          MultiLogger.error("#{event.record.index.keys}: #{e.message}")
         end
 
         #: (Fusuma::Plugin::Events::Event) -> (String | bool)

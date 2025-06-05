@@ -69,7 +69,7 @@ module Fusuma
           end
 
           # @return [Array]
-          #: () -> Array[untyped]
+          #: () -> Array[Device]
           def all
             @all ||= if @name_patterns.empty?
               Device.available

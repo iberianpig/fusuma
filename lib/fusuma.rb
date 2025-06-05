@@ -12,7 +12,7 @@ module Fusuma
   # main class
   class Runner
     class << self
-      #: (?Hash[untyped, untyped]) -> nil
+      #: (?Hash[untyped, untyped]) -> void
       def run(option = {})
         read_options(option)
         instance = new
@@ -77,7 +77,7 @@ module Fusuma
       @executors = Plugin::Executors::Executor.plugins.map(&:new)
     end
 
-    #: (?Hash[untyped, untyped]) -> nil
+    #: () -> void
     def run
       loop { pipeline }
     end

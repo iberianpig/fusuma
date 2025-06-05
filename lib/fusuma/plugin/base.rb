@@ -11,7 +11,13 @@ module Fusuma
       # when inherited from subclass
       def self.inherited(subclass)
         super
-        subclass_path = caller_locations(1..1).first.path
+
+        locations = Kernel.caller_locations(1..1)
+        if locations.nil? || locations.empty?
+          raise "Plugin class #{subclass.name} must be defined in a file."
+        end
+
+        subclass_path = locations.first.path
         Manager.add(plugin_class: subclass, plugin_path: subclass_path)
       end
 

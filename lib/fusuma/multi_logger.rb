@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
+require "logger"
+require "singleton"
+
 # module as namespace
 module Fusuma
-  require "logger"
-  require "singleton"
   # logger separate between stdout and strerr
   class MultiLogger < Logger
     include Singleton
@@ -14,22 +15,22 @@ module Fusuma
     class << self
       attr_writer :filepath
 
-      #: (String | Hash[untyped, untyped]) -> bool
+      #: (untyped) -> void
       def info(msg)
         instance.info(msg)
       end
 
-      #: (Hash[untyped, untyped] | String) -> bool?
+      #: (untyped) -> void
       def debug(msg)
         instance.debug(msg)
       end
 
-      #: (String) -> bool
+      #: (untyped) -> void
       def warn(msg)
         instance.warn(msg)
       end
 
-      #: (String) -> bool
+      #: (untyped) -> void
       def error(msg)
         instance.error(msg)
       end
@@ -50,7 +51,7 @@ module Fusuma
       @debug_mode = false
     end
 
-    #: (Hash[untyped, untyped] | String) -> bool?
+    #: (untyped) -> void
     def debug(msg)
       return unless debug_mode?
 
@@ -59,12 +60,12 @@ module Fusuma
       super
     end
 
-    #: (String) -> bool
+    #: (untyped) -> void
     def warn(msg)
       err_logger.warn(msg)
     end
 
-    #: (String) -> bool
+    #: (untyped) -> void
     def error(msg)
       err_logger.error(msg)
     end
@@ -84,7 +85,7 @@ module Fusuma
       case msg
       when Hash
         e = msg.values.find { |v| v.is_a? Fusuma::Plugin::Events::Event }
-        return unless e
+        return false unless e
 
         e.tag.match?(pattern)
       when String

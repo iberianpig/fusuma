@@ -50,7 +50,7 @@ module Fusuma
       reload
     end
 
-    #: () -> Array[untyped]
+    #: () -> Array[untyped]?
     def keymap
       # FIXME: @keymap is not initialized when called from outside Fusuma::Runner like fusuma-senkey
       @keymap || reload.keymap
@@ -82,7 +82,7 @@ module Fusuma
     # @param key [Symbol]
     # @param base [Config::Index]
     # @return [Hash]
-    #: (Symbol?, Fusuma::Config::Index) -> Hash[untyped, untyped]
+    #: (Symbol?, Fusuma::Config::Index) -> (String | Hash[untyped, untyped] | Float | Integer | bool)?
     def fetch_config_params(key, base)
       request_context = {plugin_defaults: base.keys.last.symbol.to_s}
       fallbacks = [:no_context, :plugin_default_context]
@@ -97,16 +97,16 @@ module Fusuma
 
     # @return [Hash] If check passes
     # @raise [InvalidFileError] If check does not pass
-    #: (String) -> Array[untyped]?
+    #: (String) -> Array[Hash[Symbol, untyped]]
     def validate(path)
       duplicates = []
-      YAMLDuplicationChecker.check(File.read(path), path) do |ignored, duplicate|
+      YAMLDuplicationChecker.check(File.read(path), path) do |ignored, duplicate| # steep:ignore UnexpectedBlockGiven
         MultiLogger.error "#{path}: #{ignored.value} is duplicated"
         duplicates << duplicate.value
       end
       raise InvalidFileError, "Detect duplicate keys #{duplicates}" unless duplicates.empty?
 
-      yamls = YAML.load_stream(File.read(path)).compact
+      yamls = YAML.load_stream(File.read(path)).compact # steep:ignore NoMethod
       yamls.map do |yaml|
         raise InvalidFileError, "Invalid config.yml: #{path}" unless yaml.is_a? Hash
 
@@ -119,6 +119,7 @@ module Fusuma
     # @param index [Index]
     #: (Fusuma::Config::Index) -> (String | Hash[untyped, untyped] | Integer | Float)?
     def search(index)
+      return nil if index.nil? || index.keys.empty?
       @searcher.search_with_cache(index, location: keymap)
     end
 
@@ -129,7 +130,7 @@ module Fusuma
         executor.new.execute_keys
       end.flatten
 
-      @cache_execute_keys ||= {}
+      @cache_execute_keys ||= {} #: Hash[String, untyped]
 
       cache_key = [index.cache_key, Searcher.context].join
 

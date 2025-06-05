@@ -8,7 +8,7 @@ module Fusuma
     module Inputs
       # libinput commands wrapper
       class LibinputCommandInput < Input
-        #: () -> Hash[untyped, untyped]
+        #: () -> Hash[Symbol, Array[Class]]
         def config_param_types
           {
             device: [String],
@@ -34,7 +34,7 @@ module Fusuma
         end
 
         # @return [LibinputCommand]
-        #: () -> (Fusuma::LibinputCommand | RSpec::Mocks::InstanceVerifyingDouble)
+        #: () -> (Fusuma::LibinputCommand)
         def command
           @command ||= LibinputCommand.new(
             libinput_options: libinput_options,
@@ -47,7 +47,7 @@ module Fusuma
         end
 
         # @return [Array]
-        #: () -> Array[untyped]
+        #: () -> Array[String]
         def libinput_options
           device = ("--device='#{config_params(:device)}'" if config_params(:device))
           enable_tap = "--enable-tap" if config_params(:"enable-tap")
@@ -66,17 +66,17 @@ module Fusuma
         end
 
         #: () -> String?
-        def libinput_command
+        def libinput_command # steep:ignore MethodBodyTypeMismatch
           config_params(:"libinput-command")
         end
 
-        #: () -> nil
-        def debug_events_command
+        #: () -> String?
+        def debug_events_command # steep:ignore MethodBodyTypeMismatch
           config_params(:"libinput-debug-events")
         end
 
-        #: () -> nil
-        def list_devices_command
+        #: () -> String?
+        def list_devices_command # steep:ignore MethodBodyTypeMismatch
           config_params(:"libinput-list-devices")
         end
 
