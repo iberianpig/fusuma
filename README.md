@@ -449,6 +449,32 @@ I'm a Freelance Engineer in Japan and working on these products after finishing 
 Currently, my open-source contribution times is not enough.
 If you like my work and want to contribute and become a sponsor, I will be able to focus on my projects.
 
+## Development
+
+### Type Checking
+
+Fusuma uses [RBS](https://github.com/ruby/rbs) for type signatures and [Steep](https://github.com/soutaro/steep) for type checking.
+
+#### Running Type Checks
+
+```sh
+# Generate RBS signatures and run type checking
+bundle exec rake rbs:setup && bundle exec steep check
+
+# Validate RBS files
+bundle exec rake rbs:validate
+
+# Generate inline RBS from code comments
+bundle exec rbs-inline --opt-out lib --output --base .
+```
+
+#### RBS Development
+
+The project uses both traditional RBS files and inline RBS comments:
+- Inline RBS comments in source code (processed by `rbs-inline`)
+- Generated RBS files in `sig/generated/`
+- Type checking via Steep with configuration in `Steepfile`
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/iberianpig/fusuma. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
