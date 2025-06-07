@@ -54,7 +54,7 @@ end
 
 namespace :rbs do
   desc "Generate RBS files for Fusuma"
-  task setup: %i[clean collection prototype inline subtract]
+  task generate: %i[clean collection prototype inline subtract]
 
   desc "Clean up RBS files"
   task :clean do

@@ -9,7 +9,7 @@ Fusuma is a powerful tool designed to enable multitouch gesture recognition on L
 
 ## Features
 
-- **Easy Installation**: Quick setup via RubyGems.
+- **Easy Installation**: Quick generate via RubyGems.
 - **Flexible Configuration**: Customize gestures and actions freely in YAML file format.
 - **Sensitivity Settings**: Fine-tune gesture recognition with adjustable thresholds and intervals to suit your preferences and enhance precision.
 - **Extension through Plugins**: A [plugin system](https://github.com/iberianpig/fusuma/#fusuma-plugins) allows for additional functionality as needed.
@@ -459,7 +459,7 @@ Fusuma uses [RBS](https://github.com/ruby/rbs) for type signatures and [Steep](h
 
 ```sh
 # Generate RBS signatures and run type checking
-bundle exec rake rbs:setup && bundle exec steep check
+bundle exec rake rbs:generate && bundle exec steep check
 
 # Validate RBS files
 bundle exec rake rbs:validate
