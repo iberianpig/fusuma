@@ -58,43 +58,43 @@ namespace :rbs do
 
   desc "Clean up RBS files"
   task :clean do
-    sh 'rm', '-rf', 'sig/generated/'
-    sh 'rm', '-rf', 'sig/prototype/'
-    sh 'rm', '-rf', '.gem_rbs_collection/'
+    sh "rm", "-rf", "sig/generated/"
+    sh "rm", "-rf", "sig/prototype/"
+    sh "rm", "-rf", ".gem_rbs_collection/"
   end
 
   desc "Install RBS collection"
   task :collection do
-    sh 'rbs', 'collection', 'install'
+    sh "rbs", "collection", "install"
   end
 
   desc "Generate RBS files for Fusuma"
   task :prototype do
-    sh 'rbs', 'prototype', 'rb', '--out-dir=sig/prototype', '--base-dir=.', 'lib'
+    sh "rbs", "prototype", "rb", "--out-dir=sig/prototype", "--base-dir=.", "lib"
   end
 
   desc "Generate inline RBS files"
   task :inline do
     # output rbs files from inline to sig/generated
     # $ bundle exec rbs-inline lib --opt-out --output
-    sh 'rbs-inline', '--opt-out', 'lib', '--output', '--base', '.'
+    sh "rbs-inline", "--opt-out", "lib", "--output", "--base", "."
   end
 
   desc "Subtract RBS files to create a minimal signature"
   task :subtract do
-    sh 'rbs', 'subtract', '--write', 'sig/prototype', 'sig/generated'
+    sh "rbs", "subtract", "--write", "sig/prototype", "sig/generated"
     # rbs subtract --write sig/prototype sig/generated
 
-    prototype_path = 'sig/prototype'
-    generated_path = 'sig/generated'
-    subtrahends = Dir['sig/*']
+    prototype_path = "sig/prototype"
+    generated_path = "sig/generated"
+    subtrahends = Dir["sig/*"]
       .reject { |path| path == prototype_path || path == generated_path }
       .map { |path| "--subtrahend=#{path}" }
-    sh 'rbs', 'subtract', '--write', 'sig/prototype', 'sig/generated', *subtrahends
+    sh "rbs", "subtract", "--write", "sig/prototype", "sig/generated", *subtrahends
   end
 
   desc "Validate RBS files"
   task :validate do
-    sh 'rbs', '-Isig', 'validate'
+    sh "rbs", "-Isig", "validate"
   end
 end

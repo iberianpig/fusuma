@@ -51,7 +51,7 @@ module Fusuma
       # @return [NilClass]
       # @return [Hash]
       # @return [Object]
-      #: (Fusuma::Config::Index, location: Array[untyped]) 
+      #: (Fusuma::Config::Index, location: Array[untyped])
       def search_with_cache(index, location:)
         cache([index.cache_key, Searcher.context]) do
           search_with_context(index, location: location, context: Searcher.context)
@@ -178,7 +178,7 @@ module Fusuma
 
             return config[:context] if with_context(config[:context], &block)
           end
-          
+
           complete_match_context&.tap do |context|
             with_context(context, &block)
           end

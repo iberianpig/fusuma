@@ -43,11 +43,11 @@ module Fusuma
         #: (String | Integer | Symbol, ?skippable: bool) -> void
         def initialize(symbol_word, skippable: false)
           @symbol = case symbol_word
-                    when Integer, Symbol
-                      symbol_word
-                    else
-                      symbol_word.to_sym
-                    end
+          when Integer, Symbol
+            symbol_word
+          else
+            symbol_word.to_sym
+          end
 
           @skippable = skippable
         end

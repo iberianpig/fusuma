@@ -35,7 +35,7 @@ class Hash
     end
   end
 
-  #: [T] () { (untyped) -> T } -> Hash[T, untyped]  
+  #: [T] () { (untyped) -> T } -> Hash[T, untyped]
   def deep_transform_keys(&block)
     result = {}
     each do |key, value|
