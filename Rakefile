@@ -4,7 +4,7 @@ require "rspec/core/rake_task"
 
 RSpec::Core::RakeTask.new(:spec)
 
-task default: :spec
+task default: [:spec, 'rbs:generate', 'rbs:validate', 'rbs:check']
 
 desc "bump version and generate CHANGELOG with the version"
 task :bump, :type do |_, args|
@@ -96,5 +96,10 @@ namespace :rbs do
   desc "Validate RBS files"
   task :validate do
     sh "rbs", "-Isig", "validate"
+  end
+
+  desc "Type check with Steep"
+  task :check do
+    sh "steep check"
   end
 end
