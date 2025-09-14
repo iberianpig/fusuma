@@ -31,5 +31,7 @@ end
 # typecheck
 gem "steep", require: false
 
-# irb completion using rbs
-gem "repl_type_completor", require: false
+# irb completion using rbs (Ruby 3.0+ only)
+if RUBY_VERSION >= "3.0.0"
+  gem "repl_type_completor", require: false
+end
