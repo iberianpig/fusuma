@@ -76,8 +76,8 @@ namespace :rbs do
   desc "Generate inline RBS files"
   task :inline do
     # output rbs files from inline to sig/generated
-    # $ bundle exec rbs-inline lib --opt-out --output
-    sh "rbs-inline", "--opt-out", "lib", "--output", "--base", "."
+    # $ bundle exec rbs-inline --opt-out --output --base=. lib
+    sh "rbs-inline", "--opt-out", "--output", "--base=.", "lib"
   end
 
   desc "Subtract RBS files to create a minimal signature"
