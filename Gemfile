@@ -23,8 +23,10 @@ gem "simplecov", require: false
 gem "standard", require: false
 
 # generate rbs files
-gem "rbs-trace", "~> 0.6.0", require: false
-gem "rbs-inline", require: false
+if RUBY_VERSION >= "3.1.0"
+  gem "rbs-trace", "~> 0.6.0", require: false
+  gem "rbs-inline", require: false
+end
 
 # typecheck
 gem "steep", require: false

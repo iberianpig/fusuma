@@ -19,8 +19,8 @@ RSpec.configure do |config|
 
   config.include(Fusuma::ConfigHelper)
 
-  # rbs-trace
-  begin
+  # rbs-trace (Ruby 3.1+ only)
+  if RUBY_VERSION >= "3.1.0"
     require "rbs-trace"
     # RBS::Trace.new(paths: Dir.glob("#{Dir.pwd}/app/models/**/*.rb"))
     trace = RBS::Trace.new(paths: Dir.glob("#{Dir.pwd}/lib/**/*.rb"))

@@ -4,7 +4,11 @@ require "rspec/core/rake_task"
 
 RSpec::Core::RakeTask.new(:spec)
 
-task default: [:spec, 'rbs:generate', 'rbs:validate', 'rbs:check']
+if RUBY_VERSION >= "3.1.0"
+  task default: [:spec, "rbs:generate", "rbs:validate", "rbs:check"]
+else
+  task default: :spec
+end
 
 desc "bump version and generate CHANGELOG with the version"
 task :bump, :type do |_, args|
@@ -52,54 +56,58 @@ task :release_tag do
   Rake::Task["release:source_control_push"].invoke
 end
 
-namespace :rbs do
-  desc "Generate RBS files for Fusuma"
-  task generate: %i[clean collection prototype inline subtract]
+if RUBY_VERSION >= "3.1.0"
+  namespace :rbs do
+    desc "Generate RBS files for Fusuma"
+    task generate: %i[clean collection prototype inline subtract]
 
-  desc "Clean up RBS files"
-  task :clean do
-    sh "rm", "-rf", "sig/generated/"
-    sh "rm", "-rf", "sig/prototype/"
-    sh "rm", "-rf", ".gem_rbs_collection/"
-  end
+    desc "Clean up RBS files"
+    task :clean do
+      sh "rm", "-rf", "sig/generated/"
+      sh "rm", "-rf", "sig/prototype/"
+      sh "rm", "-rf", ".gem_rbs_collection/"
+    end
 
-  desc "Install RBS collection"
-  task :collection do
-    sh "rbs", "collection", "install"
-  end
+    desc "Install RBS collection"
+    task :collection do
+      sh "rbs", "collection", "install"
+    end
 
-  desc "Generate RBS files for Fusuma"
-  task :prototype do
-    sh "rbs", "prototype", "rb", "--out-dir=sig/prototype", "--base-dir=.", "lib"
-  end
+    desc "Generate RBS files for Fusuma"
+    task :prototype do
+      sh "rbs", "prototype", "rb", "--out-dir=sig/prototype", "--base-dir=.", "lib"
+    end
 
-  desc "Generate inline RBS files"
-  task :inline do
-    # output rbs files from inline to sig/generated
-    # $ bundle exec rbs-inline --opt-out --output --base=. lib
-    sh "rbs-inline", "--opt-out", "--output", "--base=.", "lib"
-  end
+    desc "Generate inline RBS files"
+    task :inline do
+      # output rbs files from inline to sig/generated
+      # $ bundle exec rbs-inline --opt-out --output --base=. lib
+      sh "rbs-inline", "--opt-out", "--output", "--base=.", "lib"
+    end
 
-  desc "Subtract RBS files to create a minimal signature"
-  task :subtract do
-    sh "rbs", "subtract", "--write", "sig/prototype", "sig/generated"
-    # rbs subtract --write sig/prototype sig/generated
+    desc "Subtract RBS files to create a minimal signature"
+    task :subtract do
+      if Dir.exist?("sig/generated")
+        sh "rbs", "subtract", "--write", "sig/prototype", "sig/generated"
+        # rbs subtract --write sig/prototype sig/generated
 
-    prototype_path = "sig/prototype"
-    generated_path = "sig/generated"
-    subtrahends = Dir["sig/*"]
-      .reject { |path| path == prototype_path || path == generated_path }
-      .map { |path| "--subtrahend=#{path}" }
-    sh "rbs", "subtract", "--write", "sig/prototype", "sig/generated", *subtrahends
-  end
+        prototype_path = "sig/prototype"
+        generated_path = "sig/generated"
+        subtrahends = Dir["sig/*"]
+          .reject { |path| path == prototype_path || path == generated_path }
+          .map { |path| "--subtrahend=#{path}" }
+        sh "rbs", "subtract", "--write", "sig/prototype", "sig/generated", *subtrahends
+      end
+    end
 
-  desc "Validate RBS files"
-  task :validate do
-    sh "rbs", "-Isig", "validate"
-  end
+    desc "Validate RBS files"
+    task :validate do
+      sh "rbs", "-Isig", "validate"
+    end
 
-  desc "Type check with Steep"
-  task :check do
-    sh "steep check"
+    desc "Type check with Steep"
+    task :check do
+      sh "steep check"
+    end
   end
 end
