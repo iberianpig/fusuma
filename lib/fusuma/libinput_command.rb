@@ -5,7 +5,7 @@ require "open3"
 module Fusuma
   # Execute libinput command
   class LibinputCommand
-    #: (?libinput_options: Array[untyped], ?commands: Hash[untyped, untyped]) -> void
+    #: (?libinput_options: Array[String], ?commands: Hash[untyped, untyped]) -> void
     def initialize(libinput_options: [], commands: {})
       @libinput_command = commands[:libinput_command]
       @debug_events_command = commands[:debug_events_command]

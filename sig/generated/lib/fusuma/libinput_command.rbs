@@ -1,8 +1,8 @@
 module Fusuma
   # Execute libinput command
   class LibinputCommand
-    # : (?libinput_options: Array[untyped], ?commands: Hash[untyped, untyped]) -> void
-    def initialize: (?libinput_options: Array[untyped], ?commands: Hash[untyped, untyped]) -> void
+    # : (?libinput_options: Array[String], ?commands: Hash[untyped, untyped]) -> void
+    def initialize: (?libinput_options: Array[String], ?commands: Hash[untyped, untyped]) -> void
 
     # `libinput-list-devices` and `libinput-debug-events` are deprecated,
     # use `libinput list-devices` and `libinput debug-events` from 1.8.

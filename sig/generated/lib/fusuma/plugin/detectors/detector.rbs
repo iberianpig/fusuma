@@ -13,11 +13,13 @@ module Fusuma
         attr_reader type: String
 
         # @return [Array<String>]
-        def sources: () -> untyped
+        # : () -> Array[String]
+        def sources: () -> Array[String]
 
         # Always watch buffers and detect them or not
         # @return [TrueClass,FalseClass]
-        def watch?: () -> untyped
+        # : () -> bool
+        def watch?: () -> bool
 
         # @param _buffers [Array<Buffer>]
         # @return [Event] if event is detected
@@ -29,9 +31,11 @@ module Fusuma
         # : (record: Fusuma::Plugin::Events::Records::IndexRecord) -> Fusuma::Plugin::Events::Event
         def create_event: (record: Fusuma::Plugin::Events::Records::IndexRecord) -> Fusuma::Plugin::Events::Event
 
-        def last_time: () -> untyped
+        # : () -> Time
+        def last_time: () -> Time
 
-        def first_time?: () -> untyped
+        # : () -> bool
+        def first_time?: () -> bool
       end
     end
   end

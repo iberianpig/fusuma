@@ -23,12 +23,14 @@ module Fusuma
         attr_reader :type #: String
 
         # @return [Array<String>]
+        #: () -> Array[String]
         def sources
           @sources ||= self.class.const_get(:SOURCES)
         end
 
         # Always watch buffers and detect them or not
         # @return [TrueClass,FalseClass]
+        #: () -> bool
         def watch?
           false
         end
@@ -50,10 +52,12 @@ module Fusuma
           Events::Event.new(time: @last_time, tag: @tag, record: record)
         end
 
+        #: () -> Time
         def last_time
           @last_time ||= Time.now
         end
 
+        #: () -> bool
         def first_time?
           @last_time.nil?
         end

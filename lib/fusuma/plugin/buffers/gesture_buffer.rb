@@ -27,7 +27,7 @@ module Fusuma
           @cache_sum10 = {}
         end
 
-        #: () -> Hash[untyped, untyped]
+        #: () -> Hash[Symbol, Array[Class] | Class]
         def config_param_types
           {
             source: [String],

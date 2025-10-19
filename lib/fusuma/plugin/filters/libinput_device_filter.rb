@@ -10,7 +10,7 @@ module Fusuma
       class LibinputDeviceFilter < Filter
         DEFAULT_SOURCE = "libinput_command_input"
 
-        #: () -> Hash[untyped, untyped]
+        #: () -> Hash[Symbol, Array[Class] | Class]
         def config_param_types
           {
             source: String,

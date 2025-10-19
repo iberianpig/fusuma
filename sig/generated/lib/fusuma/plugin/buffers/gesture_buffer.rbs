@@ -22,8 +22,8 @@ module Fusuma
         # : () -> Hash[untyped, untyped]
         def clear: () -> Hash[untyped, untyped]
 
-        # : () -> Hash[untyped, untyped]
-        def config_param_types: () -> Hash[untyped, untyped]
+        # : () -> Hash[Symbol, Array[Class] | Class]
+        def config_param_types: () -> Hash[Symbol, Array[Class] | Class]
 
         # @param event [Event]
         # @return [Buffer, FalseClass]

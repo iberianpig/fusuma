@@ -7,7 +7,6 @@ require "./lib/fusuma/plugin/manager"
 module Fusuma
   module Plugin
     class DummyPlugin < Base
-      #: () -> Hash[untyped, untyped]
       def config_param_types
         {
           dummy_string: String,

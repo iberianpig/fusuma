@@ -12,7 +12,6 @@ module Fusuma
       class DummyFilter < Filter
         DEFAULT_SOURCE = "dummy_input"
 
-        #: () -> Hash[untyped, untyped]
         def config_param_types
           {
             source: String,
