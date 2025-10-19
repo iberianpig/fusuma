@@ -1,5 +1,17 @@
 # Changelog
 
+## [v3.10.0](https://github.com/iberianpig/fusuma/tree/v3.10.0) (2025-10-19)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.9.0...v3.10.0)
+
+**Merged pull requests:**
+
+- type checking system [\#346](https://github.com/iberianpig/fusuma/pull/346) ([iberianpig](https://github.com/iberianpig))
+
+## [v3.9.0](https://github.com/iberianpig/fusuma/tree/v3.9.0) (2025-05-26)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.8.1...v3.9.0)
+
 ## [v3.8.1](https://github.com/iberianpig/fusuma/tree/v3.8.1) (2025-04-12)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.8.0...v3.8.1)
