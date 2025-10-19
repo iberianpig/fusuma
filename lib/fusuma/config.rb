@@ -20,6 +20,7 @@ module Fusuma
     include Singleton
 
     class << self
+      #: (Fusuma::Config::Index) -> (String | Hash[untyped, untyped] | Integer | Float)?
       def search(index)
         instance.search(index)
       end
@@ -28,6 +29,7 @@ module Fusuma
         instance.find_execute_key(index)
       end
 
+      #: (String?) -> Fusuma::Config
       def custom_path=(new_path)
         instance.custom_path = new_path
       end
@@ -35,22 +37,26 @@ module Fusuma
 
     attr_reader :custom_path, :searcher
 
+    #: () -> void
     def initialize
       @searcher = Searcher.new
       @custom_path = nil
       @keymap = nil
     end
 
+    #: (String?) -> Fusuma::Config
     def custom_path=(new_path)
       @custom_path = new_path
       reload
     end
 
+    #: () -> Array[untyped]?
     def keymap
       # FIXME: @keymap is not initialized when called from outside Fusuma::Runner like fusuma-senkey
       @keymap || reload.keymap
     end
 
+    #: () -> Fusuma::Config
     def reload
       plugin_defaults = plugin_defaults_paths.map do |default_yml|
         {
@@ -76,6 +82,7 @@ module Fusuma
     # @param key [Symbol]
     # @param base [Config::Index]
     # @return [Hash]
+    #: (Symbol?, Fusuma::Config::Index) -> (String | Hash[untyped, untyped] | Float | Integer | bool)?
     def fetch_config_params(key, base)
       request_context = {plugin_defaults: base.keys.last.symbol.to_s}
       fallbacks = [:no_context, :plugin_default_context]
@@ -90,15 +97,16 @@ module Fusuma
 
     # @return [Hash] If check passes
     # @raise [InvalidFileError] If check does not pass
+    #: (String) -> Array[Hash[Symbol, untyped]]
     def validate(path)
       duplicates = []
-      YAMLDuplicationChecker.check(File.read(path), path) do |ignored, duplicate|
+      YAMLDuplicationChecker.check(File.read(path), path) do |ignored, duplicate| # steep:ignore UnexpectedBlockGiven
         MultiLogger.error "#{path}: #{ignored.value} is duplicated"
         duplicates << duplicate.value
       end
       raise InvalidFileError, "Detect duplicate keys #{duplicates}" unless duplicates.empty?
 
-      yamls = YAML.load_stream(File.read(path)).compact
+      yamls = YAML.load_stream(File.read(path)).compact # steep:ignore NoMethod
       yamls.map do |yaml|
         raise InvalidFileError, "Invalid config.yml: #{path}" unless yaml.is_a? Hash
 
@@ -109,7 +117,9 @@ module Fusuma
     end
 
     # @param index [Index]
+    #: (Fusuma::Config::Index) -> (String | Hash[untyped, untyped] | Integer | Float)?
     def search(index)
+      return nil if index.nil? || index.keys.empty?
       @searcher.search_with_cache(index, location: keymap)
     end
 
@@ -120,7 +130,7 @@ module Fusuma
         executor.new.execute_keys
       end.flatten
 
-      @cache_execute_keys ||= {}
+      @cache_execute_keys ||= {} #: Hash[String, untyped]
 
       cache_key = [index.cache_key, Searcher.context].join
 
@@ -135,6 +145,7 @@ module Fusuma
 
     private
 
+    #: () -> String
     def find_config_filepath
       filename = "fusuma/config.yml"
       if custom_path
@@ -149,10 +160,12 @@ module Fusuma
       end
     end
 
+    #: () -> String
     def expand_custom_path
       File.expand_path(custom_path)
     end
 
+    #: (String) -> String
     def expand_config_path(filename)
       File.expand_path "~/.config/#{filename}"
     end
@@ -161,6 +174,7 @@ module Fusuma
       File.expand_path "../../#{filename}", __FILE__
     end
 
+    #: () -> Array[untyped]
     def plugin_defaults_paths
       Plugin::Manager.load_paths.map do |plugin_path|
         yml = plugin_path.gsub(/\.rb$/, ".yml")

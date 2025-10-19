@@ -1,0 +1,7 @@
+# module as namespace
+module Fusuma
+  # logger separate between stdout and strerr
+  class MultiLogger < Logger
+    attr_writer self.filepath: untyped
+  end
+end

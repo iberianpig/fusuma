@@ -1,0 +1,10 @@
+module Fusuma
+  module Plugin
+    module Buffers
+      # manage events and generate command
+      class TimerBuffer < Buffer
+        @seconds_to_keep: untyped
+      end
+    end
+  end
+end

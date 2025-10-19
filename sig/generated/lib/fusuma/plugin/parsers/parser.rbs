@@ -1,0 +1,30 @@
+module Fusuma
+  module Plugin
+    module Parsers
+      # Parser change record and tag in event
+      # Inherite this base class
+      class Parser < Base
+        # Parse Event and convert Record and Tag
+        # if `#parse_record` return nil, this method will return original event
+        # @param event [Event]
+        # @return [Event]
+        # : (Fusuma::Plugin::Events::Event) -> Fusuma::Plugin::Events::Event
+        def parse: (Fusuma::Plugin::Events::Event) -> Fusuma::Plugin::Events::Event
+
+        # Set source for tag from config.yml.
+        # DEFAULT_SOURCE is defined in each Parser plugins.
+        # : () -> String
+        def source: () -> String
+
+        # : () -> String
+        def tag: () -> String
+
+        # parse Record object
+        # @param _record [Record]
+        # @return [Record, nil]
+        # : (Fusuma::Plugin::Events::Records::Record) -> Fusuma::Plugin::Events::Records::Record?
+        def parse_record: (Fusuma::Plugin::Events::Records::Record) -> Fusuma::Plugin::Events::Records::Record?
+      end
+    end
+  end
+end

@@ -1,0 +1,18 @@
+module Fusuma
+  module Plugin
+    module Filters
+      # Filter device log
+      class LibinputDeviceFilter < Filter
+        # Select Device to keep
+        class KeepDevice
+          self.@from_option: untyped
+
+          @all: untyped
+
+          attr_reader self.from_option: untyped
+        end
+        @keep_device: untyped
+      end
+    end
+  end
+end

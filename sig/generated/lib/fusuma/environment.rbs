@@ -1,0 +1,18 @@
+module Fusuma
+  # Output Environment information
+  class Environment
+    # : () -> void
+    def self.dump_information: () -> void
+
+    # : () -> void
+    def self.print_version: () -> void
+
+    # : () -> void
+    def self.print_enabled_plugins: () -> void
+
+    # : () -> void
+    def self.print_device_list: () -> void
+
+    def self.print_config: () -> untyped
+  end
+end

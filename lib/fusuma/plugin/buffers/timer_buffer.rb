@@ -19,6 +19,7 @@ module Fusuma
 
         # @param event [Event]
         # @return [Buffer, NilClass]
+        #: (Fusuma::Plugin::Events::Event) -> Fusuma::Plugin::Buffers::TimerBuffer?
         def buffer(event)
           return if event&.tag != source
 
@@ -27,7 +28,7 @@ module Fusuma
         end
 
         def clear_expired(current_time: Time.now)
-          @seconds_to_keep ||= (config_params(:seconds_to_keep) || DEFAULT_SECONDS_TO_KEEP)
+          @seconds_to_keep ||= config_params(:seconds_to_keep) || DEFAULT_SECONDS_TO_KEEP
           @events.each do |e|
             break if current_time - e.time < @seconds_to_keep
 

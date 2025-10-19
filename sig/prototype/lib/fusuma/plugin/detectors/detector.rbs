@@ -1,0 +1,12 @@
+module Fusuma
+  module Plugin
+    module Detectors
+      # Inherite this base
+      class Detector < Base
+        @sources: untyped
+
+        @last_time: untyped
+      end
+    end
+  end
+end

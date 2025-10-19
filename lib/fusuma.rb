@@ -12,6 +12,7 @@ module Fusuma
   # main class
   class Runner
     class << self
+      #: (?Hash[untyped, untyped]) -> void
       def run(option = {})
         read_options(option)
         instance = new
@@ -26,6 +27,7 @@ module Fusuma
 
       private
 
+      #: (Hash[untyped, untyped]) -> void
       def read_options(option)
         MultiLogger.filepath = option[:log_filepath]
         MultiLogger.instance.debug_mode = option[:verbose]
@@ -53,13 +55,17 @@ module Fusuma
         Process.daemon if option[:daemon]
       end
 
+      #: (String?) -> void
       def load_custom_config(config_path = nil)
         Config.custom_path = config_path
       end
     end
 
-    def initialize; end
+    #: () -> void
+    def initialize
+    end
 
+    #: () -> void
     def initialize_plugins
       @inputs = Plugin::Inputs::Input.plugins.map do |cls|
         cls.ancestors.include?(Singleton) ? cls.instance : cls.new
@@ -71,6 +77,7 @@ module Fusuma
       @executors = Plugin::Executors::Executor.plugins.map(&:new)
     end
 
+    #: () -> void
     def run
       loop { pipeline }
     end
@@ -193,6 +200,7 @@ module Fusuma
       @buffers.each(&:clear_expired)
     end
 
+    #: () -> void
     def set_trap
       Signal.trap("INT") {
         shutdown
@@ -206,6 +214,7 @@ module Fusuma
 
     private
 
+    #: () -> Array[untyped]
     def shutdown
       [@inputs, @filters, @parsers, @buffers, @detectors, @executors].flatten.compact.each do |plugin|
         plugin.shutdown

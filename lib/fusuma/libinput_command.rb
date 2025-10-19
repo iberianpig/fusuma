@@ -5,6 +5,7 @@ require "open3"
 module Fusuma
   # Execute libinput command
   class LibinputCommand
+    #: (?libinput_options: Array[String], ?commands: Hash[untyped, untyped]) -> void
     def initialize(libinput_options: [], commands: {})
       @libinput_command = commands[:libinput_command]
       @debug_events_command = commands[:debug_events_command]
@@ -17,6 +18,7 @@ module Fusuma
     NEW_CLI_OPTION_VERSION = "1.8"
 
     # @return [Boolean]
+    #: () -> bool
     def new_cli_option_available?
       Gem::Version.new(version) >= Gem::Version.new(NEW_CLI_OPTION_VERSION)
     end
@@ -27,32 +29,35 @@ module Fusuma
     end
 
     # @return [String]
+    #: () -> String?
     def version
       # version_command prints "1.6.3\n"
       @version ||= `#{version_command}`.strip
     end
 
     # @yieldparam [String] gives a line in libinput list-devices output to the block
+    #: () { (String) -> void } -> void
     def list_devices(&block)
       cmd = list_devices_command
       MultiLogger.debug(list_devices: cmd)
-      o, e, s = Open3.capture3(cmd)
+      o, _, s = Open3.capture3(cmd)
 
       unless s.success?
-        MultiLogger.error("libinput list-devices failed with output: #{o}")
-        return
+        raise "libinput list-devices failed with output: #{o}"
       end
 
       o.each_line(&block)
     end
 
     # @return [Integer] return a latest line libinput debug-events
+    #: (StringIO) -> Array[untyped]
     def debug_events(writer)
       Open3.pipeline_start([debug_events_with_options], ["grep -v POINTER_ --line-buffered"], out: writer, in: "/dev/null")
     end
 
     # @return [String] command
     # @raise [SystemExit]
+    #: () -> String?
     def version_command
       if @libinput_command
         "#{@libinput_command} --version"
@@ -68,6 +73,7 @@ module Fusuma
       end
     end
 
+    #: () -> String
     def list_devices_command
       if @libinput_command
         @libinput_command + " list-devices"
@@ -80,6 +86,7 @@ module Fusuma
       end
     end
 
+    #: () -> String
     def debug_events_command
       if @libinput_command
         @libinput_command + " debug-events"
@@ -92,6 +99,7 @@ module Fusuma
       end
     end
 
+    #: () -> String
     def debug_events_with_options
       prefix = "stdbuf -oL --"
       "#{prefix} #{debug_events_command} #{@libinput_options.join(" ")}".strip

@@ -22,6 +22,7 @@ module Fusuma
           # @param gesture [String]
           # @param finger [String, Integer]
           # @param delta [Delta, NilClass]
+          #: (status: String, gesture: String, finger: Integer | String, delta: Fusuma::Plugin::Events::Records::GestureRecord::Delta | nil) -> void
           def initialize(status:, gesture:, finger:, delta:)
             super()
             @status = status
@@ -30,6 +31,7 @@ module Fusuma
             @delta = delta
           end
 
+          #: () -> String
           def to_s
             "#{@gesture}, Finger: #{@finger}, Status: #{@status}"
           end

@@ -13,6 +13,7 @@ module Fusuma
 
         # @param record [String]
         # @return [Records::GestureRecord, nil]
+        #: (Fusuma::Plugin::Events::Records::TextRecord) -> Fusuma::Plugin::Events::Records::GestureRecord?
         def parse_record(record)
           case line = record.to_s
           when /GESTURE_SWIPE|GESTURE_PINCH|GESTURE_HOLD/
@@ -29,6 +30,7 @@ module Fusuma
 
         private
 
+        #: (String) -> Array[untyped]
         def parse_libinput(line)
           if libinput_1_27_0_or_later?
             parse_line_1_27_0_or_later(line)
@@ -37,16 +39,19 @@ module Fusuma
           end
         end
 
+        #: () -> bool
         def libinput_1_27_0_or_later?
           return @libinput_1_27_0_or_later if defined?(@libinput_1_27_0_or_later)
 
           @libinput_1_27_0_or_later = Inputs::LibinputCommandInput.new.command.libinput_1_27_0_or_later?
         end
 
+        #: (String) -> Array[untyped]
         def parse_line(line)
           _device, event_name, _time, other = line.strip.split(nil, 4)
           finger, other = other.split(nil, 2)
 
+          return [] unless event_name
           gesture, status = *detect_gesture(event_name)
 
           status = "cancelled" if gesture == "hold" && status == "end" && other == "cancelled"
@@ -54,6 +59,7 @@ module Fusuma
           [gesture, status, finger, delta]
         end
 
+        #: (String) -> Array[untyped]
         def parse_line_1_27_0_or_later(line)
           _device, event_name, other = line.strip.split(nil, 3)
 
@@ -63,6 +69,7 @@ module Fusuma
 
           _time, finger, other = other.split(nil, 3)
 
+          return [] unless event_name
           gesture, status = *detect_gesture(event_name)
 
           status = "cancelled" if gesture == "hold" && status == "end" && other == "cancelled"
@@ -70,6 +77,7 @@ module Fusuma
           [gesture, status, finger, delta]
         end
 
+        #: (String) -> Array[untyped]
         def detect_gesture(event_name)
           event_name =~ /GESTURE_(SWIPE|PINCH|HOLD)_(BEGIN|UPDATE|END)/
           gesture = Regexp.last_match(1).downcase
@@ -77,6 +85,7 @@ module Fusuma
           [gesture, status]
         end
 
+        #: (String?) -> Fusuma::Plugin::Events::Records::GestureRecord::Delta?
         def parse_delta(line)
           return if line.nil?
 

@@ -1,0 +1,75 @@
+module Fusuma
+  module Plugin
+    module Buffers
+      # manage events and generate command
+      class GestureBuffer < Buffer
+        class CacheEntry < Struct[untyped]
+          attr_accessor checked(): untyped
+
+          attr_accessor value(): untyped
+
+          def self.new: (?untyped checked, ?untyped value) -> instance
+                      | (?checked: untyped, ?value: untyped) -> instance
+        end
+
+        DEFAULT_SOURCE: ::String
+
+        DEFAULT_SECONDS_TO_KEEP: ::Integer
+
+        # : (*nil | Array[untyped]) -> void
+        def initialize: (*nil | Array[untyped]) -> void
+
+        # : () -> Hash[untyped, untyped]
+        def clear: () -> Hash[untyped, untyped]
+
+        # : () -> Hash[Symbol, Array[Class] | Class]
+        def config_param_types: () -> Hash[Symbol, Array[Class] | Class]
+
+        # @param event [Event]
+        # @return [Buffer, FalseClass]
+        # : (Fusuma::Plugin::Events::Event) -> Fusuma::Plugin::Buffers::GestureBuffer?
+        def buffer: (Fusuma::Plugin::Events::Event) -> Fusuma::Plugin::Buffers::GestureBuffer?
+
+        # : (?current_time: Time) -> void
+        def clear_expired: (?current_time: Time) -> void
+
+        # : () -> bool
+        def ended?: () -> bool
+
+        # @param attr [Symbol]
+        # @return [Float]
+        # : (Symbol) -> Float
+        def sum_attrs: (Symbol) -> Float
+
+        # @param attr [Symbol]
+        # @return [Float]
+        # : (Symbol) -> Float
+        def sum_last10_attrs: (Symbol) -> Float
+
+        # : () -> Array[untyped]
+        def updating_events: () -> Array[untyped]
+
+        # @param attr [Symbol]
+        # @return [Float]
+        # : (Symbol) -> Float
+        def avg_attrs: (Symbol) -> Float
+
+        # return [Integer]
+        # : () -> Integer
+        def finger: () -> Integer
+
+        # @example
+        #  event_buffer.gesture
+        #  => 'swipe'
+        # @return [String]
+        def gesture: () -> untyped
+
+        # : (String) -> Fusuma::Plugin::Buffers::GestureBuffer
+        def select_by_type: (String) -> Fusuma::Plugin::Buffers::GestureBuffer
+
+        # : () -> Fusuma::Plugin::Buffers::GestureBuffer
+        def select_from_last_begin: () -> Fusuma::Plugin::Buffers::GestureBuffer
+      end
+    end
+  end
+end

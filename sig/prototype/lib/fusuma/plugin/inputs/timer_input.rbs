@@ -1,0 +1,12 @@
+module Fusuma
+  module Plugin
+    module Inputs
+      # libinput commands wrapper
+      class TimerInput < Input
+        @early_wake_queue: untyped
+
+        @io: untyped
+      end
+    end
+  end
+end

@@ -1,0 +1,36 @@
+module Fusuma
+  module Plugin
+    module Inputs
+      # libinput commands wrapper
+      class LibinputCommandInput < Input
+        # : () -> Hash[Symbol, Array[Class]]
+        def config_param_types: () -> Hash[Symbol, Array[Class]]
+
+        # @return [IO]
+        # : () -> StringIO
+        def io: () -> StringIO
+
+        # @return [LibinputCommand]
+        # : () -> (Fusuma::LibinputCommand)
+        def command: () -> Fusuma::LibinputCommand
+
+        # @return [Array]
+        # : () -> Array[String]
+        def libinput_options: () -> Array[String]
+
+        # : () -> String?
+        def libinput_command: () -> String?
+
+        # : () -> String?
+        def debug_events_command: () -> String?
+
+        # : () -> String?
+        def list_devices_command: () -> String?
+
+        private
+
+        def create_io: () -> untyped
+      end
+    end
+  end
+end

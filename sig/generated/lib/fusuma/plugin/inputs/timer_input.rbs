@@ -1,0 +1,36 @@
+module Fusuma
+  module Plugin
+    module Inputs
+      # libinput commands wrapper
+      class TimerInput < Input
+        include Singleton
+
+        DEFAULT_INTERVAL: ::Integer
+
+        EPSILON_TIME: ::Float
+
+        def config_param_types: () -> untyped
+
+        # : (*nil, ?interval: nil) -> void
+        def initialize: (*nil, ?interval: nil) -> void
+
+        attr_reader interval: untyped
+
+        # : () -> IO
+        def io: () -> IO
+
+        # : (IO, IO) -> Thread
+        def start: (IO, IO) -> Thread
+
+        def timer_loop: (untyped writer) -> untyped
+
+        # : (Time) -> Thread::Queue
+        def wake_early: (Time) -> Thread::Queue
+
+        private
+
+        def create_io: () -> untyped
+      end
+    end
+  end
+end

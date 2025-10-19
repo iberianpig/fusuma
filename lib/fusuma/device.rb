@@ -8,6 +8,7 @@ module Fusuma
   class Device
     attr_reader :id, :name, :capabilities, :available
 
+    #: (?id: nil | String, ?name: nil | String, ?capabilities: nil, ?available: nil | bool) -> void
     def initialize(id: nil, name: nil, capabilities: nil, available: nil)
       @id = id
       @name = name
@@ -16,6 +17,7 @@ module Fusuma
     end
 
     # @param attributes [Hash]
+    #: (Hash[untyped, untyped]) -> Hash[untyped, untyped]
     def assign_attributes(attributes)
       attributes.each do |k, v|
         case k
@@ -35,6 +37,7 @@ module Fusuma
       # Return devices
       # sort devices by capabilities of gesture
       # @return [Array]
+      #: () -> Array[Device]
       def all
         @all ||= fetch_devices.partition do |d|
           d.capabilities.match?(/gesture/)
@@ -43,6 +46,7 @@ module Fusuma
 
       # @raise [SystemExit]
       # @return [Array]
+      #: () -> Array[Device]
       def available
         @available ||= all.select(&:available).tap do |d|
           MultiLogger.debug(available_devices: d)
@@ -54,6 +58,7 @@ module Fusuma
         exit 1
       end
 
+      #: () -> nil
       def reset
         @all = nil
         @available = nil
@@ -62,6 +67,7 @@ module Fusuma
       private
 
       # @return [Array]
+      #: () -> Array[Device]
       def fetch_devices
         line_parser = LineParser.new
 
@@ -72,6 +78,7 @@ module Fusuma
         line_parser.generate_devices
       end
 
+      #: () -> Fusuma::LibinputCommand
       def libinput_command
         @libinput_command ||= Plugin::Inputs::LibinputCommandInput.new.command
       end
@@ -81,16 +88,19 @@ module Fusuma
     class LineParser
       attr_reader :lines
 
+      #: () -> void
       def initialize
         @lines = []
       end
 
       # @param line [String]
+      #: (String) -> Array[untyped]
       def push(line)
         lines.push(line)
       end
 
       # @return [Array]
+      #: () -> Array[Device]
       def generate_devices
         lines.each_with_object([]) do |line, devices|
           attributes = extract_attribute(line: line)
@@ -108,6 +118,7 @@ module Fusuma
 
       # @param line [String]
       # @return [Hash]
+      #: (line: String) -> Hash[untyped, untyped]
       def extract_attribute(line:)
         if (id = id_from(line))
           {id: id}
@@ -122,24 +133,28 @@ module Fusuma
         end
       end
 
+      #: (String) -> String?
       def id_from(line)
         line.match("^Kernel:[[:space:]]*") do |m|
           m.post_match.match(/event[0-9]+/).to_s
         end
       end
 
+      #: (String) -> String?
       def name_from(line)
         line.match("^Device:[[:space:]]*") do |m|
           m.post_match.strip
         end
       end
 
+      #: (String) -> String?
       def capabilities_from(line)
         line.match("^Capabilities:[[:space:]]*") do |m|
           m.post_match.strip
         end
       end
 
+      #: (String) -> bool?
       def available_from(line)
         # NOTE: is natural scroll available?
         if /^Nat.scrolling: /.match?(line)

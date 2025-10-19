@@ -1,0 +1,22 @@
+module Fusuma
+  module Plugin
+    module Detectors
+      class SwipeDetector < Detector
+        # direction of gesture
+        class Direction
+          @move_x: untyped
+
+          @move_y: untyped
+        end
+
+        # quantity of gesture
+        class Quantity
+          @x: untyped
+
+          @y: untyped
+        end
+        @threshold: untyped
+      end
+    end
+  end
+end

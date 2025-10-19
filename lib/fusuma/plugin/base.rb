@@ -11,7 +11,13 @@ module Fusuma
       # when inherited from subclass
       def self.inherited(subclass)
         super
-        subclass_path = caller_locations(1..1).first.path
+
+        locations = Kernel.caller_locations(1..1)
+        if locations.nil? || locations.empty?
+          raise "Plugin class #{subclass.name} must be defined in a file."
+        end
+
+        subclass_path = locations.first.path
         Manager.add(plugin_class: subclass, plugin_path: subclass_path)
       end
 
@@ -22,11 +28,13 @@ module Fusuma
       end
 
       # @abstract override `#shutdown` to implement
+      #: () -> nil
       def shutdown
       end
 
       # config parameter name and Type of the value of parameter
       # @return [Hash]
+      #: () -> Hash[Symbol, Array[Class] | Class]
       def config_param_types
         raise NotImplementedError, "override #{self.class.name}##{__method__}"
       end
@@ -34,6 +42,7 @@ module Fusuma
       # @param key [Symbol]
       # @param base [Config::Index]
       # @return [Object]
+      #: (?Symbol?) -> (String | Hash[untyped, untyped] | Float | bool)?
       def config_params(key = nil)
         @config_params ||= {}
         if @config_params["#{config_index.cache_key},#{key}"]
@@ -59,6 +68,7 @@ module Fusuma
           end
       end
 
+      #: () -> Fusuma::Config::Index
       def config_index
         @config_index ||= Config::Index.new(self.class.name.gsub("Fusuma::", "").underscore.split("/"))
       end

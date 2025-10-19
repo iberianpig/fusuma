@@ -18,6 +18,20 @@ RSpec.configure do |config|
   end
 
   config.include(Fusuma::ConfigHelper)
+
+  # rbs-trace (Ruby 3.1+ only)
+  if RUBY_VERSION >= "3.1.0"
+    require "rbs-trace"
+    # RBS::Trace.new(paths: Dir.glob("#{Dir.pwd}/app/models/**/*.rb"))
+    trace = RBS::Trace.new(paths: Dir.glob("#{Dir.pwd}/lib/**/*.rb"))
+
+    config.before(:suite) { trace.enable }
+    config.after(:suite) do
+      trace.disable
+      trace.save_comments(:rbs_colon)
+      # trace.save_files(out_dir: "sig/trace/")
+    end
+  end
 end
 
 SimpleCov.formatter = SimpleCov::Formatter::HTMLFormatter

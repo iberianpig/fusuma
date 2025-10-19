@@ -1,0 +1,54 @@
+module Fusuma
+  # Execute libinput command
+  class LibinputCommand
+    # : (?libinput_options: Array[String], ?commands: Hash[untyped, untyped]) -> void
+    def initialize: (?libinput_options: Array[String], ?commands: Hash[untyped, untyped]) -> void
+
+    # `libinput-list-devices` and `libinput-debug-events` are deprecated,
+    # use `libinput list-devices` and `libinput debug-events` from 1.8.
+    NEW_CLI_OPTION_VERSION: ::String
+
+    # @return [Boolean]
+    # : () -> bool
+    def new_cli_option_available?: () -> bool
+
+    # @return [Boolean]
+    def libinput_1_27_0_or_later?: () -> untyped
+
+    # @return [String]
+    # : () -> String?
+    def version: () -> String?
+
+    # @yieldparam [String] gives a line in libinput list-devices output to the block
+    # : () { (String) -> void } -> void
+    def list_devices: () { (String) -> void } -> void
+
+    # @return [Integer] return a latest line libinput debug-events
+    # : (StringIO) -> Array[untyped]
+    def debug_events: (StringIO) -> Array[untyped]
+
+    # @return [String] command
+    # @raise [SystemExit]
+    # : () -> String?
+    def version_command: () -> String?
+
+    # : () -> String
+    def list_devices_command: () -> String
+
+    # : () -> String
+    def debug_events_command: () -> String
+
+    # : () -> String
+    def debug_events_with_options: () -> String
+
+    private
+
+    # which in ruby: Checking if program exists in $PATH from ruby
+    # (https://stackoverflow.com/questions/2108727/which-in-ruby-checking-if-program-exists-in-path-from-ruby)
+    # Cross-platform way of finding an executable in the $PATH.
+    #
+    #   which('ruby') #=> /usr/bin/ruby
+    # @return [String, nil]
+    def which: (untyped command) -> untyped
+  end
+end

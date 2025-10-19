@@ -16,6 +16,7 @@ module Fusuma
         # @param buffers [Array<Buffers::Buffer>]
         # @return [Events::Event] if event is detected
         # @return [NilClass] if event is NOT detected
+        #: (Array[untyped]) -> (Fusuma::Plugin::Events::Event | Array[untyped])?
         def detect(buffers)
           gesture_buffer = buffers.find { |b| b.type == BUFFER_TYPE }
             .select_from_last_begin
@@ -82,6 +83,7 @@ module Fusuma
         # @param [String] direction
         # @param [String] status
         # @return [Config::Index]
+        #: (gesture: String, finger: Integer, direction: String, status: String) -> Fusuma::Config::Index
         def create_repeat_index(gesture:, finger:, direction:, status:)
           Config::Index.new(
             [
@@ -97,6 +99,7 @@ module Fusuma
         # @param [Integer] finger
         # @param [String] direction
         # @return [Config::Index]
+        #: (gesture: String, finger: Integer, direction: String) -> Fusuma::Config::Index
         def create_oneshot_index(gesture:, finger:, direction:)
           Config::Index.new(
             [
@@ -109,14 +112,17 @@ module Fusuma
 
         private
 
+        #: (Float) -> bool
         def moved?(repeat_quantity)
           repeat_quantity > 0.3
         end
 
+        #: (index: Fusuma::Config::Index, quantity: Float) -> bool
         def enough_oneshot_threshold?(index:, quantity:)
           quantity > threshold(index: index)
         end
 
+        #: (index: Fusuma::Config::Index) -> Integer
         def threshold(index:)
           @threshold ||= {}
           @threshold[index.cache_key] ||= begin
@@ -135,15 +141,18 @@ module Fusuma
           DOWN = "down"
           UP = "up"
 
+          #: (move_x: Integer | Float, move_y: Integer | Float) -> void
           def initialize(move_x:, move_y:)
             @move_x = move_x.to_f
             @move_y = move_y.to_f
           end
 
+          #: () -> String
           def to_s
             calc
           end
 
+          #: () -> String
           def calc
             if @move_x.abs > @move_y.abs
               @move_x.positive? ? RIGHT : LEFT
@@ -157,15 +166,18 @@ module Fusuma
 
         # quantity of gesture
         class Quantity
+          #: (move_x: Integer | Float, move_y: Integer | Float) -> void
           def initialize(move_x:, move_y:)
             @x = move_x.to_f.abs
             @y = move_y.to_f.abs
           end
 
+          #: () -> Float
           def to_f
             calc.to_f
           end
 
+          #: () -> Float
           def calc
             (@x > @y) ? @x.abs : @y.abs
           end

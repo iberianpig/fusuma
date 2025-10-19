@@ -1,0 +1,12 @@
+module Fusuma
+  module Plugin
+    module Inputs
+      # libinput commands wrapper
+      class LibinputCommandInput < Input
+        @io: untyped
+
+        @command: untyped
+      end
+    end
+  end
+end

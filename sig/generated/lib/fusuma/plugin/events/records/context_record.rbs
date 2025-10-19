@@ -1,0 +1,22 @@
+module Fusuma
+  module Plugin
+    module Events
+      module Records
+        # Context Record
+        class ContextRecord < Record
+          # define gesture format
+          attr_reader name: untyped
+
+          # define gesture format
+          attr_reader value: untyped
+
+          # @param name [#to_sym]
+          # @param value [String]
+          def initialize: (name: untyped, value: untyped) -> untyped
+
+          def type: () -> untyped
+        end
+      end
+    end
+  end
+end

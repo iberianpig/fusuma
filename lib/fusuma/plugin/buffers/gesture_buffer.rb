@@ -11,6 +11,7 @@ module Fusuma
         DEFAULT_SOURCE = "libinput_gesture_parser"
         DEFAULT_SECONDS_TO_KEEP = 100
 
+        #: (*nil | Array[untyped]) -> void
         def initialize(*args)
           super
           @cache = {}
@@ -18,6 +19,7 @@ module Fusuma
           @cache_sum10 = {}
         end
 
+        #: () -> Hash[untyped, untyped]
         def clear
           super.clear
           @cache = {}
@@ -25,6 +27,7 @@ module Fusuma
           @cache_sum10 = {}
         end
 
+        #: () -> Hash[Symbol, Array[Class] | Class]
         def config_param_types
           {
             source: [String],
@@ -34,6 +37,7 @@ module Fusuma
 
         # @param event [Event]
         # @return [Buffer, FalseClass]
+        #: (Fusuma::Plugin::Events::Event) -> Fusuma::Plugin::Buffers::GestureBuffer?
         def buffer(event)
           # TODO: buffering events into buffer plugins
           # - gesture event buffer
@@ -45,10 +49,11 @@ module Fusuma
           self
         end
 
+        #: (?current_time: Time) -> void
         def clear_expired(current_time: Time.now)
           clear if ended?
 
-          @seconds_to_keep ||= (config_params(:seconds_to_keep) || DEFAULT_SECONDS_TO_KEEP)
+          @seconds_to_keep ||= config_params(:seconds_to_keep) || DEFAULT_SECONDS_TO_KEEP
           @events.each do |e|
             break if current_time - e.time < @seconds_to_keep
 
@@ -61,6 +66,7 @@ module Fusuma
           end
         end
 
+        #: () -> bool
         def ended?
           return false if empty?
 
@@ -74,6 +80,7 @@ module Fusuma
 
         # @param attr [Symbol]
         # @return [Float]
+        #: (Symbol) -> Float
         def sum_attrs(attr)
           updating_events.map do |gesture_event|
             gesture_event.record.delta[attr].to_f
@@ -82,6 +89,7 @@ module Fusuma
 
         # @param attr [Symbol]
         # @return [Float]
+        #: (Symbol) -> Float
         def sum_last10_attrs(attr) # sums last 10 values of attr (or all if length < 10)
           cache_entry = (@cache_sum10[attr] ||= CacheEntry.new(0, 0))
           upd_ev = updating_events
@@ -90,7 +98,7 @@ module Fusuma
               gesture_event.record.delta[attr].to_f
             end.reduce(:+)
           elsif upd_ev.length > cache_entry.checked
-            cache_entry.value = cache_entry.value + upd_ev[-1].record.delta[attr].to_f - \
+            cache_entry.value = cache_entry.value + upd_ev[-1].record.delta[attr].to_f -
               ((upd_ev.length > 10) ? upd_ev[-11].record.delta[attr].to_f : 0)
           else
             return cache_entry.value
@@ -99,6 +107,7 @@ module Fusuma
           cache_entry.value
         end
 
+        #: () -> Array[untyped]
         def updating_events
           cache_entry = (@cache[:updating_events] ||= CacheEntry.new(0, []))
           cache_entry.checked.upto(@events.length - 1).each do |i|
@@ -110,11 +119,13 @@ module Fusuma
 
         # @param attr [Symbol]
         # @return [Float]
+        #: (Symbol) -> Float
         def avg_attrs(attr)
           sum_attrs(attr).to_f / updating_events.length
         end
 
         # return [Integer]
+        #: () -> Integer
         def finger
           @events.last.record.finger.to_i
         end
@@ -127,13 +138,7 @@ module Fusuma
           @events.last.record.gesture
         end
 
-        def select_by_events(&block)
-          return enum_for(:select_by_events) unless block
-
-          events = @events.select(&block)
-          self.class.new events
-        end
-
+        #: (String) -> Fusuma::Plugin::Buffers::GestureBuffer
         def select_by_type(type)
           cache_entry = (@cache_select_by[type] ||= CacheEntry.new(0, self.class.new([])))
           cache_entry.checked.upto(@events.length - 1).each do |i|
@@ -143,6 +148,7 @@ module Fusuma
           cache_entry.value
         end
 
+        #: () -> Fusuma::Plugin::Buffers::GestureBuffer
         def select_from_last_begin
           return self if empty?
           cache_entry = (@cache[:last_begin] ||= CacheEntry.new(0, nil))

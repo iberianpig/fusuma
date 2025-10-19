@@ -1,0 +1,15 @@
+module Fusuma
+  # Execute libinput command
+  class LibinputCommand
+    @libinput_command: untyped
+
+    @debug_events_command: untyped
+
+    @list_devices_command: untyped
+
+    @libinput_options: untyped
+
+    # version_command prints "1.6.3\n"
+    @version: untyped
+  end
+end

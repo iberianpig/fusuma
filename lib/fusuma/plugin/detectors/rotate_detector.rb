@@ -16,6 +16,7 @@ module Fusuma
         # @param buffers [Array<Buffer>]
         # @return [Events::Event] if event is detected
         # @return [NilClass] if event is NOT detected
+        #: (Array[untyped]) -> (Fusuma::Plugin::Events::Event | Array[untyped])?
         def detect(buffers)
           gesture_buffer = buffers.find { |b| b.type == BUFFER_TYPE }
             .select_from_last_begin
@@ -84,6 +85,7 @@ module Fusuma
         # @param [String] direction
         # @param [String] status
         # @return [Config::Index]
+        #: (gesture: String, finger: Integer, direction: String, status: String) -> Fusuma::Config::Index
         def create_repeat_index(gesture:, finger:, direction:, status:)
           Config::Index.new(
             [
@@ -99,6 +101,7 @@ module Fusuma
         # @param [Integer] finger
         # @param [String] direction
         # @return [Config::Index]
+        #: (gesture: String, finger: Integer, direction: String) -> Fusuma::Config::Index
         def create_oneshot_index(gesture:, finger:, direction:)
           Config::Index.new(
             [
@@ -111,14 +114,17 @@ module Fusuma
 
         private
 
+        #: (Float) -> bool
         def moved?(repeat_quantity)
           repeat_quantity > 0.2
         end
 
+        #: (index: Fusuma::Config::Index, quantity: Float) -> bool
         def enough_oneshot_threshold?(index:, quantity:)
           quantity > threshold(index: index)
         end
 
+        #: (index: Fusuma::Config::Index) -> Float
         def threshold(index:)
           @threshold ||= {}
           @threshold[index.cache_key] ||= begin
@@ -135,14 +141,17 @@ module Fusuma
           CLOCKWISE = "clockwise"
           COUNTERCLOCKWISE = "counterclockwise"
 
+          #: (angle: Float) -> void
           def initialize(angle:)
             @angle = angle.to_f
           end
 
+          #: () -> String
           def to_s
             calc
           end
 
+          #: () -> String
           def calc
             if @angle.positive?
               CLOCKWISE
@@ -154,10 +163,12 @@ module Fusuma
 
         # quantity of gesture
         class Quantity
+          #: (angle: Float) -> void
           def initialize(angle:)
             @angle = angle.abs
           end
 
+          #: () -> Float
           def to_f
             @angle.to_f
           end

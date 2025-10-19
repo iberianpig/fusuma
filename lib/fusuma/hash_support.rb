@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-# Patch to hash
+# @rbs generic unchecked out K
+# @rbs generic unchecked out V
 class Hash
   # activesupport-5.2.0/lib/active_support/core_ext/hash/deep_merge.rb
   def deep_merge(other_hash, &block)
@@ -25,6 +26,7 @@ class Hash
   end
 
   # activesupport-4.1.1/lib/active_support/core_ext/hash/keys.rb
+  #: () -> Hash[Symbol, untyped]
   def deep_symbolize_keys
     deep_transform_keys do |key|
       key.to_sym
@@ -33,6 +35,7 @@ class Hash
     end
   end
 
+  #: [T] () { (untyped) -> T } -> Hash[T, untyped]
   def deep_transform_keys(&block)
     result = {}
     each do |key, value|
@@ -42,6 +45,7 @@ class Hash
   end
 
   # activesupport/lib/active_support/core_ext/hash/deep_transform_values.rb
+  #: () { (untyped) -> untyped } -> Hash[untyped, untyped]
   def deep_transform_values(&block)
     _deep_transform_values_in_object(self, &block)
   end
@@ -49,6 +53,7 @@ class Hash
   private
 
   # Support methods for deep transforming nested hashes and arrays.
+  #: (Hash[untyped, untyped]) { (untyped) -> untyped } -> Hash[untyped, untyped]
   def _deep_transform_values_in_object(object, &block)
     case object
     when Hash

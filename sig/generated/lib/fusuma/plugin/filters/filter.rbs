@@ -1,0 +1,26 @@
+module Fusuma
+  module Plugin
+    module Filters
+      # Filter to keep/discard events from input plugin
+      class Filter < Base
+        # Filter input event
+        # @param event [Event]
+        # @return [Event] when keeping event
+        # @return [NilClass] when discarding record
+        # : (Fusuma::Plugin::Events::Event) -> Fusuma::Plugin::Events::Event?
+        def filter: (Fusuma::Plugin::Events::Event) -> Fusuma::Plugin::Events::Event?
+
+        # @abstract override `#keep?` to implement
+        # @param record [String]
+        # @return [True]  when keeping record
+        # @return [False] when discarding record
+        def keep?: (untyped record) -> untyped
+
+        # Set source for tag from config.yml.
+        # DEFAULT_SOURCE is defined in each Filter plugins.
+        # : () -> String
+        def source: () -> String
+      end
+    end
+  end
+end

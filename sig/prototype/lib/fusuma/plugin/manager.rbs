@@ -1,0 +1,18 @@
+module Fusuma
+  module Plugin
+    # Manage Fusuma plugins
+    class Manager
+      self.@already_required: untyped
+
+      self.@plugins: untyped
+
+      self.@load_paths: untyped
+
+      @plugin_class: untyped
+
+      @_fusuma_default_plugin_paths: untyped
+
+      @_fusuma_external_plugin_paths: untyped
+    end
+  end
+end

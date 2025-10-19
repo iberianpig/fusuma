@@ -169,23 +169,6 @@ module Fusuma
             it { expect(@buffer.empty?).to be false }
           end
         end
-
-        describe "#select_by_events" do
-          context "without block" do
-            it { expect(@buffer.select_by_events).to be_a Enumerator }
-          end
-
-          context "with block" do
-            before do
-              @e1 = @event_generator.call(nil, "hoge")
-              @e2 = @event_generator.call(nil, "hoge")
-              @e3 = @event_generator.call(nil, "fuga")
-              [@e1, @e2, @e3].each { |event| @buffer.buffer(event) }
-            end
-            it { expect(@buffer.select_by_events { |e| e.record.status == "hoge" }).to be_a GestureBuffer }
-            it { expect(@buffer.select_by_events { |e| e.record.status == "hoge" }.events).to eq [@e1, @e2] }
-          end
-        end
       end
     end
   end

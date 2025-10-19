@@ -1,0 +1,35 @@
+module Fusuma
+  module Plugin
+    module Parsers
+      # parse libinput and generate gesture record
+      class LibinputGestureParser < Parser
+        DEFAULT_SOURCE: ::String
+
+        # @param record [String]
+        # @return [Records::GestureRecord, nil]
+        # : (Fusuma::Plugin::Events::Records::TextRecord) -> Fusuma::Plugin::Events::Records::GestureRecord?
+        def parse_record: (Fusuma::Plugin::Events::Records::TextRecord) -> Fusuma::Plugin::Events::Records::GestureRecord?
+
+        private
+
+        # : (String) -> Array[untyped]
+        def parse_libinput: (String) -> Array[untyped]
+
+        # : () -> bool
+        def libinput_1_27_0_or_later?: () -> bool
+
+        # : (String) -> Array[untyped]
+        def parse_line: (String) -> Array[untyped]
+
+        # : (String) -> Array[untyped]
+        def parse_line_1_27_0_or_later: (String) -> Array[untyped]
+
+        # : (String) -> Array[untyped]
+        def detect_gesture: (String) -> Array[untyped]
+
+        # : (String?) -> Fusuma::Plugin::Events::Records::GestureRecord::Delta?
+        def parse_delta: (String?) -> Fusuma::Plugin::Events::Records::GestureRecord::Delta?
+      end
+    end
+  end
+end

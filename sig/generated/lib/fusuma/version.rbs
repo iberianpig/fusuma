@@ -1,0 +1,3 @@
+module Fusuma
+  VERSION: ::String
+end

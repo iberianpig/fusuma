@@ -1,0 +1,52 @@
+module Fusuma
+  module Plugin
+    module Detectors
+      # Detect Hold gesture
+      class HoldDetector < Detector
+        SOURCES: untyped
+
+        BUFFER_TYPE: ::String
+
+        GESTURE_RECORD_TYPE: ::String
+
+        BASE_THRESHOLD: ::Float
+
+        # : (*nil) -> void
+        def initialize: (*nil) -> void
+
+        # @param buffers [Array<Buffers::Buffer>]
+        # @return [Events::Event] if event is detected
+        # @return [Array<Events::Event>] if hold end event is detected
+        # @return [NilClass] if event is NOT detected
+        # : (Array[untyped]) -> Fusuma::Plugin::Events::Event?
+        def detect: (Array[untyped]) -> Fusuma::Plugin::Events::Event?
+
+        # @param [Integer] finger
+        # @return [Config::Index]
+        # : (finger: Integer) -> Fusuma::Config::Index
+        def create_oneshot_index: (finger: Integer) -> Fusuma::Config::Index
+
+        # @param [Integer] finger
+        # @return [Config::Index]
+        # : (finger: Integer, status: String) -> Fusuma::Config::Index
+        def create_repeat_index: (finger: Integer, status: String) -> Fusuma::Config::Index
+
+        private
+
+        # @param buffers [Array<Buffers::Buffer>]
+        # @return [Buffers::GestureBuffer]
+        # : (Array[untyped]) -> Fusuma::Plugin::Buffers::GestureBuffer
+        def find_hold_buffer: (Array[untyped]) -> Fusuma::Plugin::Buffers::GestureBuffer
+
+        # : (hold_events: Array[untyped], last_timer: nil | Fusuma::Plugin::Events::Event) -> Float
+        def calc_holding_time: (hold_events: Array[untyped], last_timer: nil | Fusuma::Plugin::Events::Event) -> Float
+
+        # : (index: Fusuma::Config::Index, holding_time: Float) -> bool
+        def enough?: (index: Fusuma::Config::Index, holding_time: Float) -> bool
+
+        # : (index: Fusuma::Config::Index) -> Float
+        def threshold: (index: Fusuma::Config::Index) -> Float
+      end
+    end
+  end
+end

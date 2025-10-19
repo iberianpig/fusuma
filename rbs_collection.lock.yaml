@@ -1,0 +1,144 @@
+---
+path: ".gem_rbs_collection"
+gems:
+- name: ast
+  version: '2.4'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 10d80b1f45dd4241d64d40b49e622cd5d3cfa903
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: bigdecimal
+  version: '3.1'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 10d80b1f45dd4241d64d40b49e622cd5d3cfa903
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: binding_of_caller
+  version: '1.0'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 10d80b1f45dd4241d64d40b49e622cd5d3cfa903
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: concurrent-ruby
+  version: '1.1'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 10d80b1f45dd4241d64d40b49e622cd5d3cfa903
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: dbm
+  version: '0'
+  source:
+    type: stdlib
+- name: diff-lcs
+  version: '1.5'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 10d80b1f45dd4241d64d40b49e622cd5d3cfa903
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: erb
+  version: '0'
+  source:
+    type: stdlib
+- name: fileutils
+  version: '0'
+  source:
+    type: stdlib
+- name: io-console
+  version: '0'
+  source:
+    type: stdlib
+- name: logger
+  version: '0'
+  source:
+    type: stdlib
+- name: monitor
+  version: '0'
+  source:
+    type: stdlib
+- name: open3
+  version: '0'
+  source:
+    type: stdlib
+- name: parser
+  version: '3.2'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 10d80b1f45dd4241d64d40b49e622cd5d3cfa903
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: pp
+  version: '0'
+  source:
+    type: stdlib
+- name: prettyprint
+  version: '0'
+  source:
+    type: stdlib
+- name: prism
+  version: 1.6.0
+  source:
+    type: rubygems
+- name: pstore
+  version: '0'
+  source:
+    type: stdlib
+- name: psych
+  version: '0'
+  source:
+    type: stdlib
+- name: rainbow
+  version: '3.0'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 10d80b1f45dd4241d64d40b49e622cd5d3cfa903
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: rake
+  version: '13.0'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 10d80b1f45dd4241d64d40b49e622cd5d3cfa903
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: rdoc
+  version: '0'
+  source:
+    type: stdlib
+- name: rspec-parameterized-core
+  version: 2.0.0
+  source:
+    type: rubygems
+- name: rspec-parameterized-table_syntax
+  version: 2.0.0
+  source:
+    type: rubygems
+- name: singleton
+  version: '0'
+  source:
+    type: stdlib
+- name: timeout
+  version: '0'
+  source:
+    type: stdlib
+- name: tsort
+  version: '0'
+  source:
+    type: stdlib
+- name: yaml
+  version: '0'
+  source:
+    type: stdlib
+gemfile_lock_path: Gemfile.lock

@@ -1,0 +1,54 @@
+module Fusuma
+  module Plugin
+    module Filters
+      # Filter device log
+      class LibinputDeviceFilter < Filter
+        DEFAULT_SOURCE: ::String
+
+        # : () -> Hash[Symbol, Array[Class] | Class]
+        def config_param_types: () -> Hash[Symbol, Array[Class] | Class]
+
+        # @return [TrueClass] when keeping it
+        # @return [FalseClass] when discarding it
+        # : (Fusuma::Plugin::Events::Records::TextRecord) -> bool
+        def keep?: (Fusuma::Plugin::Events::Records::TextRecord) -> bool
+
+        # : () -> Fusuma::Plugin::Filters::LibinputDeviceFilter::KeepDevice
+        def keep_device: () -> Fusuma::Plugin::Filters::LibinputDeviceFilter::KeepDevice
+
+        # : () -> String
+        def config_param_sample: () -> String
+
+        # Select Device to keep
+        class KeepDevice
+          # : (name_patterns: Array[untyped]) -> void
+          def initialize: (name_patterns: Array[untyped]) -> void
+
+          attr_reader name_patterns: untyped
+
+          # remove cache for reloading new devices
+          # : () -> void
+          def reset: () -> void
+
+          # @return [Array]
+          # : () -> Array[Device]
+          def all: () -> Array[Device]
+
+          # : () -> nil
+          def print_not_found_messages: () -> nil
+
+          # @return [TrueClass]
+          # @return [FalseClass]
+          # : (String) -> bool
+          def match_pattern?: (String) -> bool
+
+          attr_reader from_option: untyped
+
+          # TODO: remove from_option and command line options
+          # : (nil) -> void
+          def self.from_option=: (nil) -> void
+        end
+      end
+    end
+  end
+end

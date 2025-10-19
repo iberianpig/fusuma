@@ -1,0 +1,63 @@
+module Fusuma
+  module Plugin
+    # Manage Fusuma plugins
+    class Manager
+      # : (Class) -> void
+      def initialize: (Class) -> void
+
+      # : () -> Array[untyped]
+      def require_siblings_from_plugin_dir: () -> Array[untyped]
+
+      # : () -> Array[untyped]
+      def require_siblings_from_gems: () -> Array[untyped]
+
+      # : () -> Regexp
+      def exclude_path_pattern: () -> Regexp
+
+      # : () -> Array[untyped]
+      def fusuma_default_plugin_paths: () -> Array[untyped]
+
+      # @return [Array<String>] paths of external plugins (installed by gem)
+      def fusuma_external_plugin_paths: () -> untyped
+
+      # @return [String] search key for plugin
+      # @example
+      # search_key
+      # => "fusuma/plugin/detectors/*rb"
+      # : () -> String
+      def search_key: () -> String
+
+      private
+
+      # @example
+      #  plugin_dir_name
+      #   => "fusuma/plugin/detectors"
+      # @return [String]
+      # : () -> String
+      def plugin_dir_name: () -> String
+
+      # @param plugin_class [Class]
+      # return [Hash, false]
+      def self.add: (plugin_class: untyped, plugin_path: untyped) -> untyped
+
+      # : () -> void
+      def self.require_base_plugins: () -> void
+
+      # : () -> Hash[untyped, untyped]
+      def self.plugins: () -> Hash[untyped, untyped]
+
+      # @return [Array<String>]
+      # @example
+      #   Manager.load_paths
+      #   => ["/path/to/fusuma/lib/fusuma/plugin/inputs/input.rb",
+      #       "/path/to/fusuma/lib/fusuma/plugin/inputs/libinput_command_input.rb",
+      #       "/path/to/fusuma/lib/fusuma/plugin/inputs/timer_input.rb"]
+      # : () -> Array[untyped]
+      def self.load_paths: () -> Array[untyped]
+
+      # @param plugin_class [Class]
+      # @return [Boolean]
+      def self.exist?: (plugin_class: untyped, plugin_path: untyped) -> untyped
+    end
+  end
+end

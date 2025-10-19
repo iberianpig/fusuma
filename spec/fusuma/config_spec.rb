@@ -79,7 +79,6 @@ module Fusuma
         end
 
         context "invalid syntax" do
-
           before do
             string = <<~CONFIG
               - "aaaa"

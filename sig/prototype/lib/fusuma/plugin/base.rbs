@@ -1,0 +1,10 @@
+module Fusuma
+  module Plugin
+    # Create a Plugin Class with extending this class
+    class Base
+      @config_params: untyped
+
+      @config_index: untyped
+    end
+  end
+end

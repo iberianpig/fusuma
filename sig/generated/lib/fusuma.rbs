@@ -1,0 +1,70 @@
+# this is top level module
+module Fusuma
+  # main class
+  class Runner
+    # : (?Hash[untyped, untyped]) -> void
+    def self.run: (?Hash[untyped, untyped]) -> void
+
+    # : (Hash[untyped, untyped]) -> void
+    private def self.read_options: (Hash[untyped, untyped]) -> void
+
+    # : (String?) -> void
+    private def self.load_custom_config: (String?) -> void
+
+    # : () -> void
+    def initialize: () -> void
+
+    # : () -> void
+    def initialize_plugins: () -> void
+
+    # : () -> void
+    def run: () -> void
+
+    def pipeline: () -> untyped
+
+    # For performance monitoring
+    def run_with_lineprof: (?count: untyped) -> untyped
+
+    # @return [Plugin::Events::Event]
+    def input: () -> untyped
+
+    # @param [Plugin::Events::Event]
+    # @return [Plugin::Events::Event]
+    # @return [NilClass]
+    def filter: (untyped event) -> untyped
+
+    # @param [Plugin::Events::Event]
+    # @return [Plugin::Events::Event]
+    # @return [NilClass]
+    def parse: (untyped event) -> untyped
+
+    # @param [Plugin::Events::Event]
+    # @return [Array<Plugin::Buffers::Buffer>]
+    # @return [NilClass]
+    def buffer: (untyped event) -> untyped
+
+    # @param buffers [Array<Buffer>]
+    # @return [Array<Event>]
+    # @return [NilClass]
+    def detect: (untyped buffers) -> untyped
+
+    # @param events [Array<Plugin::Events::Event>]
+    # @return [Array<Hash, Plugin::Events::Event>] Event merged all events from arguments and used context
+    # @return [NilClass] when event is NOT given
+    def merge: (untyped events) -> untyped
+
+    # @return [NilClass] when event is NOT given or executable context is NOT found
+    # @param event [Plugin::Events::Event]
+    def execute: (untyped context, untyped event) -> untyped
+
+    def clear_expired_events: () -> untyped
+
+    # : () -> void
+    def set_trap: () -> void
+
+    private
+
+    # : () -> Array[untyped]
+    def shutdown: () -> Array[untyped]
+  end
+end
