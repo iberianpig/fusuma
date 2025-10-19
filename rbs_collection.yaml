@@ -18,5 +18,5 @@ gems:
     ignore: true
   - name: singleton
   - name: yaml
-  # - name: open3
-  # - name: timeout
+  - name: open3
+  - name: timeout
