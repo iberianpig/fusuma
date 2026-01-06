@@ -81,7 +81,7 @@ sudo apt-get install xdotool
 You need `libinput` release 1.0 or later. This is most probably installed by default on Manjaro
 
 ```sh
-sudo pacman -Syu libinput
+sudo pacman -Syu libinput-tools
 ```
 
 #### 2. Install Ruby
