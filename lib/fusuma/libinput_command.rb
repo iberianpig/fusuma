@@ -39,7 +39,10 @@ module Fusuma
     #: () { (String) -> void } -> void
     def list_devices(&block)
       cmd = list_devices_command
-      MultiLogger.debug(list_devices: cmd)
+      unless @logged_list_devices
+        MultiLogger.debug(list_devices: cmd)
+        @logged_list_devices = true
+      end
       o, _, s = Open3.capture3(cmd)
 
       unless s.success?
