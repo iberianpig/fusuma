@@ -67,13 +67,13 @@ module Fusuma
           File.open("spec/fusuma/libinput-list-devices_unavailable.txt")
         end
 
-        it "should failed with exit" do
-          expect { Device.available }.to raise_error(SystemExit)
+        it "should return empty array" do
+          expect(Device.available).to eq []
         end
 
-        it "should failed with printing error log" do
-          expect(MultiLogger).to receive(:error)
-          expect { Device.available }.to raise_error(SystemExit)
+        it "should print warning log" do
+          expect(MultiLogger).to receive(:warn).with("Touchpad is not found")
+          Device.available
         end
       end
 

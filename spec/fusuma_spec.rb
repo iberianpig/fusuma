@@ -38,10 +38,10 @@ module Fusuma
 
       context 'when run with argument "-l"' do
         it "should print device list" do
-          allow(Device).to receive(:available) {
+          allow(Device).to receive(:all) {
             [
-              Device.new(name: "test_device1"),
-              Device.new(name: "test_device2")
+              Device.new(name: "test_device1", available: true),
+              Device.new(name: "test_device2", available: true)
             ]
           }
 

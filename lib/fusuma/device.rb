@@ -44,18 +44,13 @@ module Fusuma
         end.flatten
       end
 
-      # @raise [SystemExit]
       # @return [Array]
       #: () -> Array[Device]
       def available
         @available ||= all.select(&:available).tap do |d|
           MultiLogger.debug(available_devices: d)
-          raise "Touchpad is not found" if d.empty?
+          MultiLogger.warn("Touchpad is not found") if d.empty?
         end
-      rescue RuntimeError => e
-        # FIXME: should not exit without Runner class
-        MultiLogger.error(e.message)
-        exit 1
       end
 
       #: () -> nil
