@@ -59,6 +59,7 @@ module Fusuma
       def reset
         @all = nil
         @available = nil
+        @previous_device_ids = nil
       end
 
       private
