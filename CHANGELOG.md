@@ -1,5 +1,17 @@
 # Changelog
 
+## [v3.11.0](https://github.com/iberianpig/fusuma/tree/v3.11.0) (2026-01-09)
+
+[Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.10.0...v3.11.0)
+
+**Closed issues:**
+
+- When will Fusuma consider adding some animation effects [\#347](https://github.com/iberianpig/fusuma/issues/347)
+
+**Merged pull requests:**
+
+- feat: allow Fusuma to run without touchpad device [\#351](https://github.com/iberianpig/fusuma/pull/351) ([iberianpig](https://github.com/iberianpig))
+
 ## [v3.10.0](https://github.com/iberianpig/fusuma/tree/v3.10.0) (2025-10-19)
 
 [Full Changelog](https://github.com/iberianpig/fusuma/compare/v3.9.0...v3.10.0)
