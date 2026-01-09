@@ -11,7 +11,56 @@ module Fusuma
     end
 
     describe ".reset" do
-      it "should clear all cache"
+      let(:libinput_device_command) { "dummy-libinput-list-devices" }
+      let(:list_devices_output) do
+        File.open("./spec/fusuma/libinput-list-devices_iberianpig-XPS-9360.txt")
+      end
+
+      before do
+        Device.reset
+        allow_any_instance_of(LibinputCommand)
+          .to receive(:list_devices_command)
+          .and_return(libinput_device_command)
+
+        dummy_io = StringIO.new("dummy")
+        dummy_status = double("Process::Status", success?: true)
+        allow(Open3).to receive(:capture3)
+          .with(libinput_device_command)
+          .and_return([list_devices_output, dummy_io, dummy_status])
+      end
+
+      after do
+        Device.reset
+      end
+
+      it "should clear @all cache" do
+        Device.all
+        expect(Device.instance_variable_get(:@all)).not_to be_nil
+        Device.reset
+        expect(Device.instance_variable_get(:@all)).to be_nil
+      end
+
+      it "should clear @available cache" do
+        Device.available
+        expect(Device.instance_variable_get(:@available)).not_to be_nil
+        Device.reset
+        expect(Device.instance_variable_get(:@available)).to be_nil
+      end
+
+      it "should clear @previous_device_ids" do
+        Device.all
+        expect(Device.instance_variable_get(:@previous_device_ids)).not_to be_nil
+        Device.reset
+        expect(Device.instance_variable_get(:@previous_device_ids)).to be_nil
+      end
+
+      it "should log devices again after reset" do
+        Device.all
+        Device.reset
+
+        expect(MultiLogger).to receive(:debug).with(hash_including(:detected_devices))
+        Device.all
+      end
     end
 
     describe ".available" do
@@ -67,13 +116,13 @@ module Fusuma
           File.open("spec/fusuma/libinput-list-devices_unavailable.txt")
         end
 
-        it "should failed with exit" do
-          expect { Device.available }.to raise_error(SystemExit)
+        it "should return empty array" do
+          expect(Device.available).to eq []
         end
 
-        it "should failed with printing error log" do
-          expect(MultiLogger).to receive(:error)
-          expect { Device.available }.to raise_error(SystemExit)
+        it "should print warning log" do
+          expect(MultiLogger).to receive(:warn).with("Touchpad is not found")
+          Device.available
         end
       end
 

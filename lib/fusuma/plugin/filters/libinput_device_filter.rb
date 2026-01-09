@@ -2,6 +2,7 @@
 
 require_relative "filter"
 require_relative "../../device"
+require_relative "../../multi_logger"
 
 module Fusuma
   module Plugin
@@ -72,12 +73,13 @@ module Fusuma
           #: () -> Array[Device]
           def all
             @all ||= if @name_patterns.empty?
-              Device.available
+              Device.all.select(&:available)
             else
               Device.all.select do |device|
                 match_pattern?(device.name)
               end
             end.tap do |devices|
+              MultiLogger.debug(available_devices: devices)
               print_not_found_messages if devices.empty?
             end
           end
