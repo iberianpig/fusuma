@@ -33,6 +33,7 @@ module Fusuma
       end
 
       # @return [Array<String>] paths of external plugins (installed by gem)
+      #: () -> Array[untyped]
       def fusuma_external_plugin_paths
         @_fusuma_external_plugin_paths ||=
           Gem.find_latest_files(search_key).map do |siblings_plugin|
@@ -87,6 +88,7 @@ module Fusuma
 
         # @param plugin_class [Class]
         # return [Hash, false]
+        #: (plugin_class: Class, plugin_path: String) -> Array[untyped]?
         def add(plugin_class:, plugin_path:)
           return false if exist?(plugin_class: plugin_class, plugin_path: plugin_path)
 
@@ -138,6 +140,7 @@ module Fusuma
 
         # @param plugin_class [Class]
         # @return [Boolean]
+        #: (plugin_class: Class, plugin_path: String) -> bool
         def exist?(plugin_class:, plugin_path:)
           return false if load_paths.include?(plugin_path)
 

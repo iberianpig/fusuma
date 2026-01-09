@@ -9,6 +9,7 @@ module Fusuma
     # Create a Plugin Class with extending this class
     class Base
       # when inherited from subclass
+      #: (Class) -> Array[untyped]
       def self.inherited(subclass)
         super
 
