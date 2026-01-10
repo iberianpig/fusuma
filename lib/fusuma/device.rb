@@ -41,9 +41,7 @@ module Fusuma
       def all
         @all ||= fetch_devices.partition do |d|
           d.capabilities.match?(/gesture/)
-        end.flatten.tap do |devices|
-          log_if_changed(devices)
-        end
+        end.flatten
       end
 
       # @return [Array]
@@ -59,21 +57,9 @@ module Fusuma
       def reset
         @all = nil
         @available = nil
-        @previous_device_ids = nil
       end
 
       private
-
-      # Log device list only when it changes
-      # @param devices [Array<Device>]
-      #: (Array[Device]) -> void
-      def log_if_changed(devices)
-        device_ids = devices.map(&:id).sort
-        return if @previous_device_ids == device_ids
-
-        MultiLogger.debug(detected_devices: devices.map { |d| {id: d.id, name: d.name} })
-        @previous_device_ids = device_ids
-      end
 
       # @return [Array]
       #: () -> Array[Device]

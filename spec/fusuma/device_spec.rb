@@ -46,21 +46,6 @@ module Fusuma
         Device.reset
         expect(Device.instance_variable_get(:@available)).to be_nil
       end
-
-      it "should clear @previous_device_ids" do
-        Device.all
-        expect(Device.instance_variable_get(:@previous_device_ids)).not_to be_nil
-        Device.reset
-        expect(Device.instance_variable_get(:@previous_device_ids)).to be_nil
-      end
-
-      it "should log devices again after reset" do
-        Device.all
-        Device.reset
-
-        expect(MultiLogger).to receive(:debug).with(hash_including(:detected_devices))
-        Device.all
-      end
     end
 
     describe ".available" do

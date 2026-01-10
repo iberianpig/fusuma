@@ -29,11 +29,6 @@ module Fusuma
     # : () -> nil
     def self.reset: () -> nil
 
-    # Log device list only when it changes
-    # @param devices [Array<Device>]
-    # : (Array[Device]) -> void
-    private def self.log_if_changed: (Array[Device]) -> void
-
     # @return [Array]
     # : () -> Array[Device]
     private def self.fetch_devices: () -> Array[Device]

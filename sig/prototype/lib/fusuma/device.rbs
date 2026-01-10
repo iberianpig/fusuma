@@ -5,8 +5,6 @@ module Fusuma
 
     self.@available: untyped
 
-    self.@previous_device_ids: untyped
-
     self.@libinput_command: untyped
   end
 end
