@@ -43,13 +43,14 @@ module Fusuma
       # @return [false] if plugin already exists
       # @return [nil] if search_key was already required
       # @return [Array<String>] loaded plugin paths from gems
-      # : (plugin_class: Class, plugin_path: String) -> (Array[untyped] | false | nil)
-      def self.add: (plugin_class: Class, plugin_path: String) -> (Array[untyped] | false | nil)
+      # : (plugin_class: Class, plugin_path: String) -> (Array[String] | false | nil)
+      def self.add: (plugin_class: Class, plugin_path: String) -> (Array[String] | false | nil)
 
-      def self.require_base_plugins: () -> untyped
+      # : () -> bool
+      def self.require_base_plugins: () -> bool
 
-      # : () -> Hash[untyped, untyped]
-      def self.plugins: () -> Hash[untyped, untyped]
+      # : () -> Hash[String, Array[Class]]
+      def self.plugins: () -> Hash[String, Array[Class]]
 
       # @return [Array<String>]
       # @example

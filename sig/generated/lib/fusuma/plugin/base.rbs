@@ -11,7 +11,8 @@ module Fusuma
       def self.plugins: () -> untyped
 
       # @abstract override `#shutdown` to implement
-      def shutdown: () -> untyped
+      # : () -> void
+      def shutdown: () -> void
 
       # config parameter name and Type of the value of parameter
       # @return [Hash]

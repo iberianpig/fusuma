@@ -33,7 +33,7 @@ module Fusuma
       end
 
       # @abstract override `#shutdown` to implement
-      #: () -> nil
+      #: () -> void
       def shutdown
       end
 

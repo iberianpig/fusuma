@@ -92,7 +92,7 @@ module Fusuma
         # @return [false] if plugin already exists
         # @return [nil] if search_key was already required
         # @return [Array<String>] loaded plugin paths from gems
-        #: (plugin_class: Class, plugin_path: String) -> (Array[untyped] | false | nil)
+        #: (plugin_class: Class, plugin_path: String) -> (Array[String] | false | nil)
         def add(plugin_class:, plugin_path:)
           return false if exist?(plugin_class: plugin_class, plugin_path: plugin_path)
 
@@ -126,7 +126,7 @@ module Fusuma
           require_relative "executors/executor"
         end
 
-        #: () -> Hash[untyped, untyped]
+        #: () -> Hash[String, Array[Class]]
         def plugins
           @plugins ||= {}
         end
