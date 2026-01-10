@@ -18,7 +18,8 @@ module Fusuma
       def fusuma_default_plugin_paths: () -> Array[untyped]
 
       # @return [Array<String>] paths of external plugins (installed by gem)
-      def fusuma_external_plugin_paths: () -> untyped
+      # : () -> Array[untyped]
+      def fusuma_external_plugin_paths: () -> Array[untyped]
 
       # @return [String] search key for plugin
       # @example
@@ -36,12 +37,16 @@ module Fusuma
       # : () -> String
       def plugin_dir_name: () -> String
 
-      # @param plugin_class [Class]
-      # return [Hash, false]
-      def self.add: (plugin_class: untyped, plugin_path: untyped) -> untyped
+      # Register a plugin class with the manager.
+      # @param plugin_class [Class] the plugin class to register
+      # @param plugin_path [String] the file path of the plugin
+      # @return [false] if plugin already exists
+      # @return [nil] if search_key was already required
+      # @return [Array<String>] loaded plugin paths from gems
+      # : (plugin_class: Class, plugin_path: String) -> (Array[untyped] | false | nil)
+      def self.add: (plugin_class: Class, plugin_path: String) -> (Array[untyped] | false | nil)
 
-      # : () -> void
-      def self.require_base_plugins: () -> void
+      def self.require_base_plugins: () -> untyped
 
       # : () -> Hash[untyped, untyped]
       def self.plugins: () -> Hash[untyped, untyped]
@@ -55,9 +60,14 @@ module Fusuma
       # : () -> Array[untyped]
       def self.load_paths: () -> Array[untyped]
 
-      # @param plugin_class [Class]
-      # @return [Boolean]
-      def self.exist?: (plugin_class: untyped, plugin_path: untyped) -> untyped
+      # Check if a plugin class is already registered.
+      # Note: This intentionally returns false if only the path is registered,
+      # allowing multiple plugin classes from the same file (e.g., subclasses).
+      # @param plugin_class [Class] the plugin class to check
+      # @param plugin_path [String] the file path of the plugin (not used for existence check)
+      # @return [Boolean] true if plugin class is already registered
+      # : (plugin_class: Class, plugin_path: String) -> bool
+      def self.exist?: (plugin_class: Class, plugin_path: String) -> bool
     end
   end
 end

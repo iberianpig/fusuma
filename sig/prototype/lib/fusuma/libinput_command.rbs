@@ -11,5 +11,7 @@ module Fusuma
 
     # version_command prints "1.6.3\n"
     @version: untyped
+
+    @logged_list_devices: untyped
   end
 end

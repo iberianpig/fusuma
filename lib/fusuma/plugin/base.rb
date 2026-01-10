@@ -8,8 +8,8 @@ module Fusuma
   module Plugin
     # Create a Plugin Class with extending this class
     class Base
-      # when inherited from subclass
-      #: (Class) -> Array[untyped]
+      # Callback when a subclass inherits from this class.
+      # Registers the subclass with the plugin manager.
       def self.inherited(subclass)
         super
 
@@ -18,7 +18,11 @@ module Fusuma
           raise "Plugin class #{subclass.name} must be defined in a file."
         end
 
-        subclass_path = locations.first.path
+        subclass_path = locations.first&.path
+        if subclass_path.nil?
+          raise "Plugin class #{subclass.name} must have a valid file path."
+        end
+
         Manager.add(plugin_class: subclass, plugin_path: subclass_path)
       end
 
@@ -35,7 +39,6 @@ module Fusuma
 
       # config parameter name and Type of the value of parameter
       # @return [Hash]
-      #: () -> Hash[Symbol, Array[Class] | Class]
       def config_param_types
         raise NotImplementedError, "override #{self.class.name}##{__method__}"
       end
@@ -43,7 +46,8 @@ module Fusuma
       # @param key [Symbol]
       # @param base [Config::Index]
       # @return [Object]
-      #: (?Symbol?) -> (String | Hash[untyped, untyped] | Float | bool)?
+      #: () -> Hash[untyped, untyped]
+      #: (Symbol) -> untyped
       def config_params(key = nil)
         @config_params ||= {}
         if @config_params["#{config_index.cache_key},#{key}"]

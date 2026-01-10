@@ -2,7 +2,8 @@ module Fusuma
   module Plugin
     # Create a Plugin Class with extending this class
     class Base
-      # when inherited from subclass
+      # Callback when a subclass inherits from this class.
+      # Registers the subclass with the plugin manager.
       def self.inherited: (untyped subclass) -> untyped
 
       # get subclasses
@@ -10,19 +11,19 @@ module Fusuma
       def self.plugins: () -> untyped
 
       # @abstract override `#shutdown` to implement
-      # : () -> nil
-      def shutdown: () -> nil
+      def shutdown: () -> untyped
 
       # config parameter name and Type of the value of parameter
       # @return [Hash]
-      # : () -> Hash[Symbol, Array[Class] | Class]
-      def config_param_types: () -> Hash[Symbol, Array[Class] | Class]
+      def config_param_types: () -> untyped
 
       # @param key [Symbol]
       # @param base [Config::Index]
       # @return [Object]
-      # : (?Symbol?) -> (String | Hash[untyped, untyped] | Float | bool)?
-      def config_params: (?Symbol?) -> (String | Hash[untyped, untyped] | Float | bool)?
+      # : () -> Hash[untyped, untyped]
+      # : (Symbol) -> untyped
+      def config_params: () -> Hash[untyped, untyped]
+                       | (Symbol) -> untyped
 
       # : () -> Fusuma::Config::Index
       def config_index: () -> Fusuma::Config::Index

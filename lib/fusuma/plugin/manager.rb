@@ -86,9 +86,13 @@ module Fusuma
         #                              Detectors::PinchDetector,
         #                              Detectors::SwipeDetector]}
 
-        # @param plugin_class [Class]
-        # return [Hash, false]
-        #: (plugin_class: Class, plugin_path: String) -> Array[untyped]?
+        # Register a plugin class with the manager.
+        # @param plugin_class [Class] the plugin class to register
+        # @param plugin_path [String] the file path of the plugin
+        # @return [false] if plugin already exists
+        # @return [nil] if search_key was already required
+        # @return [Array<String>] loaded plugin paths from gems
+        #: (plugin_class: Class, plugin_path: String) -> (Array[untyped] | false | nil)
         def add(plugin_class:, plugin_path:)
           return false if exist?(plugin_class: plugin_class, plugin_path: plugin_path)
 
@@ -110,7 +114,7 @@ module Fusuma
           manager.require_siblings_from_gems
         end
 
-        #: () -> void
+        #: () -> bool
         def require_base_plugins
           require_relative "base"
           require_relative "events/event"
@@ -138,10 +142,16 @@ module Fusuma
           @load_paths ||= []
         end
 
-        # @param plugin_class [Class]
-        # @return [Boolean]
+        # Check if a plugin class is already registered.
+        # Note: This intentionally returns false if only the path is registered,
+        # allowing multiple plugin classes from the same file (e.g., subclasses).
+        # @param plugin_class [Class] the plugin class to check
+        # @param plugin_path [String] the file path of the plugin (not used for existence check)
+        # @return [Boolean] true if plugin class is already registered
         #: (plugin_class: Class, plugin_path: String) -> bool
         def exist?(plugin_class:, plugin_path:)
+          # Skip existence check if path is already in load_paths
+          # This allows multiple classes from the same file to be registered
           return false if load_paths.include?(plugin_path)
 
           base = plugin_class.superclass.name
