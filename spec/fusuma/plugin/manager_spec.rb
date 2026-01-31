@@ -35,6 +35,7 @@ module Fusuma
             is_expected.to match [
               %r{fusuma/plugin/inputs/input.rb},
               %r{fusuma/plugin/inputs/libinput_command_input.rb},
+              %r{fusuma/plugin/inputs/tail_context_input.rb},
               %r{fusuma/plugin/inputs/timer_input.rb}
             ]
           }

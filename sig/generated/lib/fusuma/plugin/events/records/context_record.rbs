@@ -12,7 +12,8 @@ module Fusuma
 
           # @param name [#to_sym]
           # @param value [String]
-          def initialize: (name: untyped, value: untyped) -> untyped
+          # : (name: String, value: String) -> void
+          def initialize: (name: String, value: String) -> void
 
           def type: () -> untyped
         end

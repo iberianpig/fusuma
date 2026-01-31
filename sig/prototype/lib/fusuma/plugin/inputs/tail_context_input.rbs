@@ -1,0 +1,12 @@
+module Fusuma
+  module Plugin
+    module Inputs
+      # Monitors custom commands and outputs their results as context events
+      class TailContextInput < Input
+        @io: untyped
+
+        @last_values: untyped
+      end
+    end
+  end
+end
