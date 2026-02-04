@@ -7,7 +7,7 @@ module Fusuma
   module Plugin
     module Inputs
       # Monitors custom commands and outputs their results as context events
-      class TailContextInput < Input
+      class WatchContextInput < Input
         include Singleton
 
         # Returns the reader end of IO.pipe
@@ -33,7 +33,7 @@ module Fusuma
         def execute_command(command)
           stdout, stderr, status = Open3.capture3(command)
           unless status.success?
-            MultiLogger.warn "tail_context command failed: #{command} (exit status: #{status.exitstatus})"
+            MultiLogger.warn "watch_context command failed: #{command} (exit status: #{status.exitstatus})"
             MultiLogger.warn "  stderr: #{stderr}" unless stderr.empty?
             return nil
           end
@@ -41,16 +41,17 @@ module Fusuma
           stdout.strip
         end
 
-        # Reads the tail_context section from the config file
+        # Reads the plugin config from: plugin: inputs: watch_context_input:
         # Returns an empty Hash if no config is found
-        #: () -> (String | Hash[untyped, untyped] | Integer | Float)
-        def tail_contexts
-          Config.search(Config::Index.new(:tail_context)) || {}
+        #: () -> Hash[untyped, untyped]
+        def watch_contexts
+          result = Config.search(config_index)
+          result.is_a?(Hash) ? result : {}
         end
 
         # Executes the specified command periodically and
         # writes to writer in "name:value" format only when the value changes
-        #: (name: String, command: String, writer: StringIO) -> void
+        #: (name: Symbol | String, command: String, writer: StringIO) -> void
         def watch_command(name:, command:, writer:)
           value = execute_command(command)
           return if value.nil?
@@ -78,7 +79,7 @@ module Fusuma
         #: (StringIO) -> void
         def watch_loop(writer)
           loop do
-            contexts = tail_contexts
+            contexts = watch_contexts
             if contexts.empty?
               sleep DEFAULT_INTERVAL
               next
@@ -100,6 +101,7 @@ module Fusuma
           MultiLogger.error e
         end
 
+        #: (Hash[untyped, untyped]) -> Float
         def find_min_interval(contexts)
           intervals = contexts.values.filter_map { |c| c[:interval] }
           intervals.empty? ? DEFAULT_INTERVAL : intervals.min

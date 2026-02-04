@@ -1,23 +1,23 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "./lib/fusuma/plugin/inputs/tail_context_input"
+require "./lib/fusuma/plugin/inputs/watch_context_input"
 
 module Fusuma
   module Plugin
     module Inputs
-      RSpec.describe TailContextInput do
+      RSpec.describe WatchContextInput do
         before do
-          @input = TailContextInput.instance
+          @input = WatchContextInput.instance
         end
 
         describe "class" do
           it "inherits from Input" do
-            expect(TailContextInput.superclass).to eq Input
+            expect(WatchContextInput.superclass).to eq Input
           end
 
           it "is a Singleton" do
-            expect(TailContextInput.included_modules).to include Singleton
+            expect(WatchContextInput.included_modules).to include Singleton
           end
         end
 
@@ -46,28 +46,30 @@ module Fusuma
           end
 
           it "logs warning with MultiLogger.warn when command fails" do
-            expect(MultiLogger).to receive(:warn).with(/tail_context command failed:.*exit 1.*exit status: 1/)
+            expect(MultiLogger).to receive(:warn).with(/watch_context command failed:.*exit 1.*exit status: 1/)
             @input.execute_command("exit 1")
           end
 
           it "logs stderr when command fails with error output" do
-            expect(MultiLogger).to receive(:warn).with(/tail_context command failed:/)
+            expect(MultiLogger).to receive(:warn).with(/watch_context command failed:/)
             expect(MultiLogger).to receive(:warn).with(/stderr:.*error message/)
             @input.execute_command("echo 'error message' >&2 && exit 1")
           end
         end
 
-        describe "#tail_contexts" do
+        describe "#watch_contexts" do
           context "with config" do
             around do |example|
               ConfigHelper.load_config_yml = <<~CONFIG
-                tail_context:
-                  window:
-                    command: "xdotool getactivewindow getwindowname"
-                    interval: 0.5
-                  time:
-                    command: "date +%H:%M"
-                    interval: 60
+                plugin:
+                  inputs:
+                    watch_context_input:
+                      window:
+                        command: "xdotool getactivewindow getwindowname"
+                        interval: 0.5
+                      time:
+                        command: "date +%H:%M"
+                        interval: 60
               CONFIG
 
               example.run
@@ -75,8 +77,8 @@ module Fusuma
               Config.custom_path = nil
             end
 
-            it "returns tail_context settings from config" do
-              result = @input.tail_contexts
+            it "returns watch_context settings from config" do
+              result = @input.watch_contexts
               expect(result).to be_a Hash
               expect(result.keys).to contain_exactly(:window, :time)
               expect(result[:window][:command]).to eq "xdotool getactivewindow getwindowname"
@@ -99,7 +101,7 @@ module Fusuma
             end
 
             it "returns empty hash" do
-              result = @input.tail_contexts
+              result = @input.watch_contexts
               expect(result).to eq({})
             end
           end
@@ -150,7 +152,7 @@ module Fusuma
 
           it "sleeps DEFAULT_INTERVAL and continues loop when config is empty" do
             call_count = 0
-            allow(@input).to receive(:tail_contexts) do
+            allow(@input).to receive(:watch_contexts) do
               call_count += 1
               raise StopIteration if call_count > 2
               {}
@@ -166,6 +168,74 @@ module Fusuma
             end
 
             expect(call_count).to be > 1
+          end
+        end
+
+        describe "#watch_loop (private) with config" do
+          before do
+            @writer = StringIO.new
+            @input.reset_last_values
+          end
+
+          it "calls watch_command for each context with command" do
+            call_count = 0
+            allow(@input).to receive(:watch_contexts) do
+              call_count += 1
+              raise StopIteration if call_count > 1
+              {window: {command: "get_window", interval: 0.5}}
+            end
+            allow(@input).to receive(:sleep)
+
+            expect(@input).to receive(:watch_command).with(
+              name: :window,
+              command: "get_window",
+              writer: @writer
+            )
+
+            begin
+              @input.send(:watch_loop, @writer)
+            rescue StopIteration
+              # expected
+            end
+          end
+
+          it "skips context without command" do
+            call_count = 0
+            allow(@input).to receive(:watch_contexts) do
+              call_count += 1
+              raise StopIteration if call_count > 1
+              {window: {interval: 0.5}}
+            end
+            allow(@input).to receive(:sleep)
+
+            expect(@input).not_to receive(:watch_command)
+
+            begin
+              @input.send(:watch_loop, @writer)
+            rescue StopIteration
+              # expected
+            end
+          end
+
+          it "uses minimum interval from contexts for sleep" do
+            call_count = 0
+            allow(@input).to receive(:watch_contexts) do
+              call_count += 1
+              raise StopIteration if call_count > 1
+              {
+                window: {command: "get_window", interval: 0.5},
+                time: {command: "get_time", interval: 60}
+              }
+            end
+            allow(@input).to receive(:watch_command)
+
+            expect(@input).to receive(:sleep).with(0.5)
+
+            begin
+              @input.send(:watch_loop, @writer)
+            rescue StopIteration
+              # expected
+            end
           end
         end
       end

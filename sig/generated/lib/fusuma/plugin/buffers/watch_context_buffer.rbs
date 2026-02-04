@@ -1,8 +1,8 @@
 module Fusuma
   module Plugin
     module Buffers
-      # Buffers context events from TailContextInput for detection
-      class TailContextBuffer < Buffer
+      # Buffers context events from WatchContextInput for detection
+      class WatchContextBuffer < Buffer
         DEFAULT_SOURCE: ::String
       end
     end

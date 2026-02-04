@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "./lib/fusuma/plugin/detectors/tail_context_detector"
-require "./lib/fusuma/plugin/buffers/tail_context_buffer"
+require "./lib/fusuma/plugin/detectors/watch_context_detector"
+require "./lib/fusuma/plugin/buffers/watch_context_buffer"
 require "./lib/fusuma/plugin/events/event"
 require "./lib/fusuma/plugin/events/records/text_record"
 require "./lib/fusuma/plugin/events/records/context_record"
@@ -10,21 +10,21 @@ require "./lib/fusuma/plugin/events/records/context_record"
 module Fusuma
   module Plugin
     module Detectors
-      RSpec.describe TailContextDetector do
+      RSpec.describe WatchContextDetector do
         before do
-          @detector = TailContextDetector.new
-          @buffer = Buffers::TailContextBuffer.new
+          @detector = WatchContextDetector.new
+          @buffer = Buffers::WatchContextBuffer.new
         end
 
         describe "class" do
           it "inherits from Detector" do
-            expect(TailContextDetector.superclass).to eq Detector
+            expect(WatchContextDetector.superclass).to eq Detector
           end
         end
 
         describe "#sources" do
-          it "returns ['tail_context']" do
-            expect(@detector.sources).to eq ["tail_context"]
+          it "returns ['watch_context']" do
+            expect(@detector.sources).to eq ["watch_context"]
           end
         end
 
@@ -49,7 +49,7 @@ module Fusuma
             before do
               @buffer.clear
               event = Events::Event.new(
-                tag: "tail_context_input",
+                tag: "watch_context_input",
                 record: Events::Records::TextRecord.new("window:Firefox")
               )
               @buffer.buffer(event)
@@ -81,7 +81,7 @@ module Fusuma
             before do
               @buffer.clear
               event = Events::Event.new(
-                tag: "tail_context_input",
+                tag: "watch_context_input",
                 record: Events::Records::TextRecord.new("time:12:30:45")
               )
               @buffer.buffer(event)

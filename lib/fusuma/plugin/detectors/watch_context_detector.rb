@@ -6,9 +6,9 @@ require_relative "../events/records/context_record"
 module Fusuma
   module Plugin
     module Detectors
-      # Detects context changes from TailContextInput and converts them to ContextRecord events
-      class TailContextDetector < Detector
-        SOURCES = ["tail_context"].freeze
+      # Detects context changes from WatchContextInput and converts them to ContextRecord events
+      class WatchContextDetector < Detector
+        SOURCES = ["watch_context"].freeze
 
         #: () -> bool
         def watch?
@@ -20,7 +20,7 @@ module Fusuma
         # Parses "name:value" format and splits into name and value
         #: (Array[untyped]) -> Fusuma::Plugin::Events::Event?
         def detect(buffers)
-          buffer = buffers.find { |b| b.type == "tail_context" }
+          buffer = buffers.find { |b| b.type == "watch_context" }
           return nil if buffer.nil? || buffer.empty?
 
           event = buffer.events.first

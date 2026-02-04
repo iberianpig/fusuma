@@ -2,7 +2,7 @@ module Fusuma
   module Plugin
     module Inputs
       # Monitors custom commands and outputs their results as context events
-      class TailContextInput < Input
+      class WatchContextInput < Input
         include Singleton
 
         # Returns the reader end of IO.pipe
@@ -17,15 +17,15 @@ module Fusuma
         # : (String) -> String?
         def execute_command: (String) -> String?
 
-        # Reads the tail_context section from the config file
+        # Reads the plugin config from: plugin: inputs: watch_context_input:
         # Returns an empty Hash if no config is found
-        # : () -> (String | Hash[untyped, untyped] | Integer | Float)
-        def tail_contexts: () -> (String | Hash[untyped, untyped] | Integer | Float)
+        # : () -> Hash[untyped, untyped]
+        def watch_contexts: () -> Hash[untyped, untyped]
 
         # Executes the specified command periodically and
         # writes to writer in "name:value" format only when the value changes
-        # : (name: String, command: String, writer: StringIO) -> void
-        def watch_command: (name: String, command: String, writer: StringIO) -> void
+        # : (name: Symbol | String, command: String, writer: StringIO) -> void
+        def watch_command: (name: Symbol | String, command: String, writer: StringIO) -> void
 
         # : () -> Hash[untyped, untyped]
         def reset_last_values: () -> Hash[untyped, untyped]
@@ -39,7 +39,8 @@ module Fusuma
         # : (StringIO) -> void
         def watch_loop: (StringIO) -> void
 
-        def find_min_interval: (untyped contexts) -> untyped
+        # : (Hash[untyped, untyped]) -> Float
+        def find_min_interval: (Hash[untyped, untyped]) -> Float
       end
     end
   end

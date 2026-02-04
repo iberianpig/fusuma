@@ -1,8 +1,8 @@
 module Fusuma
   module Plugin
     module Detectors
-      # Detects context changes from TailContextInput and converts them to ContextRecord events
-      class TailContextDetector < Detector
+      # Detects context changes from WatchContextInput and converts them to ContextRecord events
+      class WatchContextDetector < Detector
         SOURCES: untyped
 
         # : () -> bool
