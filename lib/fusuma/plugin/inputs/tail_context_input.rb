@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "open3"
 require_relative "input"
 
 module Fusuma
@@ -30,15 +31,19 @@ module Fusuma
         # Returns nil on failure
         #: (String) -> String?
         def execute_command(command)
-          result = `#{command}`
-          return nil unless $?.success?
+          stdout, stderr, status = Open3.capture3(command)
+          unless status.success?
+            MultiLogger.warn "tail_context command failed: #{command} (exit status: #{status.exitstatus})"
+            MultiLogger.warn "  stderr: #{stderr}" unless stderr.empty?
+            return nil
+          end
 
-          result.strip
+          stdout.strip
         end
 
         # Reads the tail_context section from the config file
         # Returns an empty Hash if no config is found
-        #: () -> Hash[untyped, untyped]
+        #: () -> (String | Hash[untyped, untyped] | Integer | Float)
         def tail_contexts
           Config.search(Config::Index.new(:tail_context)) || {}
         end
@@ -70,10 +75,14 @@ module Fusuma
           IO.pipe
         end
 
+        #: (StringIO) -> void
         def watch_loop(writer)
           loop do
             contexts = tail_contexts
-            break if contexts.empty?
+            if contexts.empty?
+              sleep DEFAULT_INTERVAL
+              next
+            end
 
             contexts.each do |name, config|
               command = config[:command]

@@ -47,7 +47,7 @@ module Fusuma
 
         # @param record [Events::Records::Record]
         # @return [Events::Event]
-        #: (record: Fusuma::Plugin::Events::Records::IndexRecord) -> Fusuma::Plugin::Events::Event
+        #: (record: Fusuma::Plugin::Events::Records::Record) -> Fusuma::Plugin::Events::Event
         def create_event(record:)
           @last_time = Time.now
           Events::Event.new(time: @last_time, tag: @tag, record: record)

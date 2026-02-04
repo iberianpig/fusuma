@@ -19,8 +19,8 @@ module Fusuma
 
         # Reads the tail_context section from the config file
         # Returns an empty Hash if no config is found
-        # : () -> Hash[untyped, untyped]
-        def tail_contexts: () -> Hash[untyped, untyped]
+        # : () -> (String | Hash[untyped, untyped] | Integer | Float)
+        def tail_contexts: () -> (String | Hash[untyped, untyped] | Integer | Float)
 
         # Executes the specified command periodically and
         # writes to writer in "name:value" format only when the value changes
@@ -36,7 +36,8 @@ module Fusuma
 
         def create_io: () -> untyped
 
-        def watch_loop: (untyped writer) -> untyped
+        # : (StringIO) -> void
+        def watch_loop: (StringIO) -> void
 
         def find_min_interval: (untyped contexts) -> untyped
       end

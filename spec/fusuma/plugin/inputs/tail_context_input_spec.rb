@@ -44,6 +44,17 @@ module Fusuma
             result = @input.execute_command("exit 1")
             expect(result).to be_nil
           end
+
+          it "logs warning with MultiLogger.warn when command fails" do
+            expect(MultiLogger).to receive(:warn).with(/tail_context command failed:.*exit 1.*exit status: 1/)
+            @input.execute_command("exit 1")
+          end
+
+          it "logs stderr when command fails with error output" do
+            expect(MultiLogger).to receive(:warn).with(/tail_context command failed:/)
+            expect(MultiLogger).to receive(:warn).with(/stderr:.*error message/)
+            @input.execute_command("echo 'error message' >&2 && exit 1")
+          end
         end
 
         describe "#tail_contexts" do
@@ -128,6 +139,33 @@ module Fusuma
             @input.watch_command(name: "window", command: "get_window", writer: @writer)
             @writer.rewind
             expect(@writer.read).to eq ""
+          end
+        end
+
+        describe "#watch_loop (private)" do
+          before do
+            @writer = StringIO.new
+            @input.reset_last_values
+          end
+
+          it "sleeps DEFAULT_INTERVAL and continues loop when config is empty" do
+            call_count = 0
+            allow(@input).to receive(:tail_contexts) do
+              call_count += 1
+              raise StopIteration if call_count > 2
+              {}
+            end
+            allow(@input).to receive(:sleep).with(1.0)
+
+            expect(@input).to receive(:sleep).with(1.0).at_least(:once)
+
+            begin
+              @input.send(:watch_loop, @writer)
+            rescue StopIteration
+              # expected
+            end
+
+            expect(call_count).to be > 1
           end
         end
       end
