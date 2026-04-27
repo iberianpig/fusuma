@@ -26,6 +26,10 @@ gem "standard", require: false
 if RUBY_VERSION >= "3.1.0"
   gem "rbs-trace", require: false
   gem "rbs-inline", require: false
+  # rbs 4.0 made :lower_bound a required keyword on RBS::AST::TypeParam,
+  # which rbs-inline 0.13.0 does not pass. Pin until rbs-inline catches up.
+  # See: https://github.com/iberianpig/fusuma/issues/356
+  gem "rbs", "< 4.0", require: false
 end
 
 # typecheck
