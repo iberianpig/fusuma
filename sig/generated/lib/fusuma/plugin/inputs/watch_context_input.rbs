@@ -1,0 +1,47 @@
+module Fusuma
+  module Plugin
+    module Inputs
+      # Monitors custom commands and outputs their results as context events
+      class WatchContextInput < Input
+        include Singleton
+
+        # Returns the reader end of IO.pipe
+        # : () -> StringIO
+        def io: () -> StringIO
+
+        # : (StringIO, StringIO) -> void
+        def start: (StringIO, StringIO) -> void
+
+        # Executes a command and returns the result
+        # Returns nil on failure
+        # : (String) -> String?
+        def execute_command: (String) -> String?
+
+        # Reads the plugin config from: plugin: inputs: watch_context_input:
+        # Returns an empty Hash if no config is found
+        # : () -> Hash[untyped, untyped]
+        def watch_contexts: () -> Hash[untyped, untyped]
+
+        # Executes the specified command periodically and
+        # writes to writer in "name:value" format only when the value changes
+        # : (name: Symbol | String, command: String, writer: StringIO) -> void
+        def watch_command: (name: Symbol | String, command: String, writer: StringIO) -> void
+
+        # : () -> Hash[untyped, untyped]
+        def reset_last_values: () -> Hash[untyped, untyped]
+
+        private
+
+        DEFAULT_INTERVAL: ::Float
+
+        def create_io: () -> untyped
+
+        # : (StringIO) -> void
+        def watch_loop: (StringIO) -> void
+
+        # : (Hash[untyped, untyped]) -> Float
+        def find_min_interval: (Hash[untyped, untyped]) -> Float
+      end
+    end
+  end
+end

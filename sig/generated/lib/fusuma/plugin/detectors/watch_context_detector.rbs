@@ -1,0 +1,24 @@
+module Fusuma
+  module Plugin
+    module Detectors
+      # Detects context changes from WatchContextInput and converts them to ContextRecord events
+      class WatchContextDetector < Detector
+        SOURCES: untyped
+
+        # : () -> bool
+        def watch?: () -> bool
+
+        # Returns nil if the buffer is empty
+        # Converts buffer events to ContextRecord
+        # Parses "name:value" format and splits into name and value
+        # : (Array[untyped]) -> Fusuma::Plugin::Events::Event?
+        def detect: (Array[untyped]) -> Fusuma::Plugin::Events::Event?
+
+        private
+
+        # : (String) -> Array[untyped]
+        def parse_name_value: (String) -> Array[untyped]
+      end
+    end
+  end
+end

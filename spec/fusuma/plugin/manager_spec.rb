@@ -32,11 +32,12 @@ module Fusuma
         context "inputs" do
           subject { Manager.new(Inputs::Input).fusuma_default_plugin_paths }
           it {
-            is_expected.to match [
-              %r{fusuma/plugin/inputs/input.rb},
-              %r{fusuma/plugin/inputs/libinput_command_input.rb},
-              %r{fusuma/plugin/inputs/timer_input.rb}
-            ]
+            is_expected.to contain_exactly(
+              a_string_matching(%r{fusuma/plugin/inputs/input.rb}),
+              a_string_matching(%r{fusuma/plugin/inputs/libinput_command_input.rb}),
+              a_string_matching(%r{fusuma/plugin/inputs/timer_input.rb}),
+              a_string_matching(%r{fusuma/plugin/inputs/watch_context_input.rb})
+            )
           }
         end
       end
