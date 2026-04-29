@@ -408,6 +408,53 @@ Type=Application
 4. Save the file and ensure its permissions are correctly set to be executable.
 5. Restart your system or session to verify that fusuma starts automatically.
 
+### Method 3: systemd user service
+
+Useful when you want fusuma to be supervised by systemd (auto-restart on failure, journal-based logs, start/stop with `systemctl --user`).
+
+1. Check the path where you installed fusuma with `which fusuma`
+2. Create `~/.config/systemd/user/fusuma.service` with the following content. Replace `{path_to_fusuma}` with the path from step 1.
+
+```ini
+[Unit]
+Description=Fusuma (multitouch gesture recognizer)
+Documentation=https://github.com/iberianpig/fusuma
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart={path_to_fusuma}
+Restart=on-failure
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=graphical-session.target
+```
+
+3. Reload, enable, and start the service:
+
+```sh
+systemctl --user daemon-reload
+systemctl --user enable --now fusuma.service
+```
+
+4. Verify it is running and inspect logs:
+
+```sh
+systemctl --user status fusuma.service
+journalctl --user -u fusuma.service -f
+```
+
+Notes:
+
+- Do not pass `-d` / `--daemon`; systemd manages the process itself, so fusuma should run in the foreground (`Type=simple`).
+- Make sure your user is in the `input` group (see [Grant permission to read the touchpad device](#grant-permission-to-read-the-touchpad-device)).
+- `graphical-session.target` is started by your desktop session manager. If the service does not start at login, your session may not pull the target in — replace both `graphical-session.target` lines with `default.target`, or start the service manually with `systemctl --user start fusuma.service`.
+- If you installed fusuma via a Ruby version manager (rbenv, asdf, mise, etc.), `which fusuma` returns a shim that relies on the manager's `PATH`. Resolve the real binary with `readlink -f $(which fusuma)` and use that as `ExecStart`.
+
 ## Fusuma Plugins
 
 Fusuma's functionality can be extended with a variety of plugins. Below is a list of available plugins along with their purposes:
