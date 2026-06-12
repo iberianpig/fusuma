@@ -17,6 +17,19 @@ module Fusuma
 
         attr_reader :tag
 
+        # Whether this input should be instantiated and watched.
+        # All enabled inputs are polled by Input.select, so a plugin can be
+        # turned off via config:
+        #   plugin: { inputs: { <plugin_name>: { enabled: false } } }
+        # NOTE: reads the config directly because Base#config_params
+        # requires :enabled to be declared in every subclass's
+        # config_param_types
+        # @return [Boolean]
+        #: () -> bool
+        def enabled?
+          enabled_in_config != false
+        end
+
         # Wait multiple inputs until it becomes readable
         # @param inputs [Array<Input>]
         # @return [Event]
@@ -58,6 +71,15 @@ module Fusuma
           e = Events::Event.new(tag: tag, record: record)
           MultiLogger.debug(input_event: e)
           e
+        end
+
+        private
+
+        # Raw `enabled` value from config (nil when not configured)
+        #: () -> untyped
+        def enabled_in_config
+          Config.instance.fetch_config_params(:enabled, config_index)
+            .fetch(:enabled, nil)
         end
       end
     end

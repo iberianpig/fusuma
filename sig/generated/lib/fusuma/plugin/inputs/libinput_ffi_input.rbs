@@ -1,0 +1,62 @@
+module Fusuma
+  module Plugin
+    module Inputs
+      # Input plugin using libinput FFI (Fiddle) instead of CLI subprocess.
+      #
+      # Disabled by default while experimental. To use it instead of the
+      # CLI-based input, switch the inputs and re-point the parser source:
+      #
+      #   plugin:
+      #     inputs:
+      #       libinput_command_input:
+      #         enabled: false
+      #       libinput_ffi_input:
+      #         enabled: true
+      #         enable-tap: true
+      #         disable-dwt: false
+      #     parsers:
+      #       libinput_gesture_parser:
+      #         source: libinput_ffi_input
+      class LibinputFfiInput < Input
+        # Opt-in: enabled only when the config explicitly says so
+        # : () -> bool
+        def enabled?: () -> bool
+
+        # : () -> Hash[Symbol, Array[Class]]
+        def config_param_types: () -> Hash[Symbol, Array[Class]]
+
+        # @return [IO]
+        # : () -> IO
+        def io: () -> IO
+
+        # Stop the event thread and release the libinput context
+        # : () -> void
+        def shutdown: () -> void
+
+        # Read a GestureRecord from the pipe
+        # @return [Events::Records::GestureRecord]
+        # : () -> Fusuma::Plugin::Events::Records::GestureRecord
+        def read_from_io: () -> Fusuma::Plugin::Events::Records::GestureRecord
+
+        private
+
+        # : () -> Array[untyped]
+        def create_io: () -> Array[untyped]
+
+        # : (IO) -> void
+        def start_event_loop: (IO) -> void
+
+        # : (IO) -> void
+        def event_loop: (IO) -> void
+
+        # : (Fiddle::Pointer, IO) -> void
+        def process_event: (Fiddle::Pointer, IO) -> void
+
+        # Equivalent of the CLI input's --enable-tap / --enable-dwt /
+        # --disable-dwt options, applied per device as it appears
+        # : (Fiddle::Pointer) -> void
+        def apply_device_config: (Fiddle::Pointer) -> void
+      end
+    end
+  end
+end

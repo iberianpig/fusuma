@@ -7,6 +7,19 @@ require "./lib/fusuma/plugin/filters/libinput_device_filter"
 
 module Fusuma
   RSpec.describe Runner do
+    describe "#initialize_plugins" do
+      it "excludes input plugins disabled by config (libinput_ffi_input is opt-in)" do
+        Plugin::Manager.require_base_plugins
+
+        runner = Runner.new
+        runner.initialize_plugins
+
+        tags = runner.instance_variable_get(:@inputs).map(&:tag)
+        expect(tags).to include("libinput_command_input")
+        expect(tags).not_to include("libinput_ffi_input")
+      end
+    end
+
     describe ".run" do
       before do
         Singleton.__init__(MultiLogger)
