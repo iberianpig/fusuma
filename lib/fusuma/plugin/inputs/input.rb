@@ -17,6 +17,29 @@ module Fusuma
 
         attr_reader :tag
 
+        # Whether this input participates in the input loop. Enabled by
+        # default; set `enabled: false` under the plugin in config.yml to
+        # skip it (e.g. to turn off libinput_command_input when another
+        # input plugin provides events). Plugins may override to opt out
+        # by default.
+        #
+        # Checked on the class BEFORE instantiation: some input plugins
+        # have side effects in #initialize (forking subprocesses, grabbing
+        # devices), so a disabled input must never be instantiated at all.
+        #: () -> bool
+        def self.enabled?
+          config_enabled != false
+        end
+
+        # The `enabled` value configured for this plugin, or nil when not
+        # set. Class-level equivalent of config_params(:enabled): the
+        # config index is derived from the class name alone.
+        #: () -> bool?
+        def self.config_enabled
+          index = Config::Index.new(name.gsub("Fusuma::", "").underscore.split("/"))
+          Config.instance.fetch_config_params(:enabled, index).fetch(:enabled, nil)
+        end
+
         # Wait multiple inputs until it becomes readable
         # @param inputs [Array<Input>]
         # @return [Event]

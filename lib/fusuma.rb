@@ -67,7 +67,10 @@ module Fusuma
 
     #: () -> void
     def initialize_plugins
-      @inputs = Plugin::Inputs::Input.plugins.map do |cls|
+      # enabled? is checked on the class before instantiation: some input
+      # plugins fork subprocesses or grab devices in #initialize, so a
+      # disabled input must not be instantiated at all.
+      @inputs = Plugin::Inputs::Input.plugins.select(&:enabled?).map do |cls|
         cls.ancestors.include?(Singleton) ? cls.instance : cls.new
       end
       @filters = Plugin::Filters::Filter.plugins.map(&:new)
