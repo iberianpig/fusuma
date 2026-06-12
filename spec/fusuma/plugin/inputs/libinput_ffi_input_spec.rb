@@ -100,6 +100,22 @@ module Fusuma
           end
         end
 
+        describe "#event_loop" do
+          it "closes the writer when the loop dies so the reader sees EOF" do
+            reader, writer = IO.pipe
+            context = double("Context")
+            allow(context).to receive(:io).and_raise("boom")
+            input.instance_variable_set(:@context, context)
+            allow(MultiLogger).to receive(:error)
+
+            input.send(:event_loop, writer)
+
+            expect(writer.closed?).to be true
+            expect(reader.eof?).to be true
+            reader.close
+          end
+        end
+
         describe "#process_event with DEVICE_ADDED" do
           let(:tap_fn) { double("TAP_SET_ENABLED") }
           let(:dwt_fn) { double("DWT_SET_ENABLED") }

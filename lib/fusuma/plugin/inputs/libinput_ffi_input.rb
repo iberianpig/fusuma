@@ -123,6 +123,14 @@ module Fusuma
           exit 0
         rescue => e
           MultiLogger.error e
+        ensure
+          # Let the reader see EOF; read_from_io then shuts fusuma down
+          # (same behavior as the CLI input when its subprocess dies)
+          begin
+            writer.close
+          rescue IOError
+            # already closed
+          end
         end
 
         #: (Fiddle::Pointer, IO) -> void

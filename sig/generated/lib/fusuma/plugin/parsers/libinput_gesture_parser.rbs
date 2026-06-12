@@ -5,10 +5,16 @@ module Fusuma
       class LibinputGestureParser < Parser
         DEFAULT_SOURCE: ::String
 
+        # Declared like other source-switchable plugins
+        # (libinput_device_filter, gesture_buffer); without this,
+        # overriding `source` via config.yml fails type validation
+        # : () -> Hash[Symbol, Class]
+        def config_param_types: () -> Hash[Symbol, Class]
+
         # @param record [String]
         # @return [Records::GestureRecord, nil]
-        # : (Fusuma::Plugin::Events::Records::TextRecord) -> Fusuma::Plugin::Events::Records::GestureRecord?
-        def parse_record: (Fusuma::Plugin::Events::Records::TextRecord) -> Fusuma::Plugin::Events::Records::GestureRecord?
+        # : (Fusuma::Plugin::Events::Records::Record) -> Fusuma::Plugin::Events::Records::GestureRecord?
+        def parse_record: (Fusuma::Plugin::Events::Records::Record) -> Fusuma::Plugin::Events::Records::GestureRecord?
 
         private
 
