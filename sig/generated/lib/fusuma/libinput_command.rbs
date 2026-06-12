@@ -49,6 +49,7 @@ module Fusuma
     #
     #   which('ruby') #=> /usr/bin/ruby
     # @return [String, nil]
-    def which: (untyped command) -> untyped
+    # : (String) -> String?
+    def which: (String) -> String?
   end
 end
