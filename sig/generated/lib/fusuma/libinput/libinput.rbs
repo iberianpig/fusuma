@@ -1,0 +1,7 @@
+module Fusuma
+  module Libinput
+    LIB: untyped
+
+    UDEV_LIB: untyped
+  end
+end

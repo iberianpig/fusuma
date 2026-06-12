@@ -1,0 +1,13 @@
+module Fusuma
+  module Libinput
+    # Wrapper around libinput context (path-based or udev-based)
+    class Context
+      @interface: untyped
+
+      # GC guard: prevent Fiddle::Pointer device references from being collected
+      @devices: untyped
+
+      @io: untyped
+    end
+  end
+end

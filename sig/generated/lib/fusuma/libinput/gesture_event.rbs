@@ -1,0 +1,41 @@
+module Fusuma
+  module Libinput
+    # Extracts gesture data from a libinput event pointer and converts to GestureRecord
+    class GestureEvent
+      attr_reader gesture: untyped
+
+      attr_reader status: untyped
+
+      attr_reader finger_count: untyped
+
+      attr_reader dx: untyped
+
+      attr_reader dy: untyped
+
+      attr_reader dx_unaccelerated: untyped
+
+      attr_reader dy_unaccelerated: untyped
+
+      attr_reader scale: untyped
+
+      attr_reader angle_delta: untyped
+
+      attr_reader cancelled: untyped
+
+      # Build from a raw libinput event pointer
+      # @param event_ptr [Fiddle::Pointer]
+      # @param event_type [Integer]
+      # : (?event_ptr: Fiddle::Pointer?, ?event_type: Integer?, ?gesture: String?, ?status: String?, ?finger_count: Integer?, ?dx: Float, ?dy: Float, ?dx_unaccelerated: Float, ?dy_unaccelerated: Float, ?scale: Float, ?angle_delta: Float, ?cancelled: bool) -> void
+      def initialize: (?event_ptr: Fiddle::Pointer?, ?event_type: Integer?, ?gesture: String?, ?status: String?, ?finger_count: Integer?, ?dx: Float, ?dy: Float, ?dx_unaccelerated: Float, ?dy_unaccelerated: Float, ?scale: Float, ?angle_delta: Float, ?cancelled: bool) -> void
+
+      # @return [Plugin::Events::Records::GestureRecord]
+      # : () -> Fusuma::Plugin::Events::Records::GestureRecord
+      def to_gesture_record: () -> Fusuma::Plugin::Events::Records::GestureRecord
+
+      private
+
+      # : (Fiddle::Pointer, Integer) -> bool
+      def extract_from_ptr: (Fiddle::Pointer, Integer) -> bool
+    end
+  end
+end

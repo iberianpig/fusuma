@@ -1,0 +1,52 @@
+module Fusuma
+  module Libinput
+    # Wrapper around libinput context (path-based or udev-based)
+    class Context
+      attr_reader ptr: untyped
+
+      # Create a path-based context
+      # @param interface [Interface]
+      # : (Fusuma::Libinput::Interface) -> void
+      def initialize: (Fusuma::Libinput::Interface) -> void
+
+      # Create a udev-based context
+      # @param interface [Interface]
+      # @param seat [String]
+      # @return [Context]
+      # : (Fusuma::Libinput::Interface, ?seat: String) -> Fusuma::Libinput::Context
+      def self.create_udev: (Fusuma::Libinput::Interface, ?seat: String) -> Fusuma::Libinput::Context
+
+      # @param path [String] device path (e.g. "/dev/input/event4")
+      # @return [Fiddle::Pointer] device pointer
+      # : (String) -> Fiddle::Pointer?
+      def add_device: (String) -> Fiddle::Pointer?
+
+      # @return [Integer] file descriptor for polling
+      # : () -> Integer
+      def fd: () -> Integer
+
+      # @return [IO] Ruby IO wrapping the fd (non-owning)
+      # : () -> IO
+      def io: () -> IO
+
+      # Dispatch pending events
+      # @return [Integer] 0 on success, negative errno on failure
+      # : () -> Integer
+      def dispatch: () -> Integer
+
+      # Get next event from the queue
+      # @return [Fiddle::Pointer, nil] event pointer or nil when no more events
+      # : () -> Fiddle::Pointer?
+      def get_event: () -> Fiddle::Pointer?
+
+      # Iterate over all pending events
+      # @yield [event_ptr] each event pointer
+      # : () { (Fiddle::Pointer) -> void } -> void
+      def each_event: () { (Fiddle::Pointer) -> void } -> void
+
+      # Clean up the context
+      # : () -> void
+      def destroy: () -> void
+    end
+  end
+end

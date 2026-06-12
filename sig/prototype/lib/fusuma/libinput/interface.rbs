@@ -1,0 +1,11 @@
+module Fusuma
+  module Libinput
+    # libinput_interface struct with open_restricted/close_restricted callbacks
+    class Interface
+      # Create callbacks and retain references to prevent GC
+      @open_restricted: untyped
+
+      @close_restricted: untyped
+    end
+  end
+end
