@@ -2,6 +2,7 @@
 
 require_relative "multi_logger"
 require "fusuma/plugin/inputs/libinput_command_input"
+require "fusuma/plugin/inputs/libinput_ffi_input"
 
 module Fusuma
   # detect input device
@@ -64,6 +65,8 @@ module Fusuma
       # @return [Array]
       #: () -> Array[Device]
       def fetch_devices
+        return fetch_devices_via_ffi if Plugin::Inputs::LibinputFfiInput.new.enabled?
+
         line_parser = LineParser.new
 
         # note: this libinput command takes a nontrivial amount of time (~200ms)
@@ -71,6 +74,15 @@ module Fusuma
           line_parser.push(line)
         end
         line_parser.generate_devices
+      end
+
+      # Enumerate devices through libinput FFI without shelling out to
+      # the libinput CLI (libinput-tools is not needed)
+      # @return [Array]
+      #: () -> Array[Device]
+      def fetch_devices_via_ffi
+        require_relative "libinput/libinput"
+        Libinput::DeviceDetector.new.detect
       end
 
       #: () -> Fusuma::LibinputCommand

@@ -11,10 +11,24 @@ module Fusuma
       class LibinputGestureParser < Parser
         DEFAULT_SOURCE = "libinput_command_input"
 
+        # Declared like other source-switchable plugins
+        # (libinput_device_filter, gesture_buffer); without this,
+        # overriding `source` via config.yml fails type validation
+        #: () -> Hash[Symbol, Class]
+        def config_param_types
+          {
+            source: String
+          }
+        end
+
         # @param record [String]
         # @return [Records::GestureRecord, nil]
-        #: (Fusuma::Plugin::Events::Records::TextRecord) -> Fusuma::Plugin::Events::Records::GestureRecord?
+        #: (Fusuma::Plugin::Events::Records::Record) -> Fusuma::Plugin::Events::Records::GestureRecord?
         def parse_record(record)
+          # libinput_ffi_input emits pre-parsed GestureRecords; pass them
+          # through so the event is re-tagged for the gesture buffer
+          return record if record.is_a?(Events::Records::GestureRecord)
+
           case line = record.to_s
           when /GESTURE_SWIPE|GESTURE_PINCH|GESTURE_HOLD/
             gesture, status, finger, delta = parse_libinput(line)

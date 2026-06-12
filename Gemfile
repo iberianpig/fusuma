@@ -7,6 +7,9 @@ gemspec
 
 gem "bundler"
 gem "debug"
+# Used via require "fiddle" in lib/fusuma/libinput; fiddle is removed from
+# default gems in Ruby 3.5, so declare it explicitly
+gem "fiddle"
 gem "rake", "~> 13.0"
 gem "rblineprof"
 gem "rblineprof-report"

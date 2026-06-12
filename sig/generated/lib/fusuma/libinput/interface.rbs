@@ -1,0 +1,18 @@
+module Fusuma
+  module Libinput
+    # libinput_interface struct with open_restricted/close_restricted callbacks
+    class Interface
+      SIZEOF_VOIDP: untyped
+
+      attr_reader to_ptr: untyped
+
+      # : () -> void
+      def initialize: () -> void
+
+      private
+
+      # : () -> String
+      def ptr_pack_format: () -> String
+    end
+  end
+end

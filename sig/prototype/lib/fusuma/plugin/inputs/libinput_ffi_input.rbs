@@ -1,0 +1,38 @@
+module Fusuma
+  module Plugin
+    module Inputs
+      # Input plugin using libinput FFI (Fiddle) instead of CLI subprocess.
+      #
+      # Disabled by default while experimental. To use it instead of the
+      # CLI-based input, switch the inputs and re-point the parser source:
+      #
+      #   plugin:
+      #     inputs:
+      #       libinput_command_input:
+      #         enabled: false
+      #       libinput_ffi_input:
+      #         enabled: true
+      #         enable-tap: true
+      #         disable-dwt: false
+      #         device: "Magic Touchpad"   # optional, like the CLI --device
+      #         touch-events: true         # TouchRecord from touchscreens (default: true)
+      #         pointer-events: false      # PointerRecord motion/button/scroll (default: false)
+      #     parsers:
+      #       libinput_gesture_parser:
+      #         source: libinput_ffi_input
+      class LibinputFfiInput < Input
+        @io: untyped
+
+        @context: untyped
+
+        @interface: untyped
+
+        @event_thread: untyped
+
+        @touch_events: untyped
+
+        @pointer_events: untyped
+      end
+    end
+  end
+end

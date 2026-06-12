@@ -1,0 +1,174 @@
+module Fusuma
+  module Libinput
+    # Fiddle::Function definitions for libinput C API
+    module Functions
+      # Shorthand type aliases
+      VOID: untyped
+
+      VOIDP: untyped
+
+      INT: untyped
+
+      # Fiddle has no unsigned int type; INT works since enum values fit in signed range
+      ENUM: untyped
+
+      DOUBLE: untyped
+
+      # Context creation/destruction
+      # struct libinput *libinput_path_create_context(
+      #   const struct libinput_interface *interface, void *user_data)
+      PATH_CREATE_CONTEXT: untyped
+
+      # struct libinput *libinput_udev_create_context(
+      #   const struct libinput_interface *interface, void *user_data,
+      #   struct udev *udev)
+      UDEV_CREATE_CONTEXT: untyped
+
+      # int libinput_udev_assign_seat(struct libinput *libinput, const char *seat_id)
+      UDEV_ASSIGN_SEAT: untyped
+
+      # struct libinput_device *libinput_path_add_device(
+      #   struct libinput *libinput, const char *path)
+      PATH_ADD_DEVICE: untyped
+
+      # void libinput_path_remove_device(struct libinput_device *device)
+      PATH_REMOVE_DEVICE: untyped
+
+      # int libinput_get_fd(struct libinput *libinput)
+      GET_FD: untyped
+
+      # int libinput_dispatch(struct libinput *libinput)
+      DISPATCH: untyped
+
+      # struct libinput_event *libinput_get_event(struct libinput *libinput)
+      GET_EVENT: untyped
+
+      # struct libinput *libinput_unref(struct libinput *libinput)
+      UNREF: untyped
+
+      # Event functions
+      # enum libinput_event_type libinput_event_get_type(struct libinput_event *event)
+      EVENT_GET_TYPE: untyped
+
+      # struct libinput_event_gesture *libinput_event_get_gesture_event(
+      #   struct libinput_event *event)
+      EVENT_GET_GESTURE_EVENT: untyped
+
+      # struct libinput_device *libinput_event_get_device(struct libinput_event *event)
+      EVENT_GET_DEVICE: untyped
+
+      # void libinput_event_destroy(struct libinput_event *event)
+      EVENT_DESTROY: untyped
+
+      # Gesture event functions
+      # int libinput_event_gesture_get_finger_count(
+      #   struct libinput_event_gesture *event)
+      GESTURE_GET_FINGER_COUNT: untyped
+
+      # double libinput_event_gesture_get_dx(struct libinput_event_gesture *event)
+      GESTURE_GET_DX: untyped
+
+      # double libinput_event_gesture_get_dy(struct libinput_event_gesture *event)
+      GESTURE_GET_DY: untyped
+
+      # double libinput_event_gesture_get_dx_unaccelerated(
+      #   struct libinput_event_gesture *event)
+      GESTURE_GET_DX_UNACCELERATED: untyped
+
+      # double libinput_event_gesture_get_dy_unaccelerated(
+      #   struct libinput_event_gesture *event)
+      GESTURE_GET_DY_UNACCELERATED: untyped
+
+      # double libinput_event_gesture_get_scale(struct libinput_event_gesture *event)
+      GESTURE_GET_SCALE: untyped
+
+      # double libinput_event_gesture_get_angle_delta(
+      #   struct libinput_event_gesture *event)
+      GESTURE_GET_ANGLE_DELTA: untyped
+
+      # int libinput_event_gesture_get_cancelled(struct libinput_event_gesture *event)
+      # Available since libinput 1.19
+      GESTURE_GET_CANCELLED: untyped
+
+      # Touch event functions
+      # struct libinput_event_touch *libinput_event_get_touch_event(
+      #   struct libinput_event *event)
+      EVENT_GET_TOUCH_EVENT: untyped
+
+      # int32_t libinput_event_touch_get_slot(struct libinput_event_touch *event)
+      TOUCH_GET_SLOT: untyped
+
+      # double libinput_event_touch_get_x(struct libinput_event_touch *event)
+      TOUCH_GET_X: untyped
+
+      # double libinput_event_touch_get_y(struct libinput_event_touch *event)
+      TOUCH_GET_Y: untyped
+
+      # Pointer event functions
+      # struct libinput_event_pointer *libinput_event_get_pointer_event(
+      #   struct libinput_event *event)
+      EVENT_GET_POINTER_EVENT: untyped
+
+      # double libinput_event_pointer_get_dx(struct libinput_event_pointer *event)
+      POINTER_GET_DX: untyped
+
+      # double libinput_event_pointer_get_dy(struct libinput_event_pointer *event)
+      POINTER_GET_DY: untyped
+
+      # uint32_t libinput_event_pointer_get_button(struct libinput_event_pointer *event)
+      POINTER_GET_BUTTON: untyped
+
+      # enum libinput_button_state libinput_event_pointer_get_button_state(
+      #   struct libinput_event_pointer *event)
+      POINTER_GET_BUTTON_STATE: untyped
+
+      # int libinput_event_pointer_has_axis(
+      #   struct libinput_event_pointer *event, enum libinput_pointer_axis axis)
+      POINTER_HAS_AXIS: untyped
+
+      # double libinput_event_pointer_get_scroll_value(
+      #   struct libinput_event_pointer *event, enum libinput_pointer_axis axis)
+      # Available since libinput 1.19 (POINTER_SCROLL_* events appeared together)
+      POINTER_GET_SCROLL_VALUE: untyped
+
+      # Device functions
+      # const char *libinput_device_get_name(struct libinput_device *device)
+      DEVICE_GET_NAME: untyped
+
+      # const char *libinput_device_get_sysname(struct libinput_device *device)
+      DEVICE_GET_SYSNAME: untyped
+
+      # int libinput_device_has_capability(struct libinput_device *device,
+      #   enum libinput_device_capability cap)
+      DEVICE_HAS_CAPABILITY: untyped
+
+      # Device config functions (equivalents of the libinput CLI options)
+      # enum libinput_config_status libinput_device_config_tap_set_enabled(
+      #   struct libinput_device *device, enum libinput_config_tap_state enable)
+      TAP_SET_ENABLED: untyped
+
+      # enum libinput_config_tap_state libinput_device_config_tap_get_enabled(
+      #   struct libinput_device *device)
+      TAP_GET_ENABLED: untyped
+
+      # enum libinput_config_status libinput_device_config_dwt_set_enabled(
+      #   struct libinput_device *device, enum libinput_config_dwt_state enable)
+      DWT_SET_ENABLED: untyped
+
+      # enum libinput_config_dwt_state libinput_device_config_dwt_get_enabled(
+      #   struct libinput_device *device)
+      DWT_GET_ENABLED: untyped
+
+      # enum libinput_config_status libinput_device_config_send_events_set_mode(
+      #   struct libinput_device *device, uint32_t mode)
+      SEND_EVENTS_SET_MODE: untyped
+
+      # udev functions
+      # struct udev *udev_new(void)
+      UDEV_NEW: untyped
+
+      # struct udev *udev_unref(struct udev *udev)
+      UDEV_UNREF: untyped
+    end
+  end
+end

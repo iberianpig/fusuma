@@ -8,6 +8,34 @@ module Fusuma
   RSpec.describe Device do
     describe ".all" do
       it "should fetch all devices"
+
+      context "when libinput_ffi_input is enabled" do
+        around do |example|
+          ConfigHelper.load_config_yml = <<~CONFIG
+            plugin:
+              inputs:
+                libinput_ffi_input:
+                  enabled: true
+          CONFIG
+          Device.reset
+
+          example.run
+
+          Config.custom_path = nil
+          Device.reset
+        end
+
+        it "fetches devices via FFI DeviceDetector instead of the libinput CLI" do
+          ffi_devices = [
+            Device.new(id: "event2", name: "Awesome Touchpad",
+              capabilities: "pointer gesture", available: true)
+          ]
+          expect(Device).to receive(:fetch_devices_via_ffi).and_return(ffi_devices)
+          allow(Open3).to receive(:capture3).and_raise("CLI must not be called")
+
+          expect(Device.all).to eq(ffi_devices)
+        end
+      end
     end
 
     describe ".reset" do

@@ -37,6 +37,32 @@ module Fusuma
             it { expect(parser.parse(event)).to eq event }
           end
 
+          context "with a pre-parsed GestureRecord from libinput_ffi_input" do
+            # cleanup is handled by the outer around block
+            before do
+              ConfigHelper.load_config_yml = <<~CONFIG
+                plugin:
+                  parsers:
+                    libinput_gesture_parser:
+                      source: libinput_ffi_input
+              CONFIG
+            end
+
+            let(:gesture_record) do
+              Events::Records::GestureRecord.new(
+                status: "update", gesture: "swipe", finger: 3,
+                delta: Events::Records::GestureRecord::Delta.new(5.0, 0.0, 5.5, 0.0, 1.0, 0.0)
+              )
+            end
+            let(:event) { Events::Event.new(tag: "libinput_ffi_input", record: gesture_record) }
+
+            it "passes the record through and re-tags the event for the buffer" do
+              parsed = parser.parse(event)
+              expect(parsed.record).to eq gesture_record
+              expect(parsed.tag).to eq "libinput_gesture_parser"
+            end
+          end
+
           context "with libinput version 1.27.0 or later" do
             before do
               allow_any_instance_of(LibinputCommand).to receive(:libinput_1_27_0_or_later?).and_return(true)

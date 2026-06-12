@@ -16,6 +16,7 @@ path: .gem_rbs_collection
 gems:
   - name: fusuma
     ignore: true
+  - name: fiddle
   - name: singleton
   - name: yaml
   - name: open3

@@ -1,0 +1,15 @@
+module Fusuma
+  module Libinput
+    # Detect input devices via libinput FFI (replaces CLI-based device detection)
+    class DeviceDetector
+      # @return [Array<Device>] detected devices with gesture capability
+      # : () -> Array[Fusuma::Device]
+      def detect: () -> Array[Fusuma::Device]
+
+      private
+
+      # @return [Array<String>] paths matching /dev/input/event*
+      def event_device_paths: () -> untyped
+    end
+  end
+end

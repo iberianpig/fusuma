@@ -26,6 +26,29 @@ module Fusuma
 
           it { is_expected.to be_a Events::Event }
         end
+
+        describe "#enabled?" do
+          it "is enabled by default" do
+            expect(input.enabled?).to be true
+          end
+
+          context "when disabled in config" do
+            around do |example|
+              ConfigHelper.load_config_yml = <<~CONFIG
+                plugin:
+                  inputs:
+                    input:
+                      enabled: false
+              CONFIG
+
+              example.run
+
+              Config.custom_path = nil
+            end
+
+            it { expect(input.enabled?).to be false }
+          end
+        end
       end
 
       class DummyInput < Input

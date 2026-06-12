@@ -1,0 +1,25 @@
+module Fusuma
+  module Libinput
+    # Extracts touch data from a libinput event pointer and converts to TouchRecord
+    class TouchEvent
+      # statuses for which libinput reports a position
+      POSITION_STATUSES: untyped
+
+      attr_reader status: untyped
+
+      attr_reader slot: untyped
+
+      attr_reader x_mm: untyped
+
+      attr_reader y_mm: untyped
+
+      # @param event_ptr [Fiddle::Pointer]
+      # @param event_type [Integer]
+      # : (event_ptr: Fiddle::Pointer, event_type: Integer) -> void
+      def initialize: (event_ptr: Fiddle::Pointer, event_type: Integer) -> void
+
+      # : () -> Fusuma::Plugin::Events::Records::TouchRecord
+      def to_touch_record: () -> Fusuma::Plugin::Events::Records::TouchRecord
+    end
+  end
+end

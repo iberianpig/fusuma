@@ -1,0 +1,33 @@
+# Run the libinput FFI integration specs in a container.
+#
+# The specs create a virtual touchpad via /dev/uinput, so the container
+# needs the host's uinput device, the shared /dev/input devtmpfs, and the
+# host's udev database (libinput classifies devices via udev properties;
+# no udev daemon is needed inside the container).
+#
+#   docker build -f Dockerfile.integration -t fusuma-ffi-test .
+#   docker run --rm \
+#     --device /dev/uinput \
+#     --device-cgroup-rule='c 13:* rmw' \
+#     -v /dev/input:/dev/input \
+#     -v /run/udev:/run/udev:ro \
+#     fusuma-ffi-test
+#
+# --device-cgroup-rule allows opening the input event nodes (char major 13);
+# without it open(2) on /dev/input/event* fails with EPERM even as root.
+# Run the full suite instead:  ... fusuma-ffi-test bundle exec rspec
+FROM ruby:3.3-bookworm
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libinput10 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY Gemfile Gemfile.lock fusuma.gemspec ./
+COPY lib/fusuma/version.rb lib/fusuma/version.rb
+RUN bundle install --jobs 4
+
+COPY . .
+
+CMD ["bundle", "exec", "rspec", "spec/fusuma/libinput/integration_spec.rb"]

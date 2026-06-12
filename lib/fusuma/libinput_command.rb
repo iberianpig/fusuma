@@ -116,6 +116,7 @@ module Fusuma
     #
     #   which('ruby') #=> /usr/bin/ruby
     # @return [String, nil]
+    #: (String) -> String?
     def which(command)
       exts = ENV["PATHEXT"] ? ENV["PATHEXT"].split(";") : [""]
       ENV["PATH"].split(File::PATH_SEPARATOR).each do |path|

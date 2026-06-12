@@ -9,6 +9,17 @@ module Fusuma
 
         attr_reader tag: untyped
 
+        # Whether this input should be instantiated and watched.
+        # All enabled inputs are polled by Input.select, so a plugin can be
+        # turned off via config:
+        #   plugin: { inputs: { <plugin_name>: { enabled: false } } }
+        # NOTE: reads the config directly because Base#config_params
+        # requires :enabled to be declared in every subclass's
+        # config_param_types
+        # @return [Boolean]
+        # : () -> bool
+        def enabled?: () -> bool
+
         # Wait multiple inputs until it becomes readable
         # @param inputs [Array<Input>]
         # @return [Event]
@@ -29,6 +40,12 @@ module Fusuma
         # @return [Event]
         # : (?record: String) -> Fusuma::Plugin::Events::Event
         def create_event: (?record: String) -> Fusuma::Plugin::Events::Event
+
+        private
+
+        # Raw `enabled` value from config (nil when not configured)
+        # : () -> untyped
+        def enabled_in_config: () -> untyped
       end
     end
   end

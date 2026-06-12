@@ -67,9 +67,10 @@ module Fusuma
 
     #: () -> void
     def initialize_plugins
-      @inputs = Plugin::Inputs::Input.plugins.map do |cls|
+      @inputs = Plugin::Inputs::Input.plugins.map { |cls|
         cls.ancestors.include?(Singleton) ? cls.instance : cls.new
-      end
+      }.select(&:enabled?)
+      MultiLogger.warn("No input plugin is enabled") if @inputs.empty?
       @filters = Plugin::Filters::Filter.plugins.map(&:new)
       @parsers = Plugin::Parsers::Parser.plugins.map(&:new)
       @buffers = Plugin::Buffers::Buffer.plugins.map(&:new)

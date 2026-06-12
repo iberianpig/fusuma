@@ -1,0 +1,41 @@
+# Minimal Fiddle type definitions.
+# The fiddle gem ships no RBS and ruby/gem_rbs_collection has no entry for
+# it, so only the surface used by Fusuma::Libinput is declared here.
+module Fiddle
+  TYPE_VOID: Integer
+  TYPE_VOIDP: Integer
+  TYPE_INT: Integer
+  TYPE_DOUBLE: Integer
+  SIZEOF_VOIDP: Integer
+  NULL: Pointer
+  RUBY_FREE: untyped
+
+  def self.dlopen: (String) -> Handle
+
+  class DLError < StandardError
+  end
+
+  class Handle
+    def []: (String) -> Pointer
+  end
+
+  class Pointer
+    def self.malloc: (Integer, ?untyped free) -> Pointer
+    def null?: () -> bool
+    def to_s: (?Integer len) -> String
+    def to_i: () -> Integer
+    def []=: (Integer offset, Integer len, String value) -> String
+  end
+
+  class Function
+    def initialize: (untyped ptr, Array[Integer] args, Integer ret_type) -> void
+    def call: (*untyped) -> untyped
+  end
+
+  class Closure
+    class BlockCaller
+      def initialize: (Integer ret_type, Array[Integer] args) { (*untyped) -> untyped } -> void
+      def to_i: () -> Integer
+    end
+  end
+end

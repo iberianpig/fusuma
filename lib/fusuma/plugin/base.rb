@@ -10,6 +10,7 @@ module Fusuma
     class Base
       # Callback when a subclass inherits from this class.
       # Registers the subclass with the plugin manager.
+      #: (Class) -> void
       def self.inherited(subclass)
         super
 
@@ -39,6 +40,7 @@ module Fusuma
 
       # config parameter name and Type of the value of parameter
       # @return [Hash]
+      #: () -> nil
       def config_param_types
         raise NotImplementedError, "override #{self.class.name}##{__method__}"
       end

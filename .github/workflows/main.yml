@@ -29,3 +29,36 @@ jobs:
         bundler-cache: true
     - name: Run the default task
       run: bundle exec rake
+
+  # The libinput FFI integration specs create a virtual touchpad via
+  # /dev/uinput. This runs directly on the runner VM (not in Docker):
+  # uinput devices live in the host kernel and libinput classifies them
+  # via the udev daemon's database, both of which a container cannot
+  # provide by itself.
+  integration:
+    runs-on: ubuntu-latest
+    name: libinput FFI integration (uinput)
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.3'
+        bundler-cache: true
+    - name: Install libinput runtime
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends libinput10
+    - name: Set up uinput
+      run: |
+        sudo modprobe uinput
+        # Let the unprivileged runner user create uinput devices and read
+        # the event nodes that appear for them
+        printf '%s\n' \
+          'KERNEL=="uinput", MODE="0666"' \
+          'SUBSYSTEM=="input", KERNEL=="event*", MODE="0666"' \
+          | sudo tee /etc/udev/rules.d/99-uinput-test.rules
+        sudo udevadm control --reload
+        sudo chmod 666 /dev/uinput
+    - name: Run integration specs
+      run: bundle exec rspec spec/fusuma/libinput/integration_spec.rb
