@@ -33,6 +33,12 @@ module Fusuma
     # : () -> Array[Device]
     private def self.fetch_devices: () -> Array[Device]
 
+    # Enumerate devices through libinput FFI without shelling out to
+    # the libinput CLI (libinput-tools is not needed)
+    # @return [Array]
+    # : () -> Array[Device]
+    private def self.fetch_devices_via_ffi: () -> Array[Device]
+
     # : () -> Fusuma::LibinputCommand
     private def self.libinput_command: () -> Fusuma::LibinputCommand
 
