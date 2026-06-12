@@ -66,6 +66,14 @@ module Fusuma
     class VirtualTouchpad
       attr_reader :fd, :path
 
+      def device_name
+        DEVICE_NAME
+      end
+
+      def input_prop
+        INPUT_PROP_POINTER
+      end
+
       def initialize
         @fd = IO.sysopen("/dev/uinput", File::WRONLY | File::NONBLOCK)
         @io = IO.for_fd(@fd, "wb", autoclose: false)
@@ -138,7 +146,7 @@ module Fusuma
         end
 
         # Set property
-        ioctl_int(UI_SET_PROPBIT, INPUT_PROP_POINTER)
+        ioctl_int(UI_SET_PROPBIT, input_prop)
 
         # Setup abs info
         setup_abs(ABS_X, 0, ABS_MAX_X, 0, 0, 10)
@@ -154,7 +162,7 @@ module Fusuma
           0x1234, # vendor
           0x5678, # product
           0x0001, # version
-          DEVICE_NAME, # name
+          device_name, # name
           0      # ff_effects_max
         ].pack(UINPUT_SETUP_FORMAT)
         ioctl_buf(UI_DEV_SETUP, setup_data)
@@ -170,7 +178,7 @@ module Fusuma
         deadline = Time.now + 2
         while Time.now < deadline
           Dir.glob("/sys/class/input/event*/device/name").each do |name_file|
-            next unless File.read(name_file).strip == DEVICE_NAME
+            next unless File.read(name_file).strip == device_name
 
             path = "/dev/input/#{name_file[%r{event\d+}]}"
             # Wait until udev has applied permissions
@@ -178,7 +186,7 @@ module Fusuma
           end
           sleep 0.05
         end
-        raise "Device node for #{DEVICE_NAME} did not appear"
+        raise "Device node for #{device_name} did not appear"
       end
 
       def setup_abs(code, min, max, fuzz, flat, resolution)
@@ -226,6 +234,21 @@ module Fusuma
 
       def ioctl_simple(request)
         @io.ioctl(request, 0)
+      end
+    end
+
+    # Direct-touch device (INPUT_PROP_DIRECT): udev tags it as a
+    # touchscreen, so libinput emits TOUCH_* events instead of
+    # pointer/gesture events
+    class VirtualTouchscreen < VirtualTouchpad
+      TOUCHSCREEN_NAME = "fusuma-test-touchscreen"
+
+      def device_name
+        TOUCHSCREEN_NAME
+      end
+
+      def input_prop
+        INPUT_PROP_DIRECT
       end
     end
   end

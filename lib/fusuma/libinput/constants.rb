@@ -8,6 +8,46 @@ module Fusuma
       DEVICE_ADDED = 1
       DEVICE_REMOVED = 2
 
+      # Pointer events
+      POINTER_MOTION = 400
+      POINTER_MOTION_ABSOLUTE = 401
+      POINTER_BUTTON = 402
+      POINTER_AXIS = 403 # deprecated upstream; superseded by SCROLL_*
+      POINTER_SCROLL_WHEEL = 404
+      POINTER_SCROLL_FINGER = 405
+      POINTER_SCROLL_CONTINUOUS = 406
+
+      # Touch events
+      TOUCH_DOWN = 500
+      TOUCH_UP = 501
+      TOUCH_MOTION = 502
+      TOUCH_CANCEL = 503
+      TOUCH_FRAME = 504
+
+      # Maps event type to TouchRecord status
+      TOUCH_STATUS_MAP = {
+        TOUCH_DOWN => "down",
+        TOUCH_UP => "up",
+        TOUCH_MOTION => "motion",
+        TOUCH_CANCEL => "cancel",
+        TOUCH_FRAME => "frame"
+      }.freeze
+
+      # Maps event type to PointerRecord status.
+      # POINTER_MOTION_ABSOLUTE and the deprecated POINTER_AXIS are
+      # intentionally absent (AXIS would duplicate the SCROLL_* events).
+      POINTER_STATUS_MAP = {
+        POINTER_MOTION => "motion",
+        POINTER_BUTTON => "button",
+        POINTER_SCROLL_WHEEL => "scroll_wheel",
+        POINTER_SCROLL_FINGER => "scroll_finger",
+        POINTER_SCROLL_CONTINUOUS => "scroll_continuous"
+      }.freeze
+
+      # libinput_pointer_axis (for scroll value lookup)
+      POINTER_AXIS_SCROLL_VERTICAL = 0
+      POINTER_AXIS_SCROLL_HORIZONTAL = 1
+
       # Gesture events
       GESTURE_SWIPE_BEGIN = 800
       GESTURE_SWIPE_UPDATE = 801
@@ -25,6 +65,10 @@ module Fusuma
       DEVICE_CAP_TABLET_TOOL = 3
       DEVICE_CAP_TABLET_PAD = 4
       DEVICE_CAP_GESTURE = 5
+
+      # libinput_config_send_events_mode
+      SEND_EVENTS_ENABLED = 0
+      SEND_EVENTS_DISABLED = 1
 
       # Capability name mapping for device detection
       CAPABILITY_MAP = {

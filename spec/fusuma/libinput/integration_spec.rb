@@ -53,6 +53,9 @@ module Fusuma
             if Constants::GESTURE_EVENT_TYPE_RANGE.cover?(event_type)
               gesture_event = GestureEvent.new(event_ptr: event_ptr, event_type: event_type)
               events << gesture_event.to_gesture_record
+            elsif Constants::TOUCH_STATUS_MAP.key?(event_type)
+              touch_event = TouchEvent.new(event_ptr: event_ptr, event_type: event_type)
+              events << touch_event.to_touch_record
             end
             Functions::EVENT_DESTROY.call(event_ptr)
           end
@@ -186,6 +189,47 @@ module Fusuma
             statuses = events.select { |e| e.gesture == "hold" }.map(&:status)
             expect(statuses).to include("begin")
           end
+        end
+      end
+
+      describe "touchscreen TOUCH events" do
+        it "generates TouchRecords with positions" do
+          skip "Requires /dev/uinput access" unless File.writable?("/dev/uinput")
+
+          touchscreen = UinputHelper::VirtualTouchscreen.new
+          context = Context.new(interface)
+          context.add_device(touchscreen.path)
+
+          # Drain initial events
+          context.dispatch
+          while context.get_event; end
+
+          events = []
+
+          # 1-finger drag on the touchscreen
+          touchscreen.touch_down(0, 1000, 1000)
+          pump_events(context, events, 0.05)
+          5.times do |i|
+            touchscreen.touch_move(0, 1000 + (i + 1) * 50, 1000)
+            pump_events(context, events, 0.02)
+          end
+          touchscreen.touch_up(0)
+          pump_events(context, events, 0.3)
+          context.destroy
+
+          touches = events.select { |e| e.is_a?(Plugin::Events::Records::TouchRecord) }
+          statuses = touches.map(&:status)
+          expect(statuses).to include("down")
+          expect(statuses).to include("motion")
+          expect(statuses).to include("up")
+
+          down = touches.find { |e| e.status == "down" }
+          # 1000 units at 10 units/mm => 100mm
+          expect(down.slot).to eq(0)
+          expect(down.x_mm).to be_within(1.0).of(100.0)
+          expect(down.y_mm).to be_within(1.0).of(100.0)
+        ensure
+          touchscreen&.destroy
         end
       end
 

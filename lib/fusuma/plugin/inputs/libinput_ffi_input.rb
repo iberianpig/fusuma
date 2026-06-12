@@ -2,6 +2,8 @@
 
 require_relative "input"
 require_relative "../events/records/gesture_record"
+require_relative "../events/records/touch_record"
+require_relative "../events/records/pointer_record"
 
 # NOTE: ../../libinput/libinput is required lazily in #start_event_loop.
 # This file is auto-required at boot by Plugin::Manager, and requiring the
@@ -24,6 +26,9 @@ module Fusuma
       #         enabled: true
       #         enable-tap: true
       #         disable-dwt: false
+      #         device: "Magic Touchpad"   # optional, like the CLI --device
+      #         touch-events: true         # TouchRecord from touchscreens (default: true)
+      #         pointer-events: false      # PointerRecord motion/button/scroll (default: false)
       #     parsers:
       #       libinput_gesture_parser:
       #         source: libinput_ffi_input
@@ -37,9 +42,12 @@ module Fusuma
         #: () -> Hash[Symbol, Array[Class]]
         def config_param_types
           {
+            device: [String, Array],
             "enable-tap": [TrueClass, FalseClass],
             "enable-dwt": [TrueClass, FalseClass],
-            "disable-dwt": [TrueClass, FalseClass]
+            "disable-dwt": [TrueClass, FalseClass],
+            "touch-events": [TrueClass, FalseClass],
+            "pointer-events": [TrueClass, FalseClass]
           }
         end
 
@@ -62,9 +70,9 @@ module Fusuma
           @context = nil
         end
 
-        # Read a GestureRecord from the pipe
-        # @return [Events::Records::GestureRecord]
-        #: () -> Fusuma::Plugin::Events::Records::GestureRecord
+        # Read a Record (gesture/touch/pointer) from the pipe
+        # @return [Events::Records::Record]
+        #: () -> Fusuma::Plugin::Events::Records::Record
         def read_from_io
           # Read length-prefixed Marshal data
           len_data = io.read(4)
@@ -142,17 +150,48 @@ module Fusuma
             return
           end
 
-          return unless Libinput::Constants::GESTURE_EVENT_TYPE_RANGE.cover?(event_type)
+          record = extract_record(event_ptr, event_type)
+          return unless record
 
-          gesture_event = Libinput::GestureEvent.new(
-            event_ptr: event_ptr,
-            event_type: event_type
-          )
-          record = gesture_event.to_gesture_record
+          write_record(writer, record)
+        end
 
+        # @return [Events::Records::Record, nil]
+        #: (Fiddle::Pointer, Integer) -> Fusuma::Plugin::Events::Records::Record?
+        def extract_record(event_ptr, event_type)
+          if Libinput::Constants::GESTURE_EVENT_TYPE_RANGE.cover?(event_type)
+            Libinput::GestureEvent.new(event_ptr: event_ptr, event_type: event_type)
+              .to_gesture_record
+          elsif touch_events? && Libinput::Constants::TOUCH_STATUS_MAP.key?(event_type)
+            Libinput::TouchEvent.new(event_ptr: event_ptr, event_type: event_type)
+              .to_touch_record
+          elsif pointer_events? && Libinput::Constants::POINTER_STATUS_MAP.key?(event_type)
+            Libinput::PointerEvent.new(event_ptr: event_ptr, event_type: event_type)
+              .to_pointer_record
+          end
+        end
+
+        #: (IO, Fusuma::Plugin::Events::Records::Record) -> void
+        def write_record(writer, record)
           data = Marshal.dump(record)
           writer.write([data.bytesize].pack("N") + data)
           writer.flush
+        end
+
+        # Touch events are emitted by default (only touchscreens produce
+        # them); cache the lookup since this runs per event
+        #: () -> bool
+        def touch_events?
+          @touch_events = config_params(:"touch-events") != false if @touch_events.nil?
+          @touch_events
+        end
+
+        # Pointer events (motion/button/scroll) are high-frequency, so
+        # they are opt-in
+        #: () -> bool
+        def pointer_events?
+          @pointer_events = config_params(:"pointer-events") == true if @pointer_events.nil?
+          @pointer_events
         end
 
         # Equivalent of the CLI input's --enable-tap / --enable-dwt /
@@ -160,6 +199,8 @@ module Fusuma
         #: (Fiddle::Pointer) -> void
         def apply_device_config(event_ptr)
           device_ptr = Libinput::Functions::EVENT_GET_DEVICE.call(event_ptr)
+
+          disable_unmatched_device(device_ptr)
 
           if config_params(:"enable-tap")
             Libinput::Functions::TAP_SET_ENABLED.call(device_ptr, 1)
@@ -170,6 +211,28 @@ module Fusuma
           elsif config_params(:"disable-dwt")
             Libinput::Functions::DWT_SET_ENABLED.call(device_ptr, 0)
           end
+        end
+
+        # Equivalent of the CLI input's --device option: when `device:` is
+        # configured, gesture devices whose name does not match are muted
+        # via send_events mode. Non-gesture devices (e.g. keyboards) stay
+        # enabled so libinput's disable-while-typing keeps working.
+        #: (Fiddle::Pointer) -> void
+        def disable_unmatched_device(device_ptr)
+          patterns = Array(config_params(:device))
+          return if patterns.empty?
+
+          gesture = Libinput::Constants::DEVICE_CAP_GESTURE
+          return if Libinput::Functions::DEVICE_HAS_CAPABILITY.call(device_ptr, gesture).zero?
+
+          name = Libinput::Functions::DEVICE_GET_NAME.call(device_ptr).to_s
+          # regex match, same semantics as libinput_device_filter's keep_device
+          return if patterns.any? { |pattern| name.match?(pattern) }
+
+          Libinput::Functions::SEND_EVENTS_SET_MODE.call(
+            device_ptr, Libinput::Constants::SEND_EVENTS_DISABLED
+          )
+          MultiLogger.debug("FFI: disabled events from unmatched device: #{name}")
         end
       end
     end

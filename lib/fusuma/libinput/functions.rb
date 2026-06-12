@@ -157,6 +157,84 @@ module Fusuma
         nil
       end
 
+      # Touch event functions
+      # struct libinput_event_touch *libinput_event_get_touch_event(
+      #   struct libinput_event *event)
+      EVENT_GET_TOUCH_EVENT = Fiddle::Function.new(
+        LIB["libinput_event_get_touch_event"],
+        [VOIDP], VOIDP
+      )
+
+      # int32_t libinput_event_touch_get_slot(struct libinput_event_touch *event)
+      TOUCH_GET_SLOT = Fiddle::Function.new(
+        LIB["libinput_event_touch_get_slot"],
+        [VOIDP], INT
+      )
+
+      # double libinput_event_touch_get_x(struct libinput_event_touch *event)
+      TOUCH_GET_X = Fiddle::Function.new(
+        LIB["libinput_event_touch_get_x"],
+        [VOIDP], DOUBLE
+      )
+
+      # double libinput_event_touch_get_y(struct libinput_event_touch *event)
+      TOUCH_GET_Y = Fiddle::Function.new(
+        LIB["libinput_event_touch_get_y"],
+        [VOIDP], DOUBLE
+      )
+
+      # Pointer event functions
+      # struct libinput_event_pointer *libinput_event_get_pointer_event(
+      #   struct libinput_event *event)
+      EVENT_GET_POINTER_EVENT = Fiddle::Function.new(
+        LIB["libinput_event_get_pointer_event"],
+        [VOIDP], VOIDP
+      )
+
+      # double libinput_event_pointer_get_dx(struct libinput_event_pointer *event)
+      POINTER_GET_DX = Fiddle::Function.new(
+        LIB["libinput_event_pointer_get_dx"],
+        [VOIDP], DOUBLE
+      )
+
+      # double libinput_event_pointer_get_dy(struct libinput_event_pointer *event)
+      POINTER_GET_DY = Fiddle::Function.new(
+        LIB["libinput_event_pointer_get_dy"],
+        [VOIDP], DOUBLE
+      )
+
+      # uint32_t libinput_event_pointer_get_button(struct libinput_event_pointer *event)
+      POINTER_GET_BUTTON = Fiddle::Function.new(
+        LIB["libinput_event_pointer_get_button"],
+        [VOIDP], INT
+      )
+
+      # enum libinput_button_state libinput_event_pointer_get_button_state(
+      #   struct libinput_event_pointer *event)
+      POINTER_GET_BUTTON_STATE = Fiddle::Function.new(
+        LIB["libinput_event_pointer_get_button_state"],
+        [VOIDP], ENUM
+      )
+
+      # int libinput_event_pointer_has_axis(
+      #   struct libinput_event_pointer *event, enum libinput_pointer_axis axis)
+      POINTER_HAS_AXIS = Fiddle::Function.new(
+        LIB["libinput_event_pointer_has_axis"],
+        [VOIDP, ENUM], INT
+      )
+
+      # double libinput_event_pointer_get_scroll_value(
+      #   struct libinput_event_pointer *event, enum libinput_pointer_axis axis)
+      # Available since libinput 1.19 (POINTER_SCROLL_* events appeared together)
+      POINTER_GET_SCROLL_VALUE = begin
+        Fiddle::Function.new(
+          LIB["libinput_event_pointer_get_scroll_value"],
+          [VOIDP, ENUM], DOUBLE
+        )
+      rescue Fiddle::DLError
+        nil
+      end
+
       # Device functions
       # const char *libinput_device_get_name(struct libinput_device *device)
       DEVICE_GET_NAME = Fiddle::Function.new(
@@ -204,6 +282,13 @@ module Fusuma
       DWT_GET_ENABLED = Fiddle::Function.new(
         LIB["libinput_device_config_dwt_get_enabled"],
         [VOIDP], ENUM
+      )
+
+      # enum libinput_config_status libinput_device_config_send_events_set_mode(
+      #   struct libinput_device *device, uint32_t mode)
+      SEND_EVENTS_SET_MODE = Fiddle::Function.new(
+        LIB["libinput_device_config_send_events_set_mode"],
+        [VOIDP, INT], ENUM
       )
 
       # udev functions

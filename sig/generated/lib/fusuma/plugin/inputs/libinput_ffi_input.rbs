@@ -14,6 +14,9 @@ module Fusuma
       #         enabled: true
       #         enable-tap: true
       #         disable-dwt: false
+      #         device: "Magic Touchpad"   # optional, like the CLI --device
+      #         touch-events: true         # TouchRecord from touchscreens (default: true)
+      #         pointer-events: false      # PointerRecord motion/button/scroll (default: false)
       #     parsers:
       #       libinput_gesture_parser:
       #         source: libinput_ffi_input
@@ -33,10 +36,10 @@ module Fusuma
         # : () -> void
         def shutdown: () -> void
 
-        # Read a GestureRecord from the pipe
-        # @return [Events::Records::GestureRecord]
-        # : () -> Fusuma::Plugin::Events::Records::GestureRecord
-        def read_from_io: () -> Fusuma::Plugin::Events::Records::GestureRecord
+        # Read a Record (gesture/touch/pointer) from the pipe
+        # @return [Events::Records::Record]
+        # : () -> Fusuma::Plugin::Events::Records::Record
+        def read_from_io: () -> Fusuma::Plugin::Events::Records::Record
 
         private
 
@@ -52,10 +55,34 @@ module Fusuma
         # : (Fiddle::Pointer, IO) -> void
         def process_event: (Fiddle::Pointer, IO) -> void
 
+        # @return [Events::Records::Record, nil]
+        # : (Fiddle::Pointer, Integer) -> Fusuma::Plugin::Events::Records::Record?
+        def extract_record: (Fiddle::Pointer, Integer) -> Fusuma::Plugin::Events::Records::Record?
+
+        # : (IO, Fusuma::Plugin::Events::Records::Record) -> void
+        def write_record: (IO, Fusuma::Plugin::Events::Records::Record) -> void
+
+        # Touch events are emitted by default (only touchscreens produce
+        # them); cache the lookup since this runs per event
+        # : () -> bool
+        def touch_events?: () -> bool
+
+        # Pointer events (motion/button/scroll) are high-frequency, so
+        # they are opt-in
+        # : () -> bool
+        def pointer_events?: () -> bool
+
         # Equivalent of the CLI input's --enable-tap / --enable-dwt /
         # --disable-dwt options, applied per device as it appears
         # : (Fiddle::Pointer) -> void
         def apply_device_config: (Fiddle::Pointer) -> void
+
+        # Equivalent of the CLI input's --device option: when `device:` is
+        # configured, gesture devices whose name does not match are muted
+        # via send_events mode. Non-gesture devices (e.g. keyboards) stay
+        # enabled so libinput's disable-while-typing keeps working.
+        # : (Fiddle::Pointer) -> void
+        def disable_unmatched_device: (Fiddle::Pointer) -> void
       end
     end
   end

@@ -7,6 +7,45 @@ module Fusuma
 
       DEVICE_REMOVED: ::Integer
 
+      # Pointer events
+      POINTER_MOTION: ::Integer
+
+      POINTER_MOTION_ABSOLUTE: ::Integer
+
+      POINTER_BUTTON: ::Integer
+
+      POINTER_AXIS: ::Integer
+
+      POINTER_SCROLL_WHEEL: ::Integer
+
+      POINTER_SCROLL_FINGER: ::Integer
+
+      POINTER_SCROLL_CONTINUOUS: ::Integer
+
+      # Touch events
+      TOUCH_DOWN: ::Integer
+
+      TOUCH_UP: ::Integer
+
+      TOUCH_MOTION: ::Integer
+
+      TOUCH_CANCEL: ::Integer
+
+      TOUCH_FRAME: ::Integer
+
+      # Maps event type to TouchRecord status
+      TOUCH_STATUS_MAP: untyped
+
+      # Maps event type to PointerRecord status.
+      # POINTER_MOTION_ABSOLUTE and the deprecated POINTER_AXIS are
+      # intentionally absent (AXIS would duplicate the SCROLL_* events).
+      POINTER_STATUS_MAP: untyped
+
+      # libinput_pointer_axis (for scroll value lookup)
+      POINTER_AXIS_SCROLL_VERTICAL: ::Integer
+
+      POINTER_AXIS_SCROLL_HORIZONTAL: ::Integer
+
       # Gesture events
       GESTURE_SWIPE_BEGIN: ::Integer
 
@@ -36,6 +75,11 @@ module Fusuma
       DEVICE_CAP_TABLET_PAD: ::Integer
 
       DEVICE_CAP_GESTURE: ::Integer
+
+      # libinput_config_send_events_mode
+      SEND_EVENTS_ENABLED: ::Integer
+
+      SEND_EVENTS_DISABLED: ::Integer
 
       # Capability name mapping for device detection
       CAPABILITY_MAP: untyped

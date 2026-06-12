@@ -1,0 +1,35 @@
+module Fusuma
+  module Libinput
+    # Extracts pointer data from a libinput event pointer and converts to PointerRecord
+    class PointerEvent
+      attr_reader status: untyped
+
+      attr_reader dx: untyped
+
+      attr_reader dy: untyped
+
+      attr_reader button: untyped
+
+      attr_reader button_state: untyped
+
+      attr_reader vertical: untyped
+
+      attr_reader horizontal: untyped
+
+      # @param event_ptr [Fiddle::Pointer]
+      # @param event_type [Integer]
+      # : (event_ptr: Fiddle::Pointer, event_type: Integer) -> void
+      def initialize: (event_ptr: Fiddle::Pointer, event_type: Integer) -> void
+
+      # : () -> Fusuma::Plugin::Events::Records::PointerRecord
+      def to_pointer_record: () -> Fusuma::Plugin::Events::Records::PointerRecord
+
+      private
+
+      # Querying an axis the event does not have is a libinput client bug,
+      # so check has_axis first
+      # : (Fiddle::Pointer, Integer) -> Float?
+      def scroll_value: (Fiddle::Pointer, Integer) -> Float?
+    end
+  end
+end

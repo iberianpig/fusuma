@@ -151,6 +151,148 @@ module Fusuma
           end
         end
 
+        describe "#process_event with touch/pointer events" do
+          let(:writer) { StringIO.new }
+
+          def written_record(writer)
+            data = writer.string
+            return nil if data.empty?
+
+            length = data[0, 4].unpack1("N")
+            Marshal.load(data[4, length]) # rubocop:disable Security/MarshalLoad
+          end
+
+          before do
+            stub_const("Fusuma::Libinput::Constants::DEVICE_ADDED", 1)
+            stub_const("Fusuma::Libinput::Constants::GESTURE_EVENT_TYPE_RANGE", 800..807)
+            stub_const("Fusuma::Libinput::Constants::TOUCH_STATUS_MAP", {500 => "down"})
+            stub_const("Fusuma::Libinput::Constants::POINTER_STATUS_MAP", {400 => "motion"})
+            stub_const("Fusuma::Libinput::Functions::EVENT_GET_TYPE", double(call: event_type))
+          end
+
+          context "with TOUCH_DOWN (touch-events default)" do
+            let(:event_type) { 500 }
+
+            it "emits a TouchRecord" do
+              touch_record = Events::Records::TouchRecord.new(
+                status: "down", slot: 0, x_mm: 51.3, y_mm: 42.1
+              )
+              stub_const("Fusuma::Libinput::TouchEvent",
+                double(new: double(to_touch_record: touch_record)))
+
+              input.send(:process_event, :event_ptr, writer)
+
+              record = written_record(writer)
+              expect(record).to be_a(Events::Records::TouchRecord)
+              expect(record.status).to eq("down")
+            end
+          end
+
+          context "with POINTER_MOTION (pointer-events default)" do
+            let(:event_type) { 400 }
+
+            it "emits nothing (opt-in)" do
+              input.send(:process_event, :event_ptr, writer)
+
+              expect(writer.string).to be_empty
+            end
+          end
+
+          context "with POINTER_MOTION and pointer-events: true" do
+            let(:event_type) { 400 }
+
+            around do |example|
+              ConfigHelper.load_config_yml = <<~CONFIG
+                plugin:
+                  inputs:
+                    libinput_ffi_input:
+                      enabled: true
+                      pointer-events: true
+              CONFIG
+
+              example.run
+
+              Config.custom_path = nil
+            end
+
+            it "emits a PointerRecord" do
+              pointer_record = Events::Records::PointerRecord.new(
+                status: "motion", dx: 2.0, dy: -1.0
+              )
+              stub_const("Fusuma::Libinput::PointerEvent",
+                double(new: double(to_pointer_record: pointer_record)))
+
+              input.send(:process_event, :event_ptr, writer)
+
+              record = written_record(writer)
+              expect(record).to be_a(Events::Records::PointerRecord)
+              expect(record.dx).to eq(2.0)
+            end
+          end
+        end
+
+        describe "#process_event with DEVICE_ADDED and device: filter" do
+          let(:send_events_fn) { double("SEND_EVENTS_SET_MODE") }
+          let(:device_name) { "Awesome Touchpad" }
+          let(:has_gesture) { 1 }
+
+          around do |example|
+            ConfigHelper.load_config_yml = <<~CONFIG
+              plugin:
+                inputs:
+                  libinput_ffi_input:
+                    enabled: true
+                    device: Awesome
+            CONFIG
+
+            example.run
+
+            Config.custom_path = nil
+          end
+
+          before do
+            stub_const("Fusuma::Libinput::Constants::DEVICE_ADDED", 1)
+            stub_const("Fusuma::Libinput::Constants::DEVICE_CAP_GESTURE", 5)
+            stub_const("Fusuma::Libinput::Constants::SEND_EVENTS_DISABLED", 1)
+            stub_const("Fusuma::Libinput::Functions::EVENT_GET_TYPE", double(call: 1))
+            stub_const("Fusuma::Libinput::Functions::EVENT_GET_DEVICE", double(call: :device_ptr))
+            stub_const("Fusuma::Libinput::Functions::DEVICE_GET_NAME",
+              double(call: double(to_s: device_name)))
+            stub_const("Fusuma::Libinput::Functions::DEVICE_HAS_CAPABILITY",
+              double(call: has_gesture))
+            stub_const("Fusuma::Libinput::Functions::SEND_EVENTS_SET_MODE", send_events_fn)
+          end
+
+          context "with a gesture device matching device:" do
+            it "keeps the device enabled" do
+              expect(send_events_fn).not_to receive(:call)
+
+              input.send(:process_event, :event_ptr, nil)
+            end
+          end
+
+          context "with a gesture device not matching device:" do
+            let(:device_name) { "Other Touchpad" }
+
+            it "disables events from the device" do
+              expect(send_events_fn).to receive(:call).with(:device_ptr, 1)
+
+              input.send(:process_event, :event_ptr, nil)
+            end
+          end
+
+          context "with a non-gesture device (e.g. keyboard for dwt)" do
+            let(:device_name) { "Some Keyboard" }
+            let(:has_gesture) { 0 }
+
+            it "keeps the device enabled" do
+              expect(send_events_fn).not_to receive(:call)
+
+              input.send(:process_event, :event_ptr, nil)
+            end
+          end
+        end
+
         describe "lazy library loading" do
           # The plugin file is auto-required at boot by Plugin::Manager.
           # dlopen("libinput.so") must not run at require time, otherwise
