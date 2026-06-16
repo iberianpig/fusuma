@@ -64,13 +64,6 @@ module Fusuma
       # : (Hash[untyped, untyped]) { () -> untyped } -> Hash[untyped, untyped]?
       private def self.complete_match_context: (Hash[untyped, untyped]) { () -> untyped } -> Hash[untyped, untyped]?
 
-      # One of multiple request contexts matched
-      # @param request_context [Hash]
-      # @return [Hash] matched context
-      # @return [NilClass] if not matched
-      # : (Hash[untyped, untyped]) { () -> untyped } -> Hash[untyped, untyped]?
-      private def self.partial_match_context: (Hash[untyped, untyped]) { () -> untyped } -> Hash[untyped, untyped]?
-
       # Search context for plugin
       # If the plugin_defaults key is a complete match,
       # it is the default value for that plugin, so it is postponed.
