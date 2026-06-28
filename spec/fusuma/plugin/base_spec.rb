@@ -69,6 +69,29 @@ module Fusuma
           expect(@dummy_plugin.config_index).to be_a Config::Index
         end
       end
+
+      describe ".config_index" do
+        it "returns an index derived from the class name (no instance needed)" do
+          expect(DummyPlugin.config_index).to be_a Config::Index
+        end
+      end
+
+      describe ".config_param" do
+        it "fetches a type-valid value before instantiation" do
+          expect(DummyPlugin.config_param(:dummy_string, String)).to eq("dummy")
+        end
+
+        it "returns nil when the key is not configured" do
+          expect(DummyPlugin.config_param(:missing, String)).to be_nil
+        end
+
+        it "exits with a helpful error on a type mismatch" do
+          allow(MultiLogger).to receive(:error)
+          expect { DummyPlugin.config_param(:dummy_string, [TrueClass, FalseClass]) }
+            .to raise_error(SystemExit)
+          expect(MultiLogger).to have_received(:error).with(/should be/)
+        end
+      end
     end
   end
 end

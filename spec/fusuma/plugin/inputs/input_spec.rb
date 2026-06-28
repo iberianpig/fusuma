@@ -127,6 +127,23 @@ module Fusuma
 
             it { expect(described_class.enabled?).to be true }
           end
+
+          context "when enabled is a non-boolean (e.g. quoted string)" do
+            before do
+              ConfigHelper.load_config_yml = <<~CONFIG
+                plugin:
+                  inputs:
+                    dummy_input:
+                      enabled: "false"
+              CONFIG
+              allow(MultiLogger).to receive(:error)
+            end
+
+            it "exits with a helpful type-validation error" do
+              expect { described_class.enabled? }.to raise_error(SystemExit)
+              expect(MultiLogger).to have_received(:error).with(/should be/)
+            end
+          end
         end
       end
     end

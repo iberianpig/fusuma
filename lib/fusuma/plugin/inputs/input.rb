@@ -26,18 +26,13 @@ module Fusuma
         # Checked on the class BEFORE instantiation: some input plugins
         # have side effects in #initialize (forking subprocesses, grabbing
         # devices), so a disabled input must never be instantiated at all.
+        #
+        # The value is type-checked via Base.config_param: a non-boolean
+        # `enabled` (e.g. the quoted string "false") exits with a helpful
+        # message rather than being silently treated as enabled.
         #: () -> bool
         def self.enabled?
-          config_enabled != false
-        end
-
-        # The `enabled` value configured for this plugin, or nil when not
-        # set. Class-level equivalent of config_params(:enabled): the
-        # config index is derived from the class name alone.
-        #: () -> bool?
-        def self.config_enabled
-          index = Config::Index.new(name.gsub("Fusuma::", "").underscore.split("/"))
-          Config.instance.fetch_config_params(:enabled, index).fetch(:enabled, nil)
+          config_param(:enabled, [TrueClass, FalseClass]) != false
         end
 
         # Wait multiple inputs until it becomes readable
