@@ -10,6 +10,7 @@ module Fusuma
         DEFAULT_SOURCE = "timer_input"
         DEFAULT_SECONDS_TO_KEEP = 3
 
+        #: () -> Hash[untyped, untyped]
         def config_param_types
           {
             source: [String],

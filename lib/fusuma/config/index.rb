@@ -54,6 +54,7 @@ module Fusuma
           @skippable = skippable
         end
 
+        #: () -> String
         def to_s
           if @skippable
             "#{@symbol}(skippable)"

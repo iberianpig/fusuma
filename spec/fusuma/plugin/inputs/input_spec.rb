@@ -78,6 +78,74 @@ module Fusuma
           it { is_expected.to eq("dummy") }
         end
       end
+
+      # enabled? is a CLASS method, checked before instantiation: input
+      # plugins may fork subprocesses or grab devices in #initialize, so a
+      # disabled input must never be instantiated.
+      RSpec.describe DummyInput do
+        around do |example|
+          example.run
+          Config.custom_path = nil
+        end
+
+        describe ".enabled?" do
+          context "when enabled is not set" do
+            before do
+              ConfigHelper.load_config_yml = <<~CONFIG
+                plugin:
+                  inputs:
+                    dummy_input:
+                      dummy: dummy
+              CONFIG
+            end
+
+            it { expect(described_class.enabled?).to be true }
+          end
+
+          context "when enabled: false" do
+            before do
+              ConfigHelper.load_config_yml = <<~CONFIG
+                plugin:
+                  inputs:
+                    dummy_input:
+                      enabled: false
+              CONFIG
+            end
+
+            it { expect(described_class.enabled?).to be false }
+          end
+
+          context "when enabled: true" do
+            before do
+              ConfigHelper.load_config_yml = <<~CONFIG
+                plugin:
+                  inputs:
+                    dummy_input:
+                      enabled: true
+              CONFIG
+            end
+
+            it { expect(described_class.enabled?).to be true }
+          end
+
+          context "when enabled is a non-boolean (e.g. quoted string)" do
+            before do
+              ConfigHelper.load_config_yml = <<~CONFIG
+                plugin:
+                  inputs:
+                    dummy_input:
+                      enabled: "false"
+              CONFIG
+              allow(MultiLogger).to receive(:error)
+            end
+
+            it "exits with a helpful type-validation error" do
+              expect { described_class.enabled? }.to raise_error(SystemExit)
+              expect(MultiLogger).to have_received(:error).with(/should be/)
+            end
+          end
+        end
+      end
     end
   end
 end
