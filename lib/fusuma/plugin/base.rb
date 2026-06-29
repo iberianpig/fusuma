@@ -39,7 +39,7 @@ module Fusuma
 
       # config parameter name and Type of the value of parameter
       # @return [Hash]
-      #: () -> Hash[untyped, untyped]
+      #: () -> Hash[Symbol, Class | Array[Class]]
       def config_param_types
         raise NotImplementedError, "override #{self.class.name}##{__method__}"
       end
