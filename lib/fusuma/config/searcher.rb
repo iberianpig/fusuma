@@ -104,10 +104,10 @@ module Fusuma
           @context = before
         end
 
-        CONTEXT_SEARCH_ORDER = [:no_context, :complete_match_context, :partial_match_context]
+        CONTEXT_SEARCH_ORDER = [:no_context, :complete_match_context]
         # Return a matching context from config
-        # @params request_context [Hash]
-        # @return [Hash]
+        # @param request_context [Hash]
+        # @return [Hash, NilClass] matched context (nil if not matched)
         #: (Hash[untyped, untyped], ?Array[untyped]) { () -> untyped } -> Hash[untyped, untyped]?
         def find_context(request_context, fallbacks = CONTEXT_SEARCH_ORDER, &block)
           # Search in blocks in the following order.
@@ -115,7 +115,7 @@ module Fusuma
           # 2. complete_match_context: config[:context] matches request_context
           #    - Supports OR condition (array values)
           #    - Supports AND condition (multiple keys)
-          # 3. partial_match_context: config[:context] partially matches request_context
+          #    - Supports partial match (config context is subset of request context)
           fallbacks.find do |method|
             result = send(method, request_context, &block)
             return result if result
@@ -144,23 +144,6 @@ module Fusuma
             return config[:context] if with_context(config[:context], &block)
           end
           nil
-        end
-
-        # One of multiple request contexts matched
-        # @param request_context [Hash]
-        # @return [Hash] matched context
-        # @return [NilClass] if not matched
-        #: (Hash[untyped, untyped]) { () -> untyped } -> Hash[untyped, untyped]?
-        def partial_match_context(request_context, &block)
-          if request_context.keys.size > 1
-            Config.instance.keymap.each do |config|
-              next if config[:context].nil?
-
-              next unless config[:context].all? { |k, v| request_context[k] == v }
-              return config[:context] if with_context(config[:context], &block)
-            end
-            nil
-          end
         end
 
         # Search context for plugin
