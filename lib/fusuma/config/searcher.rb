@@ -106,8 +106,8 @@ module Fusuma
 
         CONTEXT_SEARCH_ORDER = [:no_context, :complete_match_context]
         # Return a matching context from config
-        # @params request_context [Hash]
-        # @return [Hash]
+        # @param request_context [Hash]
+        # @return [Hash, NilClass] matched context (nil if not matched)
         #: (Hash[untyped, untyped], ?Array[untyped]) { () -> untyped } -> Hash[untyped, untyped]?
         def find_context(request_context, fallbacks = CONTEXT_SEARCH_ORDER, &block)
           # Search in blocks in the following order.
