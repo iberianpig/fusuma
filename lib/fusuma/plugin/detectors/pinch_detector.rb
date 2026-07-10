@@ -27,18 +27,7 @@ module Fusuma
 
           finger = gesture_buffer.finger
 
-          status = case gesture_buffer.events.last.record.status
-          when "end"
-            "end"
-          when "update"
-            if updating_events.length == 1
-              "begin"
-            else
-              "update"
-            end
-          else
-            gesture_buffer.events.last.record.status
-          end
+          status = detect_status(gesture_buffer, updating_events)
 
           prev_event, event = if status == "end"
             [
