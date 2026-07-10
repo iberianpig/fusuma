@@ -24,7 +24,7 @@ module Fusuma
 
         next_index = Index.new(index.keys.drop(1))
 
-        next_location_cadidates(location, key).each do |next_location|
+        next_location_candidates(location, key).each do |next_location|
           result = search(next_index, location: next_location)
           return result if result
         end
@@ -82,7 +82,7 @@ module Fusuma
       #  1. look up location with key
       #  2. skip the key and go to child location
       #: (Hash[untyped, untyped], Fusuma::Config::Index::Key) -> Array[untyped]
-      def next_location_cadidates(location, key)
+      def next_location_candidates(location, key)
         [
           location[key.symbol],
           key.skippable ? location : nil
