@@ -13,24 +13,25 @@ module Fusuma
     def new_cli_option_available?: () -> bool
 
     # @return [Boolean]
-    def libinput_1_27_0_or_later?: () -> untyped
+    # : () -> bool
+    def libinput_1_27_0_or_later?: () -> bool
 
     # @return [String]
-    # : () -> String?
-    def version: () -> String?
+    # : () -> String
+    def version: () -> String
 
     # @yieldparam [String] gives a line in libinput list-devices output to the block
     # : () { (String) -> void } -> void
     def list_devices: () { (String) -> void } -> void
 
     # @return [Integer] return a latest line libinput debug-events
-    # : (StringIO) -> Array[untyped]
-    def debug_events: (StringIO) -> Array[untyped]
+    # : (IO) -> Array[untyped]
+    def debug_events: (IO) -> Array[untyped]
 
     # @return [String] command
     # @raise [SystemExit]
-    # : () -> String?
-    def version_command: () -> String?
+    # : () -> String
+    def version_command: () -> String
 
     # : () -> String
     def list_devices_command: () -> String
@@ -49,6 +50,7 @@ module Fusuma
     #
     #   which('ruby') #=> /usr/bin/ruby
     # @return [String, nil]
-    def which: (untyped command) -> untyped
+    # : (String) -> String?
+    def which: (String) -> String?
   end
 end
