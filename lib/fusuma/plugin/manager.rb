@@ -44,8 +44,6 @@ module Fusuma
             raise "Not Found: #{match_data[1]}/#{match_data[2]}/*.gemspec" unless plugin_gemspec_path
 
             plugin_gemspec = Gem::Specification.load(plugin_gemspec_path)
-            fusuma_gemspec_path = File.expand_path("../../../fusuma.gemspec", __dir__ || ".")
-            fusuma_gemspec = Gem::Specification.load(fusuma_gemspec_path)
             next if plugin_gemspec == fusuma_gemspec
 
             if plugin_gemspec.dependencies.find { |d| d.name == "fusuma" }&.match?(fusuma_gemspec)
@@ -76,6 +74,12 @@ module Fusuma
       #: () -> String
       def plugin_dir_name
         @plugin_class.name.match(/(Fusuma::.*)::/)[1].to_s.underscore
+      end
+
+      # @return [Gem::Specification, nil] gemspec of running fusuma
+      #: () -> Gem::Specification?
+      def fusuma_gemspec
+        @fusuma_gemspec ||= Gem::Specification.load(File.expand_path("../../../fusuma.gemspec", __dir__ || "."))
       end
 
       class << self

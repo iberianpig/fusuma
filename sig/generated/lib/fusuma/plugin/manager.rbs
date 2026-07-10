@@ -37,6 +37,10 @@ module Fusuma
       # : () -> String
       def plugin_dir_name: () -> String
 
+      # @return [Gem::Specification, nil] gemspec of running fusuma
+      # : () -> Gem::Specification?
+      def fusuma_gemspec: () -> Gem::Specification?
+
       # Register a plugin class with the manager.
       # @param plugin_class [Class] the plugin class to register
       # @param plugin_path [String] the file path of the plugin
