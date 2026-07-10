@@ -37,6 +37,27 @@ module Fusuma
 
         # : () -> bool
         def first_time?: () -> bool
+
+        private
+
+        # @param index [Config::Index]
+        # @return [Float, Integer]
+        # : (index: Fusuma::Config::Index) -> (Float | Integer)
+        def threshold: (index: Fusuma::Config::Index) -> (Float | Integer)
+
+        # Detect the current status of the gesture from the buffer
+        # @param gesture_buffer [Buffers::GestureBuffer]
+        # @param updating_events [Array<Events::Event>]
+        # @return [String] "begin", "update", "end", or the last record's status
+        # : (untyped, Array[untyped]) -> String
+        def detect_status: (untyped, Array[untyped]) -> String
+
+        # Select the delta of the last relevant event depending on the status
+        # @param gesture_buffer [Buffers::GestureBuffer]
+        # @param status [String]
+        # @return [Events::Records::GestureRecord::Delta]
+        # : (untyped, String) -> untyped
+        def last_delta: (untyped, String) -> untyped
       end
     end
   end

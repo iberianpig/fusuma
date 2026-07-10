@@ -268,12 +268,12 @@ If you have a nice configuration, please share `~/.config/fusuma/config.yml` wit
 
 ### Threshold and Interval
 
-if `command:` properties are blank, the swipe/pinch/hold doesn't execute command.
+if `command:` properties are blank, the swipe/pinch/rotate/hold doesn't execute command.
 
-`threshold:` is sensitivity to swipe/pinch/hold. Default value is 1.
+`threshold:` is sensitivity to swipe/pinch/rotate/hold. Default value is 1.
 If the swipe's threshold is `0.5`, shorten swipe-length by half.
 
-`interval:` is delay between swipes/pinches/hold. Default value is 1.
+`interval:` is delay between swipes/pinches/rotations/hold. Default value is 1.
 If the swipe's interval is `0.5`, shorten swipe-interval by half to recognize a next swipe.
 
 ### Example of `threshold:` / `interval:` settings
@@ -310,7 +310,7 @@ There are three priorities of `threshold:` and `interval:`.
 The individual `threshold:` and `interval:` settings (under "direction") have a higher priority than the global one (under "root")
 
 1. child elements in the direction (left/right/down/up → threshold/interval)
-1. root child elements (threshold/interval → swipe/pinch/hold)
+1. root child elements (threshold/interval → swipe/pinch/rotate/hold)
 1. default value (= 1)
 
 ### `command:` property for assigning commands
@@ -365,7 +365,8 @@ swipe:
 - `-l`, `--list-devices` : List available devices
 - `-v`, `--verbose` : Show details about the results of running fusuma
 - `--version` : Show fusuma version
-- `--log-file=path/to/file` : Set path of log file
+- `--log=path/to/file` : Print logs to file
+- `--show-config` : Show config as YAML format which is loaded internally
 
 ### Specify touchpads by device name
 Set the following options to recognize multi-touch gestures only for the specified touchpad device.

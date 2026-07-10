@@ -19,7 +19,7 @@ module Fusuma
             .with("libinput") { false }
           allow(libinput_command).to receive("which")
             .with("libinput-list-devices") { true }
-          allow_any_instance_of(Kernel).to receive(:`)
+          allow(libinput_command).to receive(:`)
             .with("libinput-list-devices --version") { "1.6.3\n" }
         end
 
@@ -33,7 +33,7 @@ module Fusuma
             .with("libinput") { true }
           allow(libinput_command).to receive("which")
             .with("libinput-list-devices") { false }
-          allow_any_instance_of(Kernel).to receive(:`)
+          allow(libinput_command).to receive(:`)
             .with("libinput --version") { "1.8\n" }
         end
 
@@ -76,7 +76,6 @@ module Fusuma
 
     describe "list_devices" do
       subject { libinput_command.list_devices }
-      after { subject }
 
       before do
         dummy_io = StringIO.new("dummy")
@@ -90,6 +89,7 @@ module Fusuma
 
         it "should call dummy events" do
           expect(Open3).to receive(:capture3).with(/dummy_list_devices/)
+          subject
         end
       end
 
@@ -102,6 +102,7 @@ module Fusuma
         it "call `libinput list-devices`" do
           command = "libinput list-devices"
           expect(Open3).to receive(:capture3).with(command)
+          subject
         end
       end
       context "with old cli version" do
@@ -113,6 +114,7 @@ module Fusuma
         it "call `libinput-list-devices`" do
           command = "libinput-list-devices"
           expect(Open3).to receive(:capture3).with(command)
+          subject
         end
       end
     end

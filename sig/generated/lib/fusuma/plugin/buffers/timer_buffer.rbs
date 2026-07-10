@@ -7,14 +7,16 @@ module Fusuma
 
         DEFAULT_SECONDS_TO_KEEP: ::Integer
 
-        def config_param_types: () -> untyped
+        # : () -> Hash[untyped, untyped]
+        def config_param_types: () -> Hash[untyped, untyped]
 
         # @param event [Event]
         # @return [Buffer, NilClass]
         # : (Fusuma::Plugin::Events::Event) -> Fusuma::Plugin::Buffers::TimerBuffer?
         def buffer: (Fusuma::Plugin::Events::Event) -> Fusuma::Plugin::Buffers::TimerBuffer?
 
-        def clear_expired: (?current_time: untyped) -> untyped
+        # : (?current_time: Time) -> void
+        def clear_expired: (?current_time: Time) -> void
       end
     end
   end

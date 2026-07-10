@@ -26,6 +26,7 @@ module Fusuma
         instance.search(index)
       end
 
+      #: (Fusuma::Config::Index) -> Symbol?
       def find_execute_key(index)
         instance.find_execute_key(index)
       end
@@ -89,7 +90,7 @@ module Fusuma
       fallbacks = [:no_context, :plugin_default_context]
       Config::Searcher.find_context(request_context, fallbacks) do
         ret = Config.search(base)
-        if ret&.key?(key)
+        if ret.is_a?(Hash) && ret.key?(key)
           return ret
         end
       end
@@ -100,14 +101,15 @@ module Fusuma
     # @raise [InvalidFileError] If check does not pass
     #: (String) -> Array[Hash[Symbol, untyped]]
     def validate(path)
+      content = File.read(path)
       duplicates = []
-      YAMLDuplicationChecker.check(File.read(path), path) do |ignored, duplicate| # steep:ignore UnexpectedBlockGiven
+      YAMLDuplicationChecker.check(content, path) do |ignored, duplicate| # steep:ignore UnexpectedBlockGiven
         MultiLogger.error "#{path}: #{ignored.value} is duplicated"
         duplicates << duplicate.value
       end
       raise InvalidFileError, "Detect duplicate keys #{duplicates}" unless duplicates.empty?
 
-      yamls = YAML.load_stream(File.read(path)).compact # steep:ignore NoMethod
+      yamls = YAML.load_stream(content).compact # steep:ignore NoMethod
       yamls.map do |yaml|
         raise InvalidFileError, "Invalid config.yml: #{path}" unless yaml.is_a? Hash
 
@@ -126,6 +128,7 @@ module Fusuma
 
     # @param index [Config::Index]
     # @return Symbol
+    #: (Fusuma::Config::Index) -> Symbol?
     def find_execute_key(index)
       @execute_keys ||= Plugin::Executors::Executor.plugins.map do |executor|
         executor.new.execute_keys
@@ -171,6 +174,7 @@ module Fusuma
       File.expand_path "~/.config/#{filename}"
     end
 
+    #: (String) -> String
     def expand_default_path(filename)
       File.expand_path "../../#{filename}", __FILE__
     end

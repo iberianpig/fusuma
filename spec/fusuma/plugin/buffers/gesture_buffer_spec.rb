@@ -12,6 +12,11 @@ module Fusuma
     module Buffers
       RSpec.describe GestureBuffer do
         before do
+          # Ignore the user's local ~/.config/fusuma/config.yml so that specs
+          # always fall back to the bundled default config
+          allow(Config.instance).to receive(:expand_config_path).and_wrap_original { |method, filename| "#{method.call(filename)}.does_not_exist" }
+          Config.instance.reload if Config.instance.custom_path.nil?
+
           @buffer = GestureBuffer.new
           delta = Events::Records::GestureRecord::Delta.new(-1, 0, 0, 0, 0, 0)
           @event_generator = lambda { |time = nil, status = "update"|
@@ -143,19 +148,55 @@ module Fusuma
         end
 
         describe "#sum_attrs" do
-          it "should calculate the sum of each attribute"
+          before do
+            allow(@buffer).to receive(:source).and_return("libinput_gesture_parser")
+          end
+
+          it "should calculate the sum of each attribute" do
+            3.times { @buffer.buffer(@event_generator.call) }
+            expect(@buffer.sum_attrs(:move_x)).to eq(-3.0)
+          end
+
+          it "should sum only update events (exclude begin/end)" do
+            @buffer.buffer(@event_generator.call(nil, "begin"))
+            2.times { @buffer.buffer(@event_generator.call) }
+            @buffer.buffer(@event_generator.call(nil, "end"))
+            expect(@buffer.sum_attrs(:move_x)).to eq(-2.0)
+          end
         end
 
         describe "#avg_attrs" do
-          it "should calculate the average of each attribute"
+          before do
+            allow(@buffer).to receive(:source).and_return("libinput_gesture_parser")
+          end
+
+          it "should calculate the average of each attribute" do
+            3.times { @buffer.buffer(@event_generator.call) }
+            expect(@buffer.avg_attrs(:move_x)).to eq(-1.0)
+          end
         end
 
         describe "#finger" do
-          it "should return number of fingers in gestures"
+          before do
+            allow(@buffer).to receive(:source).and_return("libinput_gesture_parser")
+          end
+
+          it "should return number of fingers in gestures" do
+            @buffer.buffer(@event_generator.call)
+            expect(@buffer.finger).to eq(3)
+            expect(@buffer.finger).to be_a(Integer)
+          end
         end
 
         describe "#gesture" do
-          it "should return string of gesture type"
+          before do
+            allow(@buffer).to receive(:source).and_return("libinput_gesture_parser")
+          end
+
+          it "should return string of gesture type" do
+            @buffer.buffer(@event_generator.call)
+            expect(@buffer.gesture).to eq("SWIPE")
+          end
         end
 
         describe "#empty?" do

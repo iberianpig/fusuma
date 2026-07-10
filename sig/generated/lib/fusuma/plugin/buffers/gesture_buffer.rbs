@@ -62,7 +62,8 @@ module Fusuma
         #  event_buffer.gesture
         #  => 'swipe'
         # @return [String]
-        def gesture: () -> untyped
+        # : () -> String
+        def gesture: () -> String
 
         # : (String) -> Fusuma::Plugin::Buffers::GestureBuffer
         def select_by_type: (String) -> Fusuma::Plugin::Buffers::GestureBuffer

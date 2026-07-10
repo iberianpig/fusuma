@@ -44,6 +44,28 @@ module Fusuma
       end
     end
 
+    describe "#fetch_config_params" do
+      context "when the value resolved from the index is a scalar instead of a Hash" do
+        before do
+          ConfigHelper.load_config_yml = <<~CONFIG
+            plugin:
+              inputs:
+                libinput_command_input: "foo"
+          CONFIG
+        end
+
+        after { ConfigHelper.clear_config_yml }
+
+        it "returns an empty hash without raising an error" do
+          index = Config::Index.new(%w[plugin inputs libinput_command_input])
+          params = nil
+          expect { params = Config.instance.fetch_config_params(:enable_tap, index) }
+            .not_to raise_error
+          expect(params).to eq({})
+        end
+      end
+    end
+
     describe "#validate" do
       context "with valid yaml" do
         before do

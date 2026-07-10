@@ -11,12 +11,14 @@ module Fusuma
 
           # @param name [#to_sym]
           # @param value [String]
+          #: (name: String, value: String) -> void
           def initialize(name:, value:)
             super()
             @name = name.to_sym
             @value = value
           end
 
+          #: () -> Symbol
           def type
             :context
           end

@@ -31,24 +31,8 @@ module Fusuma
           oneshot_move_y = gesture_buffer.sum_last10_attrs(:move_y) / updating_time
 
           finger = gesture_buffer.finger
-          status = case gesture_buffer.events.last.record.status
-          when "end"
-            "end"
-          when "update"
-            if updating_events.length == 1
-              "begin"
-            else
-              "update"
-            end
-          else
-            gesture_buffer.events.last.record.status
-          end
-
-          delta = if status == "end"
-            gesture_buffer.events[-2].record.delta
-          else
-            gesture_buffer.events.last.record.delta
-          end
+          status = detect_status(gesture_buffer, updating_events)
+          delta = last_delta(gesture_buffer, status)
 
           repeat_direction = Direction.new(move_x: delta.move_x, move_y: delta.move_y).to_s
           repeat_quantity = Quantity.new(move_x: delta.move_x, move_y: delta.move_y).to_f
@@ -120,18 +104,6 @@ module Fusuma
         #: (index: Fusuma::Config::Index, quantity: Float) -> bool
         def enough_oneshot_threshold?(index:, quantity:)
           quantity > threshold(index: index)
-        end
-
-        #: (index: Fusuma::Config::Index) -> Integer
-        def threshold(index:)
-          @threshold ||= {}
-          @threshold[index.cache_key] ||= begin
-            keys_specific = Config::Index.new [*index.keys, "threshold"]
-            keys_global = Config::Index.new ["threshold", type]
-            config_value = Config.search(keys_specific) ||
-              Config.search(keys_global) || 1
-            BASE_THRESHOLD * config_value
-          end
         end
 
         # direction of gesture

@@ -13,7 +13,8 @@ module Fusuma
     # : (Fusuma::Config::Index) -> (String | Hash[untyped, untyped] | Integer | Float)?
     def self.search: (Fusuma::Config::Index) -> (String | Hash[untyped, untyped] | Integer | Float)?
 
-    def self.find_execute_key: (untyped index) -> untyped
+    # : (Fusuma::Config::Index) -> Symbol?
+    def self.find_execute_key: (Fusuma::Config::Index) -> Symbol?
 
     # : (String?) -> Fusuma::Config
     def self.custom_path=: (String?) -> Fusuma::Config
@@ -51,7 +52,8 @@ module Fusuma
 
     # @param index [Config::Index]
     # @return Symbol
-    def find_execute_key: (untyped index) -> untyped
+    # : (Fusuma::Config::Index) -> Symbol?
+    def find_execute_key: (Fusuma::Config::Index) -> Symbol?
 
     private
 
@@ -64,7 +66,8 @@ module Fusuma
     # : (String) -> String
     def expand_config_path: (String) -> String
 
-    def expand_default_path: (untyped filename) -> untyped
+    # : (String) -> String
+    def expand_default_path: (String) -> String
 
     # : () -> Array[untyped]
     def plugin_defaults_paths: () -> Array[untyped]

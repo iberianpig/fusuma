@@ -23,8 +23,8 @@ module Fusuma
         def read_from_io: () -> String
 
         # @return [IO]
-        # : () -> nil
-        def io: () -> nil
+        # : () -> IO
+        def io: () -> IO
 
         # @return [Event]
         # : (?record: String) -> Fusuma::Plugin::Events::Event

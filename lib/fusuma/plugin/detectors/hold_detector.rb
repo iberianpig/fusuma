@@ -49,7 +49,7 @@ module Fusuma
           when "end"
             "end"
           else
-            last_record = last_hold.record.status
+            last_record = last_hold.record
             raise "Unexpected Status:#{last_record.status} in #{last_record}"
           end
 
@@ -132,18 +132,6 @@ module Fusuma
             @timer.wake_early(Time.now + diff)
           end
           false
-        end
-
-        #: (index: Fusuma::Config::Index) -> Float
-        def threshold(index:)
-          @threshold ||= {}
-          @threshold[index.cache_key] ||= begin
-            keys_specific = Config::Index.new [*index.keys, "threshold"]
-            keys_global = Config::Index.new ["threshold", type]
-            config_value = Config.search(keys_specific) ||
-              Config.search(keys_global) || 1
-            BASE_THRESHOLD * config_value
-          end
         end
       end
     end

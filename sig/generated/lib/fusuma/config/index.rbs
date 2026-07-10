@@ -10,7 +10,8 @@ module Fusuma
 
       attr_reader cache_key: Symbol | Integer
 
-      def to_s: () -> untyped
+      # : () -> Array[untyped]
+      def to_s: () -> Array[untyped]
 
       def ==: (untyped other) -> untyped
 

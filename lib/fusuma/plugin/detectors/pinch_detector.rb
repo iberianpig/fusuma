@@ -27,18 +27,7 @@ module Fusuma
 
           finger = gesture_buffer.finger
 
-          status = case gesture_buffer.events.last.record.status
-          when "end"
-            "end"
-          when "update"
-            if updating_events.length == 1
-              "begin"
-            else
-              "update"
-            end
-          else
-            gesture_buffer.events.last.record.status
-          end
+          status = detect_status(gesture_buffer, updating_events)
 
           prev_event, event = if status == "end"
             [
@@ -137,18 +126,6 @@ module Fusuma
         #: (index: Fusuma::Config::Index, quantity: Float) -> bool
         def enough_oneshot_threshold?(index:, quantity:)
           quantity >= threshold(index: index)
-        end
-
-        #: (index: Fusuma::Config::Index) -> Float
-        def threshold(index:)
-          @threshold ||= {}
-          @threshold[index.cache_key] ||= begin
-            keys_specific = Config::Index.new [*index.keys, "threshold"]
-            keys_global = Config::Index.new ["threshold", type]
-            config_value = Config.search(keys_specific) ||
-              Config.search(keys_global) || 1
-            BASE_THRESHOLD * config_value
-          end
         end
 
         # direction of gesture

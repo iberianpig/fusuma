@@ -4,11 +4,15 @@
 # @rbs generic unchecked out V
 class Hash
   # activesupport-5.2.0/lib/active_support/core_ext/hash/deep_merge.rb
+  # Keep untyped: rbs-trace would record concrete types here that conflict
+  # with the block type of the core Hash#merge! signature under steep.
+  #: (untyped other_hash) ?{ (?) -> untyped } -> untyped
   def deep_merge(other_hash, &block)
     dup.deep_merge!(other_hash, &block)
   end
 
   # Same as +deep_merge+, but modifies +self+.
+  #: (untyped other_hash) ?{ (?) -> untyped } -> untyped
   def deep_merge!(other_hash, &block)
     merge!(other_hash) do |key, this_val, other_val|
       if this_val.is_a?(Hash) && other_val.is_a?(Hash)
@@ -21,6 +25,7 @@ class Hash
     end
   end
 
+  #: () -> Hash[untyped, untyped]
   def deep_stringify_keys
     deep_transform_keys(&:to_s)
   end

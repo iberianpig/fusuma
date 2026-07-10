@@ -41,6 +41,41 @@ module Fusuma
         it "does not log debug messages that match the ignore pattern" do
           expect { MultiLogger.debug(ignored_message) }.not_to output(/#{ignored_message}/).to_stdout_from_any_process
         end
+
+        context "when ignore_pattern is customized" do
+          before do
+            MultiLogger.instance.ignore_pattern = /custom_tag/
+          end
+
+          it "does not log debug messages that match the custom pattern" do
+            expect { MultiLogger.debug("custom_tag message") }.not_to output.to_stdout_from_any_process
+          end
+
+          it "logs debug messages that match the default pattern" do
+            expect { MultiLogger.debug(ignored_message) }.to output(/#{ignored_message}/).to_stdout_from_any_process
+          end
+        end
+
+        context "when ignore_pattern is built from log_filter config value" do
+          it "ignores messages matching a pattern built from a single String" do
+            MultiLogger.instance.ignore_pattern = Regexp.union(Array("custom_tag").map(&:to_s))
+            expect { MultiLogger.debug("custom_tag message") }.not_to output.to_stdout_from_any_process
+          end
+
+          it "ignores messages matching a pattern built from an Array of Strings" do
+            filters = ["custom_tag", "another_tag"]
+            MultiLogger.instance.ignore_pattern = Regexp.union(Array(filters).map(&:to_s))
+            expect { MultiLogger.debug("custom_tag message") }.not_to output.to_stdout_from_any_process
+            expect { MultiLogger.debug("another_tag message") }.not_to output.to_stdout_from_any_process
+            expect { MultiLogger.debug(debug_message) }.to output(/#{debug_message}/).to_stdout_from_any_process
+          end
+        end
+      end
+    end
+
+    describe "#ignore_pattern" do
+      it "defaults to DEFAULT_IGNORE_PATTERN" do
+        expect(MultiLogger.instance.ignore_pattern).to eq(MultiLogger::DEFAULT_IGNORE_PATTERN)
       end
     end
 

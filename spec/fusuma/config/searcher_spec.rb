@@ -7,8 +7,8 @@ require "./lib/fusuma/config/searcher"
 # spec for Config
 module Fusuma
   RSpec.describe Config::Searcher do
-    around do |example|
-      ConfigHelper.load_config_yml = <<~CONFIG
+    let(:config_yml) do
+      <<~CONFIG
         swipe:
           3:
             left:
@@ -26,6 +26,10 @@ module Fusuma
           out:
             command: 'ctrl+minus'
       CONFIG
+    end
+
+    around do |example|
+      ConfigHelper.load_config_yml = config_yml
 
       example.run
 
@@ -95,8 +99,8 @@ module Fusuma
         end
 
         context "with gesture lifecycle (begin/update/end)" do
-          around do |example|
-            ConfigHelper.load_config_yml = <<~CONFIG
+          let(:config_yml) do
+            <<~CONFIG
               swipe:
                 3:
                   begin:
@@ -109,8 +113,6 @@ module Fusuma
                       LEFTCTRL:
                         command: 'echo end+ctrl'
             CONFIG
-            example.run
-            ConfigHelper.clear_config_yml
           end
 
           context "without keypress modifier" do
@@ -165,8 +167,8 @@ module Fusuma
     end
 
     describe ".find_context" do
-      around do |example|
-        ConfigHelper.load_config_yml = <<~CONFIG
+      let(:config_yml) do
+        <<~CONFIG
           ---
           context: { plugin_defaults: "libinput_command_input" }
           plugin:
@@ -179,10 +181,6 @@ module Fusuma
               sendkey_executor:
                 device_name: keyboard|Keyboard|KEYBOARD
         CONFIG
-
-        example.run
-
-        ConfigHelper.clear_config_yml
       end
 
       it "should find matched context and matched value" do
@@ -200,8 +198,8 @@ module Fusuma
       end
 
       context "with OR condition (array value)" do
-        around do |example|
-          ConfigHelper.load_config_yml = <<~CONFIG
+        let(:config_yml) do
+          <<~CONFIG
             ---
             context:
               application:
@@ -212,8 +210,6 @@ module Fusuma
                 left:
                   command: 'browser-back'
           CONFIG
-          example.run
-          ConfigHelper.clear_config_yml
         end
 
         it "matches when request value is in the array" do
@@ -242,8 +238,8 @@ module Fusuma
       end
 
       context "with AND + OR condition" do
-        around do |example|
-          ConfigHelper.load_config_yml = <<~CONFIG
+        let(:config_yml) do
+          <<~CONFIG
             ---
             context:
               thumbsense: true
@@ -253,8 +249,6 @@ module Fusuma
             remap:
               H: 'alt+Left'
           CONFIG
-          example.run
-          ConfigHelper.clear_config_yml
         end
 
         it "matches when both AND and OR conditions are satisfied" do
@@ -283,8 +277,8 @@ module Fusuma
       end
 
       context "with same application in multiple context blocks (OR and single)" do
-        around do |example|
-          ConfigHelper.load_config_yml = <<~CONFIG
+        let(:config_yml) do
+          <<~CONFIG
             ---
             context:
               application:
@@ -300,8 +294,6 @@ module Fusuma
                 left:
                   sendkey: "LEFTALT+RIGHT"
           CONFIG
-          example.run
-          ConfigHelper.clear_config_yml
         end
 
         it "finds remap config for Google-chrome via OR condition" do
@@ -364,8 +356,8 @@ module Fusuma
       let(:searcher) { Config::Searcher.new }
 
       context "with no-context and context blocks" do
-        around do |example|
-          ConfigHelper.load_config_yml = <<~CONFIG
+        let(:config_yml) do
+          <<~CONFIG
             ---
             swipe:
               3:
@@ -381,8 +373,6 @@ module Fusuma
                 left:
                   command: 'browser-back'
           CONFIG
-          example.run
-          ConfigHelper.clear_config_yml
         end
 
         let(:location) { Config.instance.keymap }
@@ -423,15 +413,13 @@ module Fusuma
       end
 
       context "with no-context block only" do
-        around do |example|
-          ConfigHelper.load_config_yml = <<~CONFIG
+        let(:config_yml) do
+          <<~CONFIG
             swipe:
               3:
                 left:
                   command: 'default-back'
           CONFIG
-          example.run
-          ConfigHelper.clear_config_yml
         end
 
         let(:location) { Config.instance.keymap }
@@ -444,8 +432,8 @@ module Fusuma
       end
 
       context "skipping no-context blocks when context is specified" do
-        around do |example|
-          ConfigHelper.load_config_yml = <<~CONFIG
+        let(:config_yml) do
+          <<~CONFIG
             ---
             remap:
               H: 'default-h'
@@ -455,8 +443,6 @@ module Fusuma
             remap:
               H: 'thumbsense-h'
           CONFIG
-          example.run
-          ConfigHelper.clear_config_yml
         end
 
         let(:location) { Config.instance.keymap }

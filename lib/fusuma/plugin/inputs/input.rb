@@ -35,7 +35,7 @@ module Fusuma
         # so input plugin must write line to pipe (include `\n`)
         # or, override read_from_io and implement your own read method
         #: () -> String
-        def read_from_io
+        def read_from_io # steep:ignore MethodBodyTypeMismatch
           io.readline(chomp: true)
         rescue EOFError => e
           MultiLogger.error "#{self.class.name}: #{e}"
@@ -47,7 +47,7 @@ module Fusuma
         end
 
         # @return [IO]
-        #: () -> nil
+        #: () -> IO
         def io
           raise NotImplementedError, "override #{self.class.name}##{__method__}"
         end

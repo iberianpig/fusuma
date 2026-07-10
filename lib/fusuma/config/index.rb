@@ -25,6 +25,7 @@ module Fusuma
       attr_reader :keys #: Array[Key]
       attr_reader :cache_key #: Symbol | Integer
 
+      #: () -> Array[untyped]
       def to_s
         @keys.map(&:inspect)
       end

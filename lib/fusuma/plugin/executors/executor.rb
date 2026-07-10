@@ -13,7 +13,7 @@ module Fusuma
 
         # Executor parameter on config.yml
         # @return [Array<Symbol>]
-        #: () -> nil
+        #: () -> Array[Symbol]
         def execute_keys
           # [name.split('Executors::').last.underscore.gsub('_executor', '').to_sym]
           raise NotImplementedError, "override #{self.class.name}##{__method__}"
@@ -22,7 +22,7 @@ module Fusuma
         # check executable
         # @param _event [Events::Event]
         # @return [TrueClass, FalseClass]
-        #: (String) -> nil
+        #: (Fusuma::Plugin::Events::Event) -> bool
         def executable?(_event)
           raise NotImplementedError, "override #{self.class.name}##{__method__}"
         end
@@ -62,7 +62,7 @@ module Fusuma
         # execute something
         # @param _event [Event]
         # @return [nil]
-        #: (String) -> nil
+        #: (Fusuma::Plugin::Events::Event) -> void
         def execute(_event)
           raise NotImplementedError, "override #{self.class.name}##{__method__}"
         end
