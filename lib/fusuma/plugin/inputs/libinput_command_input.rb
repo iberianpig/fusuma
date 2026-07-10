@@ -24,7 +24,7 @@ module Fusuma
         end
 
         # @return [IO]
-        #: () -> StringIO
+        #: () -> IO
         def io
           @io ||= begin
             reader, writer = create_io
