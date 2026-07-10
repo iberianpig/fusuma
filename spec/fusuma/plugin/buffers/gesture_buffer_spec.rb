@@ -12,6 +12,11 @@ module Fusuma
     module Buffers
       RSpec.describe GestureBuffer do
         before do
+          # Ignore the user's local ~/.config/fusuma/config.yml so that specs
+          # always fall back to the bundled default config
+          allow(Config.instance).to receive(:expand_config_path).and_wrap_original { |method, filename| "#{method.call(filename)}.does_not_exist" }
+          Config.instance.reload if Config.instance.custom_path.nil?
+
           @buffer = GestureBuffer.new
           delta = Events::Records::GestureRecord::Delta.new(-1, 0, 0, 0, 0, 0)
           @event_generator = lambda { |time = nil, status = "update"|
