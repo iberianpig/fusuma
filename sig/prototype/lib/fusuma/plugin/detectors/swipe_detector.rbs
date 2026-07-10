@@ -15,7 +15,6 @@ module Fusuma
 
           @y: untyped
         end
-        @threshold: untyped
       end
     end
   end

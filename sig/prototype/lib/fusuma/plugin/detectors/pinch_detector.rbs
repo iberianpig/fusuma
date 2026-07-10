@@ -15,7 +15,6 @@ module Fusuma
 
           @base: untyped
         end
-        @threshold: untyped
       end
     end
   end

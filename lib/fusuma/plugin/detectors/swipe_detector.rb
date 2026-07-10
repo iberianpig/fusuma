@@ -122,18 +122,6 @@ module Fusuma
           quantity > threshold(index: index)
         end
 
-        #: (index: Fusuma::Config::Index) -> Integer
-        def threshold(index:)
-          @threshold ||= {}
-          @threshold[index.cache_key] ||= begin
-            keys_specific = Config::Index.new [*index.keys, "threshold"]
-            keys_global = Config::Index.new ["threshold", type]
-            config_value = Config.search(keys_specific) ||
-              Config.search(keys_global) || 1
-            BASE_THRESHOLD * config_value
-          end
-        end
-
         # direction of gesture
         class Direction
           RIGHT = "right"

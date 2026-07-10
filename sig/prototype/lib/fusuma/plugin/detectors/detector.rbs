@@ -6,6 +6,8 @@ module Fusuma
         @sources: untyped
 
         @last_time: untyped
+
+        @threshold: untyped
       end
     end
   end

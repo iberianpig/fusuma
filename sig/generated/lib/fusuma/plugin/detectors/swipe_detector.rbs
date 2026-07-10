@@ -41,9 +41,6 @@ module Fusuma
         # : (index: Fusuma::Config::Index, quantity: Float) -> bool
         def enough_oneshot_threshold?: (index: Fusuma::Config::Index, quantity: Float) -> bool
 
-        # : (index: Fusuma::Config::Index) -> Integer
-        def threshold: (index: Fusuma::Config::Index) -> Integer
-
         # direction of gesture
         class Direction
           RIGHT: ::String
