@@ -11,7 +11,6 @@ module Fusuma
         class Quantity
           @angle: untyped
         end
-        @threshold: untyped
       end
     end
   end

@@ -41,9 +41,6 @@ module Fusuma
         # : (index: Fusuma::Config::Index, quantity: Float) -> bool
         def enough_oneshot_threshold?: (index: Fusuma::Config::Index, quantity: Float) -> bool
 
-        # : (index: Fusuma::Config::Index) -> Float
-        def threshold: (index: Fusuma::Config::Index) -> Float
-
         # direction of gesture
         class Direction
           CLOCKWISE: ::String

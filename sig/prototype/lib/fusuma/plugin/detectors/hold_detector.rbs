@@ -6,8 +6,6 @@ module Fusuma
         @timer: untyped
 
         @timeout: untyped
-
-        @threshold: untyped
       end
     end
   end

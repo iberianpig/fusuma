@@ -43,9 +43,6 @@ module Fusuma
 
         # : (index: Fusuma::Config::Index, holding_time: Float) -> bool
         def enough?: (index: Fusuma::Config::Index, holding_time: Float) -> bool
-
-        # : (index: Fusuma::Config::Index) -> Float
-        def threshold: (index: Fusuma::Config::Index) -> Float
       end
     end
   end

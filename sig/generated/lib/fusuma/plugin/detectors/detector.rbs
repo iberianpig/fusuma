@@ -37,6 +37,13 @@ module Fusuma
 
         # : () -> bool
         def first_time?: () -> bool
+
+        private
+
+        # @param index [Config::Index]
+        # @return [Float, Integer]
+        # : (index: Fusuma::Config::Index) -> (Float | Integer)
+        def threshold: (index: Fusuma::Config::Index) -> (Float | Integer)
       end
     end
   end
