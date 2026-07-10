@@ -10,14 +10,14 @@ module Fusuma
 
         # Executor parameter on config.yml
         # @return [Array<Symbol>]
-        # : () -> nil
-        def execute_keys: () -> nil
+        # : () -> Array[Symbol]
+        def execute_keys: () -> Array[Symbol]
 
         # check executable
         # @param _event [Events::Event]
         # @return [TrueClass, FalseClass]
-        # : (String) -> nil
-        def executable?: (String) -> nil
+        # : (Fusuma::Plugin::Events::Event) -> bool
+        def executable?: (Fusuma::Plugin::Events::Event) -> bool
 
         # @param event [Events::Event]
         # @return [TrueClass, FalseClass]
@@ -33,8 +33,8 @@ module Fusuma
         # execute something
         # @param _event [Event]
         # @return [nil]
-        # : (String) -> nil
-        def execute: (String) -> nil
+        # : (Fusuma::Plugin::Events::Event) -> void
+        def execute: (Fusuma::Plugin::Events::Event) -> void
       end
     end
   end
