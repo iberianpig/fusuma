@@ -12,9 +12,10 @@ module Fusuma
 
         DEFAULT_INTERVAL = 5
         EPSILON_TIME = 0.02
+        #: () -> Hash[untyped, untyped]
         def config_param_types
           {
-            interval: [Float]
+            interval: [Float, Integer]
           }
         end
 
