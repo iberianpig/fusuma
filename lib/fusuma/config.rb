@@ -100,14 +100,15 @@ module Fusuma
     # @raise [InvalidFileError] If check does not pass
     #: (String) -> Array[Hash[Symbol, untyped]]
     def validate(path)
+      content = File.read(path)
       duplicates = []
-      YAMLDuplicationChecker.check(File.read(path), path) do |ignored, duplicate| # steep:ignore UnexpectedBlockGiven
+      YAMLDuplicationChecker.check(content, path) do |ignored, duplicate| # steep:ignore UnexpectedBlockGiven
         MultiLogger.error "#{path}: #{ignored.value} is duplicated"
         duplicates << duplicate.value
       end
       raise InvalidFileError, "Detect duplicate keys #{duplicates}" unless duplicates.empty?
 
-      yamls = YAML.load_stream(File.read(path)).compact # steep:ignore NoMethod
+      yamls = YAML.load_stream(content).compact # steep:ignore NoMethod
       yamls.map do |yaml|
         raise InvalidFileError, "Invalid config.yml: #{path}" unless yaml.is_a? Hash
 
