@@ -22,6 +22,8 @@ module Fusuma
             return
           end
 
+          return if gesture.nil?
+
           Events::Records::GestureRecord.new(status: status,
             gesture: gesture,
             finger: finger,
@@ -49,9 +51,9 @@ module Fusuma
         #: (String) -> Array[untyped]
         def parse_line(line)
           _device, event_name, _time, other = line.strip.split(nil, 4)
-          finger, other = other.split(nil, 2)
+          return [] unless event_name && other
 
-          return [] unless event_name
+          finger, other = other.split(nil, 2)
           gesture, status = *detect_gesture(event_name)
 
           status = "cancelled" if gesture == "hold" && status == "end" && other == "cancelled"
@@ -62,14 +64,14 @@ module Fusuma
         #: (String) -> Array[untyped]
         def parse_line_1_27_0_or_later(line)
           _device, event_name, other = line.strip.split(nil, 3)
+          return [] unless event_name && other
 
           if other[0] != "+"
             _seq, other = other.split(nil, 2)
+            return [] unless other
           end
 
           _time, finger, other = other.split(nil, 3)
-
-          return [] unless event_name
           gesture, status = *detect_gesture(event_name)
 
           status = "cancelled" if gesture == "hold" && status == "end" && other == "cancelled"
@@ -79,7 +81,8 @@ module Fusuma
 
         #: (String) -> Array[untyped]
         def detect_gesture(event_name)
-          event_name =~ /GESTURE_(SWIPE|PINCH|HOLD)_(BEGIN|UPDATE|END)/
+          return [] unless event_name =~ /GESTURE_(SWIPE|PINCH|HOLD)_(BEGIN|UPDATE|END)/
+
           gesture = Regexp.last_match(1).downcase
           status = Regexp.last_match(2).downcase
           [gesture, status]

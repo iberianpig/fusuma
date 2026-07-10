@@ -81,6 +81,19 @@ module Fusuma
                 expect(parser.parse(event.call).record.finger).to eq 3
               end
             end
+
+            context "with an incomplete line" do
+              let(:event) { Events::Event.new(tag: "libinput_command_input", record: "event9   GESTURE_SWIPE_BEGIN") }
+
+              it "does not raise an error" do
+                expect { parser.parse(event) }.not_to raise_error
+              end
+
+              it "returns the original event without a gesture record" do
+                expect(parser.parse(event).record).not_to be_a Events::Records::GestureRecord
+                expect(parser.parse(event)).to eq event
+              end
+            end
           end
 
           context "with libinput version 1.26.0 or earlier" do
@@ -156,6 +169,19 @@ module Fusuma
                 expect(parser.parse(event.call).record.finger).to eq 3
                 expect(parser.parse(event.call).record.finger).to eq 4
                 expect(parser.parse(event.call).record.finger).to eq 4
+              end
+            end
+
+            context "with an incomplete line" do
+              let(:event) { Events::Event.new(tag: "libinput_command_input", record: "event9   GESTURE_SWIPE_BEGIN") }
+
+              it "does not raise an error" do
+                expect { parser.parse(event) }.not_to raise_error
+              end
+
+              it "returns the original event without a gesture record" do
+                expect(parser.parse(event).record).not_to be_a Events::Records::GestureRecord
+                expect(parser.parse(event)).to eq event
               end
             end
           end
