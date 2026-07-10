@@ -7,8 +7,8 @@ module Fusuma
         def config_param_types: () -> Hash[Symbol, Array[Class]]
 
         # @return [IO]
-        # : () -> StringIO
-        def io: () -> StringIO
+        # : () -> IO
+        def io: () -> IO
 
         # @return [LibinputCommand]
         # : () -> (Fusuma::LibinputCommand)
