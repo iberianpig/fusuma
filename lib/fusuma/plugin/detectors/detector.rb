@@ -62,6 +62,41 @@ module Fusuma
         def first_time?
           @last_time.nil?
         end
+
+        private
+
+        # Detect the current status of the gesture from the buffer
+        # @param gesture_buffer [Buffers::GestureBuffer]
+        # @param updating_events [Array<Events::Event>]
+        # @return [String] "begin", "update", "end", or the last record's status
+        #: (untyped, Array[untyped]) -> String
+        def detect_status(gesture_buffer, updating_events)
+          case gesture_buffer.events.last.record.status
+          when "end"
+            "end"
+          when "update"
+            if updating_events.length == 1
+              "begin"
+            else
+              "update"
+            end
+          else
+            gesture_buffer.events.last.record.status
+          end
+        end
+
+        # Select the delta of the last relevant event depending on the status
+        # @param gesture_buffer [Buffers::GestureBuffer]
+        # @param status [String]
+        # @return [Events::Records::GestureRecord::Delta]
+        #: (untyped, String) -> untyped
+        def last_delta(gesture_buffer, status)
+          if status == "end"
+            gesture_buffer.events[-2].record.delta
+          else
+            gesture_buffer.events.last.record.delta
+          end
+        end
       end
     end
   end
