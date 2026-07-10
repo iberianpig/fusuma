@@ -8,7 +8,7 @@
 In order to use the Fusuma console and run the project's tests,
 there is a small amount of setup:
 
-1. Install Ruby. Fusuma requires Ruby 2.3+. You may choose to
+1. Install Ruby. Fusuma requires Ruby 2.7+. You may choose to
    manage your Ruby and gem installations with [RVM](https://rvm.io/),
    [rbenv](https://github.com/rbenv/rbenv), or
    [chruby](https://github.com/postmodern/chruby).
@@ -40,25 +40,31 @@ $ bundle exec rspec
 
 The project uses [YARD](https://github.com/lsegal/yard) for generating documentation.  
 
+YARD is not included in the project's Gemfile, so install it first:
+
+``` sh
+$ gem install yard
+```
+
 If you're not sure about YARD, please refer to [YARD cheatsheet](https://gist.github.com/phansch/db18a595d2f5f1ef16646af72fe1fb0e).
 
 To run the Fusuma documentation tests:
 
 ``` sh
-$ bundle exec yard --fail-on-warning
+$ yard --fail-on-warning
 ```
 
 To check Fusuma documents with running local server:
 
 ```
-$ bundle exec yard server
+$ yard server
 ```
 Then open (http://localhost:8808/)
 
 ## Coding Style
 
 Please follow the established coding style in the library.
-The style is is largely based on [The Ruby Style Guide](https://github.com/bbatsov/ruby-style-guide).
+The style is largely based on [Standard Ruby](https://github.com/standardrb/standard).
 
 You can check your code against these rules by running Rubocop like so:
 
