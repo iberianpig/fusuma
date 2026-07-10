@@ -89,7 +89,7 @@ module Fusuma
       fallbacks = [:no_context, :plugin_default_context]
       Config::Searcher.find_context(request_context, fallbacks) do
         ret = Config.search(base)
-        if ret&.key?(key)
+        if ret.is_a?(Hash) && ret.key?(key)
           return ret
         end
       end
