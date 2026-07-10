@@ -34,7 +34,7 @@ module Fusuma
       #  1. look up location with key
       #  2. skip the key and go to child location
       # : (Hash[untyped, untyped], Fusuma::Config::Index::Key) -> Array[untyped]
-      def next_location_cadidates: (Hash[untyped, untyped], Fusuma::Config::Index::Key) -> Array[untyped]
+      def next_location_candidates: (Hash[untyped, untyped], Fusuma::Config::Index::Key) -> Array[untyped]
 
       attr_reader context: untyped
 
