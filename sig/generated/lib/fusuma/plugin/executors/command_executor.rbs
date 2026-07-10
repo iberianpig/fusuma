@@ -5,7 +5,8 @@ module Fusuma
       class CommandExecutor < Executor
         # Executor parameter on config.yml
         # @return [Array<Symbol>]
-        def execute_keys: () -> untyped
+        # : () -> Array[Symbol]
+        def execute_keys: () -> Array[Symbol]
 
         # : (Fusuma::Plugin::Events::Event) -> void
         def execute: (Fusuma::Plugin::Events::Event) -> void

@@ -9,6 +9,7 @@ module Fusuma
       class CommandExecutor < Executor
         # Executor parameter on config.yml
         # @return [Array<Symbol>]
+        #: () -> Array[Symbol]
         def execute_keys
           [:command]
         end
