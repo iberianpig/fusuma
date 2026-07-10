@@ -4,9 +4,13 @@ module Fusuma
   class MultiLogger < Logger
     include Singleton
 
+    DEFAULT_IGNORE_PATTERN: Regexp
+
     attr_reader err_logger: untyped
 
     attr_accessor debug_mode: untyped
+
+    attr_accessor ignore_pattern: Regexp
 
     attr_writer filepath: untyped
 
@@ -39,7 +43,7 @@ module Fusuma
 
     private
 
-    # : (String) -> bool
-    def ignore_pattern?: (String) -> bool
+    # : (untyped) -> bool
+    def ignore_pattern?: (untyped) -> bool
   end
 end

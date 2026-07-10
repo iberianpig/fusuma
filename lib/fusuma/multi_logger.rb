@@ -9,8 +9,11 @@ module Fusuma
   class MultiLogger < Logger
     include Singleton
 
+    DEFAULT_IGNORE_PATTERN = /timer_input/ #: Regexp
+
     attr_reader :err_logger
     attr_accessor :debug_mode
+    attr_accessor :ignore_pattern #: Regexp
 
     class << self
       attr_writer :filepath
@@ -49,6 +52,7 @@ module Fusuma
       end
       @err_logger = Logger.new($stderr)
       @debug_mode = false
+      @ignore_pattern = DEFAULT_IGNORE_PATTERN
     end
 
     #: (untyped) -> void
@@ -77,19 +81,16 @@ module Fusuma
 
     private
 
-    #: (String) -> bool
+    #: (untyped) -> bool
     def ignore_pattern?(msg)
-      # TODO: configurable from config.yml
-      # pattern = /timer_input|remap_touchpad_input|thumbsense context|libinput_command_input/
-      pattern = /timer_input/
       case msg
       when Hash
         e = msg.values.find { |v| v.is_a? Fusuma::Plugin::Events::Event }
         return false unless e
 
-        e.tag.match?(pattern)
+        e.tag.match?(@ignore_pattern)
       when String
-        msg.match?(pattern)
+        msg.match?(@ignore_pattern)
       else
         false
       end

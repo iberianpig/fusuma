@@ -36,6 +36,10 @@ module Fusuma
 
         load_custom_config(option[:config_path])
 
+        if (filters = Config.search(Config::Index.new([:log_filter])))
+          MultiLogger.instance.ignore_pattern = Regexp.union(Array(filters).map(&:to_s))
+        end
+
         Environment.dump_information
         Kernel.exit(0) if option[:version]
 
