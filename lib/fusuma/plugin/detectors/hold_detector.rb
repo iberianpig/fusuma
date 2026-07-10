@@ -49,7 +49,7 @@ module Fusuma
           when "end"
             "end"
           else
-            last_record = last_hold.record.status
+            last_record = last_hold.record
             raise "Unexpected Status:#{last_record.status} in #{last_record}"
           end
 

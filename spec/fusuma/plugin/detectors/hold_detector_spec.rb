@@ -77,6 +77,16 @@ module Fusuma
             end
           end
 
+          context "with unexpected status" do
+            before do
+              buffer(create_hold_events(statuses: %w[begin update]))
+            end
+            it "raises RuntimeError with the unexpected status" do
+              expect { @detector.detect([@buffer, @timer_buffer]) }
+                .to raise_error(RuntimeError, /Unexpected Status:update/)
+            end
+          end
+
           context "with hold events and timer events" do
             context "with begin event and timer events" do
               before do
