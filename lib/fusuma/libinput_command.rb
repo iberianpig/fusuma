@@ -24,12 +24,13 @@ module Fusuma
     end
 
     # @return [Boolean]
+    #: () -> bool
     def libinput_1_27_0_or_later?
       Gem::Version.new(version) >= Gem::Version.new("1.27.0")
     end
 
     # @return [String]
-    #: () -> String?
+    #: () -> String
     def version
       # version_command prints "1.6.3\n"
       @version ||= `#{version_command}`.strip
@@ -53,14 +54,14 @@ module Fusuma
     end
 
     # @return [Integer] return a latest line libinput debug-events
-    #: (StringIO) -> Array[untyped]
+    #: (IO) -> Array[untyped]
     def debug_events(writer)
       Open3.pipeline_start([debug_events_with_options], ["grep -v POINTER_ --line-buffered"], out: writer, in: "/dev/null")
     end
 
     # @return [String] command
     # @raise [SystemExit]
-    #: () -> String?
+    #: () -> String
     def version_command
       if @libinput_command
         "#{@libinput_command} --version"
@@ -116,6 +117,7 @@ module Fusuma
     #
     #   which('ruby') #=> /usr/bin/ruby
     # @return [String, nil]
+    #: (String) -> String?
     def which(command)
       exts = ENV["PATHEXT"] ? ENV["PATHEXT"].split(";") : [""]
       ENV["PATH"].split(File::PATH_SEPARATOR).each do |path|
