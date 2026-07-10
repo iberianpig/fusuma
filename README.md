@@ -365,7 +365,8 @@ swipe:
 - `-l`, `--list-devices` : List available devices
 - `-v`, `--verbose` : Show details about the results of running fusuma
 - `--version` : Show fusuma version
-- `--log-file=path/to/file` : Set path of log file
+- `--log=path/to/file` : Print logs to file
+- `--show-config` : Show config as YAML format which is loaded internally
 
 ### Specify touchpads by device name
 Set the following options to recognize multi-touch gestures only for the specified touchpad device.
