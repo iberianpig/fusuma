@@ -26,6 +26,7 @@ module Fusuma
         instance.search(index)
       end
 
+      #: (Fusuma::Config::Index) -> Symbol?
       def find_execute_key(index)
         instance.find_execute_key(index)
       end
@@ -127,6 +128,7 @@ module Fusuma
 
     # @param index [Config::Index]
     # @return Symbol
+    #: (Fusuma::Config::Index) -> Symbol?
     def find_execute_key(index)
       @execute_keys ||= Plugin::Executors::Executor.plugins.map do |executor|
         executor.new.execute_keys
@@ -172,6 +174,7 @@ module Fusuma
       File.expand_path "~/.config/#{filename}"
     end
 
+    #: (String) -> String
     def expand_default_path(filename)
       File.expand_path "../../#{filename}", __FILE__
     end

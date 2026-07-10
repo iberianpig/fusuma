@@ -9,7 +9,8 @@ module Fusuma
 
         EPSILON_TIME: ::Float
 
-        def config_param_types: () -> untyped
+        # : () -> Hash[untyped, untyped]
+        def config_param_types: () -> Hash[untyped, untyped]
 
         # : (*nil, ?interval: nil) -> void
         def initialize: (*nil, ?interval: nil) -> void

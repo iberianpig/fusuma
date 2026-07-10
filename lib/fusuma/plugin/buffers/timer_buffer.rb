@@ -10,6 +10,7 @@ module Fusuma
         DEFAULT_SOURCE = "timer_input"
         DEFAULT_SECONDS_TO_KEEP = 3
 
+        #: () -> Hash[untyped, untyped]
         def config_param_types
           {
             source: [String],
@@ -27,6 +28,7 @@ module Fusuma
           self
         end
 
+        #: (?current_time: Time) -> void
         def clear_expired(current_time: Time.now)
           @seconds_to_keep ||= config_params(:seconds_to_keep) || DEFAULT_SECONDS_TO_KEEP
           @events.each do |e|

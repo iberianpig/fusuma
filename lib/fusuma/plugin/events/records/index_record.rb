@@ -23,6 +23,7 @@ module Fusuma
             @args = args
           end
 
+          #: () -> String
           def to_s
             "#{@index}, #{@position}, #{@trigger}, #{@args}"
           end
@@ -36,6 +37,7 @@ module Fusuma
           # @param records [Array<IndexRecord>]
           # @return [IndexRecord] when merge is succeeded
           # @return [NilClass] when merge is not succeeded
+          #: (records: Array[untyped], ?index: Fusuma::Config::Index) -> Fusuma::Plugin::Events::Records::IndexRecord?
           def merge(records:, index: @index)
             # FIXME: cache
             raise "position is NOT body: #{self}" unless mergeable?
@@ -62,11 +64,13 @@ module Fusuma
           end
 
           # @param [Config::Searcher] searcher
+          #: (?Fusuma::Config::Index) -> (String | Hash[untyped, untyped] | Integer | Float)?
           def exist_on_conf?(index = @index)
             Config.search(index)
           end
 
           # @return [Integer]
+          #: () -> Integer
           def trigger_priority
             case @trigger
             when :oneshot
@@ -78,6 +82,7 @@ module Fusuma
             end
           end
 
+          #: () -> bool
           def mergeable?
             @position == :body
           end

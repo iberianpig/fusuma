@@ -2,6 +2,7 @@
 
 # support camerize and underscore
 class String
+  #: () -> String
   def camelize
     split("_").map(&:capitalize).join
   end

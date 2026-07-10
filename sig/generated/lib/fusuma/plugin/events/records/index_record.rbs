@@ -20,7 +20,8 @@ module Fusuma
           # : (index: Fusuma::Config::Index, ?position: Symbol, ?trigger: Symbol, ?args: Hash[untyped, untyped]) -> void
           def initialize: (index: Fusuma::Config::Index, ?position: Symbol, ?trigger: Symbol, ?args: Hash[untyped, untyped]) -> void
 
-          def to_s: () -> untyped
+          # : () -> String
+          def to_s: () -> String
 
           # : () -> Symbol
           def type: () -> Symbol
@@ -29,15 +30,19 @@ module Fusuma
           # @param records [Array<IndexRecord>]
           # @return [IndexRecord] when merge is succeeded
           # @return [NilClass] when merge is not succeeded
-          def merge: (records: untyped, ?index: untyped) -> untyped
+          # : (records: Array[untyped], ?index: Fusuma::Config::Index) -> Fusuma::Plugin::Events::Records::IndexRecord?
+          def merge: (records: Array[untyped], ?index: Fusuma::Config::Index) -> Fusuma::Plugin::Events::Records::IndexRecord?
 
           # @param [Config::Searcher] searcher
-          def exist_on_conf?: (?untyped index) -> untyped
+          # : (?Fusuma::Config::Index) -> (String | Hash[untyped, untyped] | Integer | Float)?
+          def exist_on_conf?: (?Fusuma::Config::Index) -> (String | Hash[untyped, untyped] | Integer | Float)?
 
           # @return [Integer]
-          def trigger_priority: () -> untyped
+          # : () -> Integer
+          def trigger_priority: () -> Integer
 
-          def mergeable?: () -> untyped
+          # : () -> bool
+          def mergeable?: () -> bool
         end
       end
     end

@@ -134,6 +134,7 @@ module Fusuma
         #  event_buffer.gesture
         #  => 'swipe'
         # @return [String]
+        #: () -> String
         def gesture
           @events.last.record.gesture
         end

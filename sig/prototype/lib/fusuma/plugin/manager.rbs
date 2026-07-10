@@ -13,6 +13,8 @@ module Fusuma
       @_fusuma_default_plugin_paths: untyped
 
       @_fusuma_external_plugin_paths: untyped
+
+      @fusuma_gemspec: untyped
     end
   end
 end
